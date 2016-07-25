@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/background_image"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
+        android:id="@+id/login_back_arrow"
+        android:src="@drawable/back_arrow_white"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:paddingTop="36dp"
+        android:src="@drawable/trujobs_logo"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:id="@+id/user_mobile_edit_text"
+        android:theme="@style/LightEditTextTheme"
+        android:textColorHint="#aacde4"
+        android:inputType="number"
+        android:paddingTop="34dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:hint="@string/help_text_login_mobile" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="34dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:inputType="textPassword"
+        android:id="@+id/user_password_edit_text"
+        android:textColor="#ffffff"
+        android:textColorHint="#aacde4"
+        android:theme="@style/LightEditTextTheme"
+        android:hint="@string/help_text_login_password" />
+
+    <Button
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="16dp"
+        android:text="@string/login_btn_text"
+        android:id="@+id/login_submit_btn"
+        android:background="#ffffff"
+        android:layout_marginTop="18dp"
+        android:textColor="#5291ea"
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:id="@+id/forgot_password_text"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:text="Forgot Password?"/>
+</LinearLayout>

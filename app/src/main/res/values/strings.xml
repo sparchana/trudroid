@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Trudroid</string>
+    <string name="app_name">TruJobs</string>
+    <string name="skip_btn_text">Skip ></string>
+    <string name="join_now_btn_text">Join Now</string>
+    <string name="login_btn_text">Login</string>
+    <string name="signup_btn_text">Sign Up</string>
+    <string name="help_text_login_mobile">Mobile Number</string>
+    <string name="help_text_login_password">Password</string>
 </resources>
