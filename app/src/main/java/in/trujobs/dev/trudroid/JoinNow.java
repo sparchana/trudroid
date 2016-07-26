@@ -14,6 +14,7 @@ public class JoinNow extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_now);
 
+        getSupportActionBar().hide();
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.linear_layout_join_now);
 
         Button buttonLogin = (Button) findViewById(R.id.login_now_btn);

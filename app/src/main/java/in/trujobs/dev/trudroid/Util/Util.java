@@ -1,12 +1,19 @@
 package in.trujobs.dev.trudroid.Util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.util.Base64;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.proto.JobRoleResponse;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -45,6 +52,12 @@ public class Util {
         } else {
             return true;
         }
+    }
+
+    public static JobRoleResponse getJobRoleResponse(Activity context) {
+        JobRoleResponse jobRoleResponse = null;
+        jobRoleResponse = HttpRequest.getJobRoles();
+        return jobRoleResponse;
     }
 
     public static boolean isConnectedToInternet(Context context) {

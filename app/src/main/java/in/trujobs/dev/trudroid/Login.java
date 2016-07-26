@@ -31,6 +31,8 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        getSupportActionBar().hide();
+
         Button loginSubmitBtn = (Button) findViewById(R.id.login_submit_btn);
         TextView forgotPasswordTextView = (TextView) findViewById(R.id.forgot_password_text);
         ImageView loginBackArrow = (ImageView) findViewById(R.id.login_back_arrow);

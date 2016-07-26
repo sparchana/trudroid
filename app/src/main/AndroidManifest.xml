@@ -12,16 +12,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".JoinNow">
-            <intent-filter>
+<!--            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity android:name=".Login" />
         <activity android:name=".SignUp" />
         <activity android:name=".OtpScreen" />
         <activity android:name=".EnterPassword" />
-        <activity android:name=".ForgotPassword"></activity>
+        <activity android:name=".ForgotPassword" />
+        <activity android:name=".JobPreference"
+            android:label="Job Roles">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

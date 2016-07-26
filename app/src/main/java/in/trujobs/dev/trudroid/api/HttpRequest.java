@@ -1,5 +1,6 @@
 package in.trujobs.dev.trudroid.api;
 
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
 import in.trujobs.proto.ResetPasswordRequest;
@@ -93,6 +95,30 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return resetPasswordResponse;
+    }
+
+    public static JobRoleResponse getJobRoles() {
+        JobRoleResponse.Builder requestBuilder =
+                JobRoleResponse.newBuilder();
+
+        String responseString = postToServer(Config.URL_ALL_JOB_ROLES,
+                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        JobRoleResponse jobRoleResponse = null;
+        try {
+            jobRoleResponse =
+                    jobRoleResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {}
+
+        if (jobRoleResponse != null && jobRoleResponse.getJobRoleCount() != 0) {
+            return jobRoleResponse;
+        } else {
+            return null;
+        }
     }
 
     public static String postToServer(String requestUrl, String request) {

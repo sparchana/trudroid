@@ -18,6 +18,8 @@ public class OtpScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp_screen);
 
+        getSupportActionBar().hide();
+
         final EditText mUserOtp = (EditText) findViewById(R.id.user_otp_edit_text);
         Button addPasswordBtn = (Button) findViewById(R.id.add_password_btn);
         ImageView otpScreenBackArrow = (ImageView) findViewById(R.id.otp_screen_back_arrow);

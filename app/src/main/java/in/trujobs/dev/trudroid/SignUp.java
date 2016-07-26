@@ -33,6 +33,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        getSupportActionBar().hide();
 
         Button buttonSignupSubmit = (Button) findViewById(R.id.sign_up_submit_btn);
         TextView loginTextView = (TextView) findViewById(R.id.login_text_view);

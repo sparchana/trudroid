@@ -1,6 +1,7 @@
 package in.trujobs.dev.trudroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class EnterPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
+        getSupportActionBar().hide();
 
         ImageView enterPasswordBackArrow = (ImageView) findViewById(R.id.enter_password_back_arrow);
         Button mAddPasswordBtn = (Button) findViewById(R.id.add_new_password_btn);
@@ -101,7 +103,8 @@ public class EnterPassword extends AppCompatActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
-                finish();
+                Intent intent = new Intent(EnterPassword.this, JobPreference.class);
+                startActivity(intent);
             }
             else {
                 Toast.makeText(EnterPassword.this, "Something went wrong. Please try again later!",

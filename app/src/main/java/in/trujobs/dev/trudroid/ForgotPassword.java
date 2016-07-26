@@ -29,6 +29,7 @@ public class ForgotPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+        getSupportActionBar().hide();
 
         ImageView forgotPasswordBackArrow = (ImageView) findViewById(R.id.forgot_password_back_arrow);
         Button buttonGetMobile = (Button) findViewById(R.id.add_mobile_reset_password_btn);
