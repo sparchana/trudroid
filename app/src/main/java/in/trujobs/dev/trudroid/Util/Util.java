@@ -30,7 +30,7 @@ public class Util {
     }
 
     public static boolean isValidPassword(String pass) {
-        if (pass != null && pass.length() > 6) {
+        if (pass != null && pass.length() > 5) {
             return true;
         }
         return false;

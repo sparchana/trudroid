@@ -18,6 +18,10 @@ import java.net.URL;
 
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.ResetPasswordRequest;
+import in.trujobs.proto.ResetPasswordResponse;
+import in.trujobs.proto.SignUpRequest;
+import in.trujobs.proto.SignUpResponse;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -38,6 +42,57 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return logInResponse;
+    }
+
+    public static SignUpResponse signUpRequest(SignUpRequest signUpRequest) {
+        String responseString = postToServer(Config.URL_SIGN_UP,
+                Base64.encodeToString(signUpRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        SignUpResponse signUpResponse = null;
+        try {
+            signUpResponse = SignUpResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return signUpResponse;
+    }
+
+    public static LogInResponse addPassword(LogInRequest logInRequest) {
+        String responseString = postToServer(Config.URL_ADD_PASSWORD,
+                Base64.encodeToString(logInRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        LogInResponse logInResponse = null;
+        try {
+            logInResponse = LogInResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return logInResponse;
+    }
+
+    public static ResetPasswordResponse findUserAndSendOtp(ResetPasswordRequest resetPasswordRequest) {
+        String responseString = postToServer(Config.URL_FORGOT_PASSWORD_SEND_OTP,
+                Base64.encodeToString(resetPasswordRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        ResetPasswordResponse resetPasswordResponse = null;
+        try {
+            resetPasswordResponse = ResetPasswordResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return resetPasswordResponse;
     }
 
     public static String postToServer(String requestUrl, String request) {

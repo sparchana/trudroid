@@ -14,10 +14,13 @@ public class Prefs {
     public static final File.SharedPreference<String> candidateMobile = sFile.stringValue("candidateMobile", "");
     public static final File.SharedPreference<Long> leadId = sFile.longValue("leadId", 0L);
     public static final File.SharedPreference<Long> candidateId = sFile.longValue("candidateId", 0L);
+    public static final File.SharedPreference<Integer> candidateMinProfile = sFile.intValue("candidateMinProfile", 0);
     public static final File.SharedPreference<Integer> candidateGender = sFile.intValue("candidateGender", 0);
     public static final File.SharedPreference<Integer> isAssessed = sFile.intValue("isAssessed", 0);
     public static final File.SharedPreference<String> userSessionId = sFile.stringValue("userSessionId", "");
     public static final File.SharedPreference<Long> userSessionIdExpiryMillis = sFile.longValue("userSessionIdExpiryMillis", 0L);
+
+    public static final File.SharedPreference<Integer> storedOtp = sFile.intValue("storedOtp", 0);
 
     public static void onLogout() {
         Prefs.leadId.remove();

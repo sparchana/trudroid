@@ -35,7 +35,6 @@ public class Login extends AppCompatActivity {
         TextView forgotPasswordTextView = (TextView) findViewById(R.id.forgot_password_text);
         ImageView loginBackArrow = (ImageView) findViewById(R.id.login_back_arrow);
 
-
         forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +72,7 @@ public class Login extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
             check = 0;
         } else if(Util.isValidPassword(requestBuilder.getCandidatePassword()) == false){
-            Toast.makeText(Login.this, "Enter a password of minimum  characters",
+            Toast.makeText(Login.this, "Enter a password of minimum 6 characters",
                     Toast.LENGTH_LONG).show();
             check = 0;
         }
@@ -128,8 +127,7 @@ public class Login extends AppCompatActivity {
                 Prefs.isAssessed.put(logInResponse.getCandidateIsAssessed());
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
-                Prefs.userSessionId.put(logInResponse.getSessionId());
-                Prefs.userSessionIdExpiryMillis.put(logInResponse.getSessionExpiryMillis());
+                Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
                 finish();
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
@@ -143,5 +141,4 @@ public class Login extends AppCompatActivity {
             }
         }
     }
-
 }

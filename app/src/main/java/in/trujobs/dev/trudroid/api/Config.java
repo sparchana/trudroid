@@ -6,9 +6,10 @@ package in.trujobs.dev.trudroid.api;
 public class Config {
     public static final String BASE_HTTP_URL = "http://192.168.0.124:9000";
 
-    public static final String URL_SIGN_UP = BASE_HTTP_URL + "/signup";
+    public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
-    public static final String URL_FORGOT_PASSWORD_SEND_OTP = BASE_HTTP_URL + "/findUserAndSendOtp";
+    public static final String URL_ADD_PASSWORD = BASE_HTTP_URL + "/mAddPassword";
+    public static final String URL_FORGOT_PASSWORD_SEND_OTP = BASE_HTTP_URL + "/mFindUserAndSendOtp";
     public static final String URL_APPLY_JOB = BASE_HTTP_URL + "/applyJob";
 
 }
