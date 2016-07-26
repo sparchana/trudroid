@@ -50,6 +50,7 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SignUp.this, Login.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
 
@@ -119,6 +120,7 @@ public class SignUp extends AppCompatActivity {
                 Prefs.storedOtp.put(signUpResponse.getGeneratedOtp());
                 Intent intent = new Intent(SignUp.this, OtpScreen.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             } else if(signUpResponse.getStatusValue() == 3){
                 Toast.makeText(SignUp.this, "Candidate already Exists. Please Login to continue",
                         Toast.LENGTH_LONG).show();

@@ -1,10 +1,15 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -14,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
+import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobRoleResponse;
 
@@ -51,6 +58,9 @@ public class JobPreference extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_preference);
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+
         // Set job all job preference as none
         jobPrefOptionOne = false;
         jobPrefOptionTwo = false;
@@ -85,6 +95,30 @@ public class JobPreference extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                Prefs.onLogout();
+                Toast.makeText(JobPreference.this, "Logout Successful",
+                        Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(JobPreference.this, JoinNow.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void showJobRoles(){

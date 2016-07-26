@@ -33,6 +33,7 @@ public class OtpScreen extends AppCompatActivity {
                     if(mUserOtp.getText().toString().equals(Prefs.storedOtp.get().toString())){
                         Intent intent = new Intent(OtpScreen.this, EnterPassword.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                     } else{
                         Toast.makeText(OtpScreen.this, "Oops! Incorrect OTP",
                                 Toast.LENGTH_LONG).show();

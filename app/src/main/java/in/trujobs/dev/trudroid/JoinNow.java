@@ -28,6 +28,7 @@ public class JoinNow extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(JoinNow.this, Login.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
 
@@ -35,6 +36,7 @@ public class JoinNow extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(JoinNow.this, SignUp.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
     }

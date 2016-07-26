@@ -1,5 +1,6 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,6 +27,7 @@ public class Login extends AppCompatActivity {
     private AsyncTask<LogInRequest, Void, LogInResponse> mAsyncTask;
     EditText mMobile;
     EditText mPassword;
+    ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this, ForgotPassword.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
 
@@ -93,6 +96,11 @@ public class Login extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = new ProgressDialog(Login.this,R.style.SpinnerTheme);
+            pd.setCancelable(false);
+            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            pd.show();
+
         }
 
         @Override
@@ -104,6 +112,7 @@ public class Login extends AppCompatActivity {
         protected void onPostExecute(LogInResponse logInResponse) {
             super.onPostExecute(logInResponse);
             mAsyncTask = null;
+            pd.hide();
             if (logInResponse == null) {
                 Toast.makeText(Login.this, "Failed to Login. Please try again.",
                         Toast.LENGTH_LONG).show();

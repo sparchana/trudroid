@@ -3,6 +3,7 @@
     package="in.trujobs.dev.trudroid">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".Trudroid"
@@ -12,22 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".JoinNow">
-<!--            <intent-filter>
+
+            <!--
+                <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity android:name=".Login" />
         <activity android:name=".SignUp" />
         <activity android:name=".OtpScreen" />
         <activity android:name=".EnterPassword" />
         <activity android:name=".ForgotPassword" />
-        <activity android:name=".JobPreference"
+        <activity
+            android:name=".JobPreference"
             android:label="Job Roles">
+        </activity>
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

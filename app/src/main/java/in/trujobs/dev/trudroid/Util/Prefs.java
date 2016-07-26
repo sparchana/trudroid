@@ -24,6 +24,14 @@ public class Prefs {
 
     public static void onLogout() {
         Prefs.leadId.remove();
+        Prefs.candidateId.remove();
+        Prefs.candidateMobile.remove();
+        Prefs.candidateGender.remove();
+        Prefs.firstName.remove();
+        Prefs.lastName.remove();
+        Prefs.candidateMinProfile.remove();
+        Prefs.isAssessed.remove();
+        Prefs.storedOtp.remove();
     }
 
     public static void onLogin(long leadId) {

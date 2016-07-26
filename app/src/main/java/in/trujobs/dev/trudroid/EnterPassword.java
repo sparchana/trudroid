@@ -93,9 +93,6 @@ public class EnterPassword extends AppCompatActivity {
             }
 
             if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Toast.makeText(EnterPassword.this, "New Password Created!",
-                        Toast.LENGTH_LONG).show();
-
                 Prefs.firstName.put(logInResponse.getCandidateFirstName());
                 Prefs.lastName.put(logInResponse.getCandidateLastName());
                 Prefs.candidateGender.put(logInResponse.getCandidateGender());
@@ -105,6 +102,7 @@ public class EnterPassword extends AppCompatActivity {
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
                 Intent intent = new Intent(EnterPassword.this, JobPreference.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
             else {
                 Toast.makeText(EnterPassword.this, "Something went wrong. Please try again later!",

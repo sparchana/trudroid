@@ -19,6 +19,15 @@ import in.trujobs.proto.JobRoleResponse;
  * Created by batcoder1 on 25/7/16.
  */
 public class Util {
+    public static boolean isLoggedIn() {
+        boolean loginStatus = false;
+
+        if(Prefs.leadId.get() != 0L){
+            loginStatus = true;
+        }
+        return loginStatus;
+    }
+
     public static boolean isValidName(String name) {
         return !TextUtils.isEmpty(name);
     }
