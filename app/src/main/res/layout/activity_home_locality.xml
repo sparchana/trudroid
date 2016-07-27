@@ -6,7 +6,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/back_grey"
-    tools:context="in.trujobs.dev.trudroid.JobPreference">
+    tools:context="in.trujobs.dev.trudroid.HomeLocality">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="What kind of Jobs you want?"
+                android:text="Your home location?"
                 android:textAlignment="center"
                 android:textSize="16dp"
                 android:textColor="@color/white"/>
