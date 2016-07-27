@@ -4,7 +4,7 @@ package in.trujobs.dev.trudroid.api;
  * Created by batcoder1 on 25/7/16.
  */
 public class Config {
-    public static final String BASE_HTTP_URL = "http://192.168.0.120:9000";
+    public static final String BASE_HTTP_URL = "http://192.168.0.112:9000";
 /*    public static final String BASE_HTTP_URL = "http://192.168.0.9:9000";*/
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";

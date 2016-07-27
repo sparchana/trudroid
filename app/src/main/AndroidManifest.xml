@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".JoinNow"></activity>
+        <activity android:name=".JoinNow" />
         <activity android:name=".Login" />
         <activity android:name=".SignUp" />
         <activity android:name=".OtpScreen" />
@@ -31,11 +31,13 @@
         <activity
             android:name=".DashboardActivity"
             android:label="Candidate Home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".JobActivity"
             android:label="@string/title_activity_job"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".HomeLocality"
+            android:label="@string/title_activity_home"></activity>
     </application>
 
 </manifest>

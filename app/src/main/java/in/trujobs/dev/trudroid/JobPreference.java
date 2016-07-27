@@ -34,40 +34,10 @@ public class JobPreference extends AppCompatActivity {
     String[] jobRoleName;
     Stack jobPrefStack = new Stack();
     ProgressDialog pd;
-    int[] tick = {
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans,
-            R.drawable.trans
-    };
-    int[] imageId = {
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.enter_mobile,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.enter_mobile,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply,
-            R.drawable.job_apply
-    };
+    ImageView jobPrefRemoveOne, jobPrefRemoveTwo, jobPrefRemoveThree;
+
+    int[] tick = {R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans, R.drawable.trans};
+    int[] imageId = {R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.enter_mobile, R.drawable.enter_mobile, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.enter_mobile, R.drawable.job_apply, R.drawable.job_apply, R.drawable.enter_mobile, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply, R.drawable.job_apply};
 
     LinearLayout jobRoleGridViewLayout, mJobPrefOne, mJobPrefTwo, mJobPrefThree;
     ImageView jobPrefImageView, jobPrefOneImage, jobPrefTwoImage, jobPrefThreeImage;
@@ -207,21 +177,29 @@ public class JobPreference extends AppCompatActivity {
 
     public void addJobPref(int jobRoleIcon,String jobRoleText, int pos){
         if(jobPrefStack.search(pos) < 0){
-            if(jobPrefOptionOne == false){
+            jobPrefRemoveOne = (ImageView) findViewById(R.id.job_pref_one_remove);
+            jobPrefRemoveTwo = (ImageView) findViewById(R.id.job_pref_two_remove);
+            jobPrefRemoveThree = (ImageView) findViewById(R.id.job_pref_three_remove);
+
+            if(!jobPrefOptionOne){
                 jobPrefOneImage.setBackgroundResource(jobRoleIcon);
                 mJobPrefOneText.setText(jobRoleText);
+                jobPrefRemoveOne.setVisibility(View.VISIBLE);
                 jobPrefOptionOne = true;
                 jobPrefStack.push(pos);
+
                 return;
-            } else if(jobPrefOptionTwo == false){
+            } else if(!jobPrefOptionTwo){
                 jobPrefTwoImage.setBackgroundResource(jobRoleIcon);
                 mJobPrefTwoText.setText(jobRoleText);
                 jobPrefOptionTwo = true;
+                jobPrefRemoveTwo.setVisibility(View.VISIBLE);
                 jobPrefStack.push(pos);
                 return;
-            } else if(jobPrefOptionThree == false){
+            } else if(!jobPrefOptionThree){
                 jobPrefThreeImage.setBackgroundResource(jobRoleIcon);
                 mJobPrefThreeText.setText(jobRoleText);
+                jobPrefRemoveThree.setVisibility(View.VISIBLE);
                 jobPrefOptionThree = true;
                 jobPrefStack.push(pos);
                 return;
