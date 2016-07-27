@@ -1,66 +1,50 @@
 package in.trujobs.dev.trudroid.Adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import in.trujobs.dev.trudroid.JobActivity;
+
+import java.util.List;
+
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.proto.JobPost;
 
 /**
  * Created by batcoder1 on 27/7/16.
  */
-public class JobPostAdapter extends BaseAdapter {
-    String[] jobPostTitle, jobPostCompany, jobPostSalary;
-    Context context;
-    private static LayoutInflater inflater=null;
-    public JobPostAdapter(JobActivity jobActivity, String[] jobPostTitleRes, String[] jobPostCompanyRes, String[] jobPostSalaryRes) {
-        jobPostTitle = jobPostTitleRes;
-        jobPostCompany = jobPostCompanyRes;
-        jobPostSalary = jobPostSalaryRes;
-        context = jobActivity;
-        inflater = ( LayoutInflater )context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-    @Override
-    public int getCount() {
-        return 0;
-    }
+public class JobPostAdapter extends ArrayAdapter<JobPost> {
 
-    @Override
-    public Object getItem(int i) {
-        return null;
+    public JobPostAdapter(Activity context, List<JobPost> jobPostList) {
+        super(context, 0, jobPostList);
     }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
     public class Holder
     {
         TextView mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View rowView, ViewGroup parent) {
         Holder holder = new Holder();
-        View rowView;
-        rowView = inflater.inflate(R.layout.job_list_view_item, null);
+        JobPost jobPost= getItem(position);
+        if(rowView == null) {
+            rowView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.job_list_view_item, parent, false);
+        }
 
         //set job post title
         holder.mJobPostTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
-        holder.mJobPostTitleTextView.setText(jobPostTitle[position]);
+        holder.mJobPostTitleTextView.setText(jobPost.getJobPostTitle());
 
         //set job post Company
         holder.mJobPostCompanyTextView = (TextView) rowView.findViewById(R.id.job_post_company_text_view);
-        holder.mJobPostCompanyTextView.setText(jobPostCompany[position]);
+        holder.mJobPostCompanyTextView.setText(jobPost.getJobPostCompanyName());
 
         //set job post salary
         holder.mJobPostSalaryTextView = (TextView) rowView.findViewById(R.id.job_post_salary_text_view);
-        holder.mJobPostSalaryTextView.setText(jobPostSalary[position]);
+        holder.mJobPostSalaryTextView.setText(jobPost.getJobPostMinSalary() + " - " + jobPost.getJobPostMaxSalary());
         return rowView;
     }
 

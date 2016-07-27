@@ -1,6 +1,5 @@
 package in.trujobs.dev.trudroid.api;
 
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -139,7 +138,7 @@ public class HttpRequest {
                     jobPostResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {}
 
-        if (jobPostResponse != null && jobPostResponse.getJobPostCount() != 0) {
+        if (jobPostResponse != null && jobPostResponse.getJobPostCount() > 0) {
             return jobPostResponse;
         } else {
             return null;
