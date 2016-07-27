@@ -112,7 +112,7 @@ public class Login extends AppCompatActivity {
         protected void onPostExecute(LogInResponse logInResponse) {
             super.onPostExecute(logInResponse);
             mAsyncTask = null;
-            pd.hide();
+            pd.cancel();
             if (logInResponse == null) {
                 Toast.makeText(Login.this, "Failed to Login. Please try again.",
                         Toast.LENGTH_LONG).show();
@@ -139,6 +139,9 @@ public class Login extends AppCompatActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
+                Intent intent = new Intent(Login.this, JobActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 finish();
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {

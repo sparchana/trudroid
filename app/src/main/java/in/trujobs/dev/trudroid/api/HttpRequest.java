@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
@@ -116,6 +117,30 @@ public class HttpRequest {
 
         if (jobRoleResponse != null && jobRoleResponse.getJobRoleCount() != 0) {
             return jobRoleResponse;
+        } else {
+            return null;
+        }
+    }
+
+    public static JobPostResponse getJobPosts() {
+        JobPostResponse.Builder requestBuilder =
+                JobPostResponse.newBuilder();
+
+        String responseString = postToServer(Config.URL_ALL_JOB_POSTS,
+                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        JobPostResponse jobPostResponse = null;
+        try {
+            jobPostResponse =
+                    jobPostResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {}
+
+        if (jobPostResponse != null && jobPostResponse.getJobPostCount() != 0) {
+            return jobPostResponse;
         } else {
             return null;
         }

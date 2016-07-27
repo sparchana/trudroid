@@ -9,6 +9,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import in.trujobs.dev.trudroid.R;
 
 /**
@@ -17,12 +20,14 @@ import in.trujobs.dev.trudroid.R;
 public class JobRoleAdapter extends BaseAdapter {
     private Context mContext;
     private final String[] web;
-    private final int[] Imageid;
+    private final int[] imageId;
+    private final int[] tick;
 
-    public JobRoleAdapter(Context c,String[] web,int[] Imageid ) {
+    public JobRoleAdapter(Context c,String[] web, int[] imageId, int[] tick) {
         mContext = c;
-        this.Imageid = Imageid;
+        this.imageId = imageId;
         this.web = web;
+        this.tick = tick;
     }
 
     @Override
@@ -56,8 +61,10 @@ public class JobRoleAdapter extends BaseAdapter {
             grid = inflater.inflate(R.layout.grid_view_layout, null);
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
             ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+            ImageView imageViewTick = (ImageView)grid.findViewById(R.id.grid_image_tick);
             textView.setText(web[position]);
-            imageView.setImageResource(Imageid[position]);
+            imageView.setImageResource(imageId[position]);
+            imageViewTick.setImageResource(tick[position]);
         } else {
             grid = (View) convertView;
         }

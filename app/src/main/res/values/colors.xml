@@ -7,4 +7,8 @@
     <color name="back_grey">#e9e9e9</color>
     <color name="transparent">#00000000</color>
     <color name="back_grey_dark">#6c6c6c</color>
+    <color name="back_grey_light_item">#749cf4</color>
+    <color name="back_grey_dark_item">#568bff</color>
+    <color name="colorFAB1">#2196F3</color>
+    <color name="colorFAB2">#f77032</color>
 </resources>

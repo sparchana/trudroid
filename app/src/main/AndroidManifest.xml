@@ -12,16 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".JoinNow">
-
-            <!--
-                <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+        <activity android:name=".JoinNow"></activity>
         <activity android:name=".Login" />
         <activity android:name=".SignUp" />
         <activity android:name=".OtpScreen" />
@@ -29,14 +20,22 @@
         <activity android:name=".ForgotPassword" />
         <activity
             android:name=".JobPreference"
-            android:label="Job Roles">
-        </activity>
+            android:label="Job Roles" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DashboardActivity"
+            android:label="Candidate Home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".JobActivity"
+            android:label="@string/title_activity_job"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
