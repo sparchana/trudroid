@@ -131,12 +131,13 @@ public class FetchAddressIntentService extends IntentService {
             // getFeatureName() ("Cherry Lane", for example)
             // getThoroughfare() ("Margosa Avenue", for example)
             // getSubThroughfare() ("101", for example)
+
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                 System.out.println("AddressLine: "+address.getAddressLine(i));
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, getString(R.string.address_found));
-            String localityName="";
+            String localityName;
             if(addressFragments.size() < 2){
                 localityName = TextUtils.join(System.getProperty("line.separator"), addressFragments);
             } else {

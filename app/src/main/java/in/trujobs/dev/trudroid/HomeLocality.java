@@ -73,7 +73,7 @@ public class HomeLocality extends AppCompatActivity implements
     protected boolean mAddressRequested;
 
     /**
-     * The formatted location address.
+     * The formatted location name.
      */
     protected String mAddressOutput;
 
@@ -458,7 +458,7 @@ public class HomeLocality extends AppCompatActivity implements
             if (homeLocalityResponse == null) {
                 Toast.makeText(getApplicationContext(), "Failed to set Home Locality. Please try again.",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null signIn Response");
+                Log.w("","Null Response");
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
                 Toast.makeText(getApplicationContext(), "Home Locality Saved Successful!",
@@ -466,7 +466,7 @@ public class HomeLocality extends AppCompatActivity implements
                 finish();
             }
             else {
-                Toast.makeText(HomeLocality.this, "Something went wrong while saving. Please try again later!",
+                Toast.makeText(HomeLocality.this, "Something went wrong while saving home locality. Please try again later!",
                         Toast.LENGTH_LONG).show();
             }
         }
