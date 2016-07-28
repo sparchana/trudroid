@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import in.trujobs.proto.HomeLocalityRequest;
+import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.LogInRequest;
@@ -246,5 +248,22 @@ public class HttpRequest {
         }
 
         return sb.toString();
+    }
+
+    public static HomeLocalityResponse addHomeLocality(HomeLocalityRequest homeLocalityRequest) {
+        String responseString = postToServer(Config.URL_ADD_HOMELOCALITY,
+                Base64.encodeToString(homeLocalityRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        HomeLocalityResponse homeLocalityResponse = null;
+        try {
+            homeLocalityResponse = HomeLocalityResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return homeLocalityResponse;
     }
 }

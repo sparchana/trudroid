@@ -3,9 +3,9 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +22,6 @@ import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobRoleResponse;
 
@@ -156,8 +155,7 @@ public class JobPreference extends AppCompatActivity {
                 mJobPrefThreeText = (TextView) findViewById(R.id.job_pref_three_text_view);
 
                 jobRoleName = new String[jobRoleResponse.getJobRoleCount()];
-                int i=0;
-                for(i=0; i<jobRoleResponse.getJobRoleCount(); i++){
+                for(int i=0; i<jobRoleResponse.getJobRoleCount(); i++){
                     jobRoleName[i] = String.valueOf(jobRoleResponse.getJobRole(i).getJobRoleName());
                 }
                 final JobRoleAdapter adapter = new JobRoleAdapter(JobPreference.this, jobRoleName, imageId, tick);
@@ -168,7 +166,6 @@ public class JobPreference extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
                         addJobPref(imageId[+position],jobRoleName[+ position],+ position);
-                        return;
                     }
                 });
             }
@@ -188,29 +185,23 @@ public class JobPreference extends AppCompatActivity {
                 jobPrefOptionOne = true;
                 jobPrefStack.push(pos);
 
-                return;
             } else if(!jobPrefOptionTwo){
                 jobPrefTwoImage.setBackgroundResource(jobRoleIcon);
                 mJobPrefTwoText.setText(jobRoleText);
                 jobPrefOptionTwo = true;
                 jobPrefRemoveTwo.setVisibility(View.VISIBLE);
                 jobPrefStack.push(pos);
-                return;
             } else if(!jobPrefOptionThree){
                 jobPrefThreeImage.setBackgroundResource(jobRoleIcon);
                 mJobPrefThreeText.setText(jobRoleText);
                 jobPrefRemoveThree.setVisibility(View.VISIBLE);
                 jobPrefOptionThree = true;
                 jobPrefStack.push(pos);
-                return;
             } else{
                 Toast.makeText(JobPreference.this, "Maximum 3 job preferences allowed!", Toast.LENGTH_SHORT).show();
-                return;
             }
         } else{
             Toast.makeText(JobPreference.this, "Already Selected", Toast.LENGTH_SHORT).show();
-            return;
         }
-
     }
 }

@@ -2,8 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="in.trujobs.dev.trudroid">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- EXTERNAL_STORAGE permissions are optional for Android 6.0 onwards. -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="22" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="22" />
 
     <application
         android:name=".Trudroid"
@@ -12,6 +22,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Google MAP API key -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_api_key" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_api_key"/>
+
+
         <activity android:name=".JoinNow" />
         <activity android:name=".Login" />
         <activity android:name=".SignUp" />
@@ -36,8 +56,12 @@
             android:name=".JobActivity"
             android:label="@string/title_activity_job"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".HomeLocality"
-            android:label="@string/title_activity_home"></activity>
+        <activity
+            android:name=".HomeLocality"
+            android:label="@string/title_activity_home"/>
+        <service
+            android:name=".FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>
