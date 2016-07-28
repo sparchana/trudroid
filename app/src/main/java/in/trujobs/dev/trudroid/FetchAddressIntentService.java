@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -135,7 +136,13 @@ public class FetchAddressIntentService extends IntentService {
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, getString(R.string.address_found));
-            deliverResultToReceiver(Constants.SUCCESS_RESULT, ""+addressFragments.get(addressFragments.size() - 2));
+            String localityName="";
+            if(addressFragments.size() < 2){
+                localityName = TextUtils.join(System.getProperty("line.separator"), addressFragments);
+            } else {
+                localityName = addressFragments.get(addressFragments.size() - 2);
+            }
+            deliverResultToReceiver(Constants.SUCCESS_RESULT, localityName);
         }
     }
 

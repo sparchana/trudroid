@@ -180,6 +180,7 @@ public class HomeLocality extends AppCompatActivity implements
         }
 
         // We only start the service to fetch the address if GoogleApiClient is connected.
+        fetchCurrentAddress();
         if (mGoogleApiClient.isConnected() && mLastLocation != null) {
             startIntentService();
         }
@@ -419,7 +420,7 @@ public class HomeLocality extends AppCompatActivity implements
                 Log.i(TAG, "gps LastLocation not available. setting to place lat/lng");
                 mLastLocation.setLatitude(place.getLatLng().latitude);
                 mLastLocation.setLongitude(place.getLatLng().longitude);
-                
+
                 mSearchHomeLocalityTxtView.setText(place.getName());
                 /*
                 mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
