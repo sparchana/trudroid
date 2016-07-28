@@ -3,7 +3,6 @@ package in.trujobs.dev.trudroid.Adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,17 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
-import in.trujobs.dev.trudroid.JobActivity;
-import in.trujobs.dev.trudroid.JobPreference;
+import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.ViewDialog;
@@ -30,8 +26,6 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.JobPost;
-import in.trujobs.proto.LogInRequest;
-import in.trujobs.proto.LogInResponse;
 
 /**
  * Created by batcoder1 on 27/7/16.
@@ -89,6 +83,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPost> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Job id = " + jobPost.getJobPostId(), Toast.LENGTH_LONG).show();
+                JobDetailActivity.start(getContext(), jobPost.getJobPostTitle());
             }
         });
 

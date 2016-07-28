@@ -1,53 +1,55 @@
 package in.trujobs.dev.trudroid;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 
-public class JobDetailActivity extends FragmentActivity implements ActionBar.TabListener {
+import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
+import in.trujobs.proto.JobPost;
 
-    private ViewPager viewPager;
-/*    private TabsPagerAdapter mAdapter;*/
-    private ActionBar actionBar;
-    // Tab titles
-    private String[] tabs = { "Top Rated", "Games", "Movies" };
+public class JobDetailActivity extends AppCompatActivity {
+    private static final String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
+    public static void start(Context context, String jobTitle ) {
+        Intent intent = new Intent(context, JobDetailActivity.class);
+        intent.putExtra(EXTRA_JOB_TITLE, jobTitle);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
+        setTitle(getIntent().getStringExtra(EXTRA_JOB_TITLE));
 
-        // Initilization
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getActionBar();
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Job"));
+        tabLayout.addTab(tabLayout.newTab().setText("Company"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager.setAdapter(mAdapter);
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        // Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
-        }
-    }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
 
-    }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+            }
+        });
     }
 }
