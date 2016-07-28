@@ -90,11 +90,15 @@ public class HomeLocality extends AppCompatActivity implements
     /**
      * Visible while the address is being fetched.
      */
-    ProgressBar mProgressBar;
+    protected ProgressBar mProgressBar;
     /**
      * Kicks off the request to fetch an address when pressed.
      */
-    Button mFetchAddressButton;
+    protected Button mFetchAddressButton;
+    /**
+     * Displays the AutoComplete Selected Locality.
+     */
+    protected TextView mSearchHomeLocalityTxtView;
 
 
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
@@ -113,6 +117,7 @@ public class HomeLocality extends AppCompatActivity implements
         mResultReceiver = new AddressResultReceiver(new Handler());
 
         mLocationAddressTextView = (TextView) findViewById(R.id.location_address_view);
+        mSearchHomeLocalityTxtView = (TextView) findViewById(R.id.search_home_locality);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
 
@@ -124,15 +129,6 @@ public class HomeLocality extends AppCompatActivity implements
         updateUIWidgets();
         buildGoogleApiClient();
 
-       /* // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            //Initializing googleapi client
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }*/
         // Open the autocomplete activity when the button is clicked.
         TextView txtHomeLocality = (TextView) findViewById(R.id.search_home_locality);
         assert txtHomeLocality != null;
@@ -174,7 +170,7 @@ public class HomeLocality extends AppCompatActivity implements
     }
 
     /**
-     * Runs when user clicks the Fetch Address button. Starts the service to fetch the address if
+     * Runs when user clicks the Use Current Address button. Starts the service to fetch the address if
      * GoogleApiClient is connected.
      */
     public void fetchAddressButtonHandler(View view) {
@@ -194,6 +190,23 @@ public class HomeLocality extends AppCompatActivity implements
         mAddressRequested = true;
         updateUIWidgets();
     }
+
+    /**
+     * Runs when user clicks the Use Current Address button. Starts the service to fetch the address if
+     * GoogleApiClient is connected.
+     */
+    public void saveHomeLocality(View view) {
+        if(mAddressOutput != null && mLastLocation != null){
+            mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
+            mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
+            mHomeLocalityRequest.setName(mAddressOutput);
+            mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
+            mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+        }
+        mAsyncTask = new HomeLocalityAsyncTask();
+        mAsyncTask.execute(mHomeLocalityRequest.build());
+    }
+
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -229,7 +242,6 @@ public class HomeLocality extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //getCurrentLocation();
         fetchCurrentAddress();
     }
     /**
@@ -297,6 +309,7 @@ public class HomeLocality extends AppCompatActivity implements
      */
     protected void displayAddressOutput() {
         mLocationAddressTextView.setText(mAddressOutput);
+        mSearchHomeLocalityTxtView.setText(mAddressOutput);
     }
 
     /**
@@ -357,34 +370,6 @@ public class HomeLocality extends AppCompatActivity implements
         }
     }
 
-    private void getCurrentLocation() {
-        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-            startIntentService();
-        }
-        mAddressRequested = true;
-        // Gets the best and most recent location currently available,
-        // which may be null in rare cases when a location is not available.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-
-        if (mLastLocation != null) {
-            // Determine whether a Geocoder is available.
-            if (!Geocoder.isPresent()) {
-                Toast.makeText(this, R.string.no_geocoder_available,
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (mAddressRequested) {
-                startIntentService();
-            }
-        }
-
-    }
-
     private void triggerGooglePlaceAutocompleteAPI(){
         try {
             // The autocomplete activity requires Google Play Services to be available. The intent
@@ -429,16 +414,20 @@ public class HomeLocality extends AppCompatActivity implements
                 Log.i(TAG, "Place Selected: " + place.getName() + " Lat: "
                         + place.getLatLng().latitude + " lng: " + place.getLatLng().longitude
                         + "local" + place.getLocale() + " other: " + place.getAttributions());
-                TextView mSearchHomeLocalityTxtView = (TextView) findViewById(R.id.search_home_locality);
+                // set final submission data
+                mAddressOutput = place.getName().toString();
+                Log.i(TAG, "gps LastLocation not available. setting to place lat/lng");
+                mLastLocation.setLatitude(place.getLatLng().latitude);
+                mLastLocation.setLongitude(place.getLatLng().longitude);
+                
                 mSearchHomeLocalityTxtView.setText(place.getName());
+                /*
                 mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
                 mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-                mHomeLocalityRequest.setPlaceLat((long) place.getLatLng().latitude);
-                mHomeLocalityRequest.setPlaceLng((long) place.getLatLng().longitude);
+                mHomeLocalityRequest.setPlaceLat( place.getLatLng().latitude);
+                mHomeLocalityRequest.setPlaceLng( place.getLatLng().longitude);
                 mHomeLocalityRequest.setPlaceAddress(place.getAddress().toString());
-
-                mAsyncTask = new HomeLocalityAsyncTask();
-                mAsyncTask.execute(mHomeLocalityRequest.build());
+                */
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(TAG, "Error: Status = " + status.toString());
@@ -470,15 +459,13 @@ public class HomeLocality extends AppCompatActivity implements
                         Toast.LENGTH_LONG).show();
                 Log.w("","Null signIn Response");
                 return;
-            }
-
-            else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
+            } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
                 Toast.makeText(getApplicationContext(), "Home Locality Saved Successful!",
                         Toast.LENGTH_LONG).show();
                 finish();
             }
             else {
-                Toast.makeText(HomeLocality.this, "Something went wrong. Please try again later!",
+                Toast.makeText(HomeLocality.this, "Something went wrong while saving. Please try again later!",
                         Toast.LENGTH_LONG).show();
             }
         }

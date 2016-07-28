@@ -7,8 +7,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
-import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,6 +99,7 @@ public class FetchAddressIntentService extends IntentService {
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             errorMessage = getString(R.string.service_not_available);
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
             Log.e(TAG, errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
@@ -123,17 +124,18 @@ public class FetchAddressIntentService extends IntentService {
             // join them, and send them to the thread. The {@link android.location.address}
             // class provides other options for fetching address details that you may prefer
             // to use. Here are some examples:
-            // getLocality() ("Mountain View", for example)
-            // getAdminArea() ("CA", for example)
-            // getPostalCode() ("94043", for example)
-            // getCountryCode() ("US", for example)
-            // getCountryName() ("United States", for example)
+            // getCountryName() ("India", for example)
+            // getLocality() ("Bengaluru", for example)
+            // getSubLocality() ("Green Glen Layout/Bellandur", for example)
+            // getFeatureName() ("Cherry Lane", for example)
+            // getThoroughfare() ("Margosa Avenue", for example)
+            // getSubThroughfare() ("101", for example)
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                System.out.println("AddressLine: "+address.getAddressLine(i));
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, getString(R.string.address_found));
-            deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"), addressFragments));
+            deliverResultToReceiver(Constants.SUCCESS_RESULT, ""+addressFragments.get(addressFragments.size() - 2));
         }
     }
 

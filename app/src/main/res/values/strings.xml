@@ -20,7 +20,7 @@
     <string name="invalid_lat_long_used">Invalid Lat Long used</string>
     <string name="no_address_found">No Address Found for provided Lat/Lng</string>
     <string name="no_location_data_provided">No location data provided</string>
-    <string name="address_found">Address Found for provided Lat/Lng</string>
+    <string name="address_found">Address Located</string>
     <string name="no_geocoder_available">No geo coder available</string>
 
     <string name="google_api_key" templateMergeStrategy="preserve">
