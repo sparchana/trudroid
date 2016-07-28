@@ -22,7 +22,6 @@ import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobRoleResponse;
 
@@ -56,8 +55,34 @@ public class JobPreference extends AppCompatActivity {
         jobPrefOptionTwo = false;
         jobPrefOptionThree = false;
 
+        jobPrefRemoveOne = (ImageView) findViewById(R.id.job_pref_one_remove);
+        jobPrefRemoveTwo = (ImageView) findViewById(R.id.job_pref_two_remove);
+        jobPrefRemoveThree = (ImageView) findViewById(R.id.job_pref_three_remove);
+
         jobRoleGridViewLayout = (LinearLayout) findViewById(R.id.job_role_grid_view_layout);
         jobPrefImageView = (ImageView) findViewById(R.id.job_pref_image_view);
+
+        jobPrefRemoveOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeJobPref(1);
+            }
+        });
+
+        jobPrefRemoveTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeJobPref(2);
+            }
+        });
+
+        jobPrefRemoveThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeJobPref(3);
+            }
+        });
+
         mJobPrefOne = (LinearLayout) findViewById(R.id.job_pref_one);
         mJobPrefTwo = (LinearLayout) findViewById(R.id.job_pref_two);
         mJobPrefThree = (LinearLayout) findViewById(R.id.job_pref_three);
@@ -211,6 +236,24 @@ public class JobPreference extends AppCompatActivity {
             Toast.makeText(JobPreference.this, "Already Selected", Toast.LENGTH_SHORT).show();
             return;
         }
+    }
 
+    public void removeJobPref(int pos){
+        switch (pos){
+            case 1: jobPrefOneImage.setBackgroundResource(R.drawable.edit);
+                mJobPrefTwoText.setText("Add Preference");
+                jobPrefOptionOne = false;
+                jobPrefRemoveOne.setVisibility(View.GONE); break;
+
+            case 2: jobPrefTwoImage.setBackgroundResource(R.drawable.edit);
+                mJobPrefTwoText.setText("Add Preference");
+                jobPrefOptionTwo = false;
+                jobPrefRemoveTwo.setVisibility(View.GONE); break;
+
+            case 3: jobPrefThreeImage.setBackgroundResource(R.drawable.edit);
+                mJobPrefThreeText.setText("Add Preference");
+                jobPrefOptionThree = false;
+                jobPrefRemoveThree.setVisibility(View.GONE);
+        }
     }
 }

@@ -36,8 +36,10 @@
             android:name=".JobActivity"
             android:label="@string/title_activity_job"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".HomeLocality"
-            android:label="@string/title_activity_home"></activity>
+        <activity
+            android:name=".HomeLocality"
+            android:label="@string/title_activity_home" />
+        <activity android:name=".JobDetailActivity"></activity>
     </application>
 
 </manifest>

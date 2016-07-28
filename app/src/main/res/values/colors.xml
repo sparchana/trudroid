@@ -11,4 +11,6 @@
     <color name="back_grey_dark_item">#568bff</color>
     <color name="colorFAB1">#2196F3</color>
     <color name="colorFAB2">#f77032</color>
+    <color name="colorCaution">#e41b10</color>
+    <color name="colorGreen">#09ac58</color>
 </resources>
