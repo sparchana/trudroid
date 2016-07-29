@@ -1,72 +1,63 @@
 package in.trujobs.dev.trudroid.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
+import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.proto.JobPost;
+import in.trujobs.proto.JobRole;
 
 /**
  * Created by batcoder1 on 26/7/16.
  */
-public class JobRoleAdapter extends BaseAdapter {
-    private Context mContext;
-    private final String[] web;
-    private final int[] imageId;
-    private final int[] tick;
+public class JobRoleAdapter extends ArrayAdapter<JobRole> {
 
-    public JobRoleAdapter(Context c,String[] web, int[] imageId, int[] tick) {
-        mContext = c;
-        this.imageId = imageId;
-        this.web = web;
-        this.tick = tick;
+    public JobRoleAdapter(Context context, List<JobRole> jobRoleList) {
+        super(context, 0, jobRoleList);
+    }
+
+    public class Holder
+    {
+        TextView jobRoleTextView;
+        ImageView jobRoleImageView, imageViewTick;
     }
 
     @Override
-    public int getCount() {
-        // TODO Auto-generated method stub
-        return web.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        View grid;
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        Holder holder = new Holder();
+        final JobRole jobRole = getItem(position);
 
         if (convertView == null) {
-            grid = inflater.inflate(R.layout.grid_view_layout, null);
-            TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
-            ImageView imageViewTick = (ImageView)grid.findViewById(R.id.grid_image_tick);
-            textView.setText(web[position]);
-            imageView.setImageResource(imageId[position]);
-            imageViewTick.setImageResource(tick[position]);
-        } else {
-            grid = (View) convertView;
+            convertView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.grid_view_layout, parent, false);
         }
 
-        return grid;
+        Log.e("jobPreference: ", "jobRole: " + jobRole.getJobRoleName());
+
+        holder.jobRoleTextView = (TextView) convertView.findViewById(R.id.grid_text);
+        holder.jobRoleTextView.setText(jobRole.getJobRoleName());
+
+        holder.jobRoleImageView = (ImageView) convertView.findViewById(R.id.grid_image);
+        holder.jobRoleImageView.setImageResource(R.drawable.job_apply);
+
+        holder.imageViewTick = (ImageView) convertView.findViewById(R.id.grid_image_tick);
+        holder.imageViewTick.setImageResource(R.drawable.trans);
+
+        return convertView ;
     }
 }

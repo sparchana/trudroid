@@ -1,7 +1,7 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,7 +24,6 @@ public class JobActivity extends AppCompatActivity
 
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
     ProgressDialog pd;
-    Long[] jobPostId;
     ListView jobPostListView;
 
     @Override

@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp">
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp">
 
         <android.support.v7.widget.CardView
             android:layout_gravity="center"
@@ -49,177 +49,125 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_margin="8dp"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:textAlignment="center"
                         android:id="@+id/job_pref_one"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop"
+                            android:id="@+id/job_pref_one_image_view"
+                            android:background="@drawable/edit"
+                            android:layout_gravity="center" />
 
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:adjustViewBounds="true"
-                                android:scaleType="centerCrop"
-                                android:id="@+id/job_pref_one_image_view"
-                                android:background="@drawable/edit"/>
+                        <ImageView
+                            android:id="@+id/job_pref_one_remove"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:visibility="gone"
+                            android:background="@drawable/wrong"
+                            android:layout_gravity="right|top">
+                        </ImageView>
 
-                        </LinearLayout>
+                    </FrameLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textSize="9dp"
-                            android:id="@+id/job_pref_one_text_view"
-                            android:layout_marginTop="8dp"
-                            android:textAlignment="center"
-                            android:text="Add Job Role" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:visibility="gone"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:id="@+id/job_pref_one_remove"
-                        android:background="@drawable/wrong"/>
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:id="@+id/job_pref_id_one"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="9dp"
+                        android:id="@+id/job_pref_one_text_view"
+                        android:textAlignment="center"
+                        android:text="1st Preference"
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_margin="8dp"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:textAlignment="center"
                         android:id="@+id/job_pref_two"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop"
+                            android:id="@+id/job_pref_two_image_view"
+                            android:background="@drawable/edit"
+                            android:layout_gravity="center" />
 
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:adjustViewBounds="true"
-                                android:scaleType="centerCrop"
-                                android:id="@+id/job_pref_two_image_view"
-                                android:background="@drawable/edit"/>
+                        <ImageView
+                            android:id="@+id/job_pref_two_remove"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:visibility="gone"
+                            android:background="@drawable/wrong"
+                            android:layout_gravity="right|top">
+                        </ImageView>
 
-                        </LinearLayout>
+                    </FrameLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textSize="9dp"
-                            android:id="@+id/job_pref_two_text_view"
-                            android:layout_marginTop="8dp"
-                            android:textAlignment="center"
-                            android:text="Add Job Role" />
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="9dp"
+                        android:id="@+id/job_pref_two_text_view"
+                        android:textAlignment="center"
+                        android:text="2nd Preference" />
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:visibility="gone"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:id="@+id/job_pref_two_remove"
-                        android:background="@drawable/wrong"/>
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:id="@+id/job_pref_id_two"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_margin="8dp"
-                        android:layout_width="0px"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:textAlignment="center"
                         android:id="@+id/job_pref_three"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop"
+                            android:id="@+id/job_pref_three_image_view"
+                            android:background="@drawable/edit"
+                            android:layout_gravity="center" />
 
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:adjustViewBounds="true"
-                                android:scaleType="centerCrop"
-                                android:id="@+id/job_pref_three_image_view"
-                                android:background="@drawable/edit"/>
+                        <ImageView
+                            android:id="@+id/job_pref_three_remove"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/wrong"
+                            android:visibility="gone"
+                            android:layout_gravity="right|top">
+                        </ImageView>
 
-                        </LinearLayout>
+                    </FrameLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textSize="9dp"
-                            android:id="@+id/job_pref_three_text_view"
-                            android:layout_marginTop="8dp"
-                            android:textAlignment="center"
-                            android:text="Add Job Role" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:visibility="gone"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:id="@+id/job_pref_three_remove"
-                        android:background="@drawable/wrong"/>
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:id="@+id/job_pref_id_three"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="9dp"
+                        android:id="@+id/job_pref_three_text_view"
+                        android:textAlignment="center"
+                        android:text="3rd Preference" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -231,48 +179,65 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
         android:id="@+id/job_role_grid_view_layout"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp">
+        android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:layout_gravity="center"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/colorPrimary"
-            card_view:cardCornerRadius="2dp"
-            card_view:contentPadding="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.85"
+            android:orientation="vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Add Preferred Job Roles"
-                android:textAlignment="center"
-                android:textSize="16dp"
-                android:textColor="@color/white"/>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_gravity="center"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            card_view:cardCornerRadius="2dp" >
-
-            <GridView
-                android:numColumns="3"
-                android:gravity="center"
-                android:scrollbars="none"
-                android:columnWidth="100dp"
-                android:stretchMode="columnWidth"
+            <android.support.v7.widget.CardView
+                android:layout_gravity="center"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:id="@+id/grid"
-                />
-        </android.support.v7.widget.CardView>
+                android:layout_height="wrap_content"
+                card_view:cardBackgroundColor="@color/colorPrimary"
+                card_view:cardCornerRadius="2dp"
+                card_view:contentPadding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Preferred Job Roles"
+                    android:textAlignment="center"
+                    android:textSize="16dp"
+                    android:textColor="@color/white"/>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="2dp" >
+
+                <GridView
+                    android:numColumns="3"
+                    android:gravity="center"
+                    android:scrollbars="none"
+                    android:columnWidth="100dp"
+                    android:stretchMode="columnWidth"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:id="@+id/grid" />
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.15"
+            android:id="@+id/add_job_role_pref_btn"
+            android:background="@color/colorPrimary"
+            android:text="Select Location >"
+            android:textColor="@color/white"/>
     </LinearLayout>
+
+
     <ImageView
         android:layout_width="180dp"
         android:layout_height="180dp"

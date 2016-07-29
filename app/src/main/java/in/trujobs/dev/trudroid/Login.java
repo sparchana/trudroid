@@ -3,7 +3,6 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;

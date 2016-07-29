@@ -46,7 +46,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 if(Util.isLoggedIn() == true){
                     finish();
-                    Intent intent = new Intent(SplashScreenActivity.this, JobActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, JobPreference.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 } else{

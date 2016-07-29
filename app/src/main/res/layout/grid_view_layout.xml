@@ -5,25 +5,25 @@
     android:padding="8dp"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/grid_image"
             android:layout_width="50dp"
+            android:background="@drawable/job_apply"
             android:layout_height="50dp">
         </ImageView>
 
         <ImageView
             android:id="@+id/grid_image_tick"
             android:layout_width="16dp"
-            android:layout_marginLeft="-16dp"
+            android:layout_gravity="right"
             android:layout_height="16dp">
         </ImageView>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/grid_text"

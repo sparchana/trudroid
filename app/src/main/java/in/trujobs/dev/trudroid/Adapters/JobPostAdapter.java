@@ -45,7 +45,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPost> {
     @Override
     public View getView(int position, View rowView, ViewGroup parent) {
         Holder holder = new Holder();
-        final JobPost jobPost= getItem(position);
+        final JobPost jobPost = getItem(position);
         if(rowView == null) {
             rowView = LayoutInflater.from(getContext()).inflate(
                     R.layout.job_list_view_item, parent, false);

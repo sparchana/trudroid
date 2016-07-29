@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import in.trujobs.proto.AddJobRoleRequest;
+import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.JobPostResponse;
@@ -162,6 +164,23 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return applyJobResponse;
+    }
+
+    public static AddJobRoleResponse addJobPrefs(AddJobRoleRequest addJobRoleRequest) {
+        String responseString = postToServer(Config.URL_ADD_JOB_PREFS,
+                Base64.encodeToString(addJobRoleRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        AddJobRoleResponse addJobRoleResponse = null;
+        try {
+            addJobRoleResponse = AddJobRoleResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return addJobRoleResponse;
     }
 
     public static String postToServer(String requestUrl, String request) {
