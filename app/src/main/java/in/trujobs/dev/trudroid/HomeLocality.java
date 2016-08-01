@@ -83,11 +83,6 @@ public class HomeLocality extends AppCompatActivity implements
     private AddressResultReceiver mResultReceiver;
 
     /**
-     * Displays the location address.
-     */
-    protected TextView mLocationAddressTextView;
-
-    /**
      * Visible while the address is being fetched.
      */
     protected ProgressBar mProgressBar;
@@ -116,7 +111,6 @@ public class HomeLocality extends AppCompatActivity implements
 
         mResultReceiver = new AddressResultReceiver(new Handler());
 
-        mLocationAddressTextView = (TextView) findViewById(R.id.location_address_view);
         mSearchHomeLocalityTxtView = (TextView) findViewById(R.id.search_home_locality);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
@@ -197,6 +191,10 @@ public class HomeLocality extends AppCompatActivity implements
      * GoogleApiClient is connected.
      */
     public void saveHomeLocality(View view) {
+        runSubmit();
+    }
+
+    public void runSubmit(){
         if(mAddressOutput != null && mLastLocation != null){
             mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
             mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
@@ -207,7 +205,6 @@ public class HomeLocality extends AppCompatActivity implements
         mAsyncTask = new HomeLocalityAsyncTask();
         mAsyncTask.execute(mHomeLocalityRequest.build());
     }
-
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -220,6 +217,9 @@ public class HomeLocality extends AppCompatActivity implements
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
+                        mAddressRequested = false;
+                        updateUIWidgets();
+                        showToast("GPS not enabled. Please select your locality.");
                     }
                 });
         final AlertDialog alert = builder.create();
@@ -309,7 +309,6 @@ public class HomeLocality extends AppCompatActivity implements
      * Updates the address in the UI.
      */
     protected void displayAddressOutput() {
-        mLocationAddressTextView.setText(mAddressOutput);
         mSearchHomeLocalityTxtView.setText(mAddressOutput);
     }
 
@@ -418,17 +417,20 @@ public class HomeLocality extends AppCompatActivity implements
                 // set final submission data
                 mAddressOutput = place.getName().toString();
                 Log.i(TAG, "gps LastLocation not available. setting to place lat/lng");
-                mLastLocation.setLatitude(place.getLatLng().latitude);
-                mLastLocation.setLongitude(place.getLatLng().longitude);
+                try{
+                    mLastLocation.setLatitude(place.getLatLng().latitude);
+                    mLastLocation.setLongitude(place.getLatLng().longitude);
 
-                mSearchHomeLocalityTxtView.setText(place.getName());
-                /*
-                mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
-                mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-                mHomeLocalityRequest.setPlaceLat( place.getLatLng().latitude);
-                mHomeLocalityRequest.setPlaceLng( place.getLatLng().longitude);
-                mHomeLocalityRequest.setPlaceAddress(place.getAddress().toString());
-                */
+                    mSearchHomeLocalityTxtView.setText(place.getName());
+                }catch (NullPointerException np){
+                    mLastLocation = new Location("");
+                    mLastLocation.setLatitude(place.getLatLng().latitude);
+                    mLastLocation.setLongitude(place.getLatLng().longitude);
+                }
+                // Reset. Enable the Fetch Address button and stop showing the progress bar.
+                mAddressRequested = false;
+                displayAddressOutput();
+                updateUIWidgets();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(TAG, "Error: Status = " + status.toString());
