@@ -43,13 +43,13 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView
+                <AutoCompleteTextView
                     android:layout_width="0dp"
                     android:layout_weight="0.9"
-                    android:id="@+id/search_home_locality"
+                    android:id="@+id/search_home_locality_autocomplete"
                     android:layout_height="wrap_content"
-                    android:text="Location?"
-                    android:textSize="16dp" />
+                    android:hint="Ex: Koramangala"
+                    android:textSize="16dp"/>
 
                 <ImageView
                     android:layout_width="0dp"

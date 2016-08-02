@@ -19,9 +19,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +36,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -73,7 +75,7 @@ public class HomeLocality extends AppCompatActivity implements
     protected boolean mAddressRequested;
 
     /**
-     * The formatted location name.
+     * The formatted address.
      */
     protected String mAddressOutput;
 
@@ -93,7 +95,7 @@ public class HomeLocality extends AppCompatActivity implements
     /**
      * Displays the AutoComplete Selected Locality.
      */
-    protected TextView mSearchHomeLocalityTxtView;
+    protected AutoCompleteTextView mSearchHomeLocalityTxtView;
 
 
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
@@ -111,7 +113,6 @@ public class HomeLocality extends AppCompatActivity implements
 
         mResultReceiver = new AddressResultReceiver(new Handler());
 
-        mSearchHomeLocalityTxtView = (TextView) findViewById(R.id.search_home_locality);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
 
@@ -120,18 +121,20 @@ public class HomeLocality extends AppCompatActivity implements
         mAddressOutput = "";
         updateValuesFromBundle(savedInstanceState);
 
+        mSearchHomeLocalityTxtView = (AutoCompleteTextView) findViewById(R.id.search_home_locality_autocomplete);
+        mSearchHomeLocalityTxtView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.place_autocomplete_list_item));
+        mSearchHomeLocalityTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get data associated with the specified position
+                // in the list (AdapterView)
+                mAddressOutput = (String) parent.getItemAtPosition(position);
+            }
+        });
         updateUIWidgets();
         buildGoogleApiClient();
 
         // Open the autocomplete activity when the button is clicked.
-        TextView txtHomeLocality = (TextView) findViewById(R.id.search_home_locality);
-        assert txtHomeLocality != null;
-        txtHomeLocality.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                triggerGooglePlaceAutocompleteAPI();
-            }
-        });
     }
 
     /**
@@ -194,16 +197,21 @@ public class HomeLocality extends AppCompatActivity implements
         runSubmit();
     }
 
-    public void runSubmit(){
-        if(mAddressOutput != null && mLastLocation != null){
-            mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
-            mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-            mHomeLocalityRequest.setName(mAddressOutput);
-            mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
-            mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+    public void runSubmit() {
+        if(mAddressOutput == null || mAddressOutput.trim().isEmpty()){
+            mSearchHomeLocalityTxtView.setText("");
+            mSearchHomeLocalityTxtView.didTouchFocusSelect();
+            showToast("Please select locality within Bengaluru.");
+        } else if(mLastLocation != null) {
+                mSearchHomeLocalityTxtView.setText(mAddressOutput);
+                mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
+                mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
+                mHomeLocalityRequest.setAddress(mAddressOutput);
+                mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
+                mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+            mAsyncTask = new HomeLocalityAsyncTask();
+            mAsyncTask.execute(mHomeLocalityRequest.build());
         }
-        mAsyncTask = new HomeLocalityAsyncTask();
-        mAsyncTask.execute(mHomeLocalityRequest.build());
     }
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -376,7 +384,7 @@ public class HomeLocality extends AppCompatActivity implements
             // builder checks this and throws an exception if it is not the case.
             // Autocomplete Filter. Check for different types of filter
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
                     .build();
 
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -422,7 +430,7 @@ public class HomeLocality extends AppCompatActivity implements
                     mLastLocation.setLongitude(place.getLatLng().longitude);
 
                     mSearchHomeLocalityTxtView.setText(place.getName());
-                }catch (NullPointerException np){
+                } catch (NullPointerException np){
                     mLastLocation = new Location("");
                     mLastLocation.setLatitude(place.getLatLng().latitude);
                     mLastLocation.setLongitude(place.getLatLng().longitude);
