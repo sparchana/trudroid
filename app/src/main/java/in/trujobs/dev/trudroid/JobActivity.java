@@ -1,8 +1,9 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,12 +11,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobPostResponse;
 
@@ -24,8 +28,8 @@ public class JobActivity extends AppCompatActivity
 
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
     ProgressDialog pd;
-    Long[] jobPostId;
     ListView jobPostListView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,15 @@ public class JobActivity extends AppCompatActivity
         setContentView(R.layout.activity_job);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewDialog alert = new ViewDialog();
+                alert.showDialog(JobActivity.this, "Complete Assessment", "Increase your chance of getting a job by 50%", "Call us to know more!", R.drawable.assesment, 1);
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -61,24 +74,6 @@ public class JobActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.job, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private class JobPostAsyncTask extends AsyncTask<Void,
             Void, JobPostResponse> {
 
@@ -99,13 +94,14 @@ public class JobActivity extends AppCompatActivity
         protected void onPostExecute(JobPostResponse jobPostResponse) {
             super.onPostExecute(jobPostResponse);
             pd.cancel();
+            jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
             if (jobPostResponse == null) {
-                Toast.makeText(JobActivity.this, "No Jobs available right now. Please try again.",
-                        Toast.LENGTH_LONG).show();
-                Log.w("","Null signIn Response");
+                ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
+                errorImageView.setVisibility(View.VISIBLE);
+                jobPostListView.setVisibility(View.GONE);
+                Log.w("","Null JobPosts Response");
                 return;
             } else {
-                jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
                 Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
                 JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
                 jobPostListView.setAdapter(jobPostAdapter);
@@ -116,25 +112,28 @@ public class JobActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        if (id == R.id.nav_logout) {
+            Prefs.onLogout();
+            Toast.makeText(JobActivity.this, "Logout Successful",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        } else if (id == R.id.nav_my_jobs) {
+            Intent intent = new Intent(JobActivity.this, JobPreference.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        } else if (id == R.id.nav_profile) {
+            Intent intent = new Intent(JobActivity.this, CandidateInfoActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        }
+
         return true;
     }
 }

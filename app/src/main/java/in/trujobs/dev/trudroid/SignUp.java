@@ -1,13 +1,12 @@
 package in.trujobs.dev.trudroid;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,9 +16,6 @@ import android.widget.Toast;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.dev.trudroid.api.ServerConstants;
-import in.trujobs.proto.LogInRequest;
-import in.trujobs.proto.LogInResponse;
 import in.trujobs.proto.SignUpRequest;
 import in.trujobs.proto.SignUpResponse;
 
@@ -28,6 +24,7 @@ public class SignUp extends AppCompatActivity {
     private AsyncTask<SignUpRequest, Void, SignUpResponse> mAsyncTask;
     EditText mName;
     EditText mMobile;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +95,10 @@ public class SignUp extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = new ProgressDialog(SignUp.this,R.style.SpinnerTheme);
+            pd.setCancelable(false);
+            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            pd.show();
         }
 
         @Override
@@ -109,6 +110,7 @@ public class SignUp extends AppCompatActivity {
         protected void onPostExecute(SignUpResponse signUpResponse) {
             super.onPostExecute(signUpResponse);
             mAsyncTask = null;
+            pd.cancel();
             if (signUpResponse == null) {
                 Toast.makeText(SignUp.this, "Failed to Login. Please try again.",
                         Toast.LENGTH_LONG).show();

@@ -29,4 +29,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:9.2.1'
     compile 'com.google.android.gms:play-services-location:9.2.1'
     compile 'in.trujobs.proto:tru-proto:1.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

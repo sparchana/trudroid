@@ -42,7 +42,4 @@
                 android:textColor="@color/colorPrimary"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
-
-
 </LinearLayout>

@@ -4,33 +4,25 @@
     <group>
         <item
             android:id="@+id/nav_search"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/search"
             android:title="Search" />
 
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/profile"
             android:title="My profile" />
 
         <item
             android:id="@+id/nav_my_jobs"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/jobs"
             android:title="My Jobs" />
 
-        <item
-            android:id="@+id/nav_my_updates"
-            android:icon="@drawable/ic_menu_share"
-            android:title="My Updates" />
-        <item
-            android:id="@+id/nav_invite"
-            android:icon="@drawable/ic_menu_share"
-            android:title="Invite Friends" />
     </group>
 
     <group>
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/exit"
             android:title="Logout" />
     </group>
 

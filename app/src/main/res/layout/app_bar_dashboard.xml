@@ -39,7 +39,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="@dimen/fab_margin"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorFAB2"
+        app:backgroundTint="@color/colorOrange"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         android:src="@android:drawable/ic_popup_reminder" />
@@ -52,7 +52,7 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:visibility="invisible"
         app:elevation="6dp"
-        app:backgroundTint="@color/colorFAB2"
+        app:backgroundTint="@color/colorOrange"
         app:pressedTranslationZ="12dp"
         android:src="@android:drawable/ic_popup_reminder" />
     <android.support.design.widget.FloatingActionButton

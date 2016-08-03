@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-public class JoinNow extends AppCompatActivity {
+public class WelcomeScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join_now);
+        setContentView(R.layout.activity_welcome_screen);
 
         getSupportActionBar().hide();
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.linear_layout_join_now);
@@ -28,7 +28,7 @@ public class JoinNow extends AppCompatActivity {
         homeLocality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(JoinNow.this, HomeLocality.class);
+                Intent intent = new Intent(WelcomeScreen.this, HomeLocality.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
@@ -36,7 +36,7 @@ public class JoinNow extends AppCompatActivity {
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(JoinNow.this, Login.class);
+                Intent intent = new Intent(WelcomeScreen.this, Login.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
@@ -44,7 +44,7 @@ public class JoinNow extends AppCompatActivity {
 
         buttonJoinNow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(JoinNow.this, SignUp.class);
+                Intent intent = new Intent(WelcomeScreen.this, SignUp.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }

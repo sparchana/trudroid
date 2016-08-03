@@ -3,7 +3,6 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -100,7 +100,6 @@ public class Login extends AppCompatActivity {
             pd.setCancelable(false);
             pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
-
         }
 
         @Override
@@ -141,7 +140,17 @@ public class Login extends AppCompatActivity {
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
                 Prefs.sessionId.put(logInResponse.getSessionId());
                 Prefs.sessionExpiry.put(logInResponse.getSessionExpiryMillis());
-                Intent intent = new Intent(Login.this, JobActivity.class);
+                Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
+                Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
+
+                Intent intent;
+                if(Prefs.candidateJobPrefStatus.get() == 0){
+                    intent = new Intent(Login.this, JobPreference.class);
+                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                    intent = new Intent(Login.this, HomeLocality.class);
+                } else{
+                    intent = new Intent(Login.this, JobActivity.class);
+                }
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 finish();
