@@ -113,6 +113,7 @@ public class EnterPassword extends AppCompatActivity {
                 } else{
                     intent = new Intent(EnterPassword.this, JobActivity.class);
                 }
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 finish();

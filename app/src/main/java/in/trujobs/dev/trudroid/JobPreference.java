@@ -302,7 +302,11 @@ public class JobPreference extends AppCompatActivity {
             mJobPrefThree = (FrameLayout) findViewById(R.id.job_pref_three);
 
             if(!jobPrefOptionOne){
-                Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefOneImage);
+                if(jobRoleResponse.getJobRole(pos).getJobRoleIcon() == ""){
+                    Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefOneImage);
+                } else{
+                    Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefOneImage);
+                }
                 mJobPrefOneText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveOne.setVisibility(View.VISIBLE);
                 jobPrefOptionOne = true;
@@ -311,14 +315,22 @@ public class JobPreference extends AppCompatActivity {
                 saveJobPrefBtn.setBackgroundResource(R.color.colorPrimary);
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionTwo){
-                Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefTwoImage);
+                if(jobRoleResponse.getJobRole(pos).getJobRoleIcon() == ""){
+                    Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefTwoImage);
+                } else{
+                    Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefTwoImage);
+                }
                 mJobPrefTwoText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveTwo.setVisibility(View.VISIBLE);
                 jobPrefOptionTwo = true;
                 jobPrefTwo = jobRoleResponse.getJobRole(pos).getJobRoleId();
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionThree){
-                Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefThreeImage);
+                if(jobRoleResponse.getJobRole(pos).getJobRoleIcon() == ""){
+                    Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefThreeImage);
+                } else{
+                    Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefThreeImage);
+                }
                 mJobPrefThreeText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveThree.setVisibility(View.VISIBLE);
                 jobPrefOptionThree = true;
