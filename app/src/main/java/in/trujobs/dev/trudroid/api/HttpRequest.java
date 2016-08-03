@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobPostResponse;
@@ -127,7 +128,7 @@ public class HttpRequest {
         JobPostResponse.Builder requestBuilder =
                 JobPostResponse.newBuilder();
 
-        String responseString = postToServer(Config.URL_ALL_JOB_POSTS,
+        String responseString = postToServer(Config.URL_MATCHING_JOB_POSTS + "/"+ Prefs.candidateMobile.get(),
                 Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);

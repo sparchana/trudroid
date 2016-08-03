@@ -139,6 +139,8 @@ public class Login extends AppCompatActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
+                Prefs.sessionId.put(logInResponse.getSessionId());
+                Prefs.sessionExpiry.put(logInResponse.getSessionExpiryMillis());
                 Intent intent = new Intent(Login.this, JobActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);

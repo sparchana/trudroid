@@ -10,14 +10,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.proto.JobPost;
+import in.trujobs.proto.JobPostObject;
 
 /**
  * Created by batcoder1 on 27/7/16.
  */
-public class JobPostAdapter extends ArrayAdapter<JobPost> {
+public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
-    public JobPostAdapter(Activity context, List<JobPost> jobPostList) {
+    public JobPostAdapter(Activity context, List<JobPostObject> jobPostList) {
         super(context, 0, jobPostList);
     }
     public class Holder
@@ -28,7 +28,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPost> {
     @Override
     public View getView(int position, View rowView, ViewGroup parent) {
         Holder holder = new Holder();
-        JobPost jobPost= getItem(position);
+        JobPostObject jobPost= getItem(position);
         if(rowView == null) {
             rowView = LayoutInflater.from(getContext()).inflate(
                     R.layout.job_list_view_item, parent, false);

@@ -17,8 +17,8 @@ public class Prefs {
     public static final File.SharedPreference<Integer> candidateMinProfile = sFile.intValue("candidateMinProfile", 0);
     public static final File.SharedPreference<Integer> candidateGender = sFile.intValue("candidateGender", 0);
     public static final File.SharedPreference<Integer> isAssessed = sFile.intValue("isAssessed", 0);
-    public static final File.SharedPreference<String> userSessionId = sFile.stringValue("userSessionId", "");
-    public static final File.SharedPreference<Long> userSessionIdExpiryMillis = sFile.longValue("userSessionIdExpiryMillis", 0L);
+    public static final File.SharedPreference<String> sessionId = sFile.stringValue("sessionId", "");
+    public static final File.SharedPreference<Long> sessionExpiry = sFile.longValue("sessionExpiry", 0L);
 
     public static final File.SharedPreference<Integer> storedOtp = sFile.intValue("storedOtp", 0);
 
@@ -32,10 +32,17 @@ public class Prefs {
         Prefs.candidateMinProfile.remove();
         Prefs.isAssessed.remove();
         Prefs.storedOtp.remove();
+        Prefs.sessionId.remove();
+        Prefs.sessionExpiry.remove();
     }
 
-    public static void onLogin(long leadId) {
+    /* TODO maintain session and authToken across server and app */
+    public static void onLogin(long leadId, long candidateId, String sessionId,
+                                long sessionExpiry) {
         Prefs.leadId.put(leadId);
+        Prefs.candidateId.put(candidateId);
+        Prefs.sessionId.put(sessionId);
+        Prefs.sessionExpiry.put(sessionExpiry);
     }
 
     public static class File {
