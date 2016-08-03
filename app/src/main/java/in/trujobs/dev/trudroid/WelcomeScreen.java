@@ -19,12 +19,21 @@ public class WelcomeScreen extends AppCompatActivity {
 
         Button buttonLogin = (Button) findViewById(R.id.login_now_btn);
         Button buttonJoinNow = (Button) findViewById(R.id.join_now_btn);
+        Button buttonSkip = (Button) findViewById(R.id.skip_btn);
 
         relativeLayout.setBackgroundResource(R.drawable.join_now_background);
         AnimationDrawable backgroundAnimation = (AnimationDrawable) relativeLayout.getBackground();
         backgroundAnimation.start();
 
-            buttonLogin.setOnClickListener(new View.OnClickListener() {
+        buttonSkip.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(WelcomeScreen.this, JobActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+            }
+        });
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(WelcomeScreen.this, Login.class);
                 startActivity(intent);

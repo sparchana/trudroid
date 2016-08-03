@@ -143,17 +143,22 @@ public class Login extends AppCompatActivity {
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
 
-                Intent intent;
-                if(Prefs.candidateJobPrefStatus.get() == 0){
-                    intent = new Intent(Login.this, JobPreference.class);
-                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
-                    intent = new Intent(Login.this, HomeLocality.class);
+                if(Prefs.loginCheckStatus.get() == 1){
+                    finish();
                 } else{
-                    intent = new Intent(Login.this, JobActivity.class);
+                    Intent intent;
+                    if(Prefs.candidateJobPrefStatus.get() == 0){
+                        intent = new Intent(Login.this, JobPreference.class);
+                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        intent = new Intent(Login.this, HomeLocality.class);
+                    } else{
+                        intent = new Intent(Login.this, JobActivity.class);
+                    }
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
                 }
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                finish();
+
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 Toast.makeText(Login.this, "Incorrect password. Click \"Forgot Password\" to reset",

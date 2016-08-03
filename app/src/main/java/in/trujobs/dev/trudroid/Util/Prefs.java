@@ -25,6 +25,7 @@ public class Prefs {
 
     public static final File.SharedPreference<Integer> candidateJobPrefStatus = sFile.intValue("candidateJobPrefStatus", 0);
     public static final File.SharedPreference<Integer> candidateHomeLocalityStatus = sFile.intValue("candidateHomeLocalityStatus", 0);
+    public static final File.SharedPreference<Integer> loginCheckStatus = sFile.intValue("loginCheckStatus", 0);
 
     public static void onLogout() {
         Prefs.leadId.remove();

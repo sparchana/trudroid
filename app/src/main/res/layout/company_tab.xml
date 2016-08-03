@@ -261,8 +261,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
+        android:id="@+id/apply_btn_job_details"
         android:gravity="center|bottom"
         android:orientation="vertical" >
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -272,4 +274,5 @@
             android:text="Apply"
             android:textColor="#ffffff"/>
     </LinearLayout>
+
 </LinearLayout>
