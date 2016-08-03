@@ -102,9 +102,13 @@ public class JobActivity extends AppCompatActivity
                 Log.w("","Null JobPosts Response");
                 return;
             } else {
-                Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
-                JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
-                jobPostListView.setAdapter(jobPostAdapter);
+                if(jobPostResponse.getJobPostList().size() > 0){
+                    Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
+                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
+                    jobPostListView.setAdapter(jobPostAdapter);
+                } else {
+                    showToast("No jobs found in your locality");
+                }
             }
         }
     }
@@ -135,5 +139,12 @@ public class JobActivity extends AppCompatActivity
         }
 
         return true;
+    }
+
+    /**
+     * Shows a toast with the given text.
+     */
+    protected void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }
