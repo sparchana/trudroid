@@ -471,8 +471,10 @@ public class HomeLocality extends AppCompatActivity implements
                 Log.w("","Null Response");
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Toast.makeText(getApplicationContext(), "Home Locality Saved Successful!",
-                        Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(HomeLocality.this, JobActivity.class);
+                Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 finish();
             }
             else {
