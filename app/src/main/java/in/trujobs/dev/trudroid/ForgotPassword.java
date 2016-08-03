@@ -49,18 +49,15 @@ public class ForgotPassword extends AppCompatActivity {
         requestBuilder.setMobile(mUserMobile.getText().toString());
         Prefs.candidateMobile.put(mUserMobile.getText().toString());
 
-        int check = 1;
         if(Util.isValidMobile(requestBuilder.getMobile()) == false){
-            Toast.makeText(ForgotPassword.this, "Enter a valid mobile number",
+            Toast.makeText(ForgotPassword.this, "Enter a valid 10 digit mobile number",
                     Toast.LENGTH_LONG).show();
-            check = 0;
-        }
-        if(check == 1){
+        } else {
             if (mAsyncTask != null) {
                 mAsyncTask.cancel(true);
             }
             mAsyncTask = new ResetPasswordRequestAsyncTask();
-             mAsyncTask.execute(requestBuilder.build());
+            mAsyncTask.execute(requestBuilder.build());
         }
     }
 

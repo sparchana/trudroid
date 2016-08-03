@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".JoinNow"
+            android:name=".WelcomeScreen"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Login"

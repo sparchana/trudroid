@@ -3,7 +3,7 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
-import android.support.v7.app.ActionBar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
 import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
@@ -142,7 +141,7 @@ public class JobPreference extends AppCompatActivity {
                 Prefs.onLogout();
                 Toast.makeText(JobPreference.this, "Logout Successful",
                         Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(JobPreference.this, JoinNow.class);
+                Intent intent = new Intent(JobPreference.this, WelcomeScreen.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 return true;
@@ -278,11 +277,18 @@ public class JobPreference extends AppCompatActivity {
 
             else {
                 if(addJobRoleResponse.getStatusValue() == 1){
-                    Intent intent = new Intent(JobPreference.this, HomeLocality.class);
+                    Intent intent;
+                    Prefs.candidateJobPrefStatus.put(1);
+                    if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        intent = new Intent(JobPreference.this, HomeLocality.class);
+                    } else{
+                        intent = new Intent(JobPreference.this, JobActivity.class);
+                    }
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
                 } else{
-                    Toast.makeText(JobPreference.this, "Request Failed. Please try again.",
+                    Toast.makeText(JobPreference.this, "Something went wrong. Please try again later",
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -297,7 +303,7 @@ public class JobPreference extends AppCompatActivity {
             mJobPrefThree = (FrameLayout) findViewById(R.id.job_pref_three);
 
             if(!jobPrefOptionOne){
-                Picasso.with(getApplicationContext()).load("https://s3.amazonaws.com/trujobs.in/companyLogos/sent.png").into(jobPrefOneImage);
+                Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefOneImage);
                 mJobPrefOneText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveOne.setVisibility(View.VISIBLE);
                 jobPrefOptionOne = true;
@@ -306,14 +312,14 @@ public class JobPreference extends AppCompatActivity {
                 saveJobPrefBtn.setBackgroundResource(R.color.colorPrimary);
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionTwo){
-                Picasso.with(getApplicationContext()).load("https://s3.amazonaws.com/trujobs.in/companyLogos/sent.png").into(jobPrefTwoImage);
+                Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefTwoImage);
                 mJobPrefTwoText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveTwo.setVisibility(View.VISIBLE);
                 jobPrefOptionTwo = true;
                 jobPrefTwo = jobRoleResponse.getJobRole(pos).getJobRoleId();
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionThree){
-                Picasso.with(getApplicationContext()).load("https://s3.amazonaws.com/trujobs.in/companyLogos/sent.png").into(jobPrefThreeImage);
+                Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefThreeImage);
                 mJobPrefThreeText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveThree.setVisibility(View.VISIBLE);
                 jobPrefOptionThree = true;

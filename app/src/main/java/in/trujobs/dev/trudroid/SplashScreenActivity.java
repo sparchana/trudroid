@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -18,8 +19,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         if (!Util.isConnectedToInternet(this)) {
-/*            ViewDialog alert = new ViewDialog();
-            alert.showDialog(SplashScreenActivity.this, "No Internet", R.drawable.job_apply);*/
             Toast.makeText(SplashScreenActivity.this, "No internet connection. Please check your network settings.",
                     Toast.LENGTH_LONG).show();
             new Handler().postDelayed(closeSplashRunnable(), SPLASH_TIME_OUT);
@@ -43,15 +42,22 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if(Util.isLoggedIn() == true){
-                    finish();
-                    Intent intent = new Intent(SplashScreenActivity.this, JobActivity.class);
+                    Intent intent;
+                    if(Prefs.candidateJobPrefStatus.get() == 0){
+                        intent = new Intent(SplashScreenActivity.this, JobPreference.class);
+                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        intent = new Intent(SplashScreenActivity.this, HomeLocality.class);
+                    } else{
+                        intent = new Intent(SplashScreenActivity.this, JobActivity.class);
+                    }
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
                 } else{
-                    finish();
-                    Intent intent = new Intent(SplashScreenActivity.this, JoinNow.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, WelcomeScreen.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
                 }
             }
         };

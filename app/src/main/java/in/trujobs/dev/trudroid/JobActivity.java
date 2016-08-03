@@ -14,20 +14,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.Collections;
-import java.util.List;
-
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobPostResponse;
 
 public class JobActivity extends AppCompatActivity
@@ -128,7 +123,7 @@ public class JobActivity extends AppCompatActivity
             Prefs.onLogout();
             Toast.makeText(JobActivity.this, "Logout Successful",
                     Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(JobActivity.this, JoinNow.class);
+            Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_my_jobs) {

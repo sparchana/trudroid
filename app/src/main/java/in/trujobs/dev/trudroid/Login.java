@@ -138,7 +138,17 @@ public class Login extends AppCompatActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
-                Intent intent = new Intent(Login.this, JobActivity.class);
+                Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
+                Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
+
+                Intent intent;
+                if(Prefs.candidateJobPrefStatus.get() == 0){
+                    intent = new Intent(Login.this, JobPreference.class);
+                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                    intent = new Intent(Login.this, HomeLocality.class);
+                } else{
+                    intent = new Intent(Login.this, JobActivity.class);
+                }
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 finish();
