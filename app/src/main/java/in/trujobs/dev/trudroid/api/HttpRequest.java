@@ -148,11 +148,8 @@ public class HttpRequest {
                     jobPostResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {}
 
-        if (jobPostResponse != null && jobPostResponse.getJobPostCount() > 0) {
-            return jobPostResponse;
-        } else {
-            return null;
-        }
+
+        return jobPostResponse;
     }
 
     public static ApplyJobResponse applyJob(ApplyJobRequest applyJobRequest) {
