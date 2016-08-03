@@ -160,7 +160,7 @@ public class JobDetailActivity extends AppCompatActivity {
                 }
                 jobPostLocation.setText(localities);
                 jobPostJobTitle.setText(getJobPostDetailsResponse.getJobPost().getJobPostTitle());
-                jobPostExperience.setText(getJobPostDetailsResponse.getJobPost().getJobPostExperience().getExperienceType());
+                jobPostExperience.setText(getJobPostDetailsResponse.getJobPost().getJobPostExperience().getExperienceType() + " experience");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(getJobPostDetailsResponse.getJobPost().getJobPostCreationMillis());
                 int mYear = calendar.get(Calendar.YEAR);
@@ -168,42 +168,38 @@ public class JobDetailActivity extends AppCompatActivity {
                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
                 jobPostPostedOn.setText("Posted on: " + mDay + "-" + mMonth + "-" + mYear);
 
-                if(getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays() != null){
+                if(getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays() != "") {
                     String daysOff = "";
-                    Log.i("------------", getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays());
-                    if(!getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays().trim().equalsIgnoreCase("null")){
-                        Integer NoOfWorkingDays = Integer.parseInt(getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays());
-                        String workingDays = Integer.toString(NoOfWorkingDays, 2) + "";
-                        if(workingDays.length() > 7) {
-                            workingDays = workingDays.substring(2, 8);
-                        }
+                    String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
+                    if (workingDays.length() > 7) {
+                        workingDays = workingDays.substring(2, 8);
+                    }
 
-                        for(int i=0; i<7; i++){
-                            char c = workingDays.charAt(i);
-                            if(c == '0'){ //checking an off day
-                                if(i == 0){
-                                    daysOff += "Mon,";
-                                } else if(i == 1){
-                                    daysOff += "Tue,";
-                                } else if(i == 2){
-                                    daysOff += "Wed,";
-                                } else if(i == 3){
-                                    daysOff += "Thurs,";
-                                } else if(i == 4){
-                                    daysOff += "Friday,";
-                                } else if(i == 5){
-                                    daysOff += "Sat,";
-                                } else if(i == 6){
-                                    daysOff += "Sun,";
-                                }
+                    for (int i = 0; i < 7; i++) {
+                        char c = workingDays.charAt(i);
+                        if (c == '0') { //checking an off day
+                            if (i == 0) {
+                                daysOff += "Mon,";
+                            } else if (i == 1) {
+                                daysOff += "Tue,";
+                            } else if (i == 2) {
+                                daysOff += "Wed,";
+                            } else if (i == 3) {
+                                daysOff += "Thu,";
+                            } else if (i == 4) {
+                                daysOff += "Fri,";
+                            } else if (i == 5) {
+                                daysOff += "Sat,";
+                            } else if (i == 6) {
+                                daysOff += "Sun,";
                             }
                         }
-                        jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length()-1)) + " off");
                     }
-                    else{
-                        jobPostWorkingDays.setText("Off days not available");
-                    }
+                    jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length() - 1)) + " holiday");
+                } else{
+                    jobPostWorkingDays.setText("Off days not available");
                 }
+
 
                 if(getJobPostDetailsResponse.getJobPost().getJobPostStartTime() != -1){
                     String start = "";

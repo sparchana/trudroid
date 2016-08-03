@@ -51,13 +51,10 @@ public class EnterPassword extends AppCompatActivity {
         requestBuilder.setCandidateMobile(Prefs.candidateMobile.get().toString());
         requestBuilder.setCandidatePassword(mUserNewPassword.getText().toString());
 
-        int check = 1;
         if(Util.isValidPassword(requestBuilder.getCandidatePassword()) == false){
-            Toast.makeText(EnterPassword.this, "Enter a password of minimum 6 characters",
+            Toast.makeText(EnterPassword.this, "Enter a password of minimum 4 characters",
                     Toast.LENGTH_LONG).show();
-            check = 0;
-        }
-        if(check == 1){
+        } else{
             if (mAsyncTask != null) {
                 mAsyncTask.cancel(true);
             }
