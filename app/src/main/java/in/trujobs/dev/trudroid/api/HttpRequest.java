@@ -20,6 +20,10 @@ import in.trujobs.proto.AddJobRoleRequest;
 import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
+import in.trujobs.proto.CandidateInformationRequest;
+import in.trujobs.proto.GetCandidateInformationResponse;
+import in.trujobs.proto.GetJobPostDetailsRequest;
+import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.LogInRequest;
@@ -181,6 +185,44 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return addJobRoleResponse;
+    }
+
+    public static GetCandidateInformationResponse getCandidateInfo(CandidateInformationRequest candidateInformationRequest){
+        String responseString = postToServer(Config.URL_GET_CANDIDATE_INFO,
+                Base64.encodeToString(candidateInformationRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GetCandidateInformationResponse getCandidateInformationResponse = null;
+        try {
+            getCandidateInformationResponse =
+                    getCandidateInformationResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {}
+
+        if (getCandidateInformationResponse != null) {
+            return getCandidateInformationResponse;
+        } else {
+            return null;
+        }
+    }
+
+    public static GetJobPostDetailsResponse getJobPostDetails(GetJobPostDetailsRequest getJobPostDetailsRequest) {
+        String responseString = postToServer(Config.URL_JOB_POST_DETAILS,
+                Base64.encodeToString(getJobPostDetailsRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GetJobPostDetailsResponse getJobPostDetailsResponse = null;
+        try {
+            getJobPostDetailsResponse = GetJobPostDetailsResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return getJobPostDetailsResponse;
     }
 
     public static String postToServer(String requestUrl, String request) {

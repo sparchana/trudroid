@@ -1,15 +1,15 @@
 package in.trujobs.dev.trudroid.Adapters;
 
+/**
+ * Created by batcoder1 on 2/8/16.
+ */
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import in.trujobs.dev.trudroid.CompanyTabFragment;
-import in.trujobs.dev.trudroid.JobTabFragment;
-
-/**
- * Created by batcoder1 on 28/7/16.
- */
+import in.trujobs.dev.trudroid.CompanyFragmentTab;
+import in.trujobs.dev.trudroid.JobFragmentTab;
+import in.trujobs.dev.trudroid.OtherJobFragmentTab;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
@@ -24,11 +24,14 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                JobTabFragment jobTabFragment = new JobTabFragment();
-                return jobTabFragment;
+                JobFragmentTab jobFragmentTab = new JobFragmentTab();
+                return jobFragmentTab;
             case 1:
-                CompanyTabFragment companyTabFragment = new CompanyTabFragment();
-                return companyTabFragment;
+                CompanyFragmentTab companyFragmentTab = new CompanyFragmentTab();
+                return companyFragmentTab;
+/*            case 2:
+                OtherJobFragmentTab otherJobFragmentTab = new OtherJobFragmentTab();
+                return otherJobFragmentTab;*/
             default:
                 return null;
         }

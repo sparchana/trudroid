@@ -9,6 +9,7 @@ import android.util.Base64;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +47,7 @@ public class Util {
     }
 
     public static boolean isValidPassword(String pass) {
-        if (pass != null && pass.length() > 5) {
+        if (pass != null && pass.length() > 3) {
             return true;
         }
         return false;

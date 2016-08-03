@@ -1,10 +1,12 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,25 +26,18 @@ public class ForgotPassword extends AppCompatActivity {
 
     private AsyncTask<ResetPasswordRequest, Void, ResetPasswordResponse> mAsyncTask;
     EditText mUserMobile;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        getSupportActionBar().hide();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ImageView forgotPasswordBackArrow = (ImageView) findViewById(R.id.forgot_password_back_arrow);
         Button buttonGetMobile = (Button) findViewById(R.id.add_mobile_reset_password_btn);
-
         buttonGetMobile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 performPasswordReset();
-            }
-        });
-
-        forgotPasswordBackArrow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onBackPressed();
             }
         });
     }
@@ -65,7 +60,7 @@ public class ForgotPassword extends AppCompatActivity {
                 mAsyncTask.cancel(true);
             }
             mAsyncTask = new ResetPasswordRequestAsyncTask();
-            mAsyncTask.execute(requestBuilder.build());
+             mAsyncTask.execute(requestBuilder.build());
         }
     }
 
@@ -74,6 +69,10 @@ public class ForgotPassword extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = new ProgressDialog(ForgotPassword.this,R.style.SpinnerTheme);
+            pd.setCancelable(false);
+            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            pd.show();
         }
 
         @Override
@@ -85,6 +84,7 @@ public class ForgotPassword extends AppCompatActivity {
         protected void onPostExecute(ResetPasswordResponse resetPasswordResponse) {
             super.onPostExecute(resetPasswordResponse);
             mAsyncTask = null;
+            pd.cancel();
             if (resetPasswordResponse == null) {
                 Toast.makeText(ForgotPassword.this, "Failed to Request. Please try again.",
                         Toast.LENGTH_LONG).show();
@@ -106,6 +106,17 @@ public class ForgotPassword extends AppCompatActivity {
                 Toast.makeText(ForgotPassword.this, "Something went wrong. Please try again later!",
                         Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

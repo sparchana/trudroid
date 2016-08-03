@@ -6,28 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.HashMap;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.proto.JobPost;
-import in.trujobs.proto.JobRole;
+import in.trujobs.proto.JobRoleObject;
 
 /**
  * Created by batcoder1 on 26/7/16.
  */
-public class JobRoleAdapter extends ArrayAdapter<JobRole> {
+public class JobRoleAdapter extends ArrayAdapter<JobRoleObject> {
 
-    public JobRoleAdapter(Context context, List<JobRole> jobRoleList) {
+    public JobRoleAdapter(Context context, List<JobRoleObject> jobRoleList) {
         super(context, 0, jobRoleList);
     }
 
@@ -40,7 +33,7 @@ public class JobRoleAdapter extends ArrayAdapter<JobRole> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Holder holder = new Holder();
-        final JobRole jobRole = getItem(position);
+        final JobRoleObject jobRole = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(
@@ -53,7 +46,7 @@ public class JobRoleAdapter extends ArrayAdapter<JobRole> {
         holder.jobRoleTextView.setText(jobRole.getJobRoleName());
 
         holder.jobRoleImageView = (ImageView) convertView.findViewById(R.id.grid_image);
-        holder.jobRoleImageView.setImageResource(R.drawable.job_apply);
+        Picasso.with(getContext()).load(jobRole.getJobRoleIcon()).into(holder.jobRoleImageView);
 
         holder.imageViewTick = (ImageView) convertView.findViewById(R.id.grid_image_tick);
         holder.imageViewTick.setImageResource(R.drawable.trans);

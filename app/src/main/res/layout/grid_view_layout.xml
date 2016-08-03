@@ -12,7 +12,6 @@
         <ImageView
             android:id="@+id/grid_image"
             android:layout_width="50dp"
-            android:background="@drawable/job_apply"
             android:layout_height="50dp">
         </ImageView>
 

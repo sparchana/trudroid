@@ -1,11 +1,13 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -23,14 +25,14 @@ import in.trujobs.proto.LogInResponse;
 public class EnterPassword extends AppCompatActivity {
     EditText mUserNewPassword;
     private AsyncTask<LogInRequest, Void, LogInResponse> mAsyncTask;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
-        getSupportActionBar().hide();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ImageView enterPasswordBackArrow = (ImageView) findViewById(R.id.enter_password_back_arrow);
         Button mAddPasswordBtn = (Button) findViewById(R.id.add_new_password_btn);
 
         mAddPasswordBtn.setOnClickListener(new View.OnClickListener() {
@@ -40,11 +42,6 @@ public class EnterPassword extends AppCompatActivity {
             }
         });
 
-        enterPasswordBackArrow.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
     private void performSavePassword() {
@@ -74,6 +71,10 @@ public class EnterPassword extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = new ProgressDialog(EnterPassword.this,R.style.SpinnerTheme);
+            pd.setCancelable(false);
+            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            pd.show();
         }
 
         @Override
@@ -85,6 +86,7 @@ public class EnterPassword extends AppCompatActivity {
         protected void onPostExecute(LogInResponse logInResponse) {
             super.onPostExecute(logInResponse);
             mAsyncTask = null;
+            pd.cancel();
             if (logInResponse == null) {
                 Toast.makeText(EnterPassword.this, "Failed to Login. Please try again.",
                         Toast.LENGTH_LONG).show();
@@ -108,6 +110,17 @@ public class EnterPassword extends AppCompatActivity {
                 Toast.makeText(EnterPassword.this, "Something went wrong. Please try again later!",
                         Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

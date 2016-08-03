@@ -5,14 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-/**
- * Created by batcoder1 on 28/7/16.
- */
 
-public class CompanyTabFragment extends Fragment {
+/**
+ * Created by batcoder1 on 2/8/16.
+ */
+public class JobFragmentTab extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.company_tab, container, false);
+        return inflater.inflate(R.layout.job_tab, container, false);
     }
 }

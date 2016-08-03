@@ -1,5 +1,6 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class SignUp extends AppCompatActivity {
     private AsyncTask<SignUpRequest, Void, SignUpResponse> mAsyncTask;
     EditText mName;
     EditText mMobile;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,10 @@ public class SignUp extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = new ProgressDialog(SignUp.this,R.style.SpinnerTheme);
+            pd.setCancelable(false);
+            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            pd.show();
         }
 
         @Override
@@ -104,6 +110,7 @@ public class SignUp extends AppCompatActivity {
         protected void onPostExecute(SignUpResponse signUpResponse) {
             super.onPostExecute(signUpResponse);
             mAsyncTask = null;
+            pd.cancel();
             if (signUpResponse == null) {
                 Toast.makeText(SignUp.this, "Failed to Login. Please try again.",
                         Toast.LENGTH_LONG).show();

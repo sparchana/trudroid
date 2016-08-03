@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -198,14 +200,17 @@ public class JobPreference extends AppCompatActivity {
             super.onPostExecute(jobRoleResponse);
             mAsyncTask = null;
             pd.cancel();
+            ImageView defaultImage = (ImageView) findViewById(R.id.job_pref_image_view);
+            ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
             if (jobRoleResponse == null) {
-                Toast.makeText(JobPreference.this, "No Job roles available. Please try again.",
-                        Toast.LENGTH_LONG).show();
-                Log.w("","Null signIn Response");
+                errorImageView.setVisibility(View.VISIBLE);
+                defaultImage.setVisibility(View.GONE);
+                Log.w("","Null jobRole Response");
                 return;
             }
 
             else {
+                errorImageView.setVisibility(View.GONE);
                 jobRoleGridViewLayout.setVisibility(View.VISIBLE);
                 jobPrefOneImage = (ImageView) findViewById(R.id.job_pref_one_image_view);
                 jobPrefTwoImage = (ImageView) findViewById(R.id.job_pref_two_image_view);
@@ -292,7 +297,7 @@ public class JobPreference extends AppCompatActivity {
             mJobPrefThree = (FrameLayout) findViewById(R.id.job_pref_three);
 
             if(!jobPrefOptionOne){
-                jobPrefOneImage.setBackgroundResource(R.drawable.job_apply);
+                Picasso.with(getApplicationContext()).load("https://s3.amazonaws.com/trujobs.in/companyLogos/sent.png").into(jobPrefOneImage);
                 mJobPrefOneText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveOne.setVisibility(View.VISIBLE);
                 jobPrefOptionOne = true;
@@ -301,14 +306,14 @@ public class JobPreference extends AppCompatActivity {
                 saveJobPrefBtn.setBackgroundResource(R.color.colorPrimary);
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionTwo){
-                jobPrefTwoImage.setBackgroundResource(R.drawable.job_apply);
+                Picasso.with(getApplicationContext()).load("https://s3.amazonaws.com/trujobs.in/companyLogos/sent.png").into(jobPrefTwoImage);
                 mJobPrefTwoText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveTwo.setVisibility(View.VISIBLE);
                 jobPrefOptionTwo = true;
                 jobPrefTwo = jobRoleResponse.getJobRole(pos).getJobRoleId();
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionThree){
-                jobPrefThreeImage.setBackgroundResource(R.drawable.job_apply);
+                Picasso.with(getApplicationContext()).load("https://s3.amazonaws.com/trujobs.in/companyLogos/sent.png").into(jobPrefThreeImage);
                 mJobPrefThreeText.setText(jobRoleResponse.getJobRole(pos).getJobRoleName());
                 jobPrefRemoveThree.setVisibility(View.VISIBLE);
                 jobPrefOptionThree = true;
@@ -326,7 +331,7 @@ public class JobPreference extends AppCompatActivity {
     public void removeJobPref(int pos){
         saveJobPrefBtn = (Button) findViewById(R.id.add_job_role_pref_btn);
         switch (pos){
-            case 1: jobPrefOneImage.setBackgroundResource(R.drawable.edit);
+            case 1: Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefOneImage);
                 mJobPrefOneText.setText("1st Preference");
                 jobPrefOptionOne = false;
                 jobPrefRemoveOne.setVisibility(View.GONE);
@@ -335,14 +340,14 @@ public class JobPreference extends AppCompatActivity {
                 removeJobPrefValueFromStack(jobPrefOne);
                 jobPrefOne = 0L; break;
 
-            case 2: jobPrefTwoImage.setBackgroundResource(R.drawable.edit);
+            case 2: Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefTwoImage);
                 mJobPrefTwoText.setText("2nd Preference");
                 jobPrefOptionTwo = false;
                 jobPrefRemoveTwo.setVisibility(View.GONE);
                 removeJobPrefValueFromStack(jobPrefTwo);
                 jobPrefTwo = 0L; break;
 
-            case 3: jobPrefThreeImage.setBackgroundResource(R.drawable.edit);
+            case 3: Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefThreeImage);
                 mJobPrefThreeText.setText("3rd Preference");
                 jobPrefOptionThree = false;
                 jobPrefRemoveThree.setVisibility(View.GONE);

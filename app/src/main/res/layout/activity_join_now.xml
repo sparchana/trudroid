@@ -64,18 +64,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:text="@string/join_now_btn_text"
+                android:textSize="18dp"
                 android:id="@+id/join_now_btn"
-                android:background="@color/colorPrimary"
                 style="@style/Widget.AppCompat.Button.Colored" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:text="@string/login_btn_text"
+                android:textSize="18dp"
                 android:id="@+id/login_now_btn"
-                android:textColor="#6ea0f5"
-                android:layout_marginTop="-10dp"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored" />
+                style="@style/Widget.AppCompat.Button.Colored" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:text="I have read and accepted the Terms of Use and the Privacy Policy"/>
         </LinearLayout>
     </LinearLayout>
 

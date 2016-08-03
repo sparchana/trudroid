@@ -1,6 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.Util;
-import in.trujobs.dev.trudroid.api.ServerConstants;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -46,7 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 if(Util.isLoggedIn() == true){
                     finish();
-                    Intent intent = new Intent(SplashScreenActivity.this, JobPreference.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, JobActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 } else{

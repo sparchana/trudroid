@@ -100,7 +100,6 @@ public class Login extends AppCompatActivity {
             pd.setCancelable(false);
             pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
-
         }
 
         @Override
