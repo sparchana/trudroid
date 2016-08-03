@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">Trudroid</string>
+    <string name="app_name">TruJobs</string>
+    <string name="skip_btn_text">Skip ></string>
+    <string name="join_now_btn_text">Join Now</string>
+    <string name="login_btn_text">Login</string>
+    <string name="signup_btn_text">Sign Up</string>
+    <string name="help_text_login_mobile">Mobile Number</string>
+    <string name="help_text_login_password">Password</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_job">Jobs</string>
+    <string name="title_activity_home">Home Locality</string>
 </resources>
