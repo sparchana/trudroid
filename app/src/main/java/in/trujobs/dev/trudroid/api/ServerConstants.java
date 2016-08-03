@@ -20,4 +20,6 @@ public class ServerConstants {
     public static final int JOB_APPLY_NO_CANDIDATE = 4;
     public static final int JOB_APPLY_NO_JOB = 4;
 
+    public static Integer HOMELOCALITY_YES = 1;
+    public static Integer JOBPREFERENCE_YES = 1;
 }

@@ -3,8 +3,6 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import in.trujobs.dev.trudroid.Util.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,8 +23,10 @@ import com.squareup.picasso.Picasso;
 import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.AddJobRoleRequest;
 import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.JobRoleResponse;
@@ -277,7 +277,7 @@ public class JobPreference extends AppCompatActivity {
             else {
                 if(addJobRoleResponse.getStatusValue() == 1){
                     Intent intent;
-                    Prefs.candidateJobPrefStatus.put(1);
+                    Prefs.candidateJobPrefStatus.put(ServerConstants.JOBPREFERENCE_YES);
                     if(Prefs.candidateHomeLocalityStatus.get() == 0){
                         intent = new Intent(JobPreference.this, HomeLocality.class);
                     } else{
