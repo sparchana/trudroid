@@ -46,7 +46,11 @@ public class JobRoleAdapter extends ArrayAdapter<JobRoleObject> {
         holder.jobRoleTextView.setText(jobRole.getJobRoleName());
 
         holder.jobRoleImageView = (ImageView) convertView.findViewById(R.id.grid_image);
-        Picasso.with(getContext()).load(jobRole.getJobRoleIcon()).into(holder.jobRoleImageView);
+        if(jobRole.getJobRoleIcon() != ""){
+            Picasso.with(getContext()).load(jobRole.getJobRoleIcon()).into(holder.jobRoleImageView);
+        } else{
+            Picasso.with(getContext()).load(R.drawable.edit).into(holder.jobRoleImageView);
+        }
 
         holder.imageViewTick = (ImageView) convertView.findViewById(R.id.grid_image_tick);
         holder.imageViewTick.setImageResource(R.drawable.trans);
