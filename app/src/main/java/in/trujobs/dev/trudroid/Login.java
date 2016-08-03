@@ -138,6 +138,8 @@ public class Login extends AppCompatActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
+                Prefs.sessionId.put(logInResponse.getSessionId());
+                Prefs.sessionExpiry.put(logInResponse.getSessionExpiryMillis());
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
 

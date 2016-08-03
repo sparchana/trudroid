@@ -15,7 +15,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-
+import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.proto.HomeLocalityRequest;
+import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.AddJobRoleRequest;
 import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.ApplyJobRequest;
@@ -133,7 +135,7 @@ public class HttpRequest {
         JobPostResponse.Builder requestBuilder =
                 JobPostResponse.newBuilder();
 
-        String responseString = postToServer(Config.URL_ALL_JOB_POSTS,
+        String responseString = postToServer(Config.URL_MATCHING_JOB_POSTS + "/"+ Prefs.candidateMobile.get(),
                 Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
@@ -326,5 +328,22 @@ public class HttpRequest {
         }
 
         return sb.toString();
+    }
+
+    public static HomeLocalityResponse addHomeLocality(HomeLocalityRequest homeLocalityRequest) {
+        String responseString = postToServer(Config.URL_ADD_HOMELOCALITY,
+                Base64.encodeToString(homeLocalityRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        HomeLocalityResponse homeLocalityResponse = null;
+        try {
+            homeLocalityResponse = HomeLocalityResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return homeLocalityResponse;
     }
 }

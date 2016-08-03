@@ -2,10 +2,10 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import in.trujobs.dev.trudroid.Util.AsyncTask;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -218,7 +218,6 @@ public class JobPreference extends AppCompatActivity {
                 mJobPrefOneText = (TextView) findViewById(R.id.job_pref_one_text_view);
                 mJobPrefTwoText = (TextView) findViewById(R.id.job_pref_two_text_view);
                 mJobPrefThreeText = (TextView) findViewById(R.id.job_pref_three_text_view);
-
                 Log.e("jobPreference: ", "Data: "+ jobRoleResponse.getJobRoleList().get(0));
 
                 final JobRoleAdapter adapter = new JobRoleAdapter(JobPreference.this, jobRoleResponse.getJobRoleList());
@@ -330,7 +329,6 @@ public class JobPreference extends AppCompatActivity {
             }
         } else{
             Toast.makeText(JobPreference.this, "Already Selected", Toast.LENGTH_SHORT).show();
-            return;
         }
     }
 

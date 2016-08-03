@@ -1,9 +1,6 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
-
-import in.trujobs.dev.trudroid.Util.AsyncTask;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobPostResponse;
