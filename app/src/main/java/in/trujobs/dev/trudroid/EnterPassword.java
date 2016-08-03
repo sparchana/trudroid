@@ -102,18 +102,23 @@ public class EnterPassword extends AppCompatActivity {
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
 
-                Intent intent;
-                if(Prefs.candidateJobPrefStatus.get() == 0){
-                    intent = new Intent(EnterPassword.this, JobPreference.class);
-                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
-                    intent = new Intent(EnterPassword.this, HomeLocality.class);
+                if(Prefs.loginCheckStatus.get() == 1){
+                    finish();
                 } else{
-                    intent = new Intent(EnterPassword.this, JobActivity.class);
+                    Intent intent;
+                    if(Prefs.candidateJobPrefStatus.get() == 0){
+                        intent = new Intent(EnterPassword.this, JobPreference.class);
+                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        intent = new Intent(EnterPassword.this, HomeLocality.class);
+                    } else{
+                        intent = new Intent(EnterPassword.this, JobActivity.class);
+                    }
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
                 }
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                finish();
+
             }
             else {
                 Toast.makeText(EnterPassword.this, "Something went wrong. Please try again later!",
