@@ -53,7 +53,7 @@ public class JobPreference extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_preference);
-        setTitle("Hi " + Prefs.firstName.get() + ", Select Job Roles");
+        setTitle("Hi " + Prefs.firstName.get() + "!");
 
         // Set job all job preference as none
         jobPrefOptionOne = false;
