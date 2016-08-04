@@ -233,7 +233,7 @@
             android:layout_weight="0.15"
             android:id="@+id/add_job_role_pref_btn"
             android:background="@color/colorPrimary"
-            android:text="Select Location >"
+            android:text="Select Home Location >"
             android:textColor="@color/white"/>
     </LinearLayout>
 

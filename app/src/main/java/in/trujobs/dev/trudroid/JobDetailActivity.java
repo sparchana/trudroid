@@ -52,6 +52,7 @@ public class JobDetailActivity extends AppCompatActivity {
 
     public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
         Intent intent = new Intent(context, JobDetailActivity.class);
+        EXTRA_LOCALITY.clear();
         intent.putExtra(EXTRA_JOB_TITLE, jobRole);
         for(LocalityObject localityObject : jobPostLocalityList){
             EXTRA_LOCALITY.add(localityObject);
@@ -385,6 +386,7 @@ public class JobDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

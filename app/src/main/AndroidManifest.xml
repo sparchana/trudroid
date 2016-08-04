@@ -54,7 +54,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPassword"
-            android:label="Forgot Password"
+            android:label="Reset Password"
             android:screenOrientation="portrait" />
         <activity
             android:name=".JobPreference"

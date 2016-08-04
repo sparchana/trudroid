@@ -31,6 +31,7 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.JobPostObject;
+import in.trujobs.proto.LocalityObject;
 
 /**
  * Created by batcoder1 on 27/7/16.

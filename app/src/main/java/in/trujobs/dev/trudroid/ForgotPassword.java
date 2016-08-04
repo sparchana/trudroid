@@ -91,9 +91,7 @@ public class ForgotPassword extends AppCompatActivity {
 
             if (resetPasswordResponse.getStatusValue() == ServerConstants.SUCCESS){
                 Prefs.storedOtp.put(resetPasswordResponse.getOtp());
-                Intent intent = new Intent(ForgotPassword.this, OtpScreen.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                OtpScreen.resetPassword(ForgotPassword.this, "Reset Password");
 
             } else if (resetPasswordResponse.getStatusValue() == ServerConstants.NO_USER_TO_SEND_OTP){
                 Toast.makeText(ForgotPassword.this, "Account doesn't exists!",
