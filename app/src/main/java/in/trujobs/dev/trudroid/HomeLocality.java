@@ -109,7 +109,7 @@ public class HomeLocality extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_locality);
-        setTitle("Hi " + Prefs.firstName.get() + ", Select your Home Locality");
+        setTitle("Hi " + Prefs.firstName.get() + "!");
 
 
         mResultReceiver = new AddressResultReceiver(new Handler());
