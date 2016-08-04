@@ -1,5 +1,6 @@
 package in.trujobs.dev.trudroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,19 +12,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
+
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.proto.LocalityObject;
 
 public class OtpScreen extends AppCompatActivity {
-
+    private static String EXTRA_TITLE = "Candidate Registration";
     EditText mUserOtpOne, mUserOtpTwo, mUserOtpThree, mUserOtpFour;
 
-    public OtpScreen() {
+    public static void resetPassword(Context context, String title) {
+        Intent intent = new Intent(context, OtpScreen.class);
+        EXTRA_TITLE = title;
+        context.startActivity(intent);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp_screen);
+        setTitle(EXTRA_TITLE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -96,9 +103,7 @@ public class OtpScreen extends AppCompatActivity {
             String userOtp;
             userOtp = mUserOtpOne.getText().toString() + mUserOtpTwo.getText().toString() + mUserOtpThree.getText().toString() + mUserOtpFour.getText().toString();
             if(userOtp.equals(Prefs.storedOtp.get().toString())){
-                Intent intent = new Intent(OtpScreen.this, EnterPassword.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                EnterPassword.resetOldPassword(OtpScreen.this, EXTRA_TITLE);
             } else{
                 Toast.makeText(OtpScreen.this, "Oops! Incorrect OTP",
                         Toast.LENGTH_LONG).show();

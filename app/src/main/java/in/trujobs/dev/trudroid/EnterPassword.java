@@ -24,15 +24,22 @@ import in.trujobs.proto.LogInResponse;
 
 public class EnterPassword extends AppCompatActivity {
     EditText mUserNewPassword;
+    private static String EXTRA_TITLE = "Candidate Registration";
     private AsyncTask<LogInRequest, Void, LogInResponse> mAsyncTask;
     ProgressDialog pd;
+
+    public static void resetOldPassword(Context context, String title) {
+        Intent intent = new Intent(context, EnterPassword.class);
+        EXTRA_TITLE = title;
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        setTitle(EXTRA_TITLE);
         Button mAddPasswordBtn = (Button) findViewById(R.id.add_new_password_btn);
 
         mAddPasswordBtn.setOnClickListener(new View.OnClickListener() {
