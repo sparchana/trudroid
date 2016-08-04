@@ -11,7 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,8 +21,11 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
+import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.OtherJobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
@@ -29,11 +34,13 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
+import in.trujobs.proto.JobPostObject;
 
 public class JobDetailActivity extends AppCompatActivity {
     private static final String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
     private FloatingActionButton fab;
     ListView jobPostListView;
+    Button jobTabApplyBtn;
     ProgressDialog pd;
     private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mAsyncTask;
 
@@ -160,7 +167,7 @@ public class JobDetailActivity extends AppCompatActivity {
                 }
                 jobPostLocation.setText(localities);
                 jobPostJobTitle.setText(getJobPostDetailsResponse.getJobPost().getJobPostTitle());
-                jobPostExperience.setText(getJobPostDetailsResponse.getJobPost().getJobPostExperience().getExperienceType());
+                jobPostExperience.setText(getJobPostDetailsResponse.getJobPost().getJobPostExperience().getExperienceType() + " experience");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(getJobPostDetailsResponse.getJobPost().getJobPostCreationMillis());
                 int mYear = calendar.get(Calendar.YEAR);
@@ -168,42 +175,39 @@ public class JobDetailActivity extends AppCompatActivity {
                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
                 jobPostPostedOn.setText("Posted on: " + mDay + "-" + mMonth + "-" + mYear);
 
-                if(getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays() != null){
+                String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
+                if(workingDays.length() > 6) {
                     String daysOff = "";
-                    Log.i("------------", getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays());
-                    if(!getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays().trim().equalsIgnoreCase("null")){
-                        Integer NoOfWorkingDays = Integer.parseInt(getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays());
-                        String workingDays = Integer.toString(NoOfWorkingDays, 2) + "";
-                        if(workingDays.length() > 7) {
-                            workingDays = workingDays.substring(2, 8);
-                        }
+                    Log.e("workingDays:", workingDays.length() + "");
+                    if (workingDays.length() > 7) {
+                        workingDays = workingDays.substring(2, 8);
+                    }
 
-                        for(int i=0; i<7; i++){
-                            char c = workingDays.charAt(i);
-                            if(c == '0'){ //checking an off day
-                                if(i == 0){
-                                    daysOff += "Mon,";
-                                } else if(i == 1){
-                                    daysOff += "Tue,";
-                                } else if(i == 2){
-                                    daysOff += "Wed,";
-                                } else if(i == 3){
-                                    daysOff += "Thurs,";
-                                } else if(i == 4){
-                                    daysOff += "Friday,";
-                                } else if(i == 5){
-                                    daysOff += "Sat,";
-                                } else if(i == 6){
-                                    daysOff += "Sun,";
-                                }
+                    for (int i = 0; i < 7; i++) {
+                        char c = workingDays.charAt(i);
+                        if (c == '0') { //checking an off day
+                            if (i == 0) {
+                                daysOff += "Mon,";
+                            } else if (i == 1) {
+                                daysOff += "Tue,";
+                            } else if (i == 2) {
+                                daysOff += "Wed,";
+                            } else if (i == 3) {
+                                daysOff += "Thu,";
+                            } else if (i == 4) {
+                                daysOff += "Fri,";
+                            } else if (i == 5) {
+                                daysOff += "Sat,";
+                            } else if (i == 6) {
+                                daysOff += "Sun,";
                             }
                         }
-                        jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length()-1)) + " off");
                     }
-                    else{
-                        jobPostWorkingDays.setText("Off days not available");
-                    }
+                    jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length() - 1)) + " holiday");
+                } else{
+                    jobPostWorkingDays.setText("Off days not available");
                 }
+
 
                 if(getJobPostDetailsResponse.getJobPost().getJobPostStartTime() != -1){
                     String start = "";
@@ -301,6 +305,17 @@ public class JobDetailActivity extends AppCompatActivity {
                 } else{
                     companyDescription.setText("Description not available");
                 }
+
+                jobTabApplyBtn = (Button) findViewById(R.id.job_detail_apply_btn);
+                jobTabApplyBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        List<JobPostObject> list = new ArrayList<JobPostObject>();
+                        list.add(getJobPostDetailsResponse.getJobPost());
+                        JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
+                        jobPostAdapter.showJobLocality(getJobPostDetailsResponse.getJobPost());
+                    }
+                });
 
             } else {
                 Toast.makeText(JobDetailActivity.this, "Something went wrong. Please try again later!",

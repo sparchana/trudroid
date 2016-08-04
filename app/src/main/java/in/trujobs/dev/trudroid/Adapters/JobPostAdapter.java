@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,9 +20,12 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
+import in.trujobs.dev.trudroid.JobPreference;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.ViewDialog;
+import in.trujobs.dev.trudroid.WelcomeScreen;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
@@ -139,43 +143,50 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
 
     public void showJobLocality(final JobPostObject jobPost){
-        preScreenLocationIndex = 0;
-        final CharSequence[] localityList = new CharSequence[jobPost.getJobPostLocalityCount()];
-        final Long[] localityId = new Long[jobPost.getJobPostLocalityCount()];
-        for (int i = 0; i < jobPost.getJobPostLocalityCount(); i++) {
-            localityList[i] = jobPost.getJobPostLocality(i).getLocalityName();
-            localityId[i] = jobPost.getJobPostLocality(i).getLocalityId();
+        if(Util.isLoggedIn() == true){
+            preScreenLocationIndex = 0;
+            final CharSequence[] localityList = new CharSequence[jobPost.getJobPostLocalityCount()];
+            final Long[] localityId = new Long[jobPost.getJobPostLocalityCount()];
+            for (int i = 0; i < jobPost.getJobPostLocalityCount(); i++) {
+                localityList[i] = jobPost.getJobPostLocality(i).getLocalityName();
+                localityId[i] = jobPost.getJobPostLocality(i).getLocalityId();
+            }
+
+            final AlertDialog alertDialog = new AlertDialog.Builder(
+                    getContext())
+                    .setCancelable(true)
+                    .setTitle("Choose Job Locality")
+                    .setPositiveButton("Apply",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex]);
+                                    dialog.dismiss();
+                                }
+                            })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                    .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            preScreenLocationIndex = which;
+                        }
+                    }).create();
+            alertDialog.show();
+        } else{
+            Prefs.loginCheckStatus.put(1);
+            Intent intent = new Intent(getContext(), WelcomeScreen.class);
+            getContext().startActivity(intent);
+            Prefs.loginCheckStatus.put(0);
         }
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(
-                getContext())
-                .setCancelable(true)
-                .setTitle("Choose Job Locality")
-                .setPositiveButton("Apply",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex]);
-                                dialog.dismiss();
-                            }
-                        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        preScreenLocationIndex = which;
-/*                                applyJob(jobPost.getJobPostId(), localityId[which]);*/
-                    }
-                }).create();
-        alertDialog.show();
     }
 
     public void applyJob(Long jobPostId, Long localityId){

@@ -45,6 +45,14 @@
 
         </LinearLayout>-->
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="#ffffff"
+            android:id="@+id/skip_btn"
+            android:text="@string/skip_btn_text"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored" />
 
         <ImageView
             android:layout_width="match_parent"
