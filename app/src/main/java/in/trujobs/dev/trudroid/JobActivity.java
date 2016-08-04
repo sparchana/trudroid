@@ -29,6 +29,7 @@ public class JobActivity extends AppCompatActivity
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
     ProgressDialog pd;
     ListView jobPostListView;
+    private Bundle jobPostExtraDetails;
     private FloatingActionButton fab;
 
     @Override
@@ -97,16 +98,20 @@ public class JobActivity extends AppCompatActivity
             jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
             if (jobPostResponse == null) {
                 ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
+                ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
                 Log.w("","Null JobPosts Response");
                 return;
             } else {
                 if(jobPostResponse.getJobPostList().size() > 0){
+                    jobPostExtraDetails = new Bundle();
                     Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
                     JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
                     jobPostListView.setAdapter(jobPostAdapter);
                 } else {
+                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+                    noJobsImageView.setVisibility(View.VISIBLE);
                     showToast("No jobs found in your locality");
                 }
             }

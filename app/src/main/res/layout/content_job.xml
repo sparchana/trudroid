@@ -25,4 +25,11 @@
         android:visibility="gone"
         android:id="@+id/something_went_wrong_image"
         android:src="@drawable/something_went_wrong"/>
+    <ImageView
+        android:layout_width="360dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="80dp"
+        android:visibility="gone"
+        android:id="@+id/no_jobs_image"
+        android:src="@drawable/no_job"/>
 </LinearLayout>

@@ -12,7 +12,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_job">Jobs</string>
+    <string name="title_activity_job">Jobs in your Locality</string>
     <string name="title_activity_home">Locality</string>
 
     <!-- Messages -->

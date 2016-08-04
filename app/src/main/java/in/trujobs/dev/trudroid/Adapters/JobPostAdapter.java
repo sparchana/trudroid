@@ -127,7 +127,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             @Override
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
-                JobDetailActivity.start(getContext(), jobPost.getJobRole().getJobRoleName());
+                JobDetailActivity.start(getContext(), jobPost.getJobRole().getJobRoleName(), jobPost.getJobPostLocalityList());
             }
         });
 
@@ -155,7 +155,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             final AlertDialog alertDialog = new AlertDialog.Builder(
                     getContext())
                     .setCancelable(true)
-                    .setTitle("Choose Job Locality")
+                    .setTitle("You are applying for " + jobPost.getJobPostTitle() + " job at " + jobPost.getJobPostCompanyName() + ". Please select a job Location" )
                     .setPositiveButton("Apply",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -186,7 +186,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             getContext().startActivity(intent);
             Prefs.loginCheckStatus.put(0);
         }
-
     }
 
     public void applyJob(Long jobPostId, Long localityId){

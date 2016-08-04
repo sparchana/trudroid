@@ -63,7 +63,7 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:id="@+id/job_pref_one_image_view"
-                            android:background="@drawable/edit"
+                            android:src="@drawable/edit"
                             android:layout_gravity="center" />
 
                         <ImageView
@@ -105,7 +105,7 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:id="@+id/job_pref_two_image_view"
-                            android:background="@drawable/edit"
+                            android:src="@drawable/edit"
                             android:layout_gravity="center" />
 
                         <ImageView
@@ -147,7 +147,7 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:id="@+id/job_pref_three_image_view"
-                            android:background="@drawable/edit"
+                            android:src="@drawable/edit"
                             android:layout_gravity="center" />
 
                         <ImageView
