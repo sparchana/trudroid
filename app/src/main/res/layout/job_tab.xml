@@ -425,6 +425,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingLeft="10dp">
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -444,6 +445,18 @@
                                 android:text="1-2yrs experience "
                                 android:id="@+id/job_experience" />
                         </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="16dp"
+                            android:id="@+id/job_post_min_requirement"/>
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>

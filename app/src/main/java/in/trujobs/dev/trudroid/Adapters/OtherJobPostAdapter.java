@@ -58,7 +58,7 @@ public class OtherJobPostAdapter extends ArrayAdapter<JobPostObject>{
             @Override
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
-                JobDetailActivity.start(getContext(), jobPost.getJobRole().getJobRoleName());
+/*                JobDetailActivity.start(getContext(), jobPost.getJobRole().getJobRoleName());*/
             }
         });
         return rowView;

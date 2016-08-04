@@ -1,7 +1,9 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -30,23 +32,30 @@ import in.trujobs.dev.trudroid.Adapters.OtherJobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostObject;
+import in.trujobs.proto.LocalityObject;
 
 public class JobDetailActivity extends AppCompatActivity {
     private static final String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
+    private static final List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
     private FloatingActionButton fab;
     ListView jobPostListView;
     Button jobTabApplyBtn;
     ProgressDialog pd;
+    int preScreenLocationIndex = 0;
     private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mAsyncTask;
 
-    public static void start(Context context, String jobRole) {
+    public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
         Intent intent = new Intent(context, JobDetailActivity.class);
         intent.putExtra(EXTRA_JOB_TITLE, jobRole);
+        for(LocalityObject localityObject : jobPostLocalityList){
+            EXTRA_LOCALITY.add(localityObject);
+        }
         context.startActivity(intent);
     }
 
@@ -129,6 +138,7 @@ public class JobDetailActivity extends AppCompatActivity {
             TextView jobPostExperience = (TextView) findViewById(R.id.job_experience);
             TextView jobPostTimings = (TextView) findViewById(R.id.job_timing);
             TextView jobPostWorkingDays = (TextView) findViewById(R.id.job_off);
+            TextView jobPostMinReq = (TextView) findViewById(R.id.job_post_min_requirement);
 
             TextView companyName = (TextView) findViewById(R.id.company_name);
             TextView companyLocation = (TextView) findViewById(R.id.company_location);
@@ -152,17 +162,17 @@ public class JobDetailActivity extends AppCompatActivity {
 
                 //Set job page
                 String localities = "";
-                int localityCount = getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount();
+                int localityCount = EXTRA_LOCALITY.size();
                 if(localityCount > 3){
                     localityCount = 3;
                 }
                 for (int i = 0; i < localityCount; i++) {
-                    localities += getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityName();
+                    localities += EXTRA_LOCALITY.get(i).getLocalityName();
                     if(i != (localityCount - 1)){
                         localities += ", ";
                     }
                 }
-                if(getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount() > 3){
+                if(localityCount > 3){
                     localities += " more";
                 }
                 jobPostLocation.setText(localities);
@@ -208,6 +218,7 @@ public class JobDetailActivity extends AppCompatActivity {
                     jobPostWorkingDays.setText("Off days not available");
                 }
 
+                jobPostMinReq.setText(getJobPostDetailsResponse.getJobPost().getJobPostMinRequirements());
 
                 if(getJobPostDetailsResponse.getJobPost().getJobPostStartTime() != -1){
                     String start = "";
@@ -232,9 +243,9 @@ public class JobDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         String allLocalities = "";
-                        for (int i = 0; i < getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount(); i++) {
-                            allLocalities += getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityName();
-                            if(i != (getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount() - 1)){
+                        for (int i = 0; i < EXTRA_LOCALITY.size(); i++) {
+                            allLocalities += EXTRA_LOCALITY.get(i).getLocalityName();
+                            if(i != (EXTRA_LOCALITY.size() - 1)){
                                 allLocalities += ", ";
                             }
                         }
@@ -310,10 +321,54 @@ public class JobDetailActivity extends AppCompatActivity {
                 jobTabApplyBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        List<JobPostObject> list = new ArrayList<JobPostObject>();
-                        list.add(getJobPostDetailsResponse.getJobPost());
-                        JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
-                        jobPostAdapter.showJobLocality(getJobPostDetailsResponse.getJobPost());
+                        if(Util.isLoggedIn() == true){
+                            preScreenLocationIndex = 0;
+                            final CharSequence[] localityList = new CharSequence[EXTRA_LOCALITY.size()];
+                            final Long[] localityId = new Long[EXTRA_LOCALITY.size()];
+                            for (int i = 0; i < EXTRA_LOCALITY.size(); i++) {
+                                localityList[i] = EXTRA_LOCALITY.get(i).getLocalityName();
+                                localityId[i] = EXTRA_LOCALITY.get(i).getLocalityId();
+                            }
+
+
+                            final AlertDialog alertDialog = new AlertDialog.Builder(
+                                    JobDetailActivity.this)
+                                    .setCancelable(true)
+                                    .setTitle("You are applying for " + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + " job at " + getJobPostDetailsResponse.getCompany().getCompanyName() + ". Please select a job Location" )
+                                    .setPositiveButton("Apply",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog,
+                                                                    int which) {
+                                                    List<JobPostObject> list = new ArrayList<JobPostObject>();
+                                                    list.add(getJobPostDetailsResponse.getJobPost());
+                                                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
+                                                    jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex]);
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog,
+                                                                    int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                    .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            preScreenLocationIndex = which;
+                                        }
+                                    }).create();
+                            alertDialog.show();
+                        } else{
+                            Prefs.loginCheckStatus.put(1);
+                            Intent intent = new Intent(JobDetailActivity.this, WelcomeScreen.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                            Prefs.loginCheckStatus.put(0);
+                        }
                     }
                 });
 
