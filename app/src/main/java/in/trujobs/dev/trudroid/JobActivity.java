@@ -29,7 +29,6 @@ public class JobActivity extends AppCompatActivity
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
     ProgressDialog pd;
     ListView jobPostListView;
-    private Bundle jobPostExtraDetails;
     private FloatingActionButton fab;
 
     @Override
@@ -105,7 +104,6 @@ public class JobActivity extends AppCompatActivity
                 return;
             } else {
                 if(jobPostResponse.getJobPostList().size() > 0){
-                    jobPostExtraDetails = new Bundle();
                     Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
                     JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
                     jobPostListView.setAdapter(jobPostAdapter);
@@ -133,12 +131,12 @@ public class JobActivity extends AppCompatActivity
             Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-        } else if (id == R.id.nav_my_jobs) {
-            Intent intent = new Intent(JobActivity.this, JobPreference.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(JobActivity.this, CandidateInfoActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        } else if (id == R.id.nav_my_jobs){
+            Intent intent = new Intent(JobActivity.this, MyAppliedJobs.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         }

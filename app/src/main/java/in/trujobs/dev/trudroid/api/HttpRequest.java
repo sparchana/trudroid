@@ -17,6 +17,8 @@ import java.net.ProtocolException;
 import java.net.URL;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
+import in.trujobs.proto.CandidateAppliedJobsRequest;
+import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.AddJobRoleRequest;
@@ -232,6 +234,23 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return getJobPostDetailsResponse;
+    }
+
+    public static CandidateAppliedJobsResponse getMyJobs(CandidateAppliedJobsRequest candidateAppliedJobsRequest) {
+        String responseString = postToServer(Config.URL_CANDIDATE_APPLIED_JOBS,
+                Base64.encodeToString(candidateAppliedJobsRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        CandidateAppliedJobsResponse candidateAppliedJobsResponse = null;
+        try {
+            candidateAppliedJobsResponse = CandidateAppliedJobsResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return candidateAppliedJobsResponse;
     }
 
     public static String postToServer(String requestUrl, String request) {

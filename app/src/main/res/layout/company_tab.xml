@@ -253,6 +253,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/company_description" />
             </android.support.v7.widget.CardView>
+
         </LinearLayout>
     </ScrollView>
 

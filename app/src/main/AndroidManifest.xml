@@ -34,7 +34,7 @@
             android:value="@string/google_api_key" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key"/>
+            android:value="@string/google_api_key" />
 
         <activity
             android:name=".WelcomeScreen"
@@ -83,15 +83,20 @@
             android:name=".HomeLocality"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait" />
+
         <service
             android:name=".FetchAddressIntentService"
-            android:exported="false"/>
+            android:exported="false" />
+
         <activity
             android:name=".CandidateInfoActivity"
+            android:label="Profile"
             android:screenOrientation="portrait"
-            android:label="Profile"/>
-        <activity android:name=".JobDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".JobDetailActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".MyAppliedJobs"></activity>
     </application>
 
 </manifest>
