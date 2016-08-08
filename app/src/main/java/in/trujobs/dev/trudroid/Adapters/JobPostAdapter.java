@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +19,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
-import in.trujobs.dev.trudroid.JobPreference;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.ViewDialog;
 import in.trujobs.dev.trudroid.WelcomeScreen;
@@ -31,7 +30,6 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.JobPostObject;
-import in.trujobs.proto.LocalityObject;
 
 /**
  * Created by batcoder1 on 27/7/16.
@@ -226,7 +224,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             if (applyJobResponse == null) {
                 Toast.makeText(getContext(), "Something went wrong. Please try again later.",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null Response");
+                Tlog.w("Null Response");
                 return;
             }
             ViewDialog alert = new ViewDialog();

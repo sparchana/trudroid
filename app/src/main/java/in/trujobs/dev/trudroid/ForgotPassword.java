@@ -1,24 +1,20 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
-import in.trujobs.proto.LogInRequest;
-import in.trujobs.proto.LogInResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 
@@ -85,7 +81,7 @@ public class ForgotPassword extends AppCompatActivity {
             if (resetPasswordResponse == null) {
                 Toast.makeText(ForgotPassword.this, "Failed to Request. Please try again.",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null signIn Response");
+                Tlog.w("Null signIn Response");
                 return;
             }
 

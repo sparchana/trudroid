@@ -1,7 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
+import in.trujobs.dev.trudroid.Util.Tlog;
+
 /**
  * Created by zero on 1/8/16.
  */
@@ -28,10 +29,10 @@ public class PlaceAPI {
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
 
-    private static final String SERVER_API_KEY = "AIzaSyDiXTfrbJBgLyAkI7xXL4LiEN6lgAtEJo8";
+    private static final String SERVER_API_KEY = "AIzaSyBNM0b5j-qfS-foVPNviZjjSO5EXHxNdrA";
 
-    public ArrayList<String> autocomplete (String input) {
-        ArrayList<String> resultList = null;
+    public ArrayList<PlaceAPIHelper> autocomplete (String input) {
+        ArrayList<PlaceAPIHelper> resultList = null;
 
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
@@ -54,12 +55,12 @@ public class PlaceAPI {
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Error processing Places API URL", e);
+            Tlog.e("Error processing Places API URL", e);
             return resultList;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e(TAG, "Error connecting to Places API", e);
+            Tlog.e("Error connecting to Places API", e);
             return resultList;
         } finally {
             if (conn != null) {
@@ -77,6 +78,7 @@ public class PlaceAPI {
             // Extract the Place descriptions from the results
             resultList = new ArrayList<>(predsJsonArray.length());
             for (int i = 0; i < predsJsonArray.length(); i++){
+                PlaceAPIHelper placeAPIHelper = new PlaceAPIHelper();
                 String description = predsJsonArray.getJSONObject(i).getString("description");
                 String subLocality_level = predsJsonArray.getJSONObject(i).getJSONArray("types").getString(0);
                 System.out.print(subLocality_level);
@@ -86,12 +88,14 @@ public class PlaceAPI {
                     if(address.size() >= 4 && (address.get(address.size() - 3).toLowerCase().contains("bengaluru")
                             || address.get(address.size() - 3).toLowerCase().contains("bangalore") )){
                         System.out.println("--> " + predsJsonArray.getJSONObject(i));
-                        resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+                        placeAPIHelper.setPlaceId(predsJsonArray.getJSONObject(i).getString("place_id"));
+                        placeAPIHelper.setDescription(predsJsonArray.getJSONObject(i).getString("description"));
+                        resultList.add(placeAPIHelper);
                     }
                 }
             }
         } catch (JSONException e) {
-            Log.e(TAG, "Cannot process JSON results", e);
+            Tlog.e("Cannot process JSON results", e);
         }
         return resultList;
     }

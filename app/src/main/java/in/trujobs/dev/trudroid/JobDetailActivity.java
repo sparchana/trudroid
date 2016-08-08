@@ -5,17 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +30,7 @@ import in.trujobs.dev.trudroid.Adapters.OtherJobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -150,11 +149,11 @@ public class JobDetailActivity extends AppCompatActivity {
 
             pd.cancel();
 
-            Log.e("jobActivity", "Data: "+ getJobPostDetailsResponse);
+            Tlog.e("jobActivity", "Data: "+ getJobPostDetailsResponse);
             if (getJobPostDetailsResponse == null) {
                 Toast.makeText(JobDetailActivity.this, "Failed to Fetch details. Please try again.",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null signIn Response");
+                Tlog.w("","Null signIn Response");
                 finish();
                 return;
             }
@@ -189,7 +188,7 @@ public class JobDetailActivity extends AppCompatActivity {
                 String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
                 if(workingDays.length() > 6) {
                     String daysOff = "";
-                    Log.e("workingDays:", workingDays.length() + "");
+                    Tlog.e(workingDays.length() + "");
                     if (workingDays.length() > 7) {
                         workingDays = workingDays.substring(2, 8);
                     }

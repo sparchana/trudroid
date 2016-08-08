@@ -1,0 +1,39 @@
+TASK in.trujobs.dev.trudroid id=88
+  ACTIVITY in.trujobs.dev.trudroid/.HomeLocality 118994 pid=7910
+    Local FragmentActivity b559453 State:
+      mCreated=truemResumed=true mStopped=false mReallyStopped=false
+      mLoadersStarted=true
+    FragmentManager misc state:
+      mHost=android.support.v4.app.FragmentActivity$HostCallbacks@d9b64f8
+      mContainer=android.support.v4.app.FragmentActivity$HostCallbacks@d9b64f8
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.PhoneWindow$DecorView{3bdbdd1 V.E..... ... 0,0-480,800}
+        android.widget.LinearLayout{845b036 V.E..... ... 0,0-480,800}
+          android.view.ViewStub{120ab37 G.E..... ... 0,0-0,0 #10203a9 android:id/action_mode_bar_stub}
+          android.widget.FrameLayout{29dd8a4 V.E..... ... 0,36-480,800}
+            android.support.v7.widget.ActionBarOverlayLayout{80f660d V.E..... ... 0,0-480,764 #7f0c0065 app:id/decor_content_parent}
+              android.support.v7.widget.ContentFrameLayout{ab499c2 V.E..... ... 0,84-480,764 #1020002 android:id/content}
+                android.widget.LinearLayout{3cac3d3 V.E..... ... 0,0-480,680}
+                  android.widget.LinearLayout{d31db10 V.E..... ... 18,18-462,317}
+                    android.support.v7.widget.CardView{d595609 V.E..... ... 0,0-444,63}
+                      android.support.v7.widget.AppCompatTextView{b36900e V.ED.... ... 15,15-429,48}
+                    android.support.v7.widget.CardView{ef3ca2f V.E..... ... 0,63-444,185}
+                      android.widget.LinearLayout{4c1983c V.E..... ... 15,15-429,107}
+                        android.support.v7.widget.AppCompatAutoCompleteTextView{d3849c5 VFED..CL F.. 0,0-372,92 #7f0c007c app:id/search_home_locality_autocomplete}
+                        android.support.v7.widget.AppCompatImageView{acf9f1a V.ED.... ... 372,0-413,92}
+                    android.support.v7.widget.CardView{4fcda4b V.E..... ... 0,197-444,299}
+                      android.widget.LinearLayout{b2dfc28 V.E..... ... 15,15-429,87}
+                        android.support.v7.widget.AppCompatImageView{458bd41 V.ED.... ... 0,0-41,72}
+                        android.support.v7.widget.AppCompatButton{4b892e6 VF.D..C. ... 41,0-414,72 #7f0c007d app:id/current_loc}
+                  android.widget.ProgressBar{33cd027 V.ED.... ... 204,335-276,407 #7f0c007e app:id/progress_bar}
+                  android.support.v7.widget.AppCompatImageView{d7ab2d4 V.ED.... ... 105,425-375,695 #7f0c007f app:id/job_pref_image_view}
+                  android.widget.LinearLayout{3b2ec7d V.E..... ... 0,713-480,713}
+                    android.widget.LinearLayout{ceaf772 V.E...C. ... 0,-72-480,0}
+                      android.support.v7.widget.AppCompatTextView{b9c47c3 V.ED.... ... 0,21-480,50}
+              android.support.v7.widget.ActionBarContainer{33a2840 V.ED.... ... 0,0-480,84 #7f0c0066 app:id/action_bar_container}
+                android.support.v7.widget.Toolbar{986d379 V.E..... ... 0,0-480,84 #7f0c0067 app:id/action_bar}
+                  android.widget.TextView{b6d18be V.ED.... ... 24,21-110,62}
+                  android.support.v7.widget.ActionMenuView{bf19d1f V.E..... ... 480,0-480,84}
+                android.support.v7.widget.ActionBarContextView{8b9886c G.E..... ... 0,0-0,0 #7f0c0068 app:id/action_context_bar}
+        android.view.View{e182e35 V.ED.... ... 0,0-480,36 #102002f android:id/statusBarBackground}

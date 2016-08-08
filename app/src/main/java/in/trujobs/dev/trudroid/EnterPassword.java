@@ -4,18 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -94,7 +92,7 @@ public class EnterPassword extends AppCompatActivity {
             if (logInResponse == null) {
                 Toast.makeText(EnterPassword.this, "Failed to Login. Please try again.",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null signIn Response");
+                Tlog.w("Null signIn Response");
                 return;
             }
 

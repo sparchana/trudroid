@@ -2,13 +2,13 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.CandidateInformationRequest;
 import in.trujobs.proto.GetCandidateInformationResponse;
@@ -56,12 +56,12 @@ public class CandidateInfoActivity extends AppCompatActivity {
             if (getCandidateInformationResponse == null) {
                 Toast.makeText(CandidateInfoActivity.this, "Null Candidate returned",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null candidate Response");
+                Tlog.w("Null candidate Response");
                 return;
             } else {
                 Toast.makeText(CandidateInfoActivity.this, "Name: "+ getCandidateInformationResponse.getCandidate().getCandidateFirstName() + " =======> ",
                         Toast.LENGTH_LONG).show();
-                Log.e("CandidateInfo", "Name: "+ getCandidateInformationResponse.getCandidate().getCandidateFirstName() + " =======> ");
+                Tlog.e("Name: "+ getCandidateInformationResponse.getCandidate().getCandidateFirstName() + " =======> ");
             }
         }
     }

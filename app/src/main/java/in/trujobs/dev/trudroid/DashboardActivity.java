@@ -129,7 +129,6 @@ public class DashboardActivity extends AppCompatActivity
             fab1.setClickable(false);
             fab2.setClickable(false);
             isFabOpen = false;
-            Log.d("Raj", "close");
 
         } else {
 
@@ -139,7 +138,6 @@ public class DashboardActivity extends AppCompatActivity
             fab1.setClickable(true);
             fab2.setClickable(true);
             isFabOpen = true;
-            Log.d("Raj","open");
 
         }
     }

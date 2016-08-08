@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobPostResponse;
 
@@ -101,12 +101,12 @@ public class JobActivity extends AppCompatActivity
                 ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
-                Log.w("","Null JobPosts Response");
+                Tlog.w("Null JobPosts Response");
                 return;
             } else {
                 if(jobPostResponse.getJobPostList().size() > 0){
                     jobPostExtraDetails = new Bundle();
-                    Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
+                    Tlog.e("Data: "+ jobPostResponse.getJobPostList().get(0));
                     JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
                     jobPostListView.setAdapter(jobPostAdapter);
                 } else {
@@ -139,6 +139,10 @@ public class JobActivity extends AppCompatActivity
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(JobActivity.this, CandidateInfoActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        } else if (id == R.id.nav_home_locality) {
+            Intent intent = new Intent(JobActivity.this, HomeLocality.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         }
