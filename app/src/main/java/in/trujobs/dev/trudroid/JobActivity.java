@@ -136,7 +136,7 @@ public class JobActivity extends AppCompatActivity
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_my_jobs){
-            Intent intent = new Intent(JobActivity.this, MyAppliedJobs.class);
+            Intent intent = new Intent(JobActivity.this, JobPreference.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         }

@@ -12,7 +12,7 @@ public class Config {
      * replace ip below with your local ip for development
      * and uncomment the line, also comment out aws prod-like-test-server ip above
      */
-    public static final String BASE_HTTP_URL = "http://192.168.137.36:9000";
+    public static final String BASE_HTTP_URL = "http://192.168.137.104:9000";
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
@@ -27,4 +27,9 @@ public class Config {
     public static final String URL_GET_CANDIDATE_INFO = BASE_HTTP_URL + "/mGetCandidateInformation";
     public static final String URL_JOB_POST_DETAILS = BASE_HTTP_URL + "/mGetJobPostInfo";
     public static final String URL_CANDIDATE_APPLIED_JOBS = BASE_HTTP_URL + "/mGetCandidateJobApplication";
+    public static final String URL_ALL_BASIC_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateBasicProfileStatics";
+    public static final String URL_ALL_EXPERIENCE_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateExperienceProfileStatics";
+    public static final String URL_UPDATE_BASIC_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateBasicProfile";
+    public static final String URL_UPDATE_EXPERIENCE_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateExperienceProfile";
+    public static final String URL_UPDATE_EDUCATION_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateEducationProfile";
 }
