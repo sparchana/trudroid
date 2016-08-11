@@ -7,17 +7,24 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.proto.FetchCandidateAlertRequest;
+import in.trujobs.proto.FetchCandidateAlertResponse;
+
 /**
  * Created by batcoder1 on 28/7/16.
  */
 public class ViewDialog {
     public void showDialog(final Context ctx, String msg, String heading, String subHeading, int image_res, int category) {
+
         final Dialog dialog = new Dialog(ctx);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -38,38 +45,46 @@ public class ViewDialog {
         ImageView alertImage = (ImageView) dialog.findViewById(R.id.alert_image_view);
         alertImage.setImageResource(image_res);
 
-        LinearLayout assessmentLayout = (LinearLayout) dialog.findViewById(R.id.assessment_dialog);
+        LinearLayout completeProfileLayout = (LinearLayout) dialog.findViewById(R.id.completeprofile_dialog);
+        LinearLayout newJobsLayout = (LinearLayout) dialog.findViewById(R.id.newjob_dialog);
         LinearLayout referLayout = (LinearLayout) dialog.findViewById(R.id.refer_dialog);
         LinearLayout referSms = (LinearLayout) dialog.findViewById(R.id.sms_share);
         LinearLayout referWhatsapp = (LinearLayout) dialog.findViewById(R.id.whatsapp_share);
 
         if (category == 1) {
-            assessmentLayout.setVisibility(View.VISIBLE);
+            completeProfileLayout.setVisibility(View.VISIBLE);
+            newJobsLayout.setVisibility(View.GONE);
+            referLayout.setVisibility(View.GONE);
+        } else if (category ==2 ) {
+            completeProfileLayout.setVisibility(View.GONE);
+            newJobsLayout.setVisibility(View.VISIBLE);
             referLayout.setVisibility(View.GONE);
         } else if(category == 3) {
-            assessmentLayout.setVisibility(View.GONE);
+            completeProfileLayout.setVisibility(View.GONE);
+            newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.VISIBLE);
         } else {
-            assessmentLayout.setVisibility(View.GONE);
+            completeProfileLayout.setVisibility(View.GONE);
+            newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
         }
 
-        assessmentLayout.setOnClickListener(new View.OnClickListener() {
+        completeProfileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:8880007799"));
-                if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                ctx.startActivity(callIntent);
+                // Navigate user to edit profile screen
+                Intent completeProfileIntent = new Intent(view.getContext(), CandidateInfoActivity.class);
+                view.getContext().startActivity(completeProfileIntent);
+            }
+        });
+        dialog.show();
+
+        newJobsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Navigate user to search jobs screen
+                Intent applyJobsIntent = new Intent(view.getContext(), JobActivity.class);
+                view.getContext().startActivity(applyJobsIntent);
             }
         });
         dialog.show();
