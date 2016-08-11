@@ -148,12 +148,12 @@ public class JobActivity extends AppCompatActivity
 
                 if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_PROFILE) {
                     alert.showDialog(JobActivity.this,
-                            "Complete Your Profile", candidateAlertResponse.getStatusMessage(), "",
+                            "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.assesment, 1);
                 }
                 else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
                     alert.showDialog(JobActivity.this,
-                            "New Jobs Posted", candidateAlertResponse.getStatusMessage(), "",
+                            "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.assesment, 2);
                 }
             }
