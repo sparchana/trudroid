@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import in.trujobs.dev.trudroid.CompanyFragmentTab;
 import in.trujobs.dev.trudroid.JobFragmentTab;
-import in.trujobs.dev.trudroid.OtherJobFragmentTab;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;

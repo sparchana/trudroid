@@ -11,9 +11,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -38,13 +41,15 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostObject;
+import in.trujobs.proto.LanguageKnownObject;
+import in.trujobs.proto.LanguageObject;
 import in.trujobs.proto.LocalityObject;
 
 public class JobDetailActivity extends AppCompatActivity {
-    private static final String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
+    private static String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
     private static final List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
     private FloatingActionButton fab;
-    ListView jobPostListView;
+    LinearLayout jobPostListView;
     Button jobTabApplyBtn;
     ProgressDialog pd;
     int preScreenLocationIndex = 0;
@@ -53,7 +58,7 @@ public class JobDetailActivity extends AppCompatActivity {
     public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
         Intent intent = new Intent(context, JobDetailActivity.class);
         EXTRA_LOCALITY.clear();
-        intent.putExtra(EXTRA_JOB_TITLE, jobRole);
+        EXTRA_JOB_TITLE = jobRole;
         for(LocalityObject localityObject : jobPostLocalityList){
             EXTRA_LOCALITY.add(localityObject);
         }
@@ -64,7 +69,7 @@ public class JobDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
-        setTitle(getIntent().getStringExtra(EXTRA_JOB_TITLE));
+        setTitle(EXTRA_JOB_TITLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -268,11 +273,33 @@ public class JobDetailActivity extends AppCompatActivity {
                     jobPostIncentives.setText("Information not available");
                 }
 
-                //set company page
+                LinearLayout otherJobListView = (LinearLayout) findViewById(R.id.other_job_list_view);
                 //set adapter for other jobs
-                jobPostListView = (ListView) findViewById(R.id.company_other_jobs_list_view);
-                OtherJobPostAdapter otherJobPostAdapter = new OtherJobPostAdapter(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyOtherJobsList());
-/*                jobPostListView.setAdapter(otherJobPostAdapter);*/
+                Log.e("job", "returnedData: " + getJobPostDetailsResponse);
+                for(final JobPostObject jobPostObject : getJobPostDetailsResponse.getCompany().getCompanyOtherJobsList()){
+                    LayoutInflater inflater = null;
+                    inflater = (LayoutInflater) JobDetailActivity.this
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View mLinearView = inflater.inflate(R.layout.company_other_jobs_list_item, null);
+                    TextView mJobPostTitleTextView = (TextView) mLinearView.findViewById(R.id.company_other_job_title);
+                    TextView mJobPostSalary = (TextView) mLinearView.findViewById(R.id.company_other_job_min_salary);
+
+                    mJobPostTitleTextView.setText(jobPostObject.getJobPostTitle());
+                    if(jobPostObject.getJobPostMaxSalary() != 0){
+                        mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()) + " - ₹" + formatter.format(jobPostObject.getJobPostMaxSalary()));
+                    } else{
+                        mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()));
+                    }
+                    otherJobListView.addView(mLinearView);
+
+                    mLinearView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Prefs.jobPostId.put(jobPostObject.getJobPostId());
+                            JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole().getJobRoleName(), jobPostObject.getJobPostLocalityList());
+                        }
+                    });
+                }
 
                 if(getJobPostDetailsResponse.getCompany().getCompanyLogo() != null || getJobPostDetailsResponse.getCompany().getCompanyLogo() != ""){
                     Picasso.with(getApplicationContext()).load(getJobPostDetailsResponse.getCompany().getCompanyLogo()).into(companyLogo);

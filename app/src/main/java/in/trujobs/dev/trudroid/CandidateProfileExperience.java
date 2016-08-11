@@ -35,12 +35,12 @@ import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
  */
 public class CandidateProfileExperience extends Fragment {
 
-    CheckBox skillCheckbox;
     private AsyncTask<UpdateCandidateExperienceProfileRequest, Void, UpdateCandidateBasicProfileResponse> mUpdateExperienceAsyncTask;
     private AsyncTask<Void, Void, GetCandidateExperienceProfileStaticResponse> mAsyncTask;
     ProgressDialog pd;
     LanguageKnownObject.Builder existingLanguageKnown = LanguageKnownObject.newBuilder();
     CandidateSkillObject.Builder existingSkill = CandidateSkillObject.newBuilder();
+
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
     final List<CandidateSkillObject> candidateSkill = new ArrayList<CandidateSkillObject>();
     int pos = -1;
@@ -64,19 +64,16 @@ public class CandidateProfileExperience extends Fragment {
                         Toast.LENGTH_LONG).show();
                 UpdateCandidateExperienceProfileRequest.Builder experienceBuilder = UpdateCandidateExperienceProfileRequest.newBuilder();
                 experienceBuilder.addAllCandidateLanguage(candidateLanguageKnown);
-                for(LanguageKnownObject languageKnownObject : experienceBuilder.getCandidateLanguageList()){
-                    System.out.println(" --- > " + languageKnownObject);
-                }
+                experienceBuilder.addAllCandidateSkill(candidateSkill);
                 experienceBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-/*                experienceBuilder.setCandidateTotalExperience(12);
+                experienceBuilder.setCandidateTotalExperience(12);
                 experienceBuilder.setCandidateCurrentCompany("Glasswing");
-                experienceBuilder.setCandidateCurrentSalary(25000);*/
+                experienceBuilder.setCandidateCurrentSalary(22000);
 
                 mUpdateExperienceAsyncTask = new UpdateExperienceProfileAsyncTask();
                 mUpdateExperienceAsyncTask.execute(experienceBuilder.build());
             }
         });
-
         return view;
     }
 
@@ -155,11 +152,12 @@ public class CandidateProfileExperience extends Fragment {
                             LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
                             if(languageReadWrite.isChecked()){
                                 if(flag){
-                                    language.setLanguageKnownId(existingLanguageKnown.getLanguageKnownId());
+                                    language.setLanguageKnownId(languageObject.getLanguageId());
                                     language.setLanguageReadWrite(1);
                                     language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
                                     language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
-                                    candidateLanguageKnown.add(pos, language.build());
+                                    candidateLanguageKnown.remove(pos);
+                                    candidateLanguageKnown.add(language.build());
                                     pos = -1;
                                 } else{
                                     language.setLanguageKnownId(languageObject.getLanguageId());
@@ -168,9 +166,8 @@ public class CandidateProfileExperience extends Fragment {
                                     language.setLanguageSpeak(0);
                                     candidateLanguageKnown.add(language.build());
                                 }
-                                Log.e("languageKNown", "languageObjectArray :----" + flag + candidateLanguageKnown);
                             } else{
-                                language.setLanguageKnownId(existingLanguageKnown.getLanguageKnownId());
+                                language.setLanguageKnownId(languageObject.getLanguageId());
                                 language.setLanguageReadWrite(0);
                                 language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
                                 language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
@@ -183,17 +180,17 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             boolean flag = false;
+                            //check if this is there in list or not
                             flag = findExistingLanguageKnownObject(languageObject);
                             LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
-                            LanguageKnownObject.Builder existingLanguageKnown = LanguageKnownObject.newBuilder();
                             if(languageUnderstand.isChecked()){
-                                //check if this is there in list or not
                                 if(flag){
-                                    language.setLanguageKnownId(existingLanguageKnown.getLanguageKnownId());
+                                    language.setLanguageKnownId(languageObject.getLanguageId());
                                     language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
                                     language.setLanguageUnderstand(1);
                                     language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
-                                    candidateLanguageKnown.add(pos, language.build());
+                                    candidateLanguageKnown.remove(pos);
+                                    candidateLanguageKnown.add(language.build());
                                 } else{
                                     language.setLanguageKnownId(languageObject.getLanguageId());
                                     language.setLanguageReadWrite(0);
@@ -202,9 +199,8 @@ public class CandidateProfileExperience extends Fragment {
                                     candidateLanguageKnown.add(language.build());
 
                                 }
-                                Log.e("languageKNown", "languageObjectArray :----" + flag + candidateLanguageKnown);
                             } else{
-                                language.setLanguageKnownId(existingLanguageKnown.getLanguageKnownId());
+                                language.setLanguageKnownId(languageObject.getLanguageId());
                                 language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
                                 language.setLanguageUnderstand(0);
                                 language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
@@ -217,18 +213,18 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             boolean flag = false;
+                            //check if this is there in list or not
                             flag = findExistingLanguageKnownObject(languageObject);
                             LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
-                            LanguageKnownObject.Builder existingLanguageKnown = LanguageKnownObject.newBuilder();
 
                             if(languageSpeak.isChecked()){
-                                //check if this is there in list or not
                                 if(flag){
-                                    language.setLanguageKnownId(existingLanguageKnown.getLanguageKnownId());
+                                    language.setLanguageKnownId(languageObject.getLanguageId());
                                     language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
                                     language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
                                     language.setLanguageSpeak(1);
-                                    candidateLanguageKnown.add(pos, language.build());
+                                    candidateLanguageKnown.remove(pos);
+                                    candidateLanguageKnown.add(language.build());
                                 } else{
                                     language.setLanguageKnownId(languageObject.getLanguageId());
                                     language.setLanguageReadWrite(0);
@@ -236,9 +232,8 @@ public class CandidateProfileExperience extends Fragment {
                                     language.setLanguageSpeak(1);
                                     candidateLanguageKnown.add(language.build());
                                 }
-                                Log.e("languageKNown", "languageObjectArray :----" + flag + candidateLanguageKnown + " == " + existingLanguageKnown.getLanguageKnownId());
                             } else{
-                                language.setLanguageKnownId(existingLanguageKnown.getLanguageKnownId());
+                                language.setLanguageKnownId(languageObject.getLanguageId());
                                 language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
                                 language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
                                 language.setLanguageSpeak(0);
@@ -246,8 +241,6 @@ public class CandidateProfileExperience extends Fragment {
                             }
                         }
                     });
-
-
                 }
 
                 for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){
@@ -255,43 +248,38 @@ public class CandidateProfileExperience extends Fragment {
                     inflater = (LayoutInflater) getActivity().getApplicationContext()
                             .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View mLinearView = inflater.inflate(R.layout.skill_list_view, null);
-                    final TextView skillName = (TextView) mLinearView
+                    TextView skillName = (TextView) mLinearView
                             .findViewById(R.id.skill_name);
-
-                    skillCheckbox = (CheckBox) mLinearView
-                            .findViewById(R.id.skill_checkbox);
-
                     skillName.setText(skillObject.getSkillName());
                     skillListView.addView(mLinearView);
 
-/*                    skillCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    final CheckBox skillCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
+
+                    skillCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             boolean flag = false;
                             flag = findExistingSkillObject(skillObject);
                             CandidateSkillObject.Builder skill = CandidateSkillObject.newBuilder();
                             if(skillCheckbox.isChecked()){
-                                Toast.makeText(getContext(), "azaaaa " + skillCheckbox.isChecked(),
-                                        Toast.LENGTH_LONG).show();
-*//*                                if(flag){
+                                if(flag){
                                     skill.setSkillId(existingSkill.getSkillId());
                                     skill.setAnswer(true);
+                                    candidateSkill.remove(pos);
                                     candidateSkill.add(skill.build());
                                 } else{
                                     skill.setSkillId(skillObject.getSkillId());
                                     skill.setAnswer(true);
                                     candidateSkill.add(skill.build());
-                                }*//*
+                                }
                             } else{
-                                Toast.makeText(getContext(), "bbbbb " + skillCheckbox.isChecked(),
-                                        Toast.LENGTH_LONG).show();
-*//*                                skill.setSkillId(existingSkill.getSkillId());
+                                skill.setSkillId(existingSkill.getSkillId());
                                 skill.setAnswer(false);
-                                candidateSkill.add(pos, skill.build());*//*
+                                candidateSkill.remove(pos);
+                                candidateSkill.add(skill.build());
                             }
-                            Log.e("skill", "skillllll: " + candidateSkill);
                         }
-                    });*/
+                    });
                 }
             }
         }
@@ -303,7 +291,7 @@ public class CandidateProfileExperience extends Fragment {
             if(candidateLanguageKnown.get(i).getLanguageKnownId() == languageObject.getLanguageId()){
                 flag = true;
                 pos = i;
-                existingLanguageKnown = candidateLanguageKnown.get(i).newBuilderForType();
+                existingLanguageKnown = candidateLanguageKnown.get(i).toBuilder();
                 break;
             }
         }
@@ -316,7 +304,7 @@ public class CandidateProfileExperience extends Fragment {
             if(candidateSkill.get(i).getSkillId() == skillObject.getSkillId()){
                 flag = true;
                 pos = i;
-                existingSkill = candidateSkill.get(i).newBuilderForType();
+                existingSkill = candidateSkill.get(i).toBuilder();
                 break;
             }
         }

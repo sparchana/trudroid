@@ -20,6 +20,7 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
+import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
@@ -298,6 +299,26 @@ public class HttpRequest {
         return getCandidateExperienceProfileStaticResponse;
     }
 
+    public static GetCandidateEducationProfileStaticResponse getCandidateEducationProfileStatic() {
+        GetCandidateEducationProfileStaticResponse.Builder educationStaticBuilder =
+                GetCandidateEducationProfileStaticResponse.newBuilder();
+
+        String responseString;
+        responseString = postToServer(Config.URL_ALL_EDUCATION_PROFILE_STATIC,
+                Base64.encodeToString(educationStaticBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GetCandidateEducationProfileStaticResponse getCandidateEducationProfileStaticResponse = null;
+        try {
+            getCandidateEducationProfileStaticResponse =
+                    getCandidateEducationProfileStaticResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {}
+        return getCandidateEducationProfileStaticResponse;
+    }
+
     public static UpdateCandidateBasicProfileResponse updateCandidateBasicProfile(UpdateCandidateBasicProfileRequest updateCandidateBasicProfileRequest) {
         String responseString = postToServer(Config.URL_UPDATE_BASIC_PROFILE,
                 Base64.encodeToString(updateCandidateBasicProfileRequest.toByteArray(), Base64.DEFAULT));
@@ -331,6 +352,23 @@ public class HttpRequest {
         }
         return updateCandidateBasicProfileResponse;
     }
+
+/*    public static UpdateCandidateBasicProfileResponse updateCandidateEducationProfile(UpdateCandidateEducationProfileRequest updateCandidateEducationProfileRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_EDUCATION_PROFILE,
+                Base64.encodeToString(updateCandidateEducationProfileRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse = null;
+        try {
+            updateCandidateBasicProfileResponse = UpdateCandidateBasicProfileResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateCandidateBasicProfileResponse;
+    }*/
 
     public static String postToServer(String requestUrl, String request) {
         URL url = null;

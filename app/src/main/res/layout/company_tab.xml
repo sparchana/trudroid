@@ -254,6 +254,18 @@
                     android:id="@+id/company_description" />
             </android.support.v7.widget.CardView>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Other Jobs"/>
+
+            <LinearLayout
+                android:id="@+id/other_job_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
         </LinearLayout>
     </ScrollView>
 
