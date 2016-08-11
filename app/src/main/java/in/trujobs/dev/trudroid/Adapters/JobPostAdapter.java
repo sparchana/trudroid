@@ -69,7 +69,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.mJobPostSalaryTextView = (TextView) rowView.findViewById(R.id.job_post_salary_text_view);
         if(jobPost.getJobPostMaxSalary() != 0){
             holder.mJobPostSalaryTextView.setText("₹" + formatter.format(jobPost.getJobPostMinSalary()) + " - ₹" + formatter.format(jobPost.getJobPostMaxSalary()));
-        } else{
+        } else {
             holder.mJobPostSalaryTextView.setText("₹" + formatter.format(jobPost.getJobPostMinSalary()));
         }
 

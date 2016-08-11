@@ -11,6 +11,8 @@
     tools:context="in.trujobs.dev.trudroid.JobActivity"
     tools:showIn="@layout/app_bar_job">
 
+    <include layout="@layout/filter_panel" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

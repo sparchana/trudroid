@@ -27,6 +27,7 @@ import in.trujobs.proto.CandidateInformationRequest;
 import in.trujobs.proto.GetCandidateInformationResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
+import in.trujobs.proto.JobFilterRequest;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.LogInRequest;
@@ -145,6 +146,34 @@ public class HttpRequest {
         else{
             responseString = postToServer(Config.URL_ALL_JOB_POSTS,
                     Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+        }
+
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        JobPostResponse jobPostResponse = null;
+        try {
+            jobPostResponse =
+                    jobPostResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {}
+
+
+        return jobPostResponse;
+    }
+
+    public static JobPostResponse getFilteredJobPosts(JobFilterRequest jobFilterRequest) {
+
+        String responseString;
+        if(Util.isLoggedIn() == true){
+            responseString = postToServer(Config.URL_FILTERED_MATCHING_JOB_POSTS,
+                    Base64.encodeToString(jobFilterRequest.toByteArray(), Base64.DEFAULT));
+        }
+
+        else{
+            responseString = postToServer(Config.URL_ALL_JOB_POSTS,
+                    Base64.encodeToString(jobFilterRequest.toByteArray(), Base64.DEFAULT));
         }
 
 

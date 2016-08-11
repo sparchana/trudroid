@@ -12,15 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.JobFilterFragment;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobPostResponse;
 
 public class JobActivity extends AppCompatActivity
@@ -28,9 +33,11 @@ public class JobActivity extends AppCompatActivity
 
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
     ProgressDialog pd;
-    ListView jobPostListView;
+    public ListView jobPostListView;
     private Bundle jobPostExtraDetails;
     private FloatingActionButton fab;
+
+    private JobFilterFragment jobFilterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +65,41 @@ public class JobActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         showJobPosts();
+
+        /* Filter Actions */
+        Button btnFilterJob = (Button) findViewById(R.id.btn_job_filter);
+
+        btnFilterJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Check that the activity is using the layout version with
+                // the overlay_job_filter_fragment_container FrameLayout
+                if (findViewById(R.id.overlay_job_filter_fragment_container) != null) {
+
+                    // Create a new Fragment to be placed in the activity layout
+                    jobFilterFragment = new JobFilterFragment();
+
+                    // In case this activity was started with special instructions from an
+                    // Intent, pass the Intent's extras to the fragment as arguments
+                    jobFilterFragment.setArguments(getIntent().getExtras());
+
+                    // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
+                    getSupportFragmentManager().beginTransaction()
+                            .addToBackStack(null)
+                            .add(R.id.overlay_job_filter_fragment_container, jobFilterFragment).commit();
+                }
+            }
+        });
+    }
+
+
+
+    public void dismissFilterPanel(View view){
+        if( jobFilterFragment != null ){
+            getSupportFragmentManager().beginTransaction()
+                    .remove(getSupportFragmentManager().findFragmentById(
+                            R.id.overlay_job_filter_fragment_container)).commit();
+        }
     }
 
     private void showJobPosts(){
@@ -70,7 +112,11 @@ public class JobActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
         } else {
+            getFragmentManager().popBackStack();
             super.onBackPressed();
         }
     }
@@ -95,7 +141,6 @@ public class JobActivity extends AppCompatActivity
         protected void onPostExecute(JobPostResponse jobPostResponse) {
             super.onPostExecute(jobPostResponse);
             pd.cancel();
-            jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
             if (jobPostResponse == null) {
                 ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
                 ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
@@ -103,18 +148,22 @@ public class JobActivity extends AppCompatActivity
                 jobPostListView.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
                 return;
-            } else {
-                if(jobPostResponse.getJobPostList().size() > 0){
-                    jobPostExtraDetails = new Bundle();
-                    Tlog.e("Data: "+ jobPostResponse.getJobPostList().get(0));
-                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
-                    jobPostListView.setAdapter(jobPostAdapter);
-                } else {
-                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
-                    noJobsImageView.setVisibility(View.VISIBLE);
-                    showToast("No jobs found in your locality");
-                }
             }
+            updateJobPostUI(jobPostResponse.getJobPostList());
+        }
+    }
+
+    private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
+        jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
+        if (jobPostObjectList.size() > 0) {
+            jobPostExtraDetails = new Bundle();
+            Tlog.i("DataSize: " + jobPostObjectList.size());
+            JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostObjectList);
+            jobPostListView.setAdapter(jobPostAdapter);
+        } else {
+            ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+            noJobsImageView.setVisibility(View.VISIBLE);
+            showToast("No jobs found in your locality");
         }
     }
 
@@ -150,10 +199,12 @@ public class JobActivity extends AppCompatActivity
         return true;
     }
 
+
     /**
      * Shows a toast with the given text.
      */
-    protected void showToast(String text) {
+    public void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
+
 }
