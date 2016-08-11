@@ -26,12 +26,16 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobPostObject;
+import in.trujobs.proto.FetchCandidateAlertRequest;
+import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.JobPostResponse;
 
 public class JobActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
+    private AsyncTask<FetchCandidateAlertRequest, Void, FetchCandidateAlertResponse> mAlertAsyncTask;
+
     ProgressDialog pd;
     public ListView jobPostListView;
     private Bundle jobPostExtraDetails;
@@ -50,8 +54,11 @@ public class JobActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewDialog alert = new ViewDialog();
-                alert.showDialog(JobActivity.this, "Complete Assessment", "Increase your chance of getting a job by 50%", "Call us to know more!", R.drawable.assesment, 1);
+                FetchCandidateAlertRequest.Builder requestBuilder = FetchCandidateAlertRequest.newBuilder();
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.toString());
+
+                mAlertAsyncTask = new FetchAlertAsyncTask();
+                mAlertAsyncTask.execute(requestBuilder.build());
             }
         });
 
@@ -164,6 +171,41 @@ public class JobActivity extends AppCompatActivity
             ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found in your locality");
+        }
+    }
+
+    private class FetchAlertAsyncTask extends AsyncTask<FetchCandidateAlertRequest,
+            Void, FetchCandidateAlertResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected FetchCandidateAlertResponse doInBackground(FetchCandidateAlertRequest... params) {
+            return HttpRequest.fetchCandidateAlert(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(FetchCandidateAlertResponse candidateAlertResponse) {
+            super.onPostExecute(candidateAlertResponse);
+            if (candidateAlertResponse == null) {
+                Tlog.e("Null Candidate Alert Response");
+                return;
+            } else {
+                ViewDialog alert = new ViewDialog();
+
+                if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_PROFILE) {
+                    alert.showDialog(JobActivity.this,
+                            "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
+                            R.drawable.assesment, 1);
+                }
+                else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
+                    alert.showDialog(JobActivity.this,
+                            "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
+                            R.drawable.assesment, 2);
+                }
+            }
         }
     }
 

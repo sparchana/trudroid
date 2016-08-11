@@ -27,4 +27,5 @@ public class Config {
     public static final String URL_ADD_JOB_PREFS = BASE_HTTP_URL + "/mAddJobPref";
     public static final String URL_GET_CANDIDATE_INFO = BASE_HTTP_URL + "/mGetCandidateInformation";
     public static final String URL_JOB_POST_DETAILS = BASE_HTTP_URL + "/mGetJobPostInfo";
+    public static final String URL_CANDIDATE_STATUS_SPECIFIC_ALERT = BASE_HTTP_URL + "/mFetchCandidateAlert";
 }
