@@ -9,52 +9,41 @@
         android:gravity="right">
         <!--Start of filter-->
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right">
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:clickable="true"
-                android:onClick="dismissFilterPanel"
-                android:orientation="vertical">
-            </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <!--Filter Start-->
             <LinearLayout
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="2dp"
-                android:layout_width="0dp"
-                android:layout_weight="0.8"
-                android:clickable="true"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="5dp">
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:background="#fff">
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/ftr_clear_all"
-                        android:layout_weight="0.4">
+                        android:layout_weight="0.4"
+                        android:id="@+id/ftr_clear_all">
                         <TextView
+                            android:textColor="#000"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="16px"
                             android:text="Clear All"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.4"
-                        android:id="@+id/ftr_done"
-                        android:gravity="right">
+                        android:gravity="right"
+                        android:id="@+id/ftr_done">
                         <TextView
+                            android:textColor="#2196F3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="16px"
                             android:text="Done"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -78,74 +67,79 @@
                 </LinearLayout>
                 <!--Scroll Starts-->
                 <ScrollView
+                    android:scrollbars="none"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content">
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="5dp"
-                        android:background="#F99">
+                        android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:background="#EEEEEE">
+                            android:background="#555555">
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="16px"
-                                android:text="Sort By"
-
+                                android:textColor="#fff"
+                                android:text="SORT BY"
                                 android:gravity="center"/>
                         </LinearLayout>
                         <!--Sort by filter options-->
                         <LinearLayout
                             android:layout_width="fill_parent"
-                            android:layout_height="100dp"
-                            android:background="#02f">
+                            android:layout_height="80dp"
+                            android:background="@color/white"
+                            android:padding="5dp">
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:background="#f24"
                                 android:layout_weight="0.38"
                                 android:layout_gravity="center"
+                                android:background="#FAFAFA"
                                 android:gravity="center"
                                 android:id="@+id/ftr_sort_by_date_posted"
                                 android:orientation="vertical">
                                 <ImageView
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@mipmap/ic_launcher"/>
+                                    android:layout_width="30dp"
+                                    android:background="@drawable/sort_by_circle_disable"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/latest_not_selected"/>
                                 <TextView
+                                    android:textSize="@dimen/box_option_text"
+                                    android:textColor="@color/boxOption"
+                                    android:layout_marginTop="5dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="16px"
-                                    android:text="Date Posted "/>
+                                    android:text="Date Posted"/>
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="2dp"
                                 android:layout_height="match_parent"
-                                android:background="#fff">
+                                android:background="#555555">
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:background="#f24"
                                 android:layout_weight="0.38"
                                 android:layout_gravity="center"
                                 android:gravity="center"
+                                android:background="#FAFAFA"
                                 android:id="@+id/ftr_sort_by_salary"
                                 android:orientation="vertical">
                                 <ImageView
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:src="@mipmap/ic_launcher"/>
+                                    android:background="@drawable/sort_by_circle_disable"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:src="@drawable/rupee"/>
                                 <TextView
+                                    android:layout_marginTop="5dp"
+                                    android:textSize="@dimen/box_option_text"
+                                    android:textColor="@color/boxOption"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="16px"
-                                    android:text="Date Posted "/>
+                                    android:text="Salary"/>
                             </LinearLayout>
                         </LinearLayout>
                         <!-- Start Filter-->
@@ -157,99 +151,59 @@
                             <TextView
                                 android:padding="5dp"
                                 android:layout_width="fill_parent"
-                                android:textSize="16px"
                                 android:layout_height="wrap_content"
-                                android:text="Filter"
-                                android:background="#EEEEEE"
-                                android:gravity="center"/>
+                                android:text="FILTER"
+                                android:textColor="#fff"
+                                android:background="#555555"
+                                android:gravity="center"
+                                android:layout_marginBottom="8dp"/>
                             <!--Salary filter-->
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:background="#FAFAFA">
                                 <ImageView
-                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginLeft="5dp"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:src="@mipmap/ic_launcher"
-                                    android:gravity="center"/>
+                                    android:src="@drawable/rupee_rate"
+                                    />
                                 <TextView
                                     android:layout_marginLeft="10dp"
                                     android:layout_width="wrap_content"
-                                    android:textSize="16px"
                                     android:layout_height="wrap_content"
-                                    android:text="Salary(Min)"
-                                    android:gravity="center"/>
+                                    android:textColor="#2196F3"
+                                    android:text="Salary"
+                                    />
+                                <TextView
+                                    android:layout_marginLeft="2dp"
+                                    android:textSize="12dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#2196F3"
+                                    android:text="(Min)"
+                                    />
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp">
+                                android:layout_margin="5dp">
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.23"
                                     android:gravity="center"
-                                    android:background="#F15"
-                                    android:padding="2dp"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Any"
-                                        />
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F24"
-                                    android:padding="2dp"
+                                    android:padding="4dp"
+                                    android:background="@drawable/cust_border"
                                     android:id="@+id/ftr_salary_eight_k_plus"
                                     android:layout_margin="3dp">
                                     <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="8,000+"/>
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F21"
-                                    android:id="@+id/ftr_salary_ten_k_plus"
-                                    android:padding="2dp"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="10,000+"/>
-                                </LinearLayout>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp">
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F15"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_salary_twelve_k_plus"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="12,000+"
+                                        android:text="8000+"
                                         />
                                 </LinearLayout>
                                 <LinearLayout
@@ -257,270 +211,316 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.23"
                                     android:gravity="center"
-                                    android:background="#F24"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_salary_fifteen_k_plus"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_salary_ten_k_plus"
+                                    android:padding="4dp"
                                     android:layout_margin="3dp">
                                     <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="15,000+"/>
+                                        android:text="10000+"/>
                                 </LinearLayout>
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.23"
                                     android:gravity="center"
-                                    android:background="#F21"
-                                    android:padding="2dp"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_salary_twelve_k_plus"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="12000+"/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp">
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_salary_fifteen_k_plus"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="15000+"
+                                        />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
                                     android:id="@+id/ftr_salary_twenty_k_plus"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="20000+"/>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="#fff"
+                                    android:padding="2dp"
                                     android:layout_margin="3dp">
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="20,000+"/>
+                                        android:text=""/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <!--Education filter-->
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:background="#FAFAFA">
+                                <ImageView
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/education"/>
+                                <TextView
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Education"
+                                    android:textColor="#2196F3"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp">
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
+                                    android:padding="4dp"
+                                    android:id="@+id/ftr_edu_lt_ten"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Less then 10th"
+                                        />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_edu_ten_pass"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="10th Pass"/>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_edu_twelve_pass"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="12th Pass"/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp">
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_edu_ug"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="UG"
+                                        />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="@drawable/cust_border"
+                                    android:id="@+id/ftr_edu_pg"
+                                    android:padding="4dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="PG"/>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.23"
+                                    android:gravity="center"
+                                    android:background="#fff"
+                                    android:padding="2dp"
+                                    android:layout_margin="3dp">
+                                    <TextView
+                                        android:textColor="@color/boxOption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""/>
                                 </LinearLayout>
                             </LinearLayout>
                             <!--Experience filter-->
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:background="#FAFAFA"
+                                >
                                 <ImageView
-                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginLeft="5dp"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:src="@mipmap/ic_launcher"
-                                    android:gravity="center"/>
+                                    android:src="@drawable/education" />
                                 <TextView
                                     android:layout_marginLeft="10dp"
                                     android:layout_width="wrap_content"
-                                    android:textSize="16px"
                                     android:layout_height="wrap_content"
                                     android:text="Experience"
-                                    android:gravity="center"/>
+                                    android:textColor="#2196F3"/>
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp">
+                                android:layout_margin="5dp">
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
+                                    android:layout_weight="0.4"
                                     android:gravity="center"
-                                    android:background="#F15"
-                                    android:padding="2dp"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Any"
-                                        />
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F24"
-                                    android:padding="2dp"
+                                    android:background="@drawable/cust_border"
                                     android:id="@+id/ftr_experience_fresher"
+                                    android:padding="4dp"
                                     android:layout_margin="3dp">
                                     <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
                                         android:text="Fresher"/>
                                 </LinearLayout>
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
+                                    android:layout_weight="0.4"
                                     android:gravity="center"
-                                    android:background="#F21"
-                                    android:padding="2dp"
+                                    android:background="@drawable/cust_border"
                                     android:id="@+id/ftr_experience_experienced"
+                                    android:padding="4dp"
                                     android:layout_margin="3dp">
                                     <TextView
+                                        android:textSize="@dimen/box_option_text"
+                                        android:textColor="@color/boxOption"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
                                         android:text="Experienced"/>
-                                </LinearLayout>
-                            </LinearLayout>
-                            <!--Education filter-->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-                                <ImageView
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@mipmap/ic_launcher"
-                                    android:gravity="center"/>
-                                <TextView
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_width="wrap_content"
-                                    android:textSize="16px"
-                                    android:layout_height="wrap_content"
-                                    android:text="Education"
-                                    android:gravity="center"/>
-                            </LinearLayout>
-                            <!--Experience filter-->
-                            <LinearLayout
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp">
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F15"
-                                    android:padding="2dp"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Any"
-                                        />
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F24"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_edu_lt_ten"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Less tha 10th"/>
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F21"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_edu_ten_pass"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="10th Pass"/>
-                                </LinearLayout>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp">
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F15"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_edu_twelve_pass"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="12th Pass"
-                                        />
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F24"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_edu_ug"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Under Graduate"/>
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.23"
-                                    android:gravity="center"
-                                    android:background="#F21"
-                                    android:padding="2dp"
-                                    android:id="@+id/ftr_edu_pg"
-                                    android:layout_margin="3dp">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Post Graduate"/>
                                 </LinearLayout>
                             </LinearLayout>
                             <!--Filter Job for male and female-->
                             <LinearLayout
                                 android:layout_width="fill_parent"
-                                android:layout_height="100dp"
-                                android:background="#02f">
+                                android:layout_height="80dp"
+                                android:padding="5dp">
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:background="@color/white"
                                     android:layout_weight="0.38"
                                     android:layout_gravity="center"
                                     android:gravity="center"
+                                    android:background="#FAFAFA"
                                     android:id="@+id/ftr_gender_male"
                                     android:orientation="vertical">
                                     <ImageView
-                                        android:layout_width="50dp"
-                                        android:layout_height="50dp"
-                                        android:src="@mipmap/ic_launcher"/>
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:src="@drawable/male_disable"/>
                                     <TextView
+                                        android:textColor="@color/boxOption"
+                                        android:layout_marginTop="8dp"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Jobs for Male"/>
+                                        android:textSize="@dimen/box_option_text"
+                                        android:text="Job for male"/>
                                 </LinearLayout>
                                 <LinearLayout
                                     android:layout_width="2dp"
                                     android:layout_height="match_parent"
-                                    android:background="#fff">
+                                    android:background="#555555">
                                 </LinearLayout>
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:background="#f24"
                                     android:layout_weight="0.38"
                                     android:layout_gravity="center"
-                                    android:id="@+id/ftr_gender_female"
                                     android:gravity="center"
+                                    android:background="#FAFAFA"
+                                    android:id="@+id/ftr_gender_female"
                                     android:orientation="vertical">
                                     <ImageView
-                                        android:layout_width="50dp"
-                                        android:layout_height="50dp"
-                                        android:src="@mipmap/ic_launcher"/>
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:src="@drawable/female_disable"/>
                                     <TextView
+                                        android:layout_marginTop="8dp"
+                                        android:textColor="@color/boxOption"
+                                        android:textSize="@dimen/box_option_text"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="16px"
-                                        android:text="Job For Female"/>
+                                        android:text="Job for female "/>
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>

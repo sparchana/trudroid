@@ -257,13 +257,15 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
                 // send data for submission
                 //
                 Tlog.i("filter submission triggered");
-                mFilterJobAsyncTask = new JobFilterAsyncTask();
-                mFilterJobAsyncTask.execute(jobFilterRequest.build());
+                if(jobFilterRequest.isInitialized()){
+                    mFilterJobAsyncTask = new JobFilterAsyncTask();
+                    mFilterJobAsyncTask.execute(jobFilterRequest.build());
+                }
                 break;
             case R.id.ftr_clear_all:
+                jobFilterRequest.clear();
                 break;
             default:
-                jobFilterRequest.clear();
                 break;
         }
     }
@@ -284,6 +286,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
 
         @Override
         protected JobPostResponse doInBackground(JobFilterRequest... params) {
+            Tlog.i("http req for getFilteredJobPost...");
             return HttpRequest.getFilteredJobPosts(params[0]);
         }
 
@@ -292,6 +295,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
             super.onPostExecute(jobPostResponse);
             pd.cancel();
             if (jobPostResponse == null) {
+                Tlog.i("No jobs received");
                 ImageView errorImageView = (ImageView) getActivity().findViewById(R.id.something_went_wrong_image);
                 ImageView noJobsImageView = (ImageView) getActivity().findViewById(R.id.no_jobs_image);
                 errorImageView.setVisibility(View.VISIBLE);
@@ -303,17 +307,22 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         }
 
         private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
-            jobPostListView = (ListView) getActivity().findViewById(R.id.jobs_list_view);
-            if (jobPostObjectList.size() > 0) {
-                Bundle jobPostExtraDetails = new Bundle();
-                Tlog.i("DataSize: " + jobPostObjectList.size());
-                JobPostAdapter jobPostAdapter = new JobPostAdapter(getActivity(), jobPostObjectList);
-                jobPostListView.setAdapter(jobPostAdapter);
-            } else {
-                ImageView noJobsImageView = (ImageView) getActivity().findViewById(R.id.no_jobs_image);
-                noJobsImageView.setVisibility(View.VISIBLE);
-                showToast("No jobs found in your locality");
+            try{
+                if (jobPostObjectList.size() > 0) {
+                    Tlog.i(jobPostObjectList.size()+" jobs received");
+                    Tlog.i("DataSize: " + jobPostObjectList.size());
+                    JobPostAdapter jobPostAdapter = new JobPostAdapter(getActivity(), jobPostObjectList);
+                    jobPostListView = (ListView) getActivity().findViewById(R.id.jobs_list_view);
+                    jobPostListView.setAdapter(jobPostAdapter);
+                } else {
+                    ImageView noJobsImageView = (ImageView) getActivity().findViewById(R.id.no_jobs_image);
+                    noJobsImageView.setVisibility(View.VISIBLE);
+                    showToast("No jobs found in your locality");
+                }
+            } catch (NullPointerException np){
+                Tlog.e(""+np.getStackTrace());
             }
+            getActivity().onBackPressed();
         }
 
         public void showToast(String text) {

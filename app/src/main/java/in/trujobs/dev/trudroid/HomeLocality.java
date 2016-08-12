@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -43,13 +42,14 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
+import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.dev.trudroid.api.LatLngAPI;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
@@ -617,18 +617,13 @@ public class HomeLocality extends AppCompatActivity implements
         }
     }
 
-    private class LatLngAsyncTask extends AsyncTask<String, Void, LatLngAPIHelper>{
+    private class LatLngAsyncTask extends BasicLatLngAsyncTask {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             Tlog.i("Fetching LatLng ....");
             mAddressRequested = true;
             updateUIWidgets();
-        }
-
-        @Override
-        protected LatLngAPIHelper doInBackground(String... params) {
-            return LatLngAPI.getLatLngFor(params[0]);
         }
 
         @Override
