@@ -36,12 +36,14 @@ public class ViewProfileFragment extends Fragment {
     Boolean bodyOpen, preferenceOpen, experienceOpen, educationOpen;
     ImageView assessment;
 
+    public CandidateInfoActivity candidateInfoActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.view_profile_fragment, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.userIcon);
-        fab.setImageResource(R.drawable.male_icon);
+/*        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.userIcon);
+        fab.setImageResource(R.drawable.male_icon);*/
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
@@ -165,6 +167,8 @@ public class ViewProfileFragment extends Fragment {
                 Log.w("","Null candidate Response");
                 return;
             } else {
+                candidateInfoActivity = (CandidateInfoActivity) getActivity();
+                candidateInfoActivity.candidateInfo = getCandidateInformationResponse;
                 TextView candidateName = (TextView) view.findViewById(R.id.user_name);
                 TextView candidateGender = (TextView) view.findViewById(R.id.candidate_gender);
                 TextView candidateMobile = (TextView) view.findViewById(R.id.candidate_phone_number);

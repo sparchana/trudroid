@@ -34,7 +34,7 @@
 
     <include layout="@layout/content_scrolling" />
 
-    <android.support.design.widget.FloatingActionButton
+<!--    <android.support.design.widget.FloatingActionButton
         android:layout_height="100dp"
         android:layout_width="100dp"
         android:id="@+id/userIcon"
@@ -43,6 +43,6 @@
         android:src="@drawable/male_icon"
         app:pressedTranslationZ="12dp"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|center" />-->
 
 </android.support.design.widget.CoordinatorLayout>

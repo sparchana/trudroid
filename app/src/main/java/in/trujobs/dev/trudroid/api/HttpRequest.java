@@ -42,6 +42,7 @@ import in.trujobs.proto.SignUpRequest;
 import in.trujobs.proto.SignUpResponse;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
+import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
 import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
 
 /**
@@ -284,7 +285,7 @@ public class HttpRequest {
                 GetCandidateExperienceProfileStaticResponse.newBuilder();
 
         String responseString;
-        responseString = postToServer(Config.URL_ALL_EXPERIENCE_PROFILE_STATIC + "/3",
+        responseString = postToServer(Config.URL_ALL_EXPERIENCE_PROFILE_STATIC + "/" + Prefs.jobPrefString.get(),
                 Base64.encodeToString(basicStaticBuilder.build().toByteArray(), Base64.DEFAULT));
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
@@ -350,10 +351,11 @@ public class HttpRequest {
         } catch (InvalidProtocolBufferException e) {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
+
         return updateCandidateBasicProfileResponse;
     }
 
-/*    public static UpdateCandidateBasicProfileResponse updateCandidateEducationProfile(UpdateCandidateEducationProfileRequest updateCandidateEducationProfileRequest) {
+    public static UpdateCandidateBasicProfileResponse updateCandidateEducationProfile(UpdateCandidateEducationProfileRequest updateCandidateEducationProfileRequest) {
         String responseString = postToServer(Config.URL_UPDATE_EDUCATION_PROFILE,
                 Base64.encodeToString(updateCandidateEducationProfileRequest.toByteArray(), Base64.DEFAULT));
 
@@ -368,7 +370,7 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return updateCandidateBasicProfileResponse;
-    }*/
+    }
 
     public static String postToServer(String requestUrl, String request) {
         URL url = null;

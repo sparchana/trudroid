@@ -44,8 +44,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="10dp">
+                    android:padding="10dp">
                     <!-- Qualification -->
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -81,126 +80,161 @@
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:background="#2D77BA"
-                                    android:textColor="#fff"
+                                    android:textColor="#2D77BA"
+                                    android:id="@+id/is_fresher"
+                                    android:background="#fff"
                                     android:text="Fresher"
                                     android:textSize="12dp"/>
                                 <Button
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Experience"
+                                    android:id="@+id/is_experienced"
                                     android:textColor="#2D77BA"
                                     android:background="#fff"
                                     android:textSize="12dp"/>
                             </LinearLayout>
                         </LinearLayout>
-
                     </LinearLayout>
                     <!-- Experience -->
                     <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/margin_top_text"
-                        android:layout_marginBottom="@dimen/margin_bottom_text"
-                        android:orientation="horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:id="@+id/experienced_section">
+
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/margin_top_text"
                             android:layout_marginBottom="@dimen/margin_bottom_text"
-                            android:layout_weight="0.4"
-                            android:layout_gravity="center">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total Work Experience"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
-                            android:layout_gravity="center"
-                            android:gravity="center_horizontal">
+                            android:orientation="horizontal">
                             <LinearLayout
-                                android:orientation="horizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="35dp"
-                                android:padding="1dp"
-                                android:background="#2D77BA">
-                                <DatePicker
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_top_text"
+                                android:layout_marginBottom="@dimen/margin_bottom_text"
+                                android:layout_weight="0.4"
+                                android:layout_gravity="center">
+                                <TextView
                                     android:layout_width="wrap_content"
-                                    android:layout_height="fill_parent"
-                                    android:datePickerMode="spinner">
-                                </DatePicker>
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Work Experience"/>
                             </LinearLayout>
-                        </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:layout_gravity="center"
+                                android:gravity="center_horizontal">
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="35dp"
+                                    android:padding="1dp"
+                                    android:background="#2D77BA">
 
-                    </LinearLayout>
-                    <!--Total work experience -->
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/margin_top_text"
-                        android:layout_marginBottom="@dimen/margin_bottom_text"
-                        android:orientation="horizontal">
+                                    <Button
+                                        android:background="@color/colorPrimary"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:padding="8dp"
+                                        android:id="@+id/select_experience"
+                                        android:textSize="12dp"
+                                        android:text="Select Experience"/>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <!--Total work experience -->
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/margin_top_text"
                             android:layout_marginBottom="@dimen/margin_bottom_text"
-                            android:layout_weight="0.4"
-                            android:layout_gravity="center">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Are you currently working"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
-                            android:layout_gravity="center"
-                            android:gravity="center_horizontal">
+                            android:orientation="horizontal">
                             <LinearLayout
-                                android:orientation="horizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="35dp"
-                                android:padding="1dp"
-
-                                android:background="#2D77BA">
-                                <Button
-                                    android:layout_width="match_parent"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_top_text"
+                                android:layout_marginBottom="@dimen/margin_bottom_text"
+                                android:layout_weight="0.4"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:background="#2D77BA"
-                                    android:textColor="#fff"
-                                    android:text="Yes"
-                                    android:textSize="12dp"/>
-                                <Button
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="No"
-                                    android:textColor="#2D77BA"
-                                    android:background="#fff"
-                                    android:textSize="12dp"/>
+                                    android:text="Are you currently working"/>
                             </LinearLayout>
-                        </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:layout_gravity="center"
+                                android:gravity="center_horizontal">
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="35dp"
+                                    android:padding="1dp"
 
+                                    android:background="#2D77BA">
+                                    <Button
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#2D77BA"
+                                        android:background="#fff"
+                                        android:id="@+id/is_employed_yes"
+                                        android:text="Yes"
+                                        android:textSize="12dp"/>
+                                    <Button
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="No"
+                                        android:id="@+id/is_employed_no"
+                                        android:textColor="#2D77BA"
+                                        android:background="#fff"
+                                        android:textSize="12dp"/>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <!-- Qualification -->
                     </LinearLayout>
-                    <!-- Qualification -->
+
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_width="fill_parent"
+                        android:visibility="gone"
+                        android:id="@+id/current_company_details_layout"
                         android:layout_height="match_parent">
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_top_text"
+                            android:layout_marginTop="@dimen/margin_top_text">
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <EditText
+                                    android:id="@+id/current_company"
+                                    android:textSize="@dimen/Edit_Text_Size"
+                                    android:singleLine="true"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Current Company"/>
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_bottom_text">
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
                                 <EditText
-                                    android:id="@+id/phone_number"
+                                    android:id="@+id/last_withdrawn_salary"
                                     android:textSize="@dimen/Edit_Text_Size"
                                     android:singleLine="true"
                                     android:layout_width="match_parent"
@@ -208,6 +242,22 @@
                                     android:layout_height="wrap_content"
                                     android:hint="Last Drawn Salary"/>
                             </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:padding="8dp"
+                            android:layout_margin="4dp">
+                            <TextView
+                                android:id="@+id/currentJobRole"
+                                android:textSize="@dimen/Edit_Text_Size"
+                                android:singleLine="true"
+                                android:textColor="@color/white"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Select Current Job Role"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

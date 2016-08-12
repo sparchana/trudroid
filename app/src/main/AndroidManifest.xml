@@ -70,11 +70,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DashboardActivity"
-            android:label="Candidate Home"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".JobActivity"
             android:label="@string/title_activity_job"
             android:screenOrientation="portrait"

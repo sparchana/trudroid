@@ -68,13 +68,12 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.5"
                                     android:layout_marginTop="@dimen/margin_top_text"
-                                    android:layout_marginBottom="@dimen/margin_bottom_text"
-                                    >
+                                    android:layout_marginBottom="@dimen/margin_bottom_text">
                                     <android.support.design.widget.TextInputLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
                                         <EditText
-                                            android:id="@+id/first_name"
+                                            android:id="@+id/first_name_edit_text"
                                             android:singleLine="true"
                                             android:textSize="@dimen/Edit_Text_Size"
                                             android:layout_width="match_parent"
@@ -92,7 +91,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
                                         <EditText
-                                            android:id="@+id/last_name"
+                                            android:id="@+id/last_name_edit_text"
                                             android:textSize="@dimen/Edit_Text_Size"
                                             android:singleLine="true"
                                             android:layout_width="match_parent"
@@ -113,7 +112,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
                                         <EditText
-                                            android:id="@+id/date_of_birth"
+                                            android:id="@+id/date_of_birth_edit_text"
                                             android:textSize="@dimen/Edit_Text_Size"
                                             android:singleLine="true"
                                             android:layout_width="match_parent"
@@ -140,6 +139,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:background="#fff"
+                                        android:id="@+id/gender_male"
                                         android:text="Male"/>
                                 </LinearLayout>
                                 <LinearLayout
@@ -149,10 +149,11 @@
                                     android:layout_weight="0.5"
                                     android:background="#2D77BA">
                                     <Button
-                                        android:textColor="#fff"
+                                        android:textColor="#2D77BA"
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
-                                        android:background="#2D77BA"
+                                        android:background="#fff"
+                                        android:id="@+id/gender_female"
                                         android:text="Female"/>
                                 </LinearLayout>
 

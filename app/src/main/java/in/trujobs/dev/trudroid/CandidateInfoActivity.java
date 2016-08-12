@@ -4,8 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import in.trujobs.proto.GetCandidateInformationResponse;
+
 public class CandidateInfoActivity extends AppCompatActivity {
 
+    public GetCandidateInformationResponse candidateInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,6 +18,7 @@ public class CandidateInfoActivity extends AppCompatActivity {
         viewProfileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.main_profile, viewProfileFragment).commit();
+
     }
 
     @Override

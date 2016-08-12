@@ -15,11 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +28,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
-import in.trujobs.dev.trudroid.Adapters.OtherJobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
@@ -41,8 +37,6 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostObject;
-import in.trujobs.proto.LanguageKnownObject;
-import in.trujobs.proto.LanguageObject;
 import in.trujobs.proto.LocalityObject;
 
 public class JobDetailActivity extends AppCompatActivity {
