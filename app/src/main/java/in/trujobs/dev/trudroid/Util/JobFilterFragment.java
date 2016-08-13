@@ -1,6 +1,9 @@
 package in.trujobs.dev.trudroid.Util;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -38,6 +42,9 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     // The onCreateView method is called when Fragment should create its View object hierarchy,
     // either dynamically or via XML layout inflation.
 
+    /* sort by */
+    LinearLayout ftrSortBySalary;
+    LinearLayout ftrSortByDatePosted;
     /* gender */
     LinearLayout ftrGenderMale;
     LinearLayout ftrGenderFemale;
@@ -59,12 +66,21 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     /* misc */
     LinearLayout ftrDone;
     LinearLayout ftrClearAll;
-
+    /* sub-filter ui elements */
+    ImageView imgSortBySalary;
+    ImageView imgSortByDatePosted;
+    TextView txtSortByDatePosted;
+    TextView txtSortBySalary;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //super.onCreateView(inflater, container, savedInstanceState);
         View jobFilterRootView = inflater.inflate(R.layout.filter_container_layout, container, false);
 
+        /* Sort by */
+        ftrSortBySalary = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_sort_by_salary);
+        ftrSortByDatePosted = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_sort_by_date_posted);
+
+        /* Gender */
         ftrGenderMale = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_gender_male);
         ftrGenderFemale = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_gender_female);
         /* salary */
@@ -86,10 +102,21 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrDone = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_done);
         ftrClearAll = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_clear_all);
 
+
+        /* sub filter element for UI manipulation */
+        imgSortBySalary = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_salary);
+        imgSortByDatePosted = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_date_posted);
+        txtSortByDatePosted = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_date_posted);
+        txtSortBySalary = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_salary);
+
+
         jobFilterRequest = JobFilterRequest.newBuilder();
         Tlog.i("jobFilterReq init");
         jobFilterRequest.setCandidateMobile(Prefs.candidateMobile.get());
         Tlog.i("setCandidateMobile(Prefs.candidateMobile.get())");
+
+        ftrSortByDatePosted.setOnClickListener(this);
+        ftrSortBySalary.setOnClickListener(this);
         ftrGenderMale.setOnClickListener(this);
         ftrGenderFemale.setOnClickListener(this);
         ftrExperienceFresher.setOnClickListener(this);
@@ -117,30 +144,73 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View view) {
         // Perform action on click
         switch (view.getId()) {
             case R.id.ftr_sort_by_date_posted:
+                Tlog.i("SDP"+ jobFilterRequest.getSortByDatePosted() + " SS: "+
+                        jobFilterRequest.getSortBySalary());
                 if (jobFilterRequest != null && !jobFilterRequest.getSortByDatePosted()) {
                     jobFilterRequest.setSortByDatePosted(true);
+                    jobFilterRequest.setSortBySalary(false);
+
+                    /* ui manipulation */
+                    imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
+                    imgSortByDatePosted.setImageResource(R.drawable.latest);
+                    txtSortByDatePosted.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+                    imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_disable));
+                    imgSortBySalary.setImageResource(R.drawable.rupee_not_selected);
+                    txtSortBySalary.setTextColor(getResources().getColor(R.color.boxOption));
+
                     Tlog.i("setSortByDatePosted(true)");
                 } else {
+                    /* De-Select on double tap */
                     jobFilterRequest.setSortByDatePosted(false);
+
+                    /* ui manipulation */
+                    imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_disable));
+                    imgSortByDatePosted.setImageResource(R.drawable.latest_not_selected);
+                    txtSortByDatePosted.setTextColor(getResources().getColor(R.color.boxOption));
                     Tlog.i("setSortByDatePosted(false)");
                 }
                 break;
             case R.id.ftr_sort_by_salary:
+                Tlog.i("SDP"+ jobFilterRequest.getSortByDatePosted() + " SS: "+
+                        jobFilterRequest.getSortBySalary());
                 if (jobFilterRequest != null && !jobFilterRequest.getSortBySalary()) {
                     jobFilterRequest.setSortBySalary(true);
+                    jobFilterRequest.setSortByDatePosted(false);
+
+                     /* ui manipulation */
+                    imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
+                    imgSortBySalary.setImageResource(R.drawable.rupee);
+                    txtSortBySalary.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+                    imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_disable));
+                    imgSortByDatePosted.setImageResource(R.drawable.latest_not_selected);
+                    txtSortByDatePosted.setTextColor(getResources().getColor(R.color.boxOption));
+
                     Tlog.i("setSortBySalary(true)");
+                } else {
+                    /* De-Select on double tap */
+                    jobFilterRequest.setSortBySalary(false);
+                   /* ui manipulation */
+                    imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_disable));
+                    imgSortBySalary.setImageResource(R.drawable.rupee_not_selected);
+                    txtSortBySalary.setTextColor(getResources().getColor(R.color.boxOption));
+                    Tlog.i("setSortByDatePosted(false)");
                 }
                 break;
             /* SALARY */
             case R.id.ftr_salary_eight_k_plus:
                 if (jobFilterRequest.getSalary() == JobFilterRequest.Salary.EIGHT_K_PLUS) {
+                    /* De-Select */
                     jobFilterRequest.clearSalary();
+                    ftrSalaryEightKPlus.setBackgroundColor(Color.parseColor("#ffffff"));
                 } else {
+                    /* Select */
+                    ftrSalaryEightKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
                     jobFilterRequest.setSalary(JobFilterRequest.Salary.EIGHT_K_PLUS);
                     Tlog.i("setSalary(JobFilterRequest.Salary.EIGHT_K_PLUS)");
                 }

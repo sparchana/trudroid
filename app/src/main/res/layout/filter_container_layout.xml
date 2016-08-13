@@ -104,11 +104,13 @@
                                 <ImageView
                                     android:layout_width="30dp"
                                     android:background="@drawable/sort_by_circle_disable"
+                                    android:id="@+id/ftr_img_sort_by_date_posted"
                                     android:layout_height="30dp"
                                     android:src="@drawable/latest_not_selected"/>
                                 <TextView
                                     android:textSize="@dimen/box_option_text"
                                     android:textColor="@color/boxOption"
+                                    android:id="@+id/ftr_txt_sort_by_date_posted"
                                     android:layout_marginTop="5dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -132,11 +134,13 @@
                                     android:background="@drawable/sort_by_circle_disable"
                                     android:layout_width="25dp"
                                     android:layout_height="25dp"
-                                    android:src="@drawable/rupee"/>
+                                    android:id="@+id/ftr_img_sort_by_salary"
+                                    android:src="@drawable/rupee_not_selected"/>
                                 <TextView
                                     android:layout_marginTop="5dp"
                                     android:textSize="@dimen/box_option_text"
                                     android:textColor="@color/boxOption"
+                                    android:id="@+id/ftr_txt_sort_by_salary"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Salary"/>
