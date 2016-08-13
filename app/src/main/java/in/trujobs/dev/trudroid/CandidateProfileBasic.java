@@ -56,6 +56,7 @@ public class CandidateProfileBasic extends Fragment {
 
     public CandidateInfoActivity candidateInfoActivity;
     String jobRoleSelectedString = "";
+    String jobRoleSelectedId = "";
 
     View view;
     @Override
@@ -174,10 +175,13 @@ public class CandidateProfileBasic extends Fragment {
                     selectedJobRoles.addAll(candidateInfoActivity.candidateInfo.getCandidate().getCandidateJobRolePrefList());
                     for(int i=0; i<selectedJobRoles.size(); i++ ){
                         jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
+                        jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
                         if(i != (selectedJobRoles.size() - 1)){
                             jobRoleSelectedString += ", ";
+                            jobRoleSelectedId += ", ";
                         }
                     }
+                    Prefs.jobPrefString.put(jobRoleSelectedId);
                     jobPrefLocation.setText(jobRoleSelectedString);
                 }
 
@@ -215,12 +219,16 @@ public class CandidateProfileBasic extends Fragment {
                                                 public void onClick(DialogInterface dialog,
                                                                     int which) {
                                                     jobRoleSelectedString = "";
+                                                    jobRoleSelectedId = "";
                                                     for(int i=0; i<selectedJobRoles.size(); i++ ){
                                                         jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
+                                                        jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
                                                         if(i != (selectedJobRoles.size() - 1)){
                                                             jobRoleSelectedString += ", ";
+                                                            jobRoleSelectedId += ", ";
                                                         }
                                                     }
+                                                    Prefs.jobPrefString.put(jobRoleSelectedId);
                                                     jobPrefLocation.setText(jobRoleSelectedString);
                                                     dialog.dismiss();
                                                 }
@@ -237,12 +245,16 @@ public class CandidateProfileBasic extends Fragment {
                                                     selectedJobRoles.add(currentJobRoleBuilder.build());
                                                     if(selectedJobRoles.size() == 3){
                                                        jobRoleSelectedString = "";
+                                                       jobRoleSelectedId = "";
                                                         for(int x=0; x<selectedJobRoles.size(); x++ ){
                                                             jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(x).getJobRoleName();
+                                                            jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(x).getJobRoleId();
                                                             if(x != (selectedJobRoles.size() - 1)){
                                                                 jobRoleSelectedString += ", ";
+                                                                jobRoleSelectedId += ", ";
                                                             }
                                                         }
+                                                        Prefs.jobPrefString.put(jobRoleSelectedId);
                                                         jobPrefLocation.setText(jobRoleSelectedString);
                                                         dialogInterface.dismiss();
                                                     }

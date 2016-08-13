@@ -40,6 +40,9 @@ public class Prefs {
         Prefs.storedOtp.remove();
         Prefs.sessionId.remove();
         Prefs.sessionExpiry.remove();
+        Prefs.candidateHomeLocalityStatus.remove();
+        Prefs.candidateJobPrefStatus.remove();
+        Prefs.jobPrefString.remove();
     }
 
     /* TODO maintain session and authToken across server and app */
