@@ -3,6 +3,7 @@ package in.trujobs.dev.trudroid;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
+import in.trujobs.proto.JobRoleObject;
 import in.trujobs.proto.TimeShiftObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
@@ -50,8 +52,10 @@ public class CandidateProfileBasic extends Fragment {
     private Button maleBtn, femaleBtn;
     private DatePickerDialog dobDatePicker;
     private SimpleDateFormat dateFormatter;
+    public List<JobRoleObject> selectedJobRoles = new ArrayList<JobRoleObject>();
 
     public CandidateInfoActivity candidateInfoActivity;
+    String jobRoleSelectedString = "";
 
     View view;
     @Override
@@ -165,19 +169,101 @@ public class CandidateProfileBasic extends Fragment {
                 shift_adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                 shift_option.setAdapter(shift_adapter);
 
-/*                shift_option.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        int pos = shift_option.getSelectedItemPosition();
-                        shiftValue = Long.valueOf(shiftIds.get(pos));
+                final EditText jobPrefLocation = (EditText) view.findViewById(R.id.pref_job_roles);
+                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
+                    selectedJobRoles.addAll(candidateInfoActivity.candidateInfo.getCandidate().getCandidateJobRolePrefList());
+                    for(int i=0; i<selectedJobRoles.size(); i++ ){
+                        jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
+                        if(i != (selectedJobRoles.size() - 1)){
+                            jobRoleSelectedString += ", ";
+                        }
                     }
-                });*/
+                    jobPrefLocation.setText(jobRoleSelectedString);
+                }
 
-                EditText jobPrefLocation = (EditText) view.findViewById(R.id.pref_location);
-                jobPrefLocation.setOnClickListener(new View.OnClickListener() {
+                jobPrefLocation.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 
+                            final CharSequence[] jobRoleList = new CharSequence[candidateInfoActivity.candidateInfo.getJobRolesCount()];
+                            final List<Long> jobRoleIdList = new ArrayList<Long>();
+                            for (int i = 0; i < candidateInfoActivity.candidateInfo.getJobRolesCount(); i++) {
+                                jobRoleList[i] = candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleName();
+                                jobRoleIdList.add(candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleId());
+                            }
+
+                            boolean[] checkedItems = new boolean[jobRoleList.length];
+                            for(int i=0 ; i<jobRoleList.length ; i++){
+                                for(JobRoleObject jobRoleObject: selectedJobRoles){
+                                    if(jobRoleIdList.get(i) == jobRoleObject.getJobRoleId()){
+                                        checkedItems[i] = true;
+                                        break;
+                                    } else{
+                                        checkedItems[i] = false;
+                                    }
+                                }
+                            }
+
+                            final AlertDialog alertDialog = new AlertDialog.Builder(
+                                    getContext())
+                                    .setCancelable(false)
+                                    .setTitle("Select Job Role preference (Max 3)")
+                                    .setPositiveButton("Done",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog,
+                                                                    int which) {
+                                                    jobRoleSelectedString = "";
+                                                    for(int i=0; i<selectedJobRoles.size(); i++ ){
+                                                        jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
+                                                        if(i != (selectedJobRoles.size() - 1)){
+                                                            jobRoleSelectedString += ", ";
+                                                        }
+                                                    }
+                                                    jobPrefLocation.setText(jobRoleSelectedString);
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                    .setMultiChoiceItems(jobRoleList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                                            JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
+                                            if (b) {
+                                                // If the user checked the item, add it to the selected items
+                                                if(selectedJobRoles.size() < 3){
+                                                    currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[i]));
+                                                    currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(i));
+                                                    selectedJobRoles.add(currentJobRoleBuilder.build());
+                                                    if(selectedJobRoles.size() == 3){
+                                                       jobRoleSelectedString = "";
+                                                        for(int x=0; x<selectedJobRoles.size(); x++ ){
+                                                            jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(x).getJobRoleName();
+                                                            if(x != (selectedJobRoles.size() - 1)){
+                                                                jobRoleSelectedString += ", ";
+                                                            }
+                                                        }
+                                                        jobPrefLocation.setText(jobRoleSelectedString);
+                                                        dialogInterface.dismiss();
+                                                    }
+                                                } else{
+                                                    dialogInterface.dismiss();
+                                                    Toast.makeText(getContext(), "Maximum 3 preference allowed.", Toast.LENGTH_LONG).show();
+                                                }
+                                            } else{
+                                                for(int x=0; x<selectedJobRoles.size(); x++){
+                                                    if(selectedJobRoles.get(x).getJobRoleId() == jobRoleIdList.get(i)){
+                                                        selectedJobRoles.remove(x);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }).create();
+                            alertDialog.show();
+                            return true;
+                        }
+                        return false;
                     }
                 });
 
@@ -208,8 +294,6 @@ public class CandidateProfileBasic extends Fragment {
 
                 }
 
-
-
                 if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateGender() == 0){
                     genderValue = 0;
                     maleBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -235,7 +319,6 @@ public class CandidateProfileBasic extends Fragment {
                     shift_option.setSelection(pos);
                 }
 
-
                 Button saveBasicProfileBtn = (Button) view.findViewById(R.id.button_save_basic);
                 saveBasicProfileBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -251,6 +334,8 @@ public class CandidateProfileBasic extends Fragment {
                             check = true;
                         } else if(shiftValue == null){
                             check = false;
+                        } else if(selectedJobRoles.size() == 0){
+                            check = false;
                         }
 
                         if(check != true){
@@ -263,6 +348,7 @@ public class CandidateProfileBasic extends Fragment {
                             requestBuilder.setCandidateDOB(candidateDob.getText().toString());
                             requestBuilder.setCandidateTimeshiftPref(shiftValue);
                             requestBuilder.setCandidateGender(genderValue);
+                            requestBuilder.addAllJobRolePref(selectedJobRoles);
 
                             mSaveBasicProfileAsyncTask = new UpdateBasicProfileAsyncTask();
                             mSaveBasicProfileAsyncTask.execute(requestBuilder.build());

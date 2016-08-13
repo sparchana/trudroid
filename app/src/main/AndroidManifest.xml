@@ -91,7 +91,7 @@
         <activity
             android:name=".JobDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MyAppliedJobs"></activity>
+        <activity android:name=".MyAppliedJobs" />
     </application>
 
 </manifest>
