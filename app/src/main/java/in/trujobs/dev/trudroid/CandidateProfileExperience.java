@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -55,13 +56,18 @@ public class CandidateProfileExperience extends Fragment {
 
     LinearLayout qualificationLayout, experiencedSection;
     Integer isCandidateExperienced = -1;
+    ImageView addLanguage;
 
     // values
     Integer expInYears;
     JobRoleObject currentJobRoleValue;
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
     final List<CandidateSkillObject> candidateSkill = new ArrayList<CandidateSkillObject>();
+    final List<LanguageObject> checkedLanguage = new ArrayList<LanguageObject>();
     Integer isEmployed;
+
+    CharSequence[] allLanguageList = new CharSequence[0];
+    List<Integer> languageIdList = new ArrayList<Integer>();
 
     Button saveExperienceBtn, selectExp, isExperienced, isFresher, isEmployedYes, isEmployedNo;
     int pos = -1;
@@ -163,7 +169,7 @@ public class CandidateProfileExperience extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(GetCandidateExperienceProfileStaticResponse getCandidateExperienceProfileStaticResponse) {
+        protected void onPostExecute(final GetCandidateExperienceProfileStaticResponse getCandidateExperienceProfileStaticResponse) {
             super.onPostExecute(getCandidateExperienceProfileStaticResponse);
             pd.cancel();
 
@@ -176,6 +182,7 @@ public class CandidateProfileExperience extends Fragment {
                 Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
                 ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
 
+                addLanguage = (ImageView) view.findViewById(R.id.add_more_language);
                 qualificationLayout = (LinearLayout) view.findViewById(R.id.current_company_details_layout);
                 experiencedSection = (LinearLayout) view.findViewById(R.id.experienced_section);
 
@@ -290,6 +297,73 @@ public class CandidateProfileExperience extends Fragment {
                     }
                 });
 
+                getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList(), 0);
+
+                allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
+                languageIdList = new ArrayList<Integer>();
+
+                for(int i=0 ; i<getCandidateExperienceProfileStaticResponse.getLanguageObjectCount() ; i++){
+                    allLanguageList[i] = getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageName();
+                    languageIdList.add(getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageId());
+                }
+
+                final boolean[] checkedItems = new boolean[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
+                for(int i=0 ; i<3 ; i++){
+                    checkedItems[i] = true;
+                }
+                addLanguage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View view) {
+                        //addding first 3 as checked
+                        for(int x=0; x<3 ; x++){
+                            LanguageObject.Builder languageBuilder = LanguageObject.newBuilder();
+                            languageBuilder.setLanguageId(languageIdList.get(x));
+                            languageBuilder.setLanguageName(String.valueOf(allLanguageList[x]));
+                            checkedLanguage.add(languageBuilder.build());
+                        }
+
+                        final AlertDialog alertDialog = new AlertDialog.Builder(
+                                getContext())
+                                .setCancelable(false)
+                                .setTitle("All Languages")
+                                .setPositiveButton("Done",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                getAllLanguages(checkedLanguage, 1);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                .setMultiChoiceItems(allLanguageList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                                        if (b) {
+                                            // If the user checked the item, add it to the selected items
+                                            LanguageObject.Builder languageBuilder = LanguageObject.newBuilder();
+                                            languageBuilder.setLanguageId(languageIdList.get(i));
+                                            languageBuilder.setLanguageName(String.valueOf(allLanguageList[i]));
+                                            checkedLanguage.add(languageBuilder.build());
+                                        } else{
+                                            boolean flag = false;
+                                            for(int x=0; x<checkedLanguage.size(); x++){
+                                                if(checkedLanguage.get(x).getLanguageId() == languageIdList.get(x)){
+                                                    flag = true;
+                                                    pos = i;
+                                                    break;
+                                                }
+                                            }
+                                            if(flag){
+                                                checkedLanguage.remove(pos);
+                                            }
+                                        }
+                                    }
+                                }).create();
+                        alertDialog.show();
+
+                    }
+                });
+
                 currentJobRole.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -307,7 +381,6 @@ public class CandidateProfileExperience extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
-
                                         currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
                                         currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
                                         currentJobRoleValue = currentJobRoleBuilder.build();
@@ -363,149 +436,7 @@ public class CandidateProfileExperience extends Fragment {
                     }
                 });
 
-                LinearLayout languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
                 LinearLayout skillListView = (LinearLayout) view.findViewById(R.id.skill_list_view);
-                for(final LanguageObject languageObject : getCandidateExperienceProfileStaticResponse.getLanguageObjectList()){
-                    LayoutInflater inflater = null;
-                    inflater = (LayoutInflater) getActivity().getApplicationContext()
-                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View mLinearView = inflater.inflate(R.layout.language_list_item, null);
-                    TextView languageName = (TextView) mLinearView
-                            .findViewById(R.id.language_name);
-
-                    languageName.setText(languageObject.getLanguageName());
-                    languageListView.addView(mLinearView);
-
-                    final CheckBox languageReadWrite = (CheckBox) mLinearView.findViewById(R.id.lang_read_write);
-                    final CheckBox languageUnderstand = (CheckBox) mLinearView.findViewById(R.id.lang_understand);
-                    final CheckBox languageSpeak = (CheckBox) mLinearView.findViewById(R.id.lang_speak);
-
-                    for(LanguageKnownObject language : candidateInfoActivity.candidateInfo.getCandidate().getLanguageKnownObjectList()){
-                        if(language.getLanguageKnownId() == languageObject.getLanguageId()){
-                            LanguageKnownObject.Builder languageBuilder = LanguageKnownObject.newBuilder();
-                            languageBuilder.setLanguageKnownId(languageObject.getLanguageId());
-                            if(language.getLanguageReadWrite() == 1){
-                                languageReadWrite.setChecked(true);
-                                languageBuilder.setLanguageReadWrite(1);
-                            } else {
-                                languageBuilder.setLanguageReadWrite(0);
-                            }
-                            if(language.getLanguageUnderstand() == 1){
-                                languageUnderstand.setChecked(true);
-                                languageBuilder.setLanguageUnderstand(1);
-                            } else{
-                                languageBuilder.setLanguageUnderstand(0);
-                            }
-                            if(language.getLanguageSpeak() == 1){
-                                languageSpeak.setChecked(true);
-                                languageBuilder.setLanguageSpeak(1);
-                            } else {
-                                languageBuilder.setLanguageSpeak(0);
-                            }
-                            candidateLanguageKnown.add(languageBuilder.build());
-                            break;
-                        }
-                    }
-
-                    languageReadWrite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            boolean flag = false;
-                            //check if this is there in list or not
-                            flag = findExistingLanguageKnownObject(languageObject);
-                            LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
-                            if(languageReadWrite.isChecked()){
-                                if(flag){
-                                    language.setLanguageKnownId(languageObject.getLanguageId());
-                                    language.setLanguageReadWrite(1);
-                                    language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
-                                    language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
-                                    candidateLanguageKnown.remove(pos);
-                                    candidateLanguageKnown.add(language.build());
-                                    pos = -1;
-                                } else{
-                                    language.setLanguageKnownId(languageObject.getLanguageId());
-                                    language.setLanguageReadWrite(1);
-                                    language.setLanguageUnderstand(0);
-                                    language.setLanguageSpeak(0);
-                                    candidateLanguageKnown.add(language.build());
-                                }
-                            } else{
-                                language.setLanguageKnownId(languageObject.getLanguageId());
-                                language.setLanguageReadWrite(0);
-                                language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
-                                language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
-                                candidateLanguageKnown.add(pos, language.build());
-                            }
-                        }
-                    });
-
-                    languageUnderstand.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            boolean flag = false;
-                            //check if this is there in list or not
-                            flag = findExistingLanguageKnownObject(languageObject);
-                            LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
-                            if(languageUnderstand.isChecked()){
-                                if(flag){
-                                    language.setLanguageKnownId(languageObject.getLanguageId());
-                                    language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
-                                    language.setLanguageUnderstand(1);
-                                    language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
-                                    candidateLanguageKnown.remove(pos);
-                                    candidateLanguageKnown.add(language.build());
-                                } else{
-                                    language.setLanguageKnownId(languageObject.getLanguageId());
-                                    language.setLanguageReadWrite(0);
-                                    language.setLanguageUnderstand(1);
-                                    language.setLanguageSpeak(0);
-                                    candidateLanguageKnown.add(language.build());
-
-                                }
-                            } else{
-                                language.setLanguageKnownId(languageObject.getLanguageId());
-                                language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
-                                language.setLanguageUnderstand(0);
-                                language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
-                                candidateLanguageKnown.add(pos, language.build());
-                            }
-                        }
-                    });
-
-                    languageSpeak.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            boolean flag = false;
-                            //check if this is there in list or not
-                            flag = findExistingLanguageKnownObject(languageObject);
-                            LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
-
-                            if(languageSpeak.isChecked()){
-                                if(flag){
-                                    language.setLanguageKnownId(languageObject.getLanguageId());
-                                    language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
-                                    language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
-                                    language.setLanguageSpeak(1);
-                                    candidateLanguageKnown.remove(pos);
-                                    candidateLanguageKnown.add(language.build());
-                                } else{
-                                    language.setLanguageKnownId(languageObject.getLanguageId());
-                                    language.setLanguageReadWrite(0);
-                                    language.setLanguageUnderstand(0);
-                                    language.setLanguageSpeak(1);
-                                    candidateLanguageKnown.add(language.build());
-                                }
-                            } else{
-                                language.setLanguageKnownId(languageObject.getLanguageId());
-                                language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
-                                language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
-                                language.setLanguageSpeak(0);
-                                candidateLanguageKnown.add(pos, language.build());
-                            }
-                        }
-                    });
-                }
 
                 for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){
                     LayoutInflater inflater = null;
@@ -573,6 +504,165 @@ public class CandidateProfileExperience extends Fragment {
             }
         }
         return flag;
+    }
+
+    public void getAllLanguages(List<LanguageObject> languageObjectList, int val){
+        int count = 0, breakFlag = 1;
+        LinearLayout languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
+        if(languageListView.getChildCount() > 0){
+            languageListView.removeAllViews();
+        }
+        for(final LanguageObject languageObject : languageObjectList){
+            LayoutInflater inflater = null;
+            inflater = (LayoutInflater) getActivity().getApplicationContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View mLinearView = inflater.inflate(R.layout.language_list_item, null);
+            TextView languageName = (TextView) mLinearView
+                    .findViewById(R.id.language_name);
+
+            languageName.setText(languageObject.getLanguageName());
+            languageListView.addView(mLinearView);
+
+            final CheckBox languageReadWrite = (CheckBox) mLinearView.findViewById(R.id.lang_read_write);
+            final CheckBox languageUnderstand = (CheckBox) mLinearView.findViewById(R.id.lang_understand);
+            final CheckBox languageSpeak = (CheckBox) mLinearView.findViewById(R.id.lang_speak);
+
+            for(LanguageKnownObject language : candidateInfoActivity.candidateInfo.getCandidate().getLanguageKnownObjectList()){
+                if(language.getLanguageKnownId() == languageObject.getLanguageId()){
+                    LanguageKnownObject.Builder languageBuilder = LanguageKnownObject.newBuilder();
+                    languageBuilder.setLanguageKnownId(languageObject.getLanguageId());
+                    if(language.getLanguageReadWrite() == 1){
+                        languageReadWrite.setChecked(true);
+                        languageBuilder.setLanguageReadWrite(1);
+                    } else {
+                        languageBuilder.setLanguageReadWrite(0);
+                    }
+                    if(language.getLanguageUnderstand() == 1){
+                        languageUnderstand.setChecked(true);
+                        languageBuilder.setLanguageUnderstand(1);
+                    } else{
+                        languageBuilder.setLanguageUnderstand(0);
+                    }
+                    if(language.getLanguageSpeak() == 1){
+                        languageSpeak.setChecked(true);
+                        languageBuilder.setLanguageSpeak(1);
+                    } else {
+                        languageBuilder.setLanguageSpeak(0);
+                    }
+                    candidateLanguageKnown.add(languageBuilder.build());
+                    break;
+                }
+            }
+
+            languageReadWrite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    boolean flag = false;
+                    //check if this is there in list or not
+                    flag = findExistingLanguageKnownObject(languageObject);
+                    LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
+                    if(languageReadWrite.isChecked()){
+                        if(flag){
+                            language.setLanguageKnownId(languageObject.getLanguageId());
+                            language.setLanguageReadWrite(1);
+                            language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
+                            language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
+                            candidateLanguageKnown.remove(pos);
+                            candidateLanguageKnown.add(language.build());
+                            pos = -1;
+                        } else{
+                            language.setLanguageKnownId(languageObject.getLanguageId());
+                            language.setLanguageReadWrite(1);
+                            language.setLanguageUnderstand(0);
+                            language.setLanguageSpeak(0);
+                            candidateLanguageKnown.add(language.build());
+                        }
+                    } else{
+                        language.setLanguageKnownId(languageObject.getLanguageId());
+                        language.setLanguageReadWrite(0);
+                        language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
+                        language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
+                        candidateLanguageKnown.add(pos, language.build());
+                    }
+                }
+            });
+
+            languageUnderstand.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    boolean flag = false;
+                    //check if this is there in list or not
+                    flag = findExistingLanguageKnownObject(languageObject);
+                    LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
+                    if(languageUnderstand.isChecked()){
+                        if(flag){
+                            language.setLanguageKnownId(languageObject.getLanguageId());
+                            language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
+                            language.setLanguageUnderstand(1);
+                            language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
+                            candidateLanguageKnown.remove(pos);
+                            candidateLanguageKnown.add(language.build());
+                        } else{
+                            language.setLanguageKnownId(languageObject.getLanguageId());
+                            language.setLanguageReadWrite(0);
+                            language.setLanguageUnderstand(1);
+                            language.setLanguageSpeak(0);
+                            candidateLanguageKnown.add(language.build());
+
+                        }
+                    } else{
+                        language.setLanguageKnownId(languageObject.getLanguageId());
+                        language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
+                        language.setLanguageUnderstand(0);
+                        language.setLanguageSpeak(existingLanguageKnown.getLanguageSpeak());
+                        candidateLanguageKnown.add(pos, language.build());
+                    }
+                }
+            });
+
+            languageSpeak.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    boolean flag = false;
+                    //check if this is there in list or not
+                    flag = findExistingLanguageKnownObject(languageObject);
+                    LanguageKnownObject.Builder language = LanguageKnownObject.newBuilder();
+
+                    if(languageSpeak.isChecked()){
+                        if(flag){
+                            language.setLanguageKnownId(languageObject.getLanguageId());
+                            language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
+                            language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
+                            language.setLanguageSpeak(1);
+                            candidateLanguageKnown.remove(pos);
+                            candidateLanguageKnown.add(language.build());
+                        } else{
+                            language.setLanguageKnownId(languageObject.getLanguageId());
+                            language.setLanguageReadWrite(0);
+                            language.setLanguageUnderstand(0);
+                            language.setLanguageSpeak(1);
+                            candidateLanguageKnown.add(language.build());
+                        }
+                    } else{
+                        language.setLanguageKnownId(languageObject.getLanguageId());
+                        language.setLanguageReadWrite(existingLanguageKnown.getLanguageReadWrite());
+                        language.setLanguageUnderstand(existingLanguageKnown.getLanguageUnderstand());
+                        language.setLanguageSpeak(0);
+                        candidateLanguageKnown.add(pos, language.build());
+                    }
+                }
+            });
+            count++;
+            if(val == 0){
+                if(count == 3){
+                    breakFlag = 0;
+                }
+            }
+            if(breakFlag == 0){
+                break;
+            }
+
+        }
     }
 
     public boolean findExistingSkillObject(SkillObject skillObject){

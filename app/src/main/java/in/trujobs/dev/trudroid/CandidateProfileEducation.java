@@ -2,40 +2,30 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.proto.CandidateSkillObject;
-import in.trujobs.proto.DegreeObject;
-import in.trujobs.proto.EducationObject;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
-import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
-import in.trujobs.proto.LanguageKnownObject;
-import in.trujobs.proto.LanguageObject;
-import in.trujobs.proto.SkillObject;
-import in.trujobs.proto.TimeShiftObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
-import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
 
 /**
  * Created by batcoder1 on 11/8/16.
@@ -45,8 +35,25 @@ public class CandidateProfileEducation extends Fragment {
     private AsyncTask<UpdateCandidateEducationProfileRequest, Void, UpdateCandidateBasicProfileResponse> UpdateEducationAsyncTask;
     private AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask;
     ProgressDialog pd;
+    LinearLayout degreeSection;
+    EditText candidateCollege;
+    Button updateEducationProfile;
 
+    int qualificationPos = 0, degreePos = 0;
     View view;
+
+    SpinnerAdapter adapter;
+
+    public CandidateInfoActivity candidateInfoActivity;
+    String[] qualificationLevel = new String[0];
+    Long[] qualificationId = new Long[0];
+
+    String[] degreeName = new String[0];
+    Long[] degreeId = new Long[0];
+
+    //values
+    private Long qualificationSelected = Long.valueOf(0), degreeSelected = Long.valueOf(0);
+    Integer qualificationStatus = -1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.candidate_education_profile, container, false);
@@ -79,7 +86,6 @@ public class CandidateProfileEducation extends Fragment {
         protected void onPostExecute(UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse) {
             super.onPostExecute(updateCandidateBasicProfileResponse);
             pd.cancel();
-
         }
     }
 
@@ -109,34 +115,150 @@ public class CandidateProfileEducation extends Fragment {
                 Log.w("", "Null Response");
                 return;
             } else {
+                candidateInfoActivity = (CandidateInfoActivity) getActivity();
 
-                Log.e("edustatic : ", "data:-- " + getCandidateEducationProfileStaticResponse);
-                final Spinner educationLevel = (Spinner) view.findViewById(R.id.candidate_qualification);
-                final Spinner degree = (Spinner) view.findViewById(R.id.candidate_degree);
+                updateEducationProfile = (Button) view.findViewById(R.id.save_education);
+                final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
+                final Spinner candidateDegree = (Spinner) view.findViewById(R.id.candidate_degree);
 
-                List<String> eduLevel = new ArrayList<String>();
-                List<String> degreeName = new ArrayList<String>();
+                qualificationLevel = new String[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
+                qualificationId = new Long[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
 
-                final List<Integer> eduLevelId = new ArrayList<Integer>();
-                final List<Integer> degreeId = new ArrayList<Integer>();
+                degreeName = new String[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
+                degreeId = new Long[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
 
-                for(EducationObject educationObject : getCandidateEducationProfileStaticResponse.getEducationObjectList()){
-                    eduLevel.add(educationObject.getEducationName());
-                    eduLevelId.add((int) educationObject.getEducationId());
+                qualificationLevel[0] = "Select Education Level";
+                qualificationId[0] = Long.valueOf(-1);
+                for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getEducationObjectCount() ; i++){
+                    qualificationLevel[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationName();
+                    qualificationId[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
+                    if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
+                        qualificationSelected = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
+                        qualificationPos = i;
+                    }
                 }
 
-                for(DegreeObject degreeObject : getCandidateEducationProfileStaticResponse.getDegreeObjectList()){
-                    degreeName.add(degreeObject.getDegreeName());
-                    degreeId.add((int) degreeObject.getDegreeId());
+                degreeName[0] = "Select Highest Degree";
+                degreeId[0] = Long.valueOf(-1);
+                for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getDegreeObjectCount() ; i++){
+                    degreeName[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeName();
+                    degreeId[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
+                    if(getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId() == candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getDegree().getDegreeId()){
+                        degreeSelected = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
+                        degreePos = i;
+                    }
                 }
 
-                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, eduLevel);
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                educationLevel.setAdapter(spinnerAdapter);
+                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel, 0);
+                candidateQualification.setAdapter(adapter);
 
-                spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, degreeName);
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                degree.setAdapter(spinnerAdapter);
+                candidateCollege = (EditText) view.findViewById(R.id.candidate_college);
+
+                degreeSection = (LinearLayout) view.findViewById(R.id.degree_section);
+                degreeSection.setVisibility(View.GONE);
+
+                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, degreeName, 2);
+                candidateDegree.setAdapter(adapter);
+
+                //prefilling data
+                candidateQualification.setSelection(qualificationPos);
+                candidateDegree.setSelection(degreePos);
+
+                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
+                    candidateCollege.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
+                }
+
+                qualificationStatus = candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
+                candidateQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                    {
+                        if(position != 0){
+                            if(qualificationStatus == 0){
+                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                                alertDialog.setMessage("Are you " + qualificationLevel[position] + " pass?");
+                                alertDialog.setCanceledOnTouchOutside(false);
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                qualificationStatus = 1;
+                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
+                                                imageView.setImageResource(R.drawable.tick);
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                qualificationStatus = 0;
+                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
+                                                imageView.setImageResource(R.drawable.wrong);
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
+                            }
+                        }
+
+                        if(position > 3){
+                            degreeSection.setVisibility(View.VISIBLE);
+                        } else {
+                            degreeSection.setVisibility(View.GONE);
+                        }
+/*                        qualificationSelected = qualificationId[position];*/
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {}
+                });
+
+                candidateDegree.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                    {
+                        degreeSelected = degreeId[position];
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {}
+                });
+
+                updateEducationProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean check = true;
+                        if(qualificationSelected == 0){
+                            System.out.println("111 ==============");
+                            check = false;
+                        } else if(degreeSelected == 0){
+                            check = false;
+                            System.out.println("222 ==============");
+                        } else if(qualificationSelected != 0 && degreeSelected == 0){
+                            check = false;
+                            System.out.println("333 ==============");
+                        } else if(qualificationStatus == -1){
+                            check = false;
+                            System.out.println("444 ==============");
+                        }
+
+                        if(check){
+                            UpdateCandidateEducationProfileRequest.Builder educationBuilder = UpdateCandidateEducationProfileRequest.newBuilder();
+                            educationBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+                            educationBuilder.setCandidateEducationLevel(qualificationSelected);
+                            if(qualificationSelected > 3){
+                                educationBuilder.setCandidateDegree(degreeSelected);
+                            }
+                            educationBuilder.setCandidateEducationCompletionStatus(qualificationStatus);
+                            educationBuilder.setCandidateEducationInstitute(candidateCollege.getText().toString());
+
+                            UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
+                            UpdateEducationAsyncTask.execute(educationBuilder.build());
+
+                        }
+                    }
+                });
             }
         }
     }

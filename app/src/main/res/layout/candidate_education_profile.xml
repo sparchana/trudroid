@@ -128,7 +128,7 @@
         android:layout_alignParentBottom="true"
         android:gravity="bottom">
         <Button
-            android:id="@+id/button_next"
+            android:id="@+id/save_education"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"

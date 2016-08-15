@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,8 +43,7 @@ public class ViewProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.view_profile_fragment, container, false);
 
-/*        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.userIcon);
-        fab.setImageResource(R.drawable.male_icon);*/
+        FloatingActionButton editBtn = (FloatingActionButton) view.findViewById(R.id.edit_btn);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
@@ -55,8 +55,7 @@ public class ViewProfileFragment extends Fragment {
         educationOpen = false;
         experienceOpen = false;
 
-        assessment = (ImageView) view.findViewById(R.id.assessment_status);
-        assessment.setOnClickListener(new View.OnClickListener() {
+        editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CandidateProfileBasic candidateProfileBasic = new CandidateProfileBasic();

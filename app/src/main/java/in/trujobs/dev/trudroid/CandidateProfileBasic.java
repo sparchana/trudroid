@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -157,18 +158,18 @@ public class CandidateProfileBasic extends Fragment {
                 setDateTimeField();
                 final Spinner shift_option = (Spinner) view.findViewById(R.id.shift_option);
 
-                List<String> categories = new ArrayList<String>();
+                final String[] categories = new String[getCandidateBasicProfileStaticResponse.getTimeShiftListCount() + 1];
                 final List<Integer> shiftIds = new ArrayList<Integer>();
 
-                for(TimeShiftObject timeShiftObject : getCandidateBasicProfileStaticResponse.getTimeShiftListList()){
-                    categories.add(timeShiftObject.getTimeShiftName());
-                    shiftIds.add((int) timeShiftObject.getTimeShiftId());
+                categories[0] = "Select Time Shift";
+                shiftIds.add(-1);
+                for(int i = 1; i<=getCandidateBasicProfileStaticResponse.getTimeShiftListCount();i++){
+                    categories[i] = getCandidateBasicProfileStaticResponse.getTimeShiftListList().get(i-1).getTimeShiftName();
+                    shiftIds.add((int) getCandidateBasicProfileStaticResponse.getTimeShiftListList().get(i-1).getTimeShiftId());
                 }
 
-                ArrayAdapter<String> shift_adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, categories);
-
-                shift_adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                shift_option.setAdapter(shift_adapter);
+                SpinnerAdapter adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, categories, 2);
+                shift_option.setAdapter(adapter);
 
                 final EditText jobPrefLocation = (EditText) view.findViewById(R.id.pref_job_roles);
                 if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
@@ -178,7 +179,7 @@ public class CandidateProfileBasic extends Fragment {
                         jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
                         if(i != (selectedJobRoles.size() - 1)){
                             jobRoleSelectedString += ", ";
-                            jobRoleSelectedId += ", ";
+                            jobRoleSelectedId += ",";
                         }
                     }
                     Prefs.jobPrefString.put(jobRoleSelectedId);
@@ -225,7 +226,7 @@ public class CandidateProfileBasic extends Fragment {
                                                         jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
                                                         if(i != (selectedJobRoles.size() - 1)){
                                                             jobRoleSelectedString += ", ";
-                                                            jobRoleSelectedId += ", ";
+                                                            jobRoleSelectedId += ",";
                                                         }
                                                     }
                                                     Prefs.jobPrefString.put(jobRoleSelectedId);
@@ -251,7 +252,7 @@ public class CandidateProfileBasic extends Fragment {
                                                             jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(x).getJobRoleId();
                                                             if(x != (selectedJobRoles.size() - 1)){
                                                                 jobRoleSelectedString += ", ";
-                                                                jobRoleSelectedId += ", ";
+                                                                jobRoleSelectedId += ",";
                                                             }
                                                         }
                                                         Prefs.jobPrefString.put(jobRoleSelectedId);
@@ -293,17 +294,7 @@ public class CandidateProfileBasic extends Fragment {
                     int mYear = calendar.get(Calendar.YEAR);
                     int mMonth = calendar.get(Calendar.MONTH);
                     int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                    candidateDob.setText(mDay + "-" + mMonth + "-" + mYear);
-
-                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-                    long milliSeconds = candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis();
-                    System.out.println(milliSeconds + " 0-0-0-0-0-0");
-
-                    Calendar calendarTest = Calendar.getInstance();
-                    calendar.setTimeInMillis(milliSeconds);
-                    System.out.println(formatter.format(calendar.getTime()) + " 0-0-0-0-0-0");
-
+                    candidateDob.setText(mYear + "-" + (mMonth+1) + "-" + mDay);
                 }
 
                 if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateGender() == 0){
@@ -321,36 +312,40 @@ public class CandidateProfileBasic extends Fragment {
                 }
                 if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref() != null){
                     int pos = -1;
-                    for(int i=0 ; i<categories.size(); i++){
-                        if(categories.get(i) == candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftName()){
+                    for(int i=1 ; i<categories.length; i++){
+                        if(shiftIds.get(i) == candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftId()){
                             pos = i;
                             break;
                         }
                     }
                     shiftValue = candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftId();
                     shift_option.setSelection(pos);
+                } else{
+                    shift_option.setSelection(0);
                 }
 
                 Button saveBasicProfileBtn = (Button) view.findViewById(R.id.button_save_basic);
                 saveBasicProfileBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        boolean check = false;
+                        boolean check = true;
                         int pos = shift_option.getSelectedItemPosition();
                         shiftValue = Long.valueOf(shiftIds.get(pos));
                         if(firstName.getText().toString() == null){
-                            check = true;
+                            check = false;
                         } else if(candidateDob.getText().toString() == null){
-                            check = true;
+                            check = false;
                         } else if(genderValue == null){
-                            check = true;
+                            check = false;
                         } else if(shiftValue == null){
                             check = false;
                         } else if(selectedJobRoles.size() == 0){
                             check = false;
+                        } else if(shift_option.getSelectedItemPosition() == 0){
+                            check = false;
                         }
 
-                        if(check != true){
+                        if(check){
                             UpdateCandidateBasicProfileRequest.Builder requestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
                             requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                             requestBuilder.setCandidateFirstName(firstName.getText().toString());
@@ -361,6 +356,7 @@ public class CandidateProfileBasic extends Fragment {
                             requestBuilder.setCandidateTimeshiftPref(shiftValue);
                             requestBuilder.setCandidateGender(genderValue);
                             requestBuilder.addAllJobRolePref(selectedJobRoles);
+                            requestBuilder.setCandidateTimeshiftPref(shiftIds.get(shift_option.getSelectedItemPosition()));
 
                             mSaveBasicProfileAsyncTask = new UpdateBasicProfileAsyncTask();
                             mSaveBasicProfileAsyncTask.execute(requestBuilder.build());
