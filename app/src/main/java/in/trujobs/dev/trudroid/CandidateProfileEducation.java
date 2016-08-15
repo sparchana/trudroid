@@ -175,30 +175,28 @@ public class CandidateProfileEducation extends Fragment {
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
                     {
                         if(position != 0){
-                            if(qualificationStatus == 0){
-                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                alertDialog.setMessage("Are you " + qualificationLevel[position] + " pass?");
-                                alertDialog.setCanceledOnTouchOutside(false);
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                qualificationStatus = 1;
-                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
-                                                imageView.setImageResource(R.drawable.tick);
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                qualificationStatus = 0;
-                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
-                                                imageView.setImageResource(R.drawable.wrong);
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.show();
-                            }
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setMessage("Are you " + qualificationLevel[position] + " pass?");
+                            alertDialog.setCanceledOnTouchOutside(false);
+                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            qualificationStatus = 1;
+                                            ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
+                                            imageView.setImageResource(R.drawable.tick);
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            qualificationStatus = 0;
+                                            ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
+                                            imageView.setImageResource(R.drawable.wrong);
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
                         }
 
                         if(position > 3){
@@ -206,7 +204,7 @@ public class CandidateProfileEducation extends Fragment {
                         } else {
                             degreeSection.setVisibility(View.GONE);
                         }
-/*                        qualificationSelected = qualificationId[position];*/
+                        qualificationSelected = qualificationId[position];
                     }
 
                     @Override
