@@ -34,6 +34,7 @@ import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
+import in.trujobs.proto.JobFilterRequest;
 import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobSearchRequest;
@@ -55,9 +56,10 @@ public class JobActivity extends AppCompatActivity
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
 
     private JobFilterFragment jobFilterFragment;
-    private Double mSearchLat;
-    private Double mSearchLng;
+    private static Double mSearchLat;
+    private static Double mSearchLng;
     private JobSearchRequest.Builder jobSearchRequest;
+    public static JobFilterRequest jobFilterRequestBkp;
 
 
     @Override
@@ -102,13 +104,14 @@ public class JobActivity extends AppCompatActivity
                 mSearchJobAcTxtView.setText(mSearchAddressOutput.split(",")[0] + ", " + mSearchAddressOutput.split(",")[1]);
                 mLatLngAsyncTask = new LatLngAsyncTask();
                 mLatLngAsyncTask.execute(mSearchedPlaceId);
-
             }
         });
     }
 
+
     public void dismissFilterPanel(View view) {
         if (jobFilterFragment != null) {
+            jobFilterRequestBkp = jobFilterFragment.jobFilterRequest.build();
             getSupportFragmentManager().beginTransaction()
                     .remove(getSupportFragmentManager().findFragmentById(
                             R.id.overlay_job_filter_fragment_container)).commit();
@@ -351,4 +354,26 @@ public class JobActivity extends AppCompatActivity
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
+    public static Double getmSearchLat() {
+        return mSearchLat;
+    }
+
+    public void setmSearchLat(Double mSearchLat) {
+        this.mSearchLat = mSearchLat;
+    }
+
+    public static Double getmSearchLng() {
+        return mSearchLng;
+    }
+
+    public void setmSearchLng(Double mSearchLng) {
+        this.mSearchLng = mSearchLng;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSearchLat = null;
+        mSearchLng = null;
+    }
 }

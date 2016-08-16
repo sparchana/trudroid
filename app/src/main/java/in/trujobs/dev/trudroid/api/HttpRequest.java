@@ -170,15 +170,8 @@ public class HttpRequest {
     public static JobPostResponse getFilteredJobPosts(JobFilterRequest jobFilterRequest) {
 
         String responseString;
-        if(Util.isLoggedIn() == true){
             responseString = postToServer(Config.URL_FILTERED_MATCHING_JOB_POSTS,
                     Base64.encodeToString(jobFilterRequest.toByteArray(), Base64.DEFAULT));
-        }
-
-        else{
-            responseString = postToServer(Config.URL_ALL_JOB_POSTS,
-                    Base64.encodeToString(jobFilterRequest.toByteArray(), Base64.DEFAULT));
-        }
 
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
