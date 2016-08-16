@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:layout_weight="0.75"
+            android:textColor="#000000"
             android:drawableBottom="#000"
             android:padding="5dp"/>
 

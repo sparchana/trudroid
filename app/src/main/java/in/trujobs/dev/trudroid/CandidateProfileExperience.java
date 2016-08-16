@@ -54,7 +54,7 @@ public class CandidateProfileExperience extends Fragment {
 
     public CandidateInfoActivity candidateInfoActivity;
 
-    LinearLayout qualificationLayout, experiencedSection;
+    LinearLayout qualificationLayout, experiencedSection, languageListView;
     Integer isCandidateExperienced = -1;
     ImageView addLanguage;
 
@@ -92,6 +92,7 @@ public class CandidateProfileExperience extends Fragment {
 
         final NumberPicker numberPickerYear = (NumberPicker) expDialog.findViewById(R.id.numberPickerYears);
         final NumberPicker numberPickerMonth = (NumberPicker) expDialog.findViewById(R.id.numberPickerMonths);
+
         numberPickerYear.setMaxValue(35);
         numberPickerYear.setMinValue(0);
         numberPickerYear.setWrapSelectorWheel(true);
@@ -99,6 +100,9 @@ public class CandidateProfileExperience extends Fragment {
         numberPickerMonth.setMaxValue(11);
         numberPickerMonth.setMinValue(0);
         numberPickerMonth.setWrapSelectorWheel(true);
+
+        numberPickerYear.setValue(expInYears / 12);
+        numberPickerMonth.setValue(expInYears % 12);
 
         setBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -182,6 +186,8 @@ public class CandidateProfileExperience extends Fragment {
                 Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
                 ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
 
+                languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
+
                 addLanguage = (ImageView) view.findViewById(R.id.add_more_language);
                 qualificationLayout = (LinearLayout) view.findViewById(R.id.current_company_details_layout);
                 experiencedSection = (LinearLayout) view.findViewById(R.id.experienced_section);
@@ -224,6 +230,15 @@ public class CandidateProfileExperience extends Fragment {
                     isCandidateExperienced = 0;
                     experiencedSection.setVisibility(View.GONE);
                 }
+
+                selectExp = (Button) view.findViewById(R.id.select_experience);
+                selectExp.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View arg0) {
+                        showExperiencePicker();
+                    }
+                });
+
 
                 if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
                     isEmployed = 1;
@@ -289,15 +304,7 @@ public class CandidateProfileExperience extends Fragment {
                     }
                 });
 
-                selectExp = (Button) view.findViewById(R.id.select_experience);
-                selectExp.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View arg0) {
-                        showExperiencePicker();
-                    }
-                });
-
-                getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList(), 0);
+                getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList());
 
                 allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
                 languageIdList = new ArrayList<Integer>();
@@ -311,58 +318,6 @@ public class CandidateProfileExperience extends Fragment {
                 for(int i=0 ; i<3 ; i++){
                     checkedItems[i] = true;
                 }
-                addLanguage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        //addding first 3 as checked
-                        for(int x=0; x<3 ; x++){
-                            LanguageObject.Builder languageBuilder = LanguageObject.newBuilder();
-                            languageBuilder.setLanguageId(languageIdList.get(x));
-                            languageBuilder.setLanguageName(String.valueOf(allLanguageList[x]));
-                            checkedLanguage.add(languageBuilder.build());
-                        }
-
-                        final AlertDialog alertDialog = new AlertDialog.Builder(
-                                getContext())
-                                .setCancelable(false)
-                                .setTitle("All Languages")
-                                .setPositiveButton("Done",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                getAllLanguages(checkedLanguage, 1);
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                .setMultiChoiceItems(allLanguageList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                                        if (b) {
-                                            // If the user checked the item, add it to the selected items
-                                            LanguageObject.Builder languageBuilder = LanguageObject.newBuilder();
-                                            languageBuilder.setLanguageId(languageIdList.get(i));
-                                            languageBuilder.setLanguageName(String.valueOf(allLanguageList[i]));
-                                            checkedLanguage.add(languageBuilder.build());
-                                        } else{
-                                            boolean flag = false;
-                                            for(int x=0; x<checkedLanguage.size(); x++){
-                                                if(checkedLanguage.get(x).getLanguageId() == languageIdList.get(x)){
-                                                    flag = true;
-                                                    pos = i;
-                                                    break;
-                                                }
-                                            }
-                                            if(flag){
-                                                checkedLanguage.remove(pos);
-                                            }
-                                        }
-                                    }
-                                }).create();
-                        alertDialog.show();
-
-                    }
-                });
 
                 currentJobRole.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -506,17 +461,12 @@ public class CandidateProfileExperience extends Fragment {
         return flag;
     }
 
-    public void getAllLanguages(List<LanguageObject> languageObjectList, int val){
-        int count = 0, breakFlag = 1;
-        LinearLayout languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
-        if(languageListView.getChildCount() > 0){
-            languageListView.removeAllViews();
-        }
+    public void getAllLanguages(List<LanguageObject> languageObjectList){
         for(final LanguageObject languageObject : languageObjectList){
             LayoutInflater inflater = null;
             inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View mLinearView = inflater.inflate(R.layout.language_list_item, null);
+            final View mLinearView = inflater.inflate(R.layout.language_list_item, null);
             TextView languageName = (TextView) mLinearView
                     .findViewById(R.id.language_name);
 
@@ -608,7 +558,6 @@ public class CandidateProfileExperience extends Fragment {
                             language.setLanguageUnderstand(1);
                             language.setLanguageSpeak(0);
                             candidateLanguageKnown.add(language.build());
-
                         }
                     } else{
                         language.setLanguageKnownId(languageObject.getLanguageId());
@@ -652,16 +601,6 @@ public class CandidateProfileExperience extends Fragment {
                     }
                 }
             });
-            count++;
-            if(val == 0){
-                if(count == 3){
-                    breakFlag = 0;
-                }
-            }
-            if(breakFlag == 0){
-                break;
-            }
-
         }
     }
 

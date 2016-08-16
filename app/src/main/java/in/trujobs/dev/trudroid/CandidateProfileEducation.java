@@ -39,7 +39,7 @@ public class CandidateProfileEducation extends Fragment {
     EditText candidateCollege;
     Button updateEducationProfile;
 
-    int qualificationPos = 0, degreePos = 0;
+    int qualificationPos = 0, degreePos = 0, firstTimeSetting = 0;
     View view;
 
     SpinnerAdapter adapter;
@@ -135,6 +135,7 @@ public class CandidateProfileEducation extends Fragment {
                     if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
                         qualificationSelected = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
                         qualificationPos = i;
+                        firstTimeSetting = 1;
                     }
                 }
 
@@ -175,28 +176,34 @@ public class CandidateProfileEducation extends Fragment {
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
                     {
                         if(position != 0){
-                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                            alertDialog.setMessage("Are you " + qualificationLevel[position] + " pass?");
-                            alertDialog.setCanceledOnTouchOutside(false);
-                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            qualificationStatus = 1;
-                                            ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
-                                            imageView.setImageResource(R.drawable.tick);
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            qualificationStatus = 0;
-                                            ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
-                                            imageView.setImageResource(R.drawable.wrong);
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
+                            if(firstTimeSetting == 0){
+                                firstTimeSetting = 1;
+                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                                alertDialog.setMessage("Are you " + qualificationLevel[position] + " pass?");
+                                alertDialog.setCanceledOnTouchOutside(false);
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                qualificationStatus = 1;
+                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
+                                                imageView.setImageResource(R.drawable.tick);
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                qualificationStatus = 0;
+                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
+                                                imageView.setImageResource(R.drawable.wrong);
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
+                            } else {
+                                firstTimeSetting = 0;
+                            }
+
                         }
 
                         if(position > 3){

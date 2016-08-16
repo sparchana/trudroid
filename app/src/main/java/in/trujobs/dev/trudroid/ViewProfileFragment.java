@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -36,6 +37,7 @@ public class ViewProfileFragment extends Fragment {
     ProgressDialog pd;
     Boolean bodyOpen, preferenceOpen, experienceOpen, educationOpen;
     ImageView assessment;
+    TextView profileCompletePercent;
 
     public CandidateInfoActivity candidateInfoActivity;
 
@@ -74,6 +76,8 @@ public class ViewProfileFragment extends Fragment {
         bodyPreference = (LinearLayout) view.findViewById(R.id.preference_body);
         bodyEducation = (LinearLayout) view.findViewById(R.id.education_body);
         bodyExperience = (LinearLayout) view.findViewById(R.id.experience_body);
+
+        profileCompletePercent = (TextView) view.findViewById(R.id.profile_status);
 
         headerPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +193,8 @@ public class ViewProfileFragment extends Fragment {
                 candidateName.setText("Hi " + getCandidateInformationResponse.getCandidate().getCandidateFirstName());
                 candidateAge.setText("22 years");
 
+                profileCompletePercent.setText(getCandidateInformationResponse.getCandidate().getCandidateProfileCompletePercent() + "%");
+
                 candidateMobile.setText(getCandidateInformationResponse.getCandidate().getCandidateMobile());
                 if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
                     candidateCollege.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getCandidateInstitute());
@@ -196,9 +202,9 @@ public class ViewProfileFragment extends Fragment {
                     candidateCollege.setText("Not Specified");
                 }
                 if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree() != null){
-                    candidateDegree.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree().getDegreeName());
+                    candidateCourse.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree().getDegreeName());
                 } else{
-                    candidateDegree.setText("Not Specified");
+                    candidateCourse.setText("Not Specified");
                 }
                 if(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany() != null){
                     candidateCurrentCompany.setText(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany());

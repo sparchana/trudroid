@@ -12,14 +12,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +30,6 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.JobRoleObject;
-import in.trujobs.proto.TimeShiftObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 
@@ -83,15 +80,34 @@ public class CandidateProfileBasic extends Fragment {
 
         final Calendar newCalendar = Calendar.getInstance();
 
-        dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
+        if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis());
+            int mYear = calendar.get(Calendar.YEAR);
+            int mMonth = calendar.get(Calendar.MONTH);
+            int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, monthOfYear, dayOfMonth);
+                    candidateDob.setText(dateFormatter.format(newDate.getTime()));
+                }
+            },mYear, mMonth, mDay);
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.YEAR, -18);
+            dobDatePicker.getDatePicker().setMaxDate(c.getTime().getTime());
+/*            dobDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis() - (long) 1000 * 60 * 60 * 24 * 365 * 18);*/
+        } else{
+            dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, monthOfYear, dayOfMonth);
+                    candidateDob.setText(dateFormatter.format(newDate.getTime()));
+                }
+            },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+            dobDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
+        }
 
-                candidateDob.setText(dateFormatter.format(newDate.getTime()));
-            }
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-        dobDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
     }
 
     private class GetBasicStaticAsyncTask extends AsyncTask<Void,
@@ -185,31 +201,28 @@ public class CandidateProfileBasic extends Fragment {
                     Prefs.jobPrefString.put(jobRoleSelectedId);
                     jobPrefLocation.setText(jobRoleSelectedString);
                 }
+                final CharSequence[] jobRoleList = new CharSequence[candidateInfoActivity.candidateInfo.getJobRolesCount()];
+                final List<Long> jobRoleIdList = new ArrayList<Long>();
+                for (int i = 0; i < candidateInfoActivity.candidateInfo.getJobRolesCount(); i++) {
+                    jobRoleList[i] = candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleName();
+                    jobRoleIdList.add(candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleId());
+                }
 
+                final boolean[] checkedItems = new boolean[jobRoleList.length];
+                for(int i=0 ; i<jobRoleList.length ; i++){
+                    for(JobRoleObject jobRoleObject: selectedJobRoles){
+                        if(jobRoleIdList.get(i) == jobRoleObject.getJobRoleId()){
+                            checkedItems[i] = true;
+                            break;
+                        } else{
+                            checkedItems[i] = false;
+                        }
+                    }
+                }
                 jobPrefLocation.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-
-                            final CharSequence[] jobRoleList = new CharSequence[candidateInfoActivity.candidateInfo.getJobRolesCount()];
-                            final List<Long> jobRoleIdList = new ArrayList<Long>();
-                            for (int i = 0; i < candidateInfoActivity.candidateInfo.getJobRolesCount(); i++) {
-                                jobRoleList[i] = candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleName();
-                                jobRoleIdList.add(candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleId());
-                            }
-
-                            boolean[] checkedItems = new boolean[jobRoleList.length];
-                            for(int i=0 ; i<jobRoleList.length ; i++){
-                                for(JobRoleObject jobRoleObject: selectedJobRoles){
-                                    if(jobRoleIdList.get(i) == jobRoleObject.getJobRoleId()){
-                                        checkedItems[i] = true;
-                                        break;
-                                    } else{
-                                        checkedItems[i] = false;
-                                    }
-                                }
-                            }
-
                             final AlertDialog alertDialog = new AlertDialog.Builder(
                                     getContext())
                                     .setCancelable(false)
@@ -286,8 +299,7 @@ public class CandidateProfileBasic extends Fragment {
                     secondName.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateLastName());
                 }
                 mobileNumber.setText(Prefs.candidateMobile.get());
-                Toast.makeText(getContext(), "== " + candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis(),
-                        Toast.LENGTH_LONG).show();
+                mobileNumber.setEnabled(false);
                 if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis());

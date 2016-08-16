@@ -70,14 +70,15 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
-                                <ImageView
+                                <TextView
                                     android:layout_height="60dp"
                                     android:layout_width="match_parent"
                                     android:id="@+id/profile_status"
-                                    android:src="@drawable/thumbs_down"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_centerHorizontal="true">
-                                </ImageView>
+                                    android:paddingTop="16dp"
+                                    android:textSize="24dp"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textAlignment="center" >
+                                </TextView>
                             </LinearLayout>
                         </LinearLayout>
                         <LinearLayout
@@ -85,14 +86,19 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
                             android:orientation="vertical">
-                            <ImageView
-                                android:id="@+id/assessment_status"
-                                android:layout_height="60dp"
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:src="@drawable/thumbs_up"
-                                android:layout_alignParentTop="true"
-                                android:layout_centerHorizontal="true">
-                            </ImageView>
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:layout_height="60dp"
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/candidate_applied_job_no"
+                                    android:paddingTop="16dp"
+                                    android:textSize="24dp"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textAlignment="center" >
+                                </TextView>
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
@@ -121,11 +127,10 @@
                             android:layout_weight="0.5"
                             android:orientation="vertical">
                             <TextView
-
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textColor="#484848"
-                                android:text="Assessment"
+                                android:text="Jobs you have Applied"
                                 android:gravity="center"/>
                         </LinearLayout>
                     </LinearLayout>
@@ -155,11 +160,11 @@
                             android:layout_weight="0.5"
                             android:orientation="vertical">
                             <TextView
-                                android:id="@+id/assessment_mssg"
+                                android:id="@+id/assessment_msg"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textSize="10dp"
-                                android:text="Message for Assessment action"
+                                android:text="Go to My Jobs"
                                 android:gravity="center"/>
                         </LinearLayout>
                     </LinearLayout>
@@ -496,7 +501,7 @@
                                     android:layout_marginLeft="34dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Preferred Job Location"
+                                    android:text="Current Home Location"
                                     android:textSize="@dimen/label_size" />
                             </LinearLayout>
                         </LinearLayout>

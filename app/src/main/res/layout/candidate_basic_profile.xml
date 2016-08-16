@@ -199,7 +199,8 @@
                                             android:singleLine="true"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:hint="Preferred Job Role(s)"/>
+                                            android:drawableRight="@drawable/down_arrow"
+                                            android:hint="Current Home Location"/>
                                     </android.support.design.widget.TextInputLayout>
                                 </LinearLayout>
                             </LinearLayout>
