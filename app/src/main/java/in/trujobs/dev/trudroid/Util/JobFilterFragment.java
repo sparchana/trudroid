@@ -121,10 +121,16 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         txtSortByFemale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_female);
 
 
-        jobFilterRequest = JobFilterRequest.newBuilder();
-        Tlog.i("jobFilterReq init");
-        jobFilterRequest.setCandidateMobile(Prefs.candidateMobile.get());
-        assignSearchedLatLng();
+        if(JobActivity.jobFilterRequestBkp != null && jobFilterRequest == null){
+            Tlog.i("jobFilterRequest is preserved");
+            jobFilterRequest = JobActivity.jobFilterRequestBkp.toBuilder();
+            onLoadUpdateFragmentUI(jobFilterRequest.build());
+        } else {
+            jobFilterRequest = JobFilterRequest.newBuilder();
+            Tlog.i("jobFilterReq init");
+            jobFilterRequest.setCandidateMobile(Prefs.candidateMobile.get());
+            assignSearchedLatLng();
+        }
 
         ftrSortByDatePosted.setOnClickListener(this);
         ftrSortBySalary.setOnClickListener(this);
@@ -352,10 +358,21 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
                 jobFilterRequest.clear();
                 jobFilterRequest.setCandidateMobile(Prefs.candidateMobile.get());
                 assignSearchedLatLng();
+                resetFragmentUI();
                 break;
             default:
                 break;
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void resetFragmentUI() {
+         /* deactivate all then enable one */
+        SalaryBtnManipulation(null, false);
+        EduBtnManipulation(null, false);
+        ExpBtnManipulation(null, false);
+        GenderBtnManipulation(null, false);
+        DateSalaryBtnManipulation(null, false);
     }
 
     /* filter ui component manipulation */
@@ -373,21 +390,23 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrSalaryTwentyKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
         ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#000000"));
 
-        if(id == R.id.ftr_salary_eight_k_plus && shouldEnable){
-            ftrSalaryEightKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrSalaryEightKPlus.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_salary_ten_k_plus && shouldEnable){
-            ftrSalaryTenKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrSalaryTenKPlus.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_salary_twelve_k_plus && shouldEnable){
-            ftrSalaryTwelveKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrSalaryTwelveKPlus.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_salary_fifteen_k_plus && shouldEnable){
-            ftrSalaryFifteenKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrSalaryFifteenKPlus.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_salary_twenty_k_plus && shouldEnable){
-            ftrSalaryTwentyKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#ffffff"));
+        if(id != null){
+            if(shouldEnable && id == R.id.ftr_salary_eight_k_plus ){
+                ftrSalaryEightKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrSalaryEightKPlus.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_salary_ten_k_plus ){
+                ftrSalaryTenKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrSalaryTenKPlus.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_salary_twelve_k_plus ){
+                ftrSalaryTwelveKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrSalaryTwelveKPlus.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_salary_fifteen_k_plus ){
+                ftrSalaryFifteenKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrSalaryFifteenKPlus.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_salary_twenty_k_plus ){
+                ftrSalaryTwentyKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#ffffff"));
+            }
         }
     }
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -404,21 +423,23 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrEduPg.setBackground(getResources().getDrawable(R.drawable.cust_border));
         ftrEduPg.setTextColor(Color.parseColor("#000000"));
 
-        if(id == R.id.ftr_edu_lt_ten&& shouldEnable){
-            ftrEduLtTen.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrEduLtTen.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_edu_ten_pass && shouldEnable){
-            ftrEduTenPass.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrEduTenPass.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_edu_twelve_pass && shouldEnable){
-            ftrEduTwelvePass.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrEduTwelvePass.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_edu_ug && shouldEnable){
-            ftrEduUg.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrEduUg.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_edu_pg && shouldEnable){
-            ftrEduPg.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrEduPg.setTextColor(Color.parseColor("#ffffff"));
+        if(id != null){
+            if(shouldEnable && id == R.id.ftr_edu_lt_ten){
+                ftrEduLtTen.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrEduLtTen.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_edu_ten_pass){
+                ftrEduTenPass.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrEduTenPass.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_edu_twelve_pass){
+                ftrEduTwelvePass.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrEduTwelvePass.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_edu_ug){
+                ftrEduUg.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrEduUg.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable && id == R.id.ftr_edu_pg){
+                ftrEduPg.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrEduPg.setTextColor(Color.parseColor("#ffffff"));
+            }
         }
     }
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -429,12 +450,14 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrExperienceExperienced.setBackground(getResources().getDrawable(R.drawable.cust_border));
         ftrExperienceExperienced.setTextColor(Color.parseColor("#000000"));
 
-        if(id == R.id.ftr_experience_fresher&& shouldEnable){
-            ftrExperienceFresher.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrExperienceFresher.setTextColor(Color.parseColor("#ffffff"));
-        } else if(id == R.id.ftr_experience_experienced && shouldEnable){
-            ftrExperienceExperienced.setBackgroundColor(Color.parseColor("#749cf4"));
-            ftrExperienceExperienced.setTextColor(Color.parseColor("#ffffff"));
+        if(id != null){
+            if(shouldEnable && id == R.id.ftr_experience_fresher){
+                ftrExperienceFresher.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrExperienceFresher.setTextColor(Color.parseColor("#ffffff"));
+            } else if(shouldEnable &&  id == R.id.ftr_experience_experienced){
+                ftrExperienceExperienced.setBackgroundColor(Color.parseColor("#749cf4"));
+                ftrExperienceExperienced.setTextColor(Color.parseColor("#ffffff"));
+            }
         }
     }
     private void GenderBtnManipulation(Integer id, boolean shouldEnable){
@@ -444,12 +467,14 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         txtSortByMale.setTextColor(Color.parseColor("#000000"));
         txtSortByFemale.setTextColor(Color.parseColor("#000000"));
 
-        if(id == R.id.ftr_gender_male && shouldEnable){
-            imgSortByMale.setImageResource(R.drawable.male);
-            txtSortByMale.setTextColor(Color.parseColor("#749cf4"));
-        } else if(id == R.id.ftr_gender_female && shouldEnable){
-            imgSortByFemale.setImageResource(R.drawable.female);
-            txtSortByFemale.setTextColor(Color.parseColor("#749cf4"));
+        if(id != null){
+            if(shouldEnable && id == R.id.ftr_gender_male){
+                imgSortByMale.setImageResource(R.drawable.male);
+                txtSortByMale.setTextColor(Color.parseColor("#749cf4"));
+            } else if(shouldEnable && id == R.id.ftr_gender_female){
+                imgSortByFemale.setImageResource(R.drawable.female);
+                txtSortByFemale.setTextColor(Color.parseColor("#749cf4"));
+            }
         }
     }
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -465,14 +490,16 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         txtSortBySalary.setTextColor(getResources().getColor(R.color.boxOption));
 
 
-        if(id == R.id.ftr_sort_by_date_posted && shouldEnable){
-            imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
-            imgSortByDatePosted.setImageResource(R.drawable.latest);
-            txtSortByDatePosted.setTextColor(getResources().getColor(R.color.back_grey_light_item));
-        } else if(id == R.id.ftr_sort_by_salary && shouldEnable){
-            imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
-            imgSortBySalary.setImageResource(R.drawable.rupee);
-            txtSortBySalary.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+        if(id != null){
+            if(shouldEnable && id == R.id.ftr_sort_by_date_posted){
+                imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
+                imgSortByDatePosted.setImageResource(R.drawable.latest);
+                txtSortByDatePosted.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+            } else if(shouldEnable && id == R.id.ftr_sort_by_salary){
+                imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
+                imgSortBySalary.setImageResource(R.drawable.rupee);
+                txtSortBySalary.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+            }
         }
     }
 
@@ -487,6 +514,61 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
             Tlog.i("filter set to searched ln : "+JobActivity.getmSearchLng());
         }
     }
+
+    private void onLoadUpdateFragmentUI(JobFilterRequest jobFilterRequest) {
+        /* misc */
+        if(jobFilterRequest.getSortByDatePosted()){
+            DateSalaryBtnManipulation(R.id.ftr_sort_by_date_posted, true);
+        }
+        if(jobFilterRequest.getSortBySalary()){
+            DateSalaryBtnManipulation(R.id.ftr_sort_by_salary, true);
+        }
+         /* salary */
+        switch (jobFilterRequest.getSalary()){
+            case EIGHT_K_PLUS: SalaryBtnManipulation(R.id.ftr_salary_eight_k_plus, true);
+                break;
+            case TEN_K_PLUS: SalaryBtnManipulation(R.id.ftr_salary_ten_k_plus, true);
+                break;
+            case TWELVE_K_PLUS: SalaryBtnManipulation(R.id.ftr_salary_twelve_k_plus, true);
+                break;
+            case FIFTEEN_K_PLUS: SalaryBtnManipulation(R.id.ftr_salary_fifteen_k_plus, true);
+                break;
+            case TWENTY_K_PLUS: SalaryBtnManipulation(R.id.ftr_salary_twenty_k_plus, true);
+                break;
+            default: break;
+        }
+        /* edu */
+        switch (jobFilterRequest.getEdu()){
+            case LT_TEN: EduBtnManipulation(R.id.ftr_edu_lt_ten, true);
+                break;
+            case TEN_PASS: EduBtnManipulation(R.id.ftr_edu_ten_pass, true);
+                break;
+            case TWELVE_PASS: EduBtnManipulation(R.id.ftr_edu_twelve_pass, true);
+                break;
+            case UG: EduBtnManipulation(R.id.ftr_edu_ug, true);
+                break;
+            case PG: EduBtnManipulation(R.id.ftr_edu_pg, true);
+                break;
+            default: break;
+        }
+        /* exp */
+        switch (jobFilterRequest.getExp()){
+            case FRESHER: ExpBtnManipulation(R.id.ftr_experience_fresher, true);
+                break;
+            case EXPERIENCED: ExpBtnManipulation(R.id.ftr_experience_experienced, true);
+                break;
+            default: break;
+        }
+        /* gender */
+        switch (jobFilterRequest.getGender()){
+            case MALE: GenderBtnManipulation(R.id.ftr_gender_male, true);
+                break;
+            case FEMALE: GenderBtnManipulation(R.id.ftr_gender_female, true);
+                break;
+            default: break;
+        }
+    }
+
 
     private class JobFilterAsyncTask extends AsyncTask<JobFilterRequest,
             Void, JobPostResponse> {

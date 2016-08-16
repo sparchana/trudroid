@@ -45,7 +45,7 @@
                    android:focusableInTouchMode="true"
                    android:maxLength="50"
                    android:layout_gravity="center"
-                   android:text="Bellandur, Bangalore"
+                   android:hint="Bellandur, Bangalore"
                    android:layout_weight="1"/>
 
                <ImageView
@@ -103,7 +103,7 @@
                     android:layout_gravity="center_vertical"
                     android:textSize="12dp"
                     android:maxLength="50"
-                    android:text="All Jobs (4)"
+                    android:text="All Jobs"
                     android:layout_weight="1"/>
 
                 <ImageView
