@@ -27,6 +27,7 @@ public class Prefs {
     public static final File.SharedPreference<Integer> candidateHomeLocalityStatus = sFile.intValue("candidateHomeLocalityStatus", 0);
     public static final File.SharedPreference<Integer> loginCheckStatus = sFile.intValue("loginCheckStatus", 0);
 
+    public static final File.SharedPreference<String> jobPrefString = sFile.stringValue("jobPrefString", "");
     public static void onLogout() {
         Prefs.leadId.remove();
         Prefs.candidateId.remove();
@@ -39,6 +40,9 @@ public class Prefs {
         Prefs.storedOtp.remove();
         Prefs.sessionId.remove();
         Prefs.sessionExpiry.remove();
+        Prefs.candidateHomeLocalityStatus.remove();
+        Prefs.candidateJobPrefStatus.remove();
+        Prefs.jobPrefString.remove();
     }
 
     /* TODO maintain session and authToken across server and app */

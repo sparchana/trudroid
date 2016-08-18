@@ -14,4 +14,12 @@
     <color name="colorOrange">#f77032</color>
     <color name="colorCaution">#e41b10</color>
     <color name="colorGreen">#09ac58</color>
+    <color name="colorYellow">#e4d04b</color>
+
+    <color name="enabled_color">#000000</color>
+    <color name="disabled_color">#4d4d4d</color>
+
+    <!-- custom progress bar colours -->
+    <color name="circular_progress_default_background">#787878</color>
+    <color name="circular_progress_default_subtitle">#D1D1D1</color>
 </resources>

@@ -235,6 +235,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp"
+                android:id="@+id/apply_button_layout"
                 android:background="@color/colorPrimary"
                 android:gravity="center|center_horizontal|center_vertical">
 
@@ -242,6 +243,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textAlignment="center"
+                    android:id="@+id/apply_button"
                     android:text="APPLY"
                     android:textStyle="bold"
                     android:textColor="#ffffff"

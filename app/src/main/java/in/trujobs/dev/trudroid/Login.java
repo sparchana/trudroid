@@ -158,7 +158,6 @@ public class Login extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                     finish();
                 }
-
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 Toast.makeText(Login.this, "Incorrect password. Click \"Forgot Password\" to reset",

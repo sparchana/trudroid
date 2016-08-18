@@ -3,6 +3,7 @@
     <!-- Logout -->
     <item android:id="@+id/action_logout"
         android:title="Logout"
-        android:showAsAction="never"/>
+        android:icon="@drawable/friend"
+        android:showAsAction="always" />
 
 </menu>

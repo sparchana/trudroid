@@ -242,6 +242,26 @@ public class JobPreference extends AppCompatActivity {
         requestBuilder.setJobRolePrefTwoId(jobPrefTwo);
         requestBuilder.setJobRolePrefThreeId(jobPrefThree);
 
+        Prefs.jobPrefString.remove();
+        if(jobPrefOne != 0L){
+            if(Prefs.jobPrefString.get() != ""){
+                Prefs.jobPrefString.put(Prefs.jobPrefString.get() + ",");
+            }
+            Prefs.jobPrefString.put(Prefs.jobPrefString.get() + jobPrefOne);
+        }
+        if(jobPrefTwo != 0L){
+            if(Prefs.jobPrefString.get() != ""){
+                Prefs.jobPrefString.put(Prefs.jobPrefString.get() + ",");
+            }
+            Prefs.jobPrefString.put(Prefs.jobPrefString.get() + jobPrefTwo);
+        }
+        if(jobPrefThree != 0L){
+            if(Prefs.jobPrefString.get() != ""){
+                Prefs.jobPrefString.put(Prefs.jobPrefString.get() + ",");
+            }
+            Prefs.jobPrefString.put(Prefs.jobPrefString.get() + jobPrefThree);
+        }
+
         mSaveJobPrefAsyncTask = new SaveJobRolePrefAsyncTask();
         mSaveJobPrefAsyncTask.execute(requestBuilder.build());
     }

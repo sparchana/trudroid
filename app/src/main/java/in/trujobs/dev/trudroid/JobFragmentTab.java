@@ -12,10 +12,6 @@ import android.widget.LinearLayout;
  */
 public class JobFragmentTab extends Fragment {
 
-    public class Holder
-    {
-        LinearLayout jobApplyLayout;
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.job_tab, container, false);
