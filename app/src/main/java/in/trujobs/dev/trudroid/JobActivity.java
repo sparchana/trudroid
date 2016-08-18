@@ -25,13 +25,16 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
+import in.trujobs.proto.FetchCandidateAlertRequest;
+import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.JobPostResponse;
 
 public class JobActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
-    private AsyncTask<CandidateAppliedJobsRequest, Void, CandidateAppliedJobsResponse> mCandidateAppliedJobsAsyncTask;
+    private AsyncTask<FetchCandidateAlertRequest, Void, FetchCandidateAlertResponse> mAlertAsyncTask;
+
     ProgressDialog pd;
     ListView jobPostListView;
     private FloatingActionButton fab;
@@ -49,8 +52,11 @@ public class JobActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewDialog alert = new ViewDialog();
-                alert.showDialog(JobActivity.this, "Complete Assessment", "Increase your chance of getting a job by 50%", "Call us to know more!", R.drawable.assesment, 1);
+                FetchCandidateAlertRequest.Builder requestBuilder = FetchCandidateAlertRequest.newBuilder();
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.toString());
+
+                mAlertAsyncTask = new FetchAlertAsyncTask();
+                mAlertAsyncTask.execute(requestBuilder.build());
             }
         });
 
@@ -122,33 +128,41 @@ public class JobActivity extends AppCompatActivity
         }
     }
 
-    private class MyAppliedJobPostAsyncTask extends AsyncTask<CandidateAppliedJobsRequest,
-            Void, CandidateAppliedJobsResponse> {
 
-        @Override
-        protected CandidateAppliedJobsResponse doInBackground(CandidateAppliedJobsRequest... params) {
-            return HttpRequest.getMyJobs(params[0]);
+    private class FetchAlertAsyncTask extends AsyncTask<FetchCandidateAlertRequest,
+            Void, FetchCandidateAlertResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
         @Override
-        protected void onPostExecute(CandidateAppliedJobsResponse candidateAppliedJobsResponse) {
-            super.onPostExecute(candidateAppliedJobsResponse);
-            pd.cancel();
-            if (candidateAppliedJobsResponse == null) {
-                Log.w("","Null my jobs Response");
+        protected FetchCandidateAlertResponse doInBackground(FetchCandidateAlertRequest... params) {
+            return HttpRequest.fetchCandidateAlert(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(FetchCandidateAlertResponse candidateAlertResponse) {
+            super.onPostExecute(candidateAlertResponse);
+            if (candidateAlertResponse == null) {
+                Log.e("","Null Candidate Alert Response");
                 return;
             } else {
-                if(returnedJobPostResponse.getJobPostCount() > 0){
-                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, returnedJobPostResponse.getJobPostList());
-                    jobPostListView.setAdapter(jobPostAdapter);
-                } else {
-                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
-                    noJobsImageView.setVisibility(View.VISIBLE);
+                ViewDialog alert = new ViewDialog();
+
+                if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_PROFILE) {
+                    alert.showDialog(JobActivity.this,
+                            "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
+                            R.drawable.assesment, 1);
+                }
+                else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
+                    alert.showDialog(JobActivity.this,
+                            "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
+                            R.drawable.assesment, 2);
                 }
             }
         }
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

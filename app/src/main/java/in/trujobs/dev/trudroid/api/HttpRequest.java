@@ -22,6 +22,8 @@ import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
+import in.trujobs.proto.FetchCandidateAlertRequest;
+import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.AddJobRoleRequest;
@@ -490,5 +492,23 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return homeLocalityResponse;
+    }
+
+    public static FetchCandidateAlertResponse fetchCandidateAlert(FetchCandidateAlertRequest candidateAlertRequest) {
+        String responseString = postToServer(Config.URL_CANDIDATE_STATUS_SPECIFIC_ALERT,
+                Base64.encodeToString(candidateAlertRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        FetchCandidateAlertResponse candidateAlertResponse = null;
+        try {
+            candidateAlertResponse = FetchCandidateAlertResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return candidateAlertResponse;
+
     }
 }
