@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.trujobs.dev.trudroid.R;
@@ -18,13 +19,11 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
 
     private Context ctx;
     private String[] contentArray;
-    private int imageArray;
 
-    public SpinnerAdapter(Context context, int resource, String[] objects, int imageStatus) {
+    public SpinnerAdapter(Context context, int resource, String[] objects) {
         super(context, resource, R.id.spinnerTextViewQualification, objects);
         this.ctx = context;
         this.contentArray = objects;
-        this.imageArray = imageStatus;
     }
 
     @Override
@@ -37,14 +36,6 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
 
         TextView textView = (TextView) convertView.findViewById(R.id.spinnerTextViewQualification);
         textView.setText(contentArray[position]);
-
-        ImageView imageView = (ImageView)convertView.findViewById(R.id.spinnerImagesQualification);
-        if(imageArray == 0){
-            imageView.setImageResource(R.drawable.wrong);
-        } else if(imageArray == 1){
-            imageView.setImageResource(R.drawable.tick);
-        }
-
         return convertView;
     }
 }

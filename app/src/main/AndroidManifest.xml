@@ -84,7 +84,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".CandidateInfoActivity"
+            android:name=".CandidateProfileActivity"
             android:label="Profile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

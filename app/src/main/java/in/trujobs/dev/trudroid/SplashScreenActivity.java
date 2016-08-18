@@ -49,7 +49,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         intent = new Intent(SplashScreenActivity.this, HomeLocality.class);
                     } else{
                         intent = new Intent(SplashScreenActivity.this, JobActivity.class);
-/*                        intent = new Intent(SplashScreenActivity.this, CandidateInfoActivity.class);*/
+/*                        intent = new Intent(SplashScreenActivity.this, CandidateProfileActivity.class);*/
 
                     }
                     startActivity(intent);

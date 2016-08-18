@@ -29,6 +29,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -43,7 +44,6 @@ public class JobDetailActivity extends AppCompatActivity {
     private static String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
     private static final List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
     private FloatingActionButton fab;
-    LinearLayout jobPostListView;
     Button jobTabApplyBtn;
     ProgressDialog pd;
     int preScreenLocationIndex = 0;
@@ -51,6 +51,7 @@ public class JobDetailActivity extends AppCompatActivity {
 
     public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
         Intent intent = new Intent(context, JobDetailActivity.class);
+        Log.e("Other job post in", "data: " + jobRole);
         EXTRA_LOCALITY.clear();
         EXTRA_JOB_TITLE = jobRole;
         for(LocalityObject localityObject : jobPostLocalityList){
@@ -66,7 +67,6 @@ public class JobDetailActivity extends AppCompatActivity {
         setTitle(EXTRA_JOB_TITLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +78,12 @@ public class JobDetailActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Job"));
         tabLayout.addTab(tabLayout.newTab().setText("Company"));
-/*        tabLayout.addTab(tabLayout.newTab().setText("Other Jobs"));*/
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        //get details of a jobPost via AsyncTask
         getDetails();
+
+        //pager to contain 2 tabs
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
@@ -104,6 +106,12 @@ public class JobDetailActivity extends AppCompatActivity {
     public void getDetails(){
         GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
         requestBuilder.setJobPostId(Prefs.jobPostId.get());
+        if(Util.isLoggedIn()){
+            requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+        } else{
+            //sending 0 because Prefs is empty because user is not logged in
+            requestBuilder.setCandidateMobile("0");
+        }
         mAsyncTask = new JobPostDetailAsyncTask();
         mAsyncTask.execute(requestBuilder.build());
     }
@@ -129,6 +137,7 @@ public class JobDetailActivity extends AppCompatActivity {
             super.onPostExecute(getJobPostDetailsResponse);
             ImageView companyLogo = (ImageView) findViewById(R.id.company_logo);
 
+            //job Tab values
             TextView jobPostPostedOn = (TextView) findViewById(R.id.posted_date);
             TextView companyNameJobScreen = (TextView) findViewById(R.id.c_name);
             TextView jobPostJobTitle = (TextView) findViewById(R.id.job_role);
@@ -140,6 +149,7 @@ public class JobDetailActivity extends AppCompatActivity {
             TextView jobPostWorkingDays = (TextView) findViewById(R.id.job_off);
             TextView jobPostMinReq = (TextView) findViewById(R.id.job_post_min_requirement);
 
+            //company tab values
             TextView companyName = (TextView) findViewById(R.id.company_name);
             TextView companyLocation = (TextView) findViewById(R.id.company_location);
             TextView companyEmployees = (TextView) findViewById(R.id.company_employees);
@@ -149,7 +159,6 @@ public class JobDetailActivity extends AppCompatActivity {
 
             pd.cancel();
 
-            Log.e("jobActivity", "Data: "+ getJobPostDetailsResponse);
             if (getJobPostDetailsResponse == null) {
                 Toast.makeText(JobDetailActivity.this, "Failed to Fetch details. Please try again.",
                         Toast.LENGTH_LONG).show();
@@ -159,8 +168,9 @@ public class JobDetailActivity extends AppCompatActivity {
             }
 
             if(getJobPostDetailsResponse.getStatusValue() == ServerConstants.SUCCESS){
-
                 //Set job page
+
+                //breaking a lot of localities in 3 localities and rest as "more"
                 String localities = "";
                 int localityCount = EXTRA_LOCALITY.size();
                 if(localityCount > 3){
@@ -175,6 +185,7 @@ public class JobDetailActivity extends AppCompatActivity {
                 if(localityCount > 3){
                     localities += " more";
                 }
+                //setting job post details
                 jobPostLocation.setText(localities);
                 jobPostJobTitle.setText(getJobPostDetailsResponse.getJobPost().getJobPostTitle());
                 jobPostExperience.setText(getJobPostDetailsResponse.getJobPost().getJobPostExperience().getExperienceType() + " experience");
@@ -185,6 +196,7 @@ public class JobDetailActivity extends AppCompatActivity {
                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
                 jobPostPostedOn.setText("Posted on: " + mDay + "-" + mMonth + "-" + mYear);
 
+                //calculating and setting working days
                 String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
                 if(workingDays.length() > 6) {
                     String daysOff = "";
@@ -192,25 +204,16 @@ public class JobDetailActivity extends AppCompatActivity {
                     if (workingDays.length() > 7) {
                         workingDays = workingDays.substring(2, 8);
                     }
-
                     for (int i = 0; i < 7; i++) {
                         char c = workingDays.charAt(i);
-                        if (c == '0') { //checking an off day
-                            if (i == 0) {
-                                daysOff += "Mon,";
-                            } else if (i == 1) {
-                                daysOff += "Tue,";
-                            } else if (i == 2) {
-                                daysOff += "Wed,";
-                            } else if (i == 3) {
-                                daysOff += "Thu,";
-                            } else if (i == 4) {
-                                daysOff += "Fri,";
-                            } else if (i == 5) {
-                                daysOff += "Sat,";
-                            } else if (i == 6) {
-                                daysOff += "Sun,";
-                            }
+                        switch (c){
+                            case '0': daysOff += "Mon,"; break;
+                            case '1': daysOff += "Tue,"; break;
+                            case '2': daysOff += "Wed,"; break;
+                            case '3': daysOff += "Thu,"; break;
+                            case '4': daysOff += "Fri,"; break;
+                            case '5': daysOff += "Sat,"; break;
+                            case '6': daysOff += "Sun,"; break;
                         }
                     }
                     jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length() - 1)) + " holiday");
@@ -218,18 +221,23 @@ public class JobDetailActivity extends AppCompatActivity {
                     jobPostWorkingDays.setText("Off days not available");
                 }
 
+                //setting min requirements
                 jobPostMinReq.setText(getJobPostDetailsResponse.getJobPost().getJobPostMinRequirements());
 
+                //setting start and end time requirements
                 if(getJobPostDetailsResponse.getJobPost().getJobPostStartTime() != -1){
-                    String start = "";
-                    String end = "";
+                    String start;
+                    String end;
 
+                    //conversion from 24 hrs format to 12 hr format
+                    //start time conversion
                     if(getJobPostDetailsResponse.getJobPost().getJobPostStartTime() > 12){
                         start = (getJobPostDetailsResponse.getJobPost().getJobPostStartTime() - 12) + "pm";
                     } else{
                         start = getJobPostDetailsResponse.getJobPost().getJobPostStartTime() + "am";
                     }
 
+                    //end time conversion
                     if(getJobPostDetailsResponse.getJobPost().getJobPostEndTime() > 12){
                         end = (getJobPostDetailsResponse.getJobPost().getJobPostEndTime() - 12) + "pm";
                     } else{
@@ -239,6 +247,8 @@ public class JobDetailActivity extends AppCompatActivity {
                 } else{
                     jobPostTimings.setText("working hours not available");
                 }
+
+                //alert dialog to show all the localities with comma separated
                 jobPostLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -254,6 +264,7 @@ public class JobDetailActivity extends AppCompatActivity {
                     }
                 });
 
+                //converting min and max salaries in #,### format
                 DecimalFormat formatter = new DecimalFormat("#,###");
                 if(getJobPostDetailsResponse.getJobPost().getJobPostMaxSalary() != 0){
                     jobPostSalary.setText("₹" + formatter.format(getJobPostDetailsResponse.getJobPost().getJobPostMinSalary()) + " - ₹" + formatter.format(getJobPostDetailsResponse.getJobPost().getJobPostMaxSalary()));
@@ -267,9 +278,11 @@ public class JobDetailActivity extends AppCompatActivity {
                     jobPostIncentives.setText("Information not available");
                 }
 
+                //setting other jobs in Other job section
+
                 LinearLayout otherJobListView = (LinearLayout) findViewById(R.id.other_job_list_view);
+
                 //set adapter for other jobs
-                Log.e("job", "returnedData: " + getJobPostDetailsResponse);
                 for(final JobPostObject jobPostObject : getJobPostDetailsResponse.getCompany().getCompanyOtherJobsList()){
                     LayoutInflater inflater = null;
                     inflater = (LayoutInflater) JobDetailActivity.this
@@ -278,23 +291,30 @@ public class JobDetailActivity extends AppCompatActivity {
                     TextView mJobPostTitleTextView = (TextView) mLinearView.findViewById(R.id.company_other_job_title);
                     TextView mJobPostSalary = (TextView) mLinearView.findViewById(R.id.company_other_job_min_salary);
 
+                    //setting title of the job Post
                     mJobPostTitleTextView.setText(jobPostObject.getJobPostTitle());
+
+                    //setting salary of the job post
                     if(jobPostObject.getJobPostMaxSalary() != 0){
                         mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()) + " - ₹" + formatter.format(jobPostObject.getJobPostMaxSalary()));
                     } else{
                         mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()));
                     }
+                    //adding the job view
                     otherJobListView.addView(mLinearView);
 
                     mLinearView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Log.e("Other job post", "data: " + jobPostObject);
                             Prefs.jobPostId.put(jobPostObject.getJobPostId());
-                            JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole().getJobRoleName(), jobPostObject.getJobPostLocalityList());
+                            JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole(), jobPostObject.getJobPostLocalityList());
                         }
                     });
                 }
 
+                //setting company tab info
+                //setting logo
                 if(getJobPostDetailsResponse.getCompany().getCompanyLogo() != null || getJobPostDetailsResponse.getCompany().getCompanyLogo() != ""){
                     Picasso.with(getApplicationContext()).load(getJobPostDetailsResponse.getCompany().getCompanyLogo()).into(companyLogo);
                 } else{
@@ -302,26 +322,31 @@ public class JobDetailActivity extends AppCompatActivity {
                 }
 
                 companyName.setText(getJobPostDetailsResponse.getCompany().getCompanyName());
+
                 if(getJobPostDetailsResponse.getCompany().getCompanyLocality() != null){
                     companyLocation.setText(getJobPostDetailsResponse.getCompany().getCompanyLocality().getLocalityName());
                 } else{
                     companyLocation.setText("Info not available");
                 }
+
                 if(getJobPostDetailsResponse.getCompany().getCompanyEmployeeCount() != ""){
                     companyEmployees.setText(getJobPostDetailsResponse.getCompany().getCompanyEmployeeCount() + " employees");
                 } else{
                     companyEmployees.setText("Info not available");
                 }
+
                 if(getJobPostDetailsResponse.getCompany().getCompanyWebsite() != ""){
                     companyWebsite.setText(getJobPostDetailsResponse.getCompany().getCompanyWebsite());
                 } else {
                     companyWebsite.setText("website not available");
                 }
+
                 if(getJobPostDetailsResponse.getCompany().getCompanyType() != null){
                     companyType.setText(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName());
                 } else{
                     companyType.setText("Info not Available");
                 }
+
                 if(getJobPostDetailsResponse.getCompany().getCompanyDescription() != ""){
                     companyDescription.setText(getJobPostDetailsResponse.getCompany().getCompanyDescription());
                     int len = getJobPostDetailsResponse.getCompany().getCompanyDescription().length();
@@ -340,6 +365,12 @@ public class JobDetailActivity extends AppCompatActivity {
                 }
 
                 jobTabApplyBtn = (Button) findViewById(R.id.job_detail_apply_btn);
+                if(getJobPostDetailsResponse.getAlreadyApplied()){
+                    jobTabApplyBtn.setText("Already Applied");
+                    jobTabApplyBtn.setBackgroundColor(getResources().getColor(R.color.back_grey_dark));
+                    jobTabApplyBtn.setEnabled(false);
+                }
+
                 jobTabApplyBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -351,7 +382,6 @@ public class JobDetailActivity extends AppCompatActivity {
                                 localityList[i] = EXTRA_LOCALITY.get(i).getLocalityName();
                                 localityId[i] = EXTRA_LOCALITY.get(i).getLocalityId();
                             }
-
 
                             final AlertDialog alertDialog = new AlertDialog.Builder(
                                     JobDetailActivity.this)

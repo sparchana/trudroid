@@ -6,13 +6,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -49,14 +51,12 @@ public class CandidateProfileExperience extends Fragment {
     String selectedExpValue = "";
     CandidateSkillObject.Builder existingSkill = CandidateSkillObject.newBuilder();
     LanguageKnownObject.Builder existingLanguageKnown = LanguageKnownObject.newBuilder();
-    EditText lastWithdrawnSalary, currentCompany;
-    TextView currentJobRole;
+    EditText currentJobRole, lastWithdrawnSalary, currentCompany;
 
-    public CandidateInfoActivity candidateInfoActivity;
+    public CandidateProfileActivity candidateProfileActivity;
 
     LinearLayout qualificationLayout, experiencedSection, languageListView;
     Integer isCandidateExperienced = -1;
-    ImageView addLanguage;
 
     // values
     Integer expInYears;
@@ -69,26 +69,38 @@ public class CandidateProfileExperience extends Fragment {
     CharSequence[] allLanguageList = new CharSequence[0];
     List<Integer> languageIdList = new ArrayList<Integer>();
 
-    Button saveExperienceBtn, selectExp, isExperienced, isFresher, isEmployedYes, isEmployedNo;
+    Button saveExperienceBtn, isExperienced, isFresher, isEmployedYes, isEmployedNo;
     int pos = -1;
+    TextView selectExp;
 
+    ImageView experiencePicker, currentJobRolePicker;
     View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.candidate_experience_profile, container, false);
-        candidateInfoActivity = (CandidateInfoActivity) getActivity();
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
+
+        ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        collapsingToolbarLayout.setTitle("Experience Profile");
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        candidateProfileActivity = (CandidateProfileActivity) getActivity();
         mAsyncTask = new GetExperienceStaticAsyncTask();
         mAsyncTask.execute();
         return view;
     }
 
     public void showExperiencePicker(){
-        selectExp = (Button) view.findViewById(R.id.select_experience);
         final Dialog expDialog = new Dialog(getActivity());
         expDialog.setTitle("Select Experience");
         expDialog.setContentView(R.layout.experience_picker);
         Button setBtn = (Button) expDialog.findViewById(R.id.setBtn);
-        Button cnlBtn = (Button) expDialog.findViewById(R.id.CancelButton_NumberPicker);
 
         final NumberPicker numberPickerYear = (NumberPicker) expDialog.findViewById(R.id.numberPickerYears);
         final NumberPicker numberPickerMonth = (NumberPicker) expDialog.findViewById(R.id.numberPickerMonths);
@@ -101,8 +113,10 @@ public class CandidateProfileExperience extends Fragment {
         numberPickerMonth.setMinValue(0);
         numberPickerMonth.setWrapSelectorWheel(true);
 
-        numberPickerYear.setValue(expInYears / 12);
-        numberPickerMonth.setValue(expInYears % 12);
+        if(expInYears != null){
+            numberPickerYear.setValue(expInYears / 12);
+            numberPickerMonth.setValue(expInYears % 12);
+        }
 
         setBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -116,13 +130,6 @@ public class CandidateProfileExperience extends Fragment {
                 }
                 selectExp.setText(selectedExpValue);
                 expInYears = (numberPickerYear.getValue() * 12) + (numberPickerMonth.getValue());
-                expDialog.dismiss();
-            }
-        });
-
-        cnlBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
                 expDialog.dismiss();
             }
         });
@@ -153,7 +160,8 @@ public class CandidateProfileExperience extends Fragment {
             CandidateProfileEducation candidateProfileEducation = new CandidateProfileEducation();
             candidateProfileEducation.setArguments(getActivity().getIntent().getExtras());
             getFragmentManager().beginTransaction()
-                    .replace(R.id.main_profile, candidateProfileEducation).commit();
+                    .addToBackStack(null)
+                    .add(R.id.main_profile, candidateProfileEducation).commit();
         }
     }
 
@@ -184,39 +192,38 @@ public class CandidateProfileExperience extends Fragment {
                 return;
             } else {
                 Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-                ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
+                ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
                 languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
 
-                addLanguage = (ImageView) view.findViewById(R.id.add_more_language);
                 qualificationLayout = (LinearLayout) view.findViewById(R.id.current_company_details_layout);
                 experiencedSection = (LinearLayout) view.findViewById(R.id.experienced_section);
 
                 lastWithdrawnSalary = (EditText) view.findViewById(R.id.last_withdrawn_salary);
                 currentCompany = (EditText) view.findViewById(R.id.current_company);
-                currentJobRole = (TextView) view.findViewById(R.id.currentJobRole);
+                currentJobRole = (EditText) view.findViewById(R.id.currentJobRole);
 
                 isExperienced = (Button) view.findViewById(R.id.is_experienced);
                 isFresher = (Button) view.findViewById(R.id.is_fresher);
                 isEmployedYes = (Button) view.findViewById(R.id.is_employed_yes);
                 isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
-                selectExp = (Button) view.findViewById(R.id.select_experience);
+                selectExp = (TextView) view.findViewById(R.id.select_experience);
 
-                lastWithdrawnSalary.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
-                currentCompany.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
-                    currentJobRole.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
-                    currentJobRoleValue = candidateInfoActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
+                lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
+                    currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
+                    currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
                 }
 
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateTotalExperience() > 0){
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() > 0){
                     isCandidateExperienced = 1;
                     experiencedSection.setVisibility(View.VISIBLE);
-                    isExperienced.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                     isExperienced.setTextColor(getResources().getColor(R.color.white));
-                    isFresher.setBackgroundColor(getResources().getColor(R.color.white));
+                    isFresher.setBackgroundResource(R.drawable.round_white_button);
                     isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    expInYears = candidateInfoActivity.candidateInfo.getCandidate().getCandidateTotalExperience();
+                    expInYears = candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience();
                     Integer year = expInYears / 12;
                     Integer month = expInYears % 12;
                     if(year == 0){
@@ -231,28 +238,30 @@ public class CandidateProfileExperience extends Fragment {
                     experiencedSection.setVisibility(View.GONE);
                 }
 
-                selectExp = (Button) view.findViewById(R.id.select_experience);
-                selectExp.setOnClickListener(new View.OnClickListener(){
+                selectExp = (TextView) view.findViewById(R.id.select_experience);
+                currentJobRolePicker = (ImageView) view.findViewById(R.id.current_job_role_picker);
+
+                experiencePicker = (ImageView) view.findViewById(R.id.experience_picker);
+                experiencePicker.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View arg0) {
+                    public void onClick(View view) {
                         showExperiencePicker();
                     }
                 });
 
-
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
                     isEmployed = 1;
                     qualificationLayout.setVisibility(View.VISIBLE);
-                    isEmployedNo.setBackgroundColor(getResources().getColor(R.color.white));
+                    isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
                     isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    isEmployedYes.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
                     isEmployedYes.setTextColor(getResources().getColor(R.color.white));
-                } else if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
+                } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
                     isEmployed = 0;
                     qualificationLayout.setVisibility(View.GONE);
-                    isEmployedYes.setBackgroundColor(getResources().getColor(R.color.white));
+                    isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                     isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    isEmployedNo.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
                     isEmployedNo.setTextColor(getResources().getColor(R.color.white));
                 }
                 isEmployedYes.setOnClickListener(new View.OnClickListener() {
@@ -260,9 +269,9 @@ public class CandidateProfileExperience extends Fragment {
                     public void onClick(View view) {
                         isEmployed = 1;
                         qualificationLayout.setVisibility(View.VISIBLE);
-                        isEmployedNo.setBackgroundColor(getResources().getColor(R.color.white));
+                        isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
                         isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedYes.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
                         isEmployedYes.setTextColor(getResources().getColor(R.color.white));
                     }
                 });
@@ -283,11 +292,13 @@ public class CandidateProfileExperience extends Fragment {
                     @Override
                     public void onClick(View view) {
                         isCandidateExperienced = 0;
+                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                        isEmployedYes.setTextColor(getResources().getColor(R.color.white));
                         experiencedSection.setVisibility(View.GONE);
                         qualificationLayout.setVisibility(View.GONE);
-                        isExperienced.setBackgroundColor(getResources().getColor(R.color.white));
+                        isExperienced.setBackgroundResource(R.drawable.round_white_button);
                         isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isFresher.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        isFresher.setBackgroundResource(R.drawable.rounded_corner_button);
                         isFresher.setTextColor(getResources().getColor(R.color.white));
                     }
                 });
@@ -297,9 +308,9 @@ public class CandidateProfileExperience extends Fragment {
                     public void onClick(View view) {
                         isCandidateExperienced = 1;
                         experiencedSection.setVisibility(View.VISIBLE);
-                        isExperienced.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                         isExperienced.setTextColor(getResources().getColor(R.color.white));
-                        isFresher.setBackgroundColor(getResources().getColor(R.color.white));
+                        isFresher.setBackgroundResource(R.drawable.round_white_button);
                         isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
                     }
                 });
@@ -319,18 +330,29 @@ public class CandidateProfileExperience extends Fragment {
                     checkedItems[i] = true;
                 }
 
-                currentJobRole.setOnClickListener(new View.OnClickListener() {
+                final CharSequence[] jobRoleList = new CharSequence[candidateProfileActivity.candidateInfo.getJobRolesCount()];
+                final List<Long> jobRoleIdList = new ArrayList<Long>();
+                for (int i = 0; i < candidateProfileActivity.candidateInfo.getJobRolesCount(); i++) {
+                    jobRoleList[i] = candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleName();
+                    jobRoleIdList.add(candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleId());
+                }
+
+                currentJobRole.setEnabled(false);
+
+                currentJobRolePicker.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final CharSequence[] jobRoleList = new CharSequence[candidateInfoActivity.candidateInfo.getJobRolesCount()];
-                        final List<Long> jobRoleIdList = new ArrayList<Long>();
-                        for (int i = 0; i < candidateInfoActivity.candidateInfo.getJobRolesCount(); i++) {
-                            jobRoleList[i] = candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleName();
-                            jobRoleIdList.add(candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleId());
-                        }
                         final AlertDialog alertDialog = new AlertDialog.Builder(
                                 getContext())
                                 .setCancelable(true)
+                                .setPositiveButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
                                 .setTitle("Select current Job Role")
                                 .setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
                                     @Override
@@ -344,6 +366,10 @@ public class CandidateProfileExperience extends Fragment {
                                     }
                                 }).create();
                         alertDialog.show();
+                        WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+                        params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+                        params.height = 900;
+                        alertDialog.getWindow().setAttributes(params);
                     }
                 });
 
@@ -356,17 +382,17 @@ public class CandidateProfileExperience extends Fragment {
 
                         if(isCandidateExperienced == -1){
                             check = false;
-                            System.out.println("Please select Fresher or exp  =-=-=-=-=-=-");
+                            showDialog("Please select Fresher or Experience");
                         }
                         if(isEmployed == null){
                             check = false;
-                            System.out.println("Please select are you employed?  =-=-=-=-=-=-");
+                            showDialog("Please select are you employed?");
                         } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().length() == 0)){
                             check = false;
-                            System.out.println("Please select salary if you are currently employed?  =-=-=-=-=-=-");
+                            showDialog("Please provide your current Salary");
                         } else if(isCandidateExperienced == 1 && (expInYears == null || expInYears == 0)){
                             check = false;
-                            System.out.println("Please select years of experience?  =-=-=-=-=-=-");
+                            showDialog("Please select total years of experience?");
                         }
 
                         if(check){
@@ -405,7 +431,7 @@ public class CandidateProfileExperience extends Fragment {
 
                     final CheckBox skillCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
 
-                    for(CandidateSkillObject skill : candidateInfoActivity.candidateInfo.getCandidate().getCandidateSkillObjectList()){
+                    for(CandidateSkillObject skill : candidateProfileActivity.candidateInfo.getCandidate().getCandidateSkillObjectList()){
                         if(skill.getSkillId() == skillObject.getSkillId()){
                             if(skill.getAnswer() == true){
                                 skillCheckbox.setChecked(true);
@@ -477,7 +503,7 @@ public class CandidateProfileExperience extends Fragment {
             final CheckBox languageUnderstand = (CheckBox) mLinearView.findViewById(R.id.lang_understand);
             final CheckBox languageSpeak = (CheckBox) mLinearView.findViewById(R.id.lang_speak);
 
-            for(LanguageKnownObject language : candidateInfoActivity.candidateInfo.getCandidate().getLanguageKnownObjectList()){
+            for(LanguageKnownObject language : candidateProfileActivity.candidateInfo.getCandidate().getLanguageKnownObjectList()){
                 if(language.getLanguageKnownId() == languageObject.getLanguageId()){
                     LanguageKnownObject.Builder languageBuilder = LanguageKnownObject.newBuilder();
                     languageBuilder.setLanguageKnownId(languageObject.getLanguageId());
@@ -615,5 +641,18 @@ public class CandidateProfileExperience extends Fragment {
             }
         }
         return flag;
+    }
+
+    public void showDialog(String msg){
+        android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
+        alertDialog.setMessage(msg);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

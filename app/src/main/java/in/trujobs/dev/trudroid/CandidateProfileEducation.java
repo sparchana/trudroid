@@ -1,9 +1,9 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
@@ -35,16 +35,17 @@ public class CandidateProfileEducation extends Fragment {
     private AsyncTask<UpdateCandidateEducationProfileRequest, Void, UpdateCandidateBasicProfileResponse> UpdateEducationAsyncTask;
     private AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask;
     ProgressDialog pd;
+
     LinearLayout degreeSection;
+    LinearLayout qualificationBackground;
     EditText candidateCollege;
     Button updateEducationProfile;
-
+    TextView qualificationStatusText;
     int qualificationPos = 0, degreePos = 0, firstTimeSetting = 0;
+    SpinnerAdapter adapter;
+    public CandidateProfileActivity candidateProfileActivity;
     View view;
 
-    SpinnerAdapter adapter;
-
-    public CandidateInfoActivity candidateInfoActivity;
     String[] qualificationLevel = new String[0];
     Long[] qualificationId = new Long[0];
 
@@ -53,13 +54,21 @@ public class CandidateProfileEducation extends Fragment {
 
     //values
     private Long qualificationSelected = Long.valueOf(0), degreeSelected = Long.valueOf(0);
+
     Integer qualificationStatus = -1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.candidate_education_profile, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
+        ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
+
+        ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        collapsingToolbarLayout.setTitle("Education Profile");
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         mAsyncTask = new GetEducationStaticAsyncTask();
         mAsyncTask.execute();
@@ -86,6 +95,8 @@ public class CandidateProfileEducation extends Fragment {
         protected void onPostExecute(UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse) {
             super.onPostExecute(updateCandidateBasicProfileResponse);
             pd.cancel();
+
+            getActivity().finish();
         }
     }
 
@@ -115,7 +126,7 @@ public class CandidateProfileEducation extends Fragment {
                 Log.w("", "Null Response");
                 return;
             } else {
-                candidateInfoActivity = (CandidateInfoActivity) getActivity();
+                candidateProfileActivity = (CandidateProfileActivity) getActivity();
 
                 updateEducationProfile = (Button) view.findViewById(R.id.save_education);
                 final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
@@ -132,7 +143,7 @@ public class CandidateProfileEducation extends Fragment {
                 for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getEducationObjectCount() ; i++){
                     qualificationLevel[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationName();
                     qualificationId[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
-                    if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
+                    if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
                         qualificationSelected = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
                         qualificationPos = i;
                         firstTimeSetting = 1;
@@ -144,13 +155,13 @@ public class CandidateProfileEducation extends Fragment {
                 for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getDegreeObjectCount() ; i++){
                     degreeName[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeName();
                     degreeId[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
-                    if(getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId() == candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getDegree().getDegreeId()){
+                    if(getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getDegree().getDegreeId()){
                         degreeSelected = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
                         degreePos = i;
                     }
                 }
 
-                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel, 0);
+                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel);
                 candidateQualification.setAdapter(adapter);
 
                 candidateCollege = (EditText) view.findViewById(R.id.candidate_college);
@@ -158,18 +169,18 @@ public class CandidateProfileEducation extends Fragment {
                 degreeSection = (LinearLayout) view.findViewById(R.id.degree_section);
                 degreeSection.setVisibility(View.GONE);
 
-                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, degreeName, 2);
+                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, degreeName);
                 candidateDegree.setAdapter(adapter);
 
-                //prefilling data
+                //pre-filling data
                 candidateQualification.setSelection(qualificationPos);
                 candidateDegree.setSelection(degreePos);
 
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
-                    candidateCollege.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
+                    candidateCollege.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
                 }
 
-                qualificationStatus = candidateInfoActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
+                qualificationStatus = candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
                 candidateQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
                 {
                     @Override
@@ -177,16 +188,18 @@ public class CandidateProfileEducation extends Fragment {
                     {
                         if(position != 0){
                             if(firstTimeSetting == 0){
-                                firstTimeSetting = 1;
                                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                alertDialog.setMessage("Are you " + qualificationLevel[position] + " pass?");
+                                alertDialog.setMessage("Have you successfully completed this course?");
                                 alertDialog.setCanceledOnTouchOutside(false);
                                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 qualificationStatus = 1;
-                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
-                                                imageView.setImageResource(R.drawable.tick);
+                                                qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                                qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+
+                                                qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                                qualificationStatusText.setText("Pass");
                                                 dialog.dismiss();
                                             }
                                         });
@@ -194,16 +207,35 @@ public class CandidateProfileEducation extends Fragment {
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 qualificationStatus = 0;
-                                                ImageView imageView = (ImageView) view.findViewById(R.id.spinnerImagesQualification);
-                                                imageView.setImageResource(R.drawable.wrong);
+                                                qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                                qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+
+                                                qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                                qualificationStatusText.setText("Fail");
                                                 dialog.dismiss();
                                             }
                                         });
                                 alertDialog.show();
                             } else {
+                                if(qualificationStatus == 1){
+                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+
+                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                    qualificationStatusText.setText("Pass");
+                                } else if(qualificationStatus == 0){
+                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+
+                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                    qualificationStatusText.setText("Fail");
+
+                                }
                                 firstTimeSetting = 0;
                             }
-
+                        } else{
+                            qualificationStatus = 0;
+                            qualificationSelected = Long.valueOf(0);
                         }
 
                         if(position > 3){
@@ -234,18 +266,15 @@ public class CandidateProfileEducation extends Fragment {
                     @Override
                     public void onClick(View view) {
                         boolean check = true;
-                        if(qualificationSelected == 0){
-                            System.out.println("111 ==============");
+                        if(qualificationSelected < 1){
+                            showDialog("Please select your Education");
                             check = false;
-                        } else if(degreeSelected == 0){
+                        } else if(qualificationSelected > 2 && degreeSelected < 1){
                             check = false;
-                            System.out.println("222 ==============");
-                        } else if(qualificationSelected != 0 && degreeSelected == 0){
-                            check = false;
-                            System.out.println("333 ==============");
+                            showDialog("Please select your Degree");
                         } else if(qualificationStatus == -1){
                             check = false;
-                            System.out.println("444 ==============");
+                            showDialog("Please select \"have you completed this course?\"");
                         }
 
                         if(check){
@@ -267,5 +296,19 @@ public class CandidateProfileEducation extends Fragment {
             }
         }
     }
+
+    public void showDialog(String msg){
+        android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
+        alertDialog.setMessage(msg);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
 }
 

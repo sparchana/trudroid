@@ -5,17 +5,23 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -52,7 +58,7 @@ public class CandidateProfileBasic extends Fragment {
     private SimpleDateFormat dateFormatter;
     public List<JobRoleObject> selectedJobRoles = new ArrayList<JobRoleObject>();
 
-    public CandidateInfoActivity candidateInfoActivity;
+    public CandidateProfileActivity candidateProfileActivity;
     String jobRoleSelectedString = "";
     String jobRoleSelectedId = "";
 
@@ -60,8 +66,19 @@ public class CandidateProfileBasic extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        candidateInfoActivity = (CandidateInfoActivity) getActivity();
+        candidateProfileActivity = (CandidateProfileActivity) getActivity();
         view = inflater.inflate(R.layout.candidate_basic_profile, container, false);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
+
+        ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        collapsingToolbarLayout.setTitle("Basic Profile");
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         mAsyncTask = new GetBasicStaticAsyncTask();
         mAsyncTask.execute();
@@ -78,36 +95,19 @@ public class CandidateProfileBasic extends Fragment {
             }
         });
 
+        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         final Calendar newCalendar = Calendar.getInstance();
 
-        if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis());
-            int mYear = calendar.get(Calendar.YEAR);
-            int mMonth = calendar.get(Calendar.MONTH);
-            int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-            dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    Calendar newDate = Calendar.getInstance();
-                    newDate.set(year, monthOfYear, dayOfMonth);
-                    candidateDob.setText(dateFormatter.format(newDate.getTime()));
-                }
-            },mYear, mMonth, mDay);
-            Calendar c = Calendar.getInstance();
-            c.add(Calendar.YEAR, -18);
-            dobDatePicker.getDatePicker().setMaxDate(c.getTime().getTime());
-/*            dobDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis() - (long) 1000 * 60 * 60 * 24 * 365 * 18);*/
-        } else{
-            dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    Calendar newDate = Calendar.getInstance();
-                    newDate.set(year, monthOfYear, dayOfMonth);
-                    candidateDob.setText(dateFormatter.format(newDate.getTime()));
-                }
-            },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-            dobDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
-        }
-
+        dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                candidateDob.setText(dayOfMonth + "-" + (monthOfYear+1) + "-" + year);
+            }
+        },newCalendar.get(Calendar.DAY_OF_MONTH), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.YEAR));
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, -18);
+        dobDatePicker.getDatePicker().setMaxDate(c.getTime().getTime());
     }
 
     private class GetBasicStaticAsyncTask extends AsyncTask<Void,
@@ -137,7 +137,7 @@ public class CandidateProfileBasic extends Fragment {
                 return;
             } else {
                 Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-                ((CandidateInfoActivity)getActivity()).setSupportActionBar(toolbar);
+                ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
                 firstName = (EditText) view.findViewById(R.id.first_name_edit_text);
                 secondName = (EditText) view.findViewById(R.id.last_name_edit_text);
@@ -151,9 +151,9 @@ public class CandidateProfileBasic extends Fragment {
                     @Override
                     public void onClick(View view) {
                         genderValue = 0;
-                        maleBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        maleBtn.setBackgroundResource(R.drawable.rounded_corner_button);
                         maleBtn.setTextColor(getResources().getColor(R.color.white));
-                        femaleBtn.setBackgroundColor(getResources().getColor(R.color.white));
+                        femaleBtn.setBackgroundResource(R.drawable.round_white_button);
                         femaleBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
                     }
                 });
@@ -162,14 +162,12 @@ public class CandidateProfileBasic extends Fragment {
                     @Override
                     public void onClick(View view) {
                         genderValue = 1;
-                        femaleBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        femaleBtn.setBackgroundResource(R.drawable.rounded_corner_button);
                         femaleBtn.setTextColor(getResources().getColor(R.color.white));
-                        maleBtn.setBackgroundColor(getResources().getColor(R.color.white));
+                        maleBtn.setBackgroundResource(R.drawable.round_white_button);
                         maleBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
                     }
                 });
-
-                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
                 setDateTimeField();
                 final Spinner shift_option = (Spinner) view.findViewById(R.id.shift_option);
@@ -184,12 +182,12 @@ public class CandidateProfileBasic extends Fragment {
                     shiftIds.add((int) getCandidateBasicProfileStaticResponse.getTimeShiftListList().get(i-1).getTimeShiftId());
                 }
 
-                SpinnerAdapter adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, categories, 2);
+                SpinnerAdapter adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, categories);
                 shift_option.setAdapter(adapter);
 
-                final EditText jobPrefLocation = (EditText) view.findViewById(R.id.pref_job_roles);
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
-                    selectedJobRoles.addAll(candidateInfoActivity.candidateInfo.getCandidate().getCandidateJobRolePrefList());
+                final EditText jobPrefEditText = (EditText) view.findViewById(R.id.pref_job_roles);
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
+                    selectedJobRoles.addAll(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefList());
                     for(int i=0; i<selectedJobRoles.size(); i++ ){
                         jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
                         jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
@@ -199,13 +197,13 @@ public class CandidateProfileBasic extends Fragment {
                         }
                     }
                     Prefs.jobPrefString.put(jobRoleSelectedId);
-                    jobPrefLocation.setText(jobRoleSelectedString);
+                    jobPrefEditText.setText(jobRoleSelectedString);
                 }
-                final CharSequence[] jobRoleList = new CharSequence[candidateInfoActivity.candidateInfo.getJobRolesCount()];
+                final CharSequence[] jobRoleList = new CharSequence[candidateProfileActivity.candidateInfo.getJobRolesCount()];
                 final List<Long> jobRoleIdList = new ArrayList<Long>();
-                for (int i = 0; i < candidateInfoActivity.candidateInfo.getJobRolesCount(); i++) {
-                    jobRoleList[i] = candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleName();
-                    jobRoleIdList.add(candidateInfoActivity.candidateInfo.getJobRoles(i).getJobRoleId());
+                for (int i = 0; i < candidateProfileActivity.candidateInfo.getJobRolesCount(); i++) {
+                    jobRoleList[i] = candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleName();
+                    jobRoleIdList.add(candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleId());
                 }
 
                 final boolean[] checkedItems = new boolean[jobRoleList.length];
@@ -219,101 +217,116 @@ public class CandidateProfileBasic extends Fragment {
                         }
                     }
                 }
-                jobPrefLocation.setOnTouchListener(new View.OnTouchListener() {
+                jobPrefEditText.setEnabled(false);
+                ImageView jobRolePrefPicker = (ImageView) view.findViewById(R.id.job_role_pref_picker);
+                jobRolePrefPicker.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            final AlertDialog alertDialog = new AlertDialog.Builder(
-                                    getContext())
-                                    .setCancelable(false)
-                                    .setTitle("Select Job Role preference (Max 3)")
-                                    .setPositiveButton("Done",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
+                    public void onClick(View view) {
+                        final AlertDialog alertDialog = new AlertDialog.Builder(
+                                getContext())
+                                .setCancelable(false)
+                                .setTitle("Select Job Role preference (Max 3)")
+                                .setPositiveButton("Done",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                jobRoleSelectedString = "";
+                                                jobRoleSelectedId = "";
+                                                for(int i=0; i<selectedJobRoles.size(); i++ ){
+                                                    jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
+                                                    jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
+                                                    if(i != (selectedJobRoles.size() - 1)){
+                                                        jobRoleSelectedString += ", ";
+                                                        jobRoleSelectedId += ",";
+                                                    }
+                                                }
+                                                Prefs.jobPrefString.put(jobRoleSelectedId);
+                                                jobPrefEditText.setText(jobRoleSelectedString);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                .setMultiChoiceItems(jobRoleList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                                        JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
+                                        if (b) {
+                                            // If the user checked the item, add it to the selected items
+                                            if(selectedJobRoles.size() < 3){
+                                                currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[i]));
+                                                currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(i));
+                                                selectedJobRoles.add(currentJobRoleBuilder.build());
+                                                if(selectedJobRoles.size() == 3){
+                                                    //forcefully closing the dialog
                                                     jobRoleSelectedString = "";
                                                     jobRoleSelectedId = "";
-                                                    for(int i=0; i<selectedJobRoles.size(); i++ ){
-                                                        jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
-                                                        jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
-                                                        if(i != (selectedJobRoles.size() - 1)){
+                                                    for(int x=0; x<selectedJobRoles.size(); x++ ){
+                                                        jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(x).getJobRoleName();
+                                                        jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(x).getJobRoleId();
+                                                        if(x != (selectedJobRoles.size() - 1)){
                                                             jobRoleSelectedString += ", ";
                                                             jobRoleSelectedId += ",";
                                                         }
                                                     }
                                                     Prefs.jobPrefString.put(jobRoleSelectedId);
-                                                    jobPrefLocation.setText(jobRoleSelectedString);
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                    .setMultiChoiceItems(jobRoleList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                                            JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
-                                            if (b) {
-                                                // If the user checked the item, add it to the selected items
-                                                if(selectedJobRoles.size() < 3){
-                                                    currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[i]));
-                                                    currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(i));
-                                                    selectedJobRoles.add(currentJobRoleBuilder.build());
-                                                    if(selectedJobRoles.size() == 3){
-                                                       jobRoleSelectedString = "";
-                                                       jobRoleSelectedId = "";
-                                                        for(int x=0; x<selectedJobRoles.size(); x++ ){
-                                                            jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(x).getJobRoleName();
-                                                            jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(x).getJobRoleId();
-                                                            if(x != (selectedJobRoles.size() - 1)){
-                                                                jobRoleSelectedString += ", ";
-                                                                jobRoleSelectedId += ",";
-                                                            }
-                                                        }
-                                                        Prefs.jobPrefString.put(jobRoleSelectedId);
-                                                        jobPrefLocation.setText(jobRoleSelectedString);
-                                                        dialogInterface.dismiss();
-                                                    }
-                                                } else{
+                                                    jobPrefEditText.setText(jobRoleSelectedString);
                                                     dialogInterface.dismiss();
-                                                    Toast.makeText(getContext(), "Maximum 3 preference allowed.", Toast.LENGTH_LONG).show();
                                                 }
                                             } else{
-                                                for(int x=0; x<selectedJobRoles.size(); x++){
-                                                    if(selectedJobRoles.get(x).getJobRoleId() == jobRoleIdList.get(i)){
-                                                        selectedJobRoles.remove(x);
-                                                        break;
-                                                    }
+                                                dialogInterface.dismiss();
+                                                Toast.makeText(getContext(), "Maximum 3 preference allowed.", Toast.LENGTH_LONG).show();
+                                            }
+                                        } else{
+                                            for(int x=0; x<selectedJobRoles.size(); x++){
+                                                if(selectedJobRoles.get(x).getJobRoleId() == jobRoleIdList.get(i)){
+                                                    selectedJobRoles.remove(x);
+                                                    break;
                                                 }
                                             }
                                         }
-                                    }).create();
-                            alertDialog.show();
-                            return true;
-                        }
-                        return false;
+                                    }
+                                }).create();
+                        alertDialog.show();
+                        WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+                        params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+                        params.height = 900;
+                        alertDialog.getWindow().setAttributes(params);
+
                     }
                 });
 
                 // prefilling data
-                firstName.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateFirstName());
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateLastName() != null){
-                    secondName.setText(candidateInfoActivity.candidateInfo.getCandidate().getCandidateLastName());
+                firstName.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateFirstName());
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastName() != null){
+                    secondName.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastName());
                 }
                 mobileNumber.setText(Prefs.candidateMobile.get());
                 mobileNumber.setEnabled(false);
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
+
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(candidateInfoActivity.candidateInfo.getCandidate().getCandidateDobMillis());
+                    calendar.setTimeInMillis(candidateProfileActivity.candidateInfo.getCandidate().getCandidateDobMillis());
                     int mYear = calendar.get(Calendar.YEAR);
                     int mMonth = calendar.get(Calendar.MONTH);
                     int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                    candidateDob.setText(mYear + "-" + (mMonth+1) + "-" + mDay);
+                    candidateDob.setText(mDay + "-" + (mMonth+1) + "-" + mYear);
+                    dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar newDate = Calendar.getInstance();
+                            newDate.set(year, monthOfYear, dayOfMonth);
+                            candidateDob.setText(dayOfMonth + "-" + (monthOfYear+1) + "-" + year);
+                        }
+                    },mYear, mMonth, mDay);
+                    Calendar c = Calendar.getInstance();
+                    c.add(Calendar.YEAR, -18);
+                    dobDatePicker.getDatePicker().setMaxDate(c.getTime().getTime());
                 }
 
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateGender() == 0){
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateGender() == 0){
                     genderValue = 0;
-                    maleBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    maleBtn.setBackgroundResource(R.drawable.rounded_corner_button);
                     maleBtn.setTextColor(getResources().getColor(R.color.white));
-                    femaleBtn.setBackgroundColor(getResources().getColor(R.color.white));
+                    femaleBtn.setBackgroundResource(R.drawable.round_white_button);
                     femaleBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
                 } else{
                     genderValue = 1;
@@ -322,15 +335,15 @@ public class CandidateProfileBasic extends Fragment {
                     maleBtn.setBackgroundColor(getResources().getColor(R.color.white));
                     maleBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
                 }
-                if(candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref() != null){
+                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref() != null){
                     int pos = -1;
                     for(int i=1 ; i<categories.length; i++){
-                        if(shiftIds.get(i) == candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftId()){
+                        if(shiftIds.get(i) == candidateProfileActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftId()){
                             pos = i;
                             break;
                         }
                     }
-                    shiftValue = candidateInfoActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftId();
+                    shiftValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateTimeShiftPref().getTimeShiftId();
                     shift_option.setSelection(pos);
                 } else{
                     shift_option.setSelection(0);
@@ -345,17 +358,23 @@ public class CandidateProfileBasic extends Fragment {
                         shiftValue = Long.valueOf(shiftIds.get(pos));
                         if(firstName.getText().toString() == null){
                             check = false;
+                            showDialog("Please enter your Name");
                         } else if(candidateDob.getText().toString() == null){
                             check = false;
+                            showDialog("Please enter your Date of Birth");
                         } else if(genderValue == null){
                             check = false;
+                            showDialog("Please provide your gender");
                         } else if(shiftValue == null){
                             check = false;
+                            showDialog("Please provide your preferred Time Shift");
                         } else if(selectedJobRoles.size() == 0){
                             check = false;
-                        } else if(shift_option.getSelectedItemPosition() == 0){
+                            showDialog("Please provide your preferred Job Roles");
+                        } /*else if(shift_option.getSelectedItemPosition() == 0){
                             check = false;
-                        }
+                            showDialog("Please provide your preferred Job Roles");
+                        }*/
 
                         if(check){
                             UpdateCandidateBasicProfileRequest.Builder requestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
@@ -408,8 +427,22 @@ public class CandidateProfileBasic extends Fragment {
                 CandidateProfileExperience candidateProfileExperience = new CandidateProfileExperience();
                 candidateProfileExperience.setArguments(getActivity().getIntent().getExtras());
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.main_profile, candidateProfileExperience).commit();
+                        .addToBackStack(null)
+                        .add(R.id.main_profile, candidateProfileExperience).commit();
             }
         }
+    }
+
+    public void showDialog(String msg){
+        android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
+        alertDialog.setMessage(msg);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

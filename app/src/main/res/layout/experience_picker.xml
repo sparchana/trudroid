@@ -69,15 +69,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/CancelButton_NumberPicker"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:textColor="@color/colorPrimary"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
-
-        <Button
             android:id="@+id/setBtn"
             android:layout_width="0dp"
             android:layout_weight="0.5"

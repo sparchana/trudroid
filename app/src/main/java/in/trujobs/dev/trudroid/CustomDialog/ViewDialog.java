@@ -1,4 +1,4 @@
-package in.trujobs.dev.trudroid;
+package in.trujobs.dev.trudroid.CustomDialog;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import in.trujobs.dev.trudroid.R;
+
 /**
  * Created by batcoder1 on 28/7/16.
  */
@@ -26,6 +28,7 @@ public class ViewDialog {
         TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
         TextView headOne = (TextView) dialog.findViewById(R.id.heading_one);
         TextView headTwo = (TextView) dialog.findViewById(R.id.heading_two);
+
         text.setText(msg);
 
         if (subHeading == "") {
@@ -40,13 +43,14 @@ public class ViewDialog {
 
         LinearLayout assessmentLayout = (LinearLayout) dialog.findViewById(R.id.assessment_dialog);
         LinearLayout referLayout = (LinearLayout) dialog.findViewById(R.id.refer_dialog);
+
         LinearLayout referSms = (LinearLayout) dialog.findViewById(R.id.sms_share);
         LinearLayout referWhatsapp = (LinearLayout) dialog.findViewById(R.id.whatsapp_share);
 
-        if (category == 1) {
+        if (category == 1) { //assessment category
             assessmentLayout.setVisibility(View.VISIBLE);
             referLayout.setVisibility(View.GONE);
-        } else if(category == 3) {
+        } else if(category == 3) { //refer category
             assessmentLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.VISIBLE);
         } else {

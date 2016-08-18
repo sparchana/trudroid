@@ -6,5 +6,5 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:id="@+id/main_profile"
-    tools:context=".CandidateInfoActivity">
+    tools:context=".CandidateProfileActivity">
 </FrameLayout>

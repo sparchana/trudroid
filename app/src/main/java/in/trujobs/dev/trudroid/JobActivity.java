@@ -18,18 +18,25 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.proto.CandidateAppliedJobsRequest;
+import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.JobPostResponse;
 
 public class JobActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private AsyncTask<Void, Void, JobPostResponse> mAsyncTask;
+    private AsyncTask<CandidateAppliedJobsRequest, Void, CandidateAppliedJobsResponse> mCandidateAppliedJobsAsyncTask;
     ProgressDialog pd;
     ListView jobPostListView;
     private FloatingActionButton fab;
+
+    JobPostResponse returnedJobPostResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,19 +100,18 @@ public class JobActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(JobPostResponse jobPostResponse) {
             super.onPostExecute(jobPostResponse);
-            pd.cancel();
             jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
             if (jobPostResponse == null) {
                 ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
-                ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
                 Log.w("","Null JobPosts Response");
                 return;
             } else {
                 if(jobPostResponse.getJobPostList().size() > 0){
-                    Log.e("jobActivity", "Data: "+ jobPostResponse.getJobPostList().get(0));
-                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostResponse.getJobPostList());
+                    returnedJobPostResponse = jobPostResponse;
+                    pd.cancel();
+                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, returnedJobPostResponse.getJobPostList());
                     jobPostListView.setAdapter(jobPostAdapter);
                 } else {
                     ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
@@ -115,6 +121,34 @@ public class JobActivity extends AppCompatActivity
             }
         }
     }
+
+    private class MyAppliedJobPostAsyncTask extends AsyncTask<CandidateAppliedJobsRequest,
+            Void, CandidateAppliedJobsResponse> {
+
+        @Override
+        protected CandidateAppliedJobsResponse doInBackground(CandidateAppliedJobsRequest... params) {
+            return HttpRequest.getMyJobs(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(CandidateAppliedJobsResponse candidateAppliedJobsResponse) {
+            super.onPostExecute(candidateAppliedJobsResponse);
+            pd.cancel();
+            if (candidateAppliedJobsResponse == null) {
+                Log.w("","Null my jobs Response");
+                return;
+            } else {
+                if(returnedJobPostResponse.getJobPostCount() > 0){
+                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, returnedJobPostResponse.getJobPostList());
+                    jobPostListView.setAdapter(jobPostAdapter);
+                } else {
+                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+                    noJobsImageView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -132,15 +166,14 @@ public class JobActivity extends AppCompatActivity
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_profile) {
-            Intent intent = new Intent(JobActivity.this, CandidateInfoActivity.class);
+            Intent intent = new Intent(JobActivity.this, CandidateProfileActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_my_jobs){
-            Intent intent = new Intent(JobActivity.this, JobPreference.class);
+            Intent intent = new Intent(JobActivity.this, MyAppliedJobs.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         }
-
         return true;
     }
 
