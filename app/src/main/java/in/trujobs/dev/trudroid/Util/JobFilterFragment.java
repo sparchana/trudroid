@@ -363,7 +363,8 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.ftr_clear_all:
                 jobFilterRequest.clear();
-                JobActivity.jobFilterRequestBkp.toBuilder().clear();
+                if(JobActivity.jobFilterRequestBkp!= null)
+                    JobActivity.jobFilterRequestBkp.toBuilder().clear();
                 assignSearchedLatLng();
                 resetFragmentUI();
                 break;
@@ -633,7 +634,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
                     noJobsImageView.setVisibility(View.VISIBLE);
                     jobPostListView.setVisibility(View.GONE);
 
-                    showToast("No jobs found in your locality");
+                    showToast("No jobs found !!");
                 }
             } catch (NullPointerException np){
                 Tlog.e(""+np.getStackTrace());

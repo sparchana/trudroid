@@ -80,6 +80,7 @@ public class JobActivity extends AppCompatActivity
     public boolean[] checkedItems = null;
     public BiMap<Integer, Long> biMap = null;
     public BiMap<Long, Integer> invBiMap = null;
+    public CharSequence[] jobRoleNameList = null;
 
     TextView selectedJobRolesNameTxtView;
 
@@ -289,7 +290,6 @@ public class JobActivity extends AppCompatActivity
             } else {
                 showToast("Opps Something went wrong during search. Please try again");
             }
-
         }
     }
 
@@ -356,7 +356,8 @@ public class JobActivity extends AppCompatActivity
         if (jobPostObjectList.size() > 0) {
             Tlog.i("DataSize: " + jobPostObjectList.size());
             JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostObjectList);
-            if(jobPostListView.getVisibility() == View.GONE){
+            if(jobPostListView.getVisibility() == View.GONE
+                    || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
             }
             jobPostListView.setAdapter(jobPostAdapter);
@@ -364,7 +365,7 @@ public class JobActivity extends AppCompatActivity
             jobPostListView.setVisibility(View.GONE);
             ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
             noJobsImageView.setVisibility(View.VISIBLE);
-            showToast("No jobs found in your locality");
+            showToast("No jobs found !!");
         }
     }
 
@@ -421,22 +422,61 @@ public class JobActivity extends AppCompatActivity
                 Tlog.i("fetched all jobRoles successfully + " + jobRoleResponse.getJobRoleList().size());
                 jobRoleObjectList = jobRoleResponse.getJobRoleList();
                  /* Search By Job Roles */
-                selectedJobRoleList = new ArrayList<>();
-                if(Prefs.candidatePrefJobRoleIdOne.get() != 0){
-                    selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdOne.get());
-                    checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
-                }
-                if(Prefs.candidatePrefJobRoleIdTwo.get() != 0){
-                    selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdTwo.get());
-                    checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
-                }
-                if(Prefs.candidatePrefJobRoleIdThree.get() != 0){
-                    selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdThree.get());
-                    checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
-                }
+                 initJobRoleVars();
+                 setJobRoleIdFromPrefs();
+                setSelectedJobRolesNameTxtView();
             } else {
                 showToast("Something went wrong. Please try later");
             }
+        }
+    }
+
+    private void initJobRoleVars() {
+        if(biMap == null) {
+            biMap = HashBiMap.create();
+        }
+        jobRoleIdList = new ArrayList<>();
+        selectedJobRoleList = new ArrayList<>();
+        jobRoleNameList = new CharSequence[jobRoleObjectList.size()];
+        if(checkedItems == null){
+            checkedItems = new boolean[jobRoleNameList.length];
+        }
+        if (selectedJobRoleList.size() > 0) {
+            for (Long jobRoleId : selectedJobRoleList) {
+                checkedItems[invBiMap.get(jobRoleId)] = true;
+                Tlog.i("checkbox["+invBiMap.get(jobRoleId)+"] marked true for jobroleid:"+jobRoleId);
+            }
+        }
+        for (int i = 0; i < jobRoleObjectList.size(); i++) {
+            // create nameList and idList
+            jobRoleNameList[i] = jobRoleObjectList.get(i).getJobRoleName();
+            jobRoleIdList.add(jobRoleObjectList.get(i).getJobRoleId());
+            biMap.put(i, jobRoleObjectList.get(i).getJobRoleId());
+        }
+        invBiMap = biMap.inverse();
+    }
+
+    private void setJobRoleIdFromPrefs() {
+        Tlog.i("setting jobroleId form pref");
+        if(Prefs.candidatePrefJobRoleIdOne.get() != 0){
+            Tlog.i("found candidate pref job Role one..");
+            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdOne.get());
+            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
+        }
+        if(Prefs.candidatePrefJobRoleIdTwo.get() != 0){
+            Tlog.i("found candidate pref job Role two..");
+            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdTwo.get());
+            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdTwo.get())] = true;
+        }
+        if(Prefs.candidatePrefJobRoleIdThree.get() != 0){
+            Tlog.i("found candidate pref job Role three..");
+            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdThree.get());
+            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdThree.get())] = true;
+        } else {
+            Tlog.i("pref jobRole val are one: " + Prefs.candidatePrefJobRoleIdOne.get() +
+                "two " + Prefs.candidatePrefJobRoleIdTwo.get() +
+                "three " + Prefs.candidatePrefJobRoleIdThree.get()
+            );
         }
     }
 
@@ -468,88 +508,67 @@ public class JobActivity extends AppCompatActivity
     }
 
     private void showJobRolesAlertUI(List<JobRoleObject> jobRoleObjectList) {
-        if(biMap == null) {
-            biMap = HashBiMap.create();
-        }
-        final CharSequence[] jobRoleNameList = new CharSequence[jobRoleObjectList.size()];
-        jobRoleIdList = new ArrayList<>();
-        if(checkedItems == null){
-            checkedItems = new boolean[jobRoleNameList.length];
-        }
-        if (selectedJobRoleList.size() > 0) {
-            for (Long jobRoleId : selectedJobRoleList) {
-                checkedItems[invBiMap.get(jobRoleId)] = true;
-                Tlog.i("checkbox["+invBiMap.get(jobRoleId)+"] marked true for jobroleid:"+jobRoleId);
-            }
-        }
-        for (int i = 0; i < jobRoleObjectList.size(); i++) {
-            // create nameList and idList
-            jobRoleNameList[i] = jobRoleObjectList.get(i).getJobRoleName();
-            jobRoleIdList.add(jobRoleObjectList.get(i).getJobRoleId());
-            biMap.put(i, jobRoleObjectList.get(i).getJobRoleId());
-        }
-        invBiMap = biMap.inverse();
+
         final List<String> mSelectedJobsName = new ArrayList<>();
-
-
-            AlertDialog alertDialog = new AlertDialog.Builder(
-                this)
-                .setCancelable(false)
-                .setTitle("Select Job Role preference (Max 3)")
-                .setPositiveButton("Done",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                /* if not selected any job roles then don't do anything*/
-                                if(selectedJobRoleList!= null && selectedJobRoleList.size() > 0){
-                                    for(int j=0; j<selectedJobRoleList.size();j++){
-                                        Tlog.i("search job for jobRoles: "+selectedJobRoleList.get(j));
-                                        String jobRoleName = jobRoleNameList[invBiMap
-                                                .get(selectedJobRoleList.get(j))].toString();
-                                        mSelectedJobsName.add(jobRoleName);
-                                    }
-                                } else {
-                                    Tlog.i("clearing selectedJobRoleList");
-                                    selectedJobRoleList.clear();
-                                    if(jobRoles!=null)jobRoles.clear();
-                                    Arrays.fill(checkedItems, false);
-                                    mSelectedJobsName.add("All Jobs");
-                                }
-                                selectedJobRolesNameTxtView.setText(TextUtils.join(", ", mSelectedJobsName));
-                                searchJobsByJobRole();
-                                dialog.dismiss();
+        final AlertDialog.Builder searchByJobRoleBuilder = new AlertDialog.Builder(this);
+        searchByJobRoleBuilder.setCancelable(false);
+        searchByJobRoleBuilder.setTitle("Select Job Role preference (Max 3)");
+        searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                /* if not selected any job roles then don't do anything*/
+                if(mSelectedJobsName.size()>0){
+                    mSelectedJobsName.clear();
+                }
+                mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
+                if(selectedJobRoleList.isEmpty()){
+                    showToast("Please select atleast one JobRole (max: 3)");
+                } else{
+                    searchJobsByJobRole();
+                }
+            }
+        });
+        searchByJobRoleBuilder.setNegativeButton("Clear All", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                selectedJobRoleList.clear();
+                Arrays.fill(checkedItems, false);
+                selectedJobRolesNameTxtView.setText("");
+                jobPostListView.setVisibility(View.INVISIBLE);
+                showToast("Selection Cleared. Please select atleast one Job Role (Ex: Driver)");
+            }
+        });
+        searchByJobRoleBuilder.setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
+                if(isChecked) {
+                    if (selectedJobRoleList.size() < 3) {
+                        checkedItems[which] = true;
+                        selectedJobRoleList.add(jobRoleIdList.get(which));
+                        Tlog.i("checkBox["+which+"] for item:"+jobRoleIdList.get(which));
+                    } else {
+                        checkedItems[which] = false;
+                        dialogInterface.dismiss();
+                        if(selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
+                            for(int j=0; j<selectedJobRoleList.size();j++){
+                                String jobRoleName = jobRoleNameList[invBiMap
+                                        .get(selectedJobRoleList.get(j))].toString();
+                                mSelectedJobsName.add(jobRoleName);
                             }
-                })
-                .setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
-                        if(isChecked) {
-                            if (selectedJobRoleList.size() < 3) {
-                                checkedItems[which] = true;
-                                selectedJobRoleList.add(jobRoleIdList.get(which));
-                                Tlog.i("checkBox["+which+"] for item:"+jobRoleIdList.get(which));
-                            } else {
-                                checkedItems[which] = false;
-                                dialogInterface.dismiss();
-                                searchJobsByJobRole();
-                                showToast("Maximum 3 preference allowed.");
-                            }
-                        } else if(selectedJobRoleList.contains(jobRoleIdList.get(which))) {
-                            checkedItems[which] = false;
-                            Tlog.i("marked false for checkBox["+which+"] and removed item:"+jobRoleIdList.get(which));
-                            selectedJobRoleList.remove(jobRoleIdList.get(which));
-                        } else {
-                            /* clear all */
-                            selectedJobRoleList.clear();
-                            Arrays.fill(checkedItems, false);
-                            if(jobRoles!=null)jobRoles.clear();
+                            selectedJobRolesNameTxtView.setText(TextUtils.join(", ", mSelectedJobsName));
                         }
-                        Tlog.i("Total SelectedJobRoleSize:"+selectedJobRoleList.size());
+                        searchJobsByJobRole();
+                        showToast("Maximum 3 preference allowed.");
                     }
-                })
-                .create();
-        alertDialog.show();
+                } else if(selectedJobRoleList.contains(jobRoleIdList.get(which))) {
+                    checkedItems[which] = false;
+                    Tlog.i("marked false for checkBox["+which+"] and removed item:"+jobRoleIdList.get(which));
+                    selectedJobRoleList.remove(jobRoleIdList.get(which));
+                }
+                Tlog.i("Total SelectedJobRoleSize:" + selectedJobRoleList.size());
+            }
+        });
+
+        final AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
+        searchByJobRoleDialog.show();
     }
 
     /**
@@ -567,6 +586,26 @@ public class JobActivity extends AppCompatActivity
         return mSearchLng;
     }
 
+    public List<String> setSelectedJobRolesNameTxtView() {
+        List<String> mSelectedJobsName = new ArrayList<>();
+        if (selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
+            for(int j=0; j<selectedJobRoleList.size();j++){
+                Tlog.i("search job for jobRoles: "+selectedJobRoleList.get(j));
+                String jobRoleName = jobRoleNameList[invBiMap
+                        .get(selectedJobRoleList.get(j))].toString();
+                mSelectedJobsName.add(jobRoleName);
+            }
+        } else {
+            Tlog.i("clearing selectedJobRoleList");
+            selectedJobRoleList.clear();
+            if(jobRoles!=null)jobRoles.clear();
+            Arrays.fill(checkedItems, false);
+            mSelectedJobsName.add("No JobRole Selected");
+        }
+        selectedJobRolesNameTxtView.setText(TextUtils.join(", ", mSelectedJobsName));
+
+        return mSelectedJobsName;
+    }
     @Override
     protected void onStop() {
         super.onStop();

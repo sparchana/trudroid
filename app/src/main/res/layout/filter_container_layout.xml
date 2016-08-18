@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="right">
         <!--Start of filter-->
         <LinearLayout
@@ -15,38 +15,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:clickable="true"
-                    android:background="#fff">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4"
-                        android:id="@+id/ftr_clear_all">
-                        <TextView
-                            android:textColor="#000"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Clear All"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4"
-                        android:gravity="right"
-                        android:id="@+id/ftr_done">
-                        <TextView
-                            android:textColor="#2196F3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Done"/>
-                    </LinearLayout>
-                </LinearLayout>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content">
@@ -149,7 +118,7 @@
                         <!-- Start Filter-->
                         <LinearLayout
                             android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="#fff"
                             android:orientation="vertical">
                             <TextView
@@ -476,6 +445,39 @@
                         </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:background="#FF6F00">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:id="@+id/ftr_clear_all">
+                        <TextView
+                            android:textColor="#fff"
+                            android:textSize="16dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clear All"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:gravity="right"
+                        android:id="@+id/ftr_done">
+                        <TextView
+                            android:textColor="#fff"
+                            android:textSize="16dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Done"/>
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
