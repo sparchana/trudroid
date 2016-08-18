@@ -27,6 +27,7 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobFilterRequest;
 import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobPostResponse;
+import in.trujobs.proto.JobSearchRequest;
 
 /**
  * Created by zero on 9/8/16.
@@ -35,11 +36,14 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
 
     public ProgressDialog pd;
 
+    public JobSearchRequest.Builder jobSearchRequest;
+
     public JobFilterRequest.Builder jobFilterRequest;
 
     public ListView jobPostListView;
 
     public static AsyncTask<JobFilterRequest, Void, JobPostResponse> mFilterJobAsyncTask;
+    public static AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
 
 
     // The onCreateView method is called when Fragment should create its View object hierarchy,
@@ -72,12 +76,12 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     /* sub-filter ui elements */
     ImageView imgSortBySalary;
     ImageView imgSortByDatePosted;
-    ImageView imgSortByMale;
-    ImageView imgSortByFemale;
+    ImageView imgFilterByMale;
+    ImageView imgFilterFemale;
     TextView txtSortByDatePosted;
     TextView txtSortBySalary;
-    TextView txtSortByMale;
-    TextView txtSortByFemale;
+    TextView txtFilterByMale;
+    TextView txtFilterByFemale;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //super.onCreateView(inflater, container, savedInstanceState);
@@ -113,18 +117,18 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         /* sub filter element for UI manipulation */
         imgSortBySalary = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_salary);
         imgSortByDatePosted = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_date_posted);
-        imgSortByMale = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_male);
-        imgSortByFemale = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_female);
+        imgFilterByMale = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_ftr_by_male);
+        imgFilterFemale = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_ftr_by_female);
         txtSortByDatePosted = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_date_posted);
         txtSortBySalary = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_salary);
-        txtSortByMale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_male);
-        txtSortByFemale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_female);
+        txtFilterByMale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_male);
+        txtFilterByFemale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_female);
 
 
         if(JobActivity.jobFilterRequestBkp != null && jobFilterRequest == null){
             Tlog.i("jobFilterRequest is preserved");
             jobFilterRequest = JobActivity.jobFilterRequestBkp.toBuilder();
-            onLoadUpdateFragmentUI(jobFilterRequest.build());
+            onLoadUpdateFilterFragmentUI(jobFilterRequest.build());
         } else {
             jobFilterRequest = JobFilterRequest.newBuilder();
             Tlog.i("jobFilterReq init");
@@ -349,14 +353,17 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
                 // send data for submission
                 //
                 if(jobFilterRequest.isInitialized()){
-                    mFilterJobAsyncTask = new JobFilterAsyncTask();
-                    mFilterJobAsyncTask.execute(jobFilterRequest.build());
+                    assignSearchedLatLng();
+                    jobSearchRequest.setJobFilterRequest(jobFilterRequest.build());
+                    if(JobActivity.jobRoles != null)jobSearchRequest.setJobSearchByJobRoleRequest(JobActivity.jobRoles);
+                    mJobSearchAsyncTask = new JobSearchAsyncTask();
+                    mJobSearchAsyncTask.execute(jobSearchRequest.build());
                     JobActivity.jobFilterRequestBkp = jobFilterRequest.build();
                 }
                 break;
             case R.id.ftr_clear_all:
                 jobFilterRequest.clear();
-                jobFilterRequest.setCandidateMobile(Prefs.candidateMobile.get());
+                JobActivity.jobFilterRequestBkp.toBuilder().clear();
                 assignSearchedLatLng();
                 resetFragmentUI();
                 break;
@@ -390,7 +397,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrSalaryTwentyKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
         ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#000000"));
 
-        if(id != null){
+        if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_salary_eight_k_plus ){
                 ftrSalaryEightKPlus.setBackgroundColor(Color.parseColor("#749cf4"));
                 ftrSalaryEightKPlus.setTextColor(Color.parseColor("#ffffff"));
@@ -423,7 +430,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrEduPg.setBackground(getResources().getDrawable(R.drawable.cust_border));
         ftrEduPg.setTextColor(Color.parseColor("#000000"));
 
-        if(id != null){
+        if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_edu_lt_ten){
                 ftrEduLtTen.setBackgroundColor(Color.parseColor("#749cf4"));
                 ftrEduLtTen.setTextColor(Color.parseColor("#ffffff"));
@@ -450,7 +457,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         ftrExperienceExperienced.setBackground(getResources().getDrawable(R.drawable.cust_border));
         ftrExperienceExperienced.setTextColor(Color.parseColor("#000000"));
 
-        if(id != null){
+        if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_experience_fresher){
                 ftrExperienceFresher.setBackgroundColor(Color.parseColor("#749cf4"));
                 ftrExperienceFresher.setTextColor(Color.parseColor("#ffffff"));
@@ -462,18 +469,18 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     }
     private void GenderBtnManipulation(Integer id, boolean shouldEnable){
         /* deactivate all then enable one */
-        imgSortByMale.setImageResource(R.drawable.male_disable);
-        imgSortByFemale.setImageResource(R.drawable.female_disable);
-        txtSortByMale.setTextColor(Color.parseColor("#000000"));
-        txtSortByFemale.setTextColor(Color.parseColor("#000000"));
+        imgFilterByMale.setImageResource(R.drawable.male_disable);
+        imgFilterFemale.setImageResource(R.drawable.female_disable);
+        txtFilterByMale.setTextColor(Color.parseColor("#000000"));
+        txtFilterByFemale.setTextColor(Color.parseColor("#000000"));
 
-        if(id != null){
+        if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_gender_male){
-                imgSortByMale.setImageResource(R.drawable.male);
-                txtSortByMale.setTextColor(Color.parseColor("#749cf4"));
+                imgFilterByMale.setImageResource(R.drawable.male);
+                txtFilterByMale.setTextColor(Color.parseColor("#749cf4"));
             } else if(shouldEnable && id == R.id.ftr_gender_female){
-                imgSortByFemale.setImageResource(R.drawable.female);
-                txtSortByFemale.setTextColor(Color.parseColor("#749cf4"));
+                imgFilterFemale.setImageResource(R.drawable.female);
+                txtFilterByFemale.setTextColor(Color.parseColor("#749cf4"));
             }
         }
     }
@@ -490,7 +497,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         txtSortBySalary.setTextColor(getResources().getColor(R.color.boxOption));
 
 
-        if(id != null){
+        if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_sort_by_date_posted){
                 imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
                 imgSortByDatePosted.setImageResource(R.drawable.latest);
@@ -504,18 +511,22 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     }
 
     private void assignSearchedLatLng() {
+        jobSearchRequest = JobSearchRequest.newBuilder();
+        jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
         if(JobActivity.getmSearchLat()!=null){
+            jobSearchRequest.setLatitude(JobActivity.getmSearchLat());
             jobFilterRequest.setJobSearchLatitude(JobActivity.getmSearchLat());
             Tlog.i("filter set to searched lat : "+JobActivity.getmSearchLat());
 
         }
         if(JobActivity.getmSearchLng() != null){
+            jobSearchRequest.setLongitude(JobActivity.getmSearchLng());
             jobFilterRequest.setJobSearchLongitude(JobActivity.getmSearchLng());
             Tlog.i("filter set to searched ln : "+JobActivity.getmSearchLng());
         }
     }
 
-    private void onLoadUpdateFragmentUI(JobFilterRequest jobFilterRequest) {
+    private void onLoadUpdateFilterFragmentUI(JobFilterRequest jobFilterRequest) {
         /* misc */
         if(jobFilterRequest.getSortByDatePosted()){
             DateSalaryBtnManipulation(R.id.ftr_sort_by_date_posted, true);
@@ -570,7 +581,7 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     }
 
 
-    private class JobFilterAsyncTask extends AsyncTask<JobFilterRequest,
+    private class JobSearchAsyncTask extends AsyncTask<JobSearchRequest,
             Void, JobPostResponse> {
 
         protected void onPreExecute() {
@@ -585,9 +596,9 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         }
 
         @Override
-        protected JobPostResponse doInBackground(JobFilterRequest... params) {
+        protected JobPostResponse doInBackground(JobSearchRequest... params) {
             Tlog.i("http req for getFilteredJobPost...");
-            return HttpRequest.getFilteredJobPosts(params[0]);
+            return HttpRequest.searchJobs(params[0]);
         }
 
         @Override

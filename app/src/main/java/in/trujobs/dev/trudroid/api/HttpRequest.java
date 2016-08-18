@@ -16,8 +16,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.proto.AddJobRoleRequest;
 import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.ApplyJobRequest;
@@ -30,7 +28,6 @@ import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
-import in.trujobs.proto.JobFilterRequest;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchRequest;
@@ -137,41 +134,11 @@ public class HttpRequest {
         }
     }
 
-    public static JobPostResponse getJobPosts() {
-        JobPostResponse.Builder requestBuilder =
-                JobPostResponse.newBuilder();
+    public static JobPostResponse searchJobs(JobSearchRequest jobSearchRequest) {
 
         String responseString;
-        if(Util.isLoggedIn() == true){
-            responseString = postToServer(Config.URL_MATCHING_JOB_POSTS + "/"+ Prefs.candidateMobile.get(),
-                    Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
-        }
-
-        else{
-            responseString = postToServer(Config.URL_ALL_JOB_POSTS,
-                    Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
-        }
-
-
-        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
-        if (responseByteArray == null) {
-            return null;
-        }
-        JobPostResponse jobPostResponse = null;
-        try {
-            jobPostResponse =
-                    jobPostResponse.parseFrom(responseByteArray);
-        } catch (InvalidProtocolBufferException e) {}
-
-
-        return jobPostResponse;
-    }
-
-    public static JobPostResponse getFilteredJobPosts(JobFilterRequest jobFilterRequest) {
-
-        String responseString;
-            responseString = postToServer(Config.URL_FILTERED_MATCHING_JOB_POSTS,
-                    Base64.encodeToString(jobFilterRequest.toByteArray(), Base64.DEFAULT));
+            responseString = postToServer(Config.URL_JOB_SEARCH,
+                    Base64.encodeToString(jobSearchRequest.toByteArray(), Base64.DEFAULT));
 
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
@@ -399,7 +366,7 @@ public class HttpRequest {
     }
 
     public static JobPostResponse getJobsForLatLng(JobSearchRequest jobSearchRequest) {
-        String responseString = postToServer(Config.URL_JOB_SEARCH_BY_LAT_LNG,
+        String responseString = postToServer(Config.URL_JOB_SEARCH,
                 Base64.encodeToString(jobSearchRequest.toByteArray(), Base64.DEFAULT));
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);

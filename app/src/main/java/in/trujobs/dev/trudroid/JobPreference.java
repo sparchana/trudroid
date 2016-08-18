@@ -206,9 +206,7 @@ public class JobPreference extends AppCompatActivity {
                 defaultImage.setVisibility(View.GONE);
                 Log.w("","Null jobRole Response");
                 return;
-            }
-
-            else {
+            } else {
                 errorImageView.setVisibility(View.GONE);
                 jobRoleGridViewLayout.setVisibility(View.VISIBLE);
                 jobPrefOneImage = (ImageView) findViewById(R.id.job_pref_one_image_view);
@@ -241,6 +239,11 @@ public class JobPreference extends AppCompatActivity {
         requestBuilder.setJobRolePrefOneId(jobPrefOne);
         requestBuilder.setJobRolePrefTwoId(jobPrefTwo);
         requestBuilder.setJobRolePrefThreeId(jobPrefThree);
+
+        /* save selected JobRoleId into Pref */
+        Prefs.candidatePrefJobRoleIdOne.put(jobPrefOne);
+        Prefs.candidatePrefJobRoleIdTwo.put(jobPrefTwo);
+        Prefs.candidatePrefJobRoleIdThree.put(jobPrefThree);
 
         mSaveJobPrefAsyncTask = new SaveJobRolePrefAsyncTask();
         mSaveJobPrefAsyncTask.execute(requestBuilder.build());

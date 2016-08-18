@@ -142,6 +142,8 @@ public class Login extends AppCompatActivity {
                 Prefs.sessionExpiry.put(logInResponse.getSessionExpiryMillis());
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
+                Prefs.candidateHomeLat.put(String.valueOf(logInResponse.getCandidateHomeLatitude()));
+                Prefs.candidateHomeLng.put(String.valueOf(logInResponse.getCandidateHomeLongitude()));
 
                 if(Prefs.loginCheckStatus.get() == 1){
                     finish();

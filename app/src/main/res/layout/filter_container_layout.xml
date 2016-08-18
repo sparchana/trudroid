@@ -433,12 +433,12 @@
                                     <ImageView
                                         android:layout_width="25dp"
                                         android:layout_height="25dp"
-                                        android:id="@+id/ftr_img_sort_by_male"
+                                        android:id="@+id/ftr_img_ftr_by_male"
                                         android:src="@drawable/male_disable"/>
                                     <TextView
                                         android:textColor="@color/boxOption"
                                         android:layout_marginTop="8dp"
-                                        android:id="@+id/ftr_txt_sort_by_male"
+                                        android:id="@+id/ftr_txt_ftr_by_male"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:textSize="@dimen/box_option_text"
@@ -461,12 +461,12 @@
                                     <ImageView
                                         android:layout_width="25dp"
                                         android:layout_height="25dp"
-                                        android:id="@+id/ftr_img_sort_by_female"
+                                        android:id="@+id/ftr_img_ftr_by_female"
                                         android:src="@drawable/female_disable"/>
                                     <TextView
                                         android:layout_marginTop="8dp"
                                         android:textColor="@color/boxOption"
-                                        android:id="@+id/ftr_txt_sort_by_female"
+                                        android:id="@+id/ftr_txt_ftr_by_female"
                                         android:textSize="@dimen/box_option_text"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
