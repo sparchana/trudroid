@@ -431,13 +431,14 @@ public class HomeLocality extends AppCompatActivity implements
      * Toggles the visibility of the progress bar. Enables or disables the Fetch Address button.
      */
     private void updateUIWidgets() {
-        if (mAddressRequested) {
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
-            mFetchAddressButton.setEnabled(false);
-        } else if (showProgressBar) {
+        if (showProgressBar) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
             mSaveHomeLocality.setEnabled(false);
+        }
+        if (mAddressRequested) {
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mFetchAddressButton.setEnabled(false);
         } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
             mFetchAddressButton.setEnabled(true);
