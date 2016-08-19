@@ -25,6 +25,13 @@ public class Config {
     public static final String URL_ADD_JOB_PREFS = BASE_HTTP_URL + "/mAddJobPref";
     public static final String URL_GET_CANDIDATE_INFO = BASE_HTTP_URL + "/mGetCandidateInformation";
     public static final String URL_JOB_POST_DETAILS = BASE_HTTP_URL + "/mGetJobPostInfo";
+    public static final String URL_CANDIDATE_APPLIED_JOBS = BASE_HTTP_URL + "/mGetCandidateJobApplication";
+    public static final String URL_ALL_BASIC_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateBasicProfileStatics";
+    public static final String URL_ALL_EXPERIENCE_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateExperienceProfileStatics";
+    public static final String URL_ALL_EDUCATION_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateEducationProfileStatics";
+    public static final String URL_UPDATE_BASIC_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateBasicProfile";
+    public static final String URL_UPDATE_EXPERIENCE_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateExperienceProfile";
+    public static final String URL_UPDATE_EDUCATION_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateEducationProfile";
     public static final String URL_CANDIDATE_STATUS_SPECIFIC_ALERT = BASE_HTTP_URL + "/mFetchCandidateAlert";
     public static final String URL_JOB_SEARCH = BASE_HTTP_URL + "/mSearchJobs";
 }

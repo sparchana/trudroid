@@ -36,11 +36,15 @@ import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.JobFilterFragment;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.proto.CandidateAppliedJobsRequest;
+import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.JobFilterRequest;
@@ -83,6 +87,8 @@ public class JobActivity extends AppCompatActivity
     public CharSequence[] jobRoleNameList = null;
 
     TextView selectedJobRolesNameTxtView;
+
+    JobPostResponse returnedJobPostResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,11 +229,11 @@ public class JobActivity extends AppCompatActivity
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_my_jobs) {
-            Intent intent = new Intent(JobActivity.this, JobPreference.class);
+            Intent intent = new Intent(JobActivity.this, MyAppliedJobs.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_profile) {
-            Intent intent = new Intent(JobActivity.this, CandidateInfoActivity.class);
+            Intent intent = new Intent(JobActivity.this, CandidateProfileActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
         } else if (id == R.id.nav_home_locality) {
@@ -339,12 +345,24 @@ public class JobActivity extends AppCompatActivity
         protected void onPostExecute(JobPostResponse jobPostResponse) {
             super.onPostExecute(jobPostResponse);
             loaderStop();
+            jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
             if (jobPostResponse == null) {
                 ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
                 return;
+            } else {
+                if(jobPostResponse.getJobPostList().size() > 0){
+                    returnedJobPostResponse = jobPostResponse;
+                    pd.cancel();
+                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, returnedJobPostResponse.getJobPostList());
+                    jobPostListView.setAdapter(jobPostAdapter);
+                } else {
+                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+                    noJobsImageView.setVisibility(View.VISIBLE);
+                    showToast("No jobs found in your locality");
+                }
             }
             updateJobPostUI(jobPostResponse.getJobPostList());
         }
@@ -368,6 +386,7 @@ public class JobActivity extends AppCompatActivity
             showToast("No jobs found !!");
         }
     }
+
 
     private class FetchAlertAsyncTask extends AsyncTask<FetchCandidateAlertRequest,
             Void, FetchCandidateAlertResponse> {
@@ -409,7 +428,6 @@ public class JobActivity extends AppCompatActivity
         protected void onPreExecute() {
             super.onPreExecute();
         }
-
         @Override
         protected JobRoleResponse doInBackground(Void... params) {
             return HttpRequest.getJobRoles();

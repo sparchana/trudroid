@@ -31,4 +31,5 @@ dependencies {
     compile 'in.trujobs.proto:tru-proto:1.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile group: 'com.google.guava', name: 'guava', version: '15.0'
+    compile 'com.android.support:support-v4:+'
 }

@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_scrollFlags="scroll"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            android:fitsSystemWindows="true">
+
+            <ImageView
+                android:id="@+id/header_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:src="@drawable/parallax"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:title="Experience Profile"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:background="@drawable/rounded_corner"
+        android:layout_marginTop="-36dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:elevation="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layout_collapseMode="parallax"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.9"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/experience_profile"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:text="Experience"
+                            android:textSize="18dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginTop="26dp"
+                            android:background="@color/back_grey"/>
+                    </LinearLayout>
+
+                    <!-- Qualification -->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/margin_top_text"
+                        android:layout_marginBottom="@dimen/margin_bottom_text"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_top_text"
+                            android:layout_marginBottom="@dimen/margin_bottom_text"
+                            android:layout_weight="0.5"
+                            android:layout_gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="6dp"
+                                android:text="Are you a fresher or Experienced?"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:layout_gravity="center"
+                            android:gravity="center_horizontal">
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="42dp"
+                                android:padding="1dp">
+
+                                <Button
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.5"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimary"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/round_white_button"
+                                    android:padding="8dp"
+                                    android:id="@+id/is_fresher"
+                                    android:textSize="9dp"
+                                    android:text="Fresher"/>
+
+                                <Button
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.5"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimary"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/round_white_button"
+                                    android:padding="8dp"
+                                    android:id="@+id/is_experienced"
+                                    android:textSize="9dp"
+                                    android:text="Experienced"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <!-- Experience -->
+                    <LinearLayout
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/experienced_section">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/margin_top_text"
+                            android:layout_marginBottom="@dimen/margin_bottom_text"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_top_text"
+                                android:layout_marginBottom="@dimen/margin_bottom_text"
+                                android:layout_weight="0.5"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="6dp"
+                                    android:text="Total Work Experience"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:layout_gravity="center"
+                                android:gravity="center_horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/select_experience"
+                                            android:textSize="@dimen/Edit_Text_Size"
+                                            android:singleLine="true"
+                                            android:layout_marginTop="4dp"
+                                            android:layout_width="0dp"
+                                            android:layout_weight="0.8"
+                                            android:layout_height="wrap_content"
+                                            android:hint="Total Work Experience"/>
+
+                                        <ImageView
+                                            android:id="@+id/experience_picker"
+                                            android:layout_width="0dp"
+                                            android:padding="8dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="0.2"
+                                            android:src="@drawable/down_arrow"/>
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/back_grey_dark"/>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <!--Total work experience -->
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="@dimen/margin_bottom_text"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_top_text"
+                                android:layout_marginBottom="@dimen/margin_bottom_text"
+                                android:layout_weight="0.5"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:padding="6dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Are you currently working?"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:layout_gravity="center"
+                                android:gravity="center_horizontal">
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="42dp"
+                                    android:padding="1dp">
+
+                                    <Button
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.5"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colorPrimary"
+                                        android:layout_margin="2dp"
+                                        android:background="@drawable/round_white_button"
+                                        android:padding="8dp"
+                                        android:id="@+id/is_employed_yes"
+                                        android:textSize="9dp"
+                                        android:text="Yes"/>
+
+                                    <Button
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.5"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colorPrimary"
+                                        android:layout_margin="2dp"
+                                        android:background="@drawable/round_white_button"
+                                        android:padding="8dp"
+                                        android:id="@+id/is_employed_no"
+                                        android:textSize="9dp"
+                                        android:text="No"/>
+
+<!--                                    <Button
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.5"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colorPrimary"
+                                        android:background="@color/white"
+                                        android:padding="8dp"
+                                        android:id="@+id/is_employed_yes"
+                                        android:textSize="12dp"
+                                        android:text="Yes"/>
+
+                                    <Button
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.5"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colorPrimary"
+                                        android:padding="8dp"
+                                        android:background="@color/white"
+                                        android:id="@+id/is_employed_no"
+                                        android:textSize="12dp"
+                                        android:text="No"/>-->
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Qualification -->
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:id="@+id/current_company_details_layout"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Current Job Details"
+                                android:textSize="16dp"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="8dp"
+                                android:background="@color/back_grey"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp">
+                                <EditText
+                                    android:id="@+id/current_company"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:textSize="@dimen/Edit_Text_Size"
+                                    android:singleLine="true"
+                                    android:paddingLeft="4dp"
+                                    android:drawableLeft="@drawable/building_small"
+                                    android:hint="Current Company"/>
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp">
+                                <EditText
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/last_withdrawn_salary"
+                                    android:textSize="@dimen/Edit_Text_Size"
+                                    android:singleLine="true"
+                                    android:inputType="number"
+                                    android:paddingLeft="4dp"
+                                    android:drawableLeft="@drawable/rupee_role_small"
+                                    android:hint="Last Drawn Salary"/>
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_bottom_text">
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:text="Preferred Shift Timing"/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <EditText
+                                        android:id="@+id/currentJobRole"
+                                        android:layout_height="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.92"
+                                        android:textSize="@dimen/Edit_Text_Size"
+                                        android:singleLine="true"
+                                        android:inputType="number"
+                                        android:paddingLeft="4dp"
+                                        android:drawableLeft="@drawable/rupee_role_small"
+                                        android:textColor="@drawable/edit_text_selector"
+                                        android:hint="Select Current Job Role"/>
+
+                                    <ImageView
+                                        android:id="@+id/current_job_role_picker"
+                                        android:layout_width="0dp"
+                                        android:paddingTop="8dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.08"
+                                        android:src="@drawable/down_arrow"/>
+                                </LinearLayout>
+
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <!--Language-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/language_profile"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Language"
+                        android:textSize="18dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginTop="26dp"
+                        android:background="@color/back_grey"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="Languages you know"/>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5">
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Understand"
+                                android:textSize="12dp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Speak"
+                                android:textSize="12dp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Read/Write"
+                                android:textSize="12dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/back_grey"
+                        android:layout_margin="5dp"/>
+                    <!--Break of titles U/S/R/W -->
+
+                    <LinearLayout
+                        android:id="@+id/language_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
+                <!-- Skills -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/skill_profile"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Skills"
+                        android:textSize="18dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginTop="26dp"
+                        android:background="@color/back_grey"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Let us know about your skills "/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/back_grey"
+                        android:layout_margin="5dp"/>
+                    <LinearLayout
+                        android:id="@+id/skill_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:padding="6dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom">
+                <Button
+                    android:id="@+id/save_experience_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="Next"
+                    android:textColor="#fff"
+                    android:background="@drawable/rounded_corner_button"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
+
+

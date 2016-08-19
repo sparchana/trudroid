@@ -23,12 +23,14 @@ import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
-import in.trujobs.dev.trudroid.ViewDialog;
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.WelcomeScreen;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
+import in.trujobs.proto.CandidateAppliedJobsResponse;
+import in.trujobs.proto.JobApplicationObject;
 import in.trujobs.proto.JobPostObject;
 
 /**
@@ -38,12 +40,14 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
     private AsyncTask<ApplyJobRequest, Void, ApplyJobResponse> mAsyncTask;
     int preScreenLocationIndex = 0;
+
     public JobPostAdapter(Activity context, List<JobPostObject> jobPostList) {
         super(context, 0, jobPostList);
     }
     public class Holder
     {
-        TextView mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView;
+        TextView mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, mJobPostApplyBtn;
+        LinearLayout mApplyBtnBackground;
     }
     ProgressDialog pd;
 
@@ -54,6 +58,20 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         if(rowView == null) {
             rowView = LayoutInflater.from(getContext()).inflate(
                     R.layout.job_list_view_item, parent, false);
+        }
+        holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
+        holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
+
+        LinearLayout applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
+
+        applyBtn.setEnabled(true);
+        holder.mJobPostApplyBtn.setText("Apply");
+        holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+        if(jobPost.getIsApplied() == 1){
+            applyBtn.setEnabled(false);
+            holder.mJobPostApplyBtn.setText("Already Applied");
+            holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
         }
 
         //set job post title
@@ -126,11 +144,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             @Override
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
-                JobDetailActivity.start(getContext(), jobPost.getJobRole().getJobRoleName(), jobPost.getJobPostLocalityList());
+                JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
             }
         });
-
-        LinearLayout applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
 
         applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override

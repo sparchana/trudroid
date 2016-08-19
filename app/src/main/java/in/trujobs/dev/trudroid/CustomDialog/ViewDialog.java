@@ -1,23 +1,17 @@
-package in.trujobs.dev.trudroid;
+package in.trujobs.dev.trudroid.CustomDialog;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import in.trujobs.dev.trudroid.Util.AsyncTask;
-import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.proto.FetchCandidateAlertRequest;
-import in.trujobs.proto.FetchCandidateAlertResponse;
+import in.trujobs.dev.trudroid.CandidateProfileActivity;
+import in.trujobs.dev.trudroid.JobActivity;
+import in.trujobs.dev.trudroid.R;
 
 /**
  * Created by batcoder1 on 28/7/16.
@@ -33,6 +27,7 @@ public class ViewDialog {
         TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
         TextView headOne = (TextView) dialog.findViewById(R.id.heading_one);
         TextView headTwo = (TextView) dialog.findViewById(R.id.heading_two);
+
         text.setText(msg);
 
         if (subHeading == "") {
@@ -48,6 +43,7 @@ public class ViewDialog {
         LinearLayout completeProfileLayout = (LinearLayout) dialog.findViewById(R.id.completeprofile_dialog);
         LinearLayout newJobsLayout = (LinearLayout) dialog.findViewById(R.id.newjob_dialog);
         LinearLayout referLayout = (LinearLayout) dialog.findViewById(R.id.refer_dialog);
+
         LinearLayout referSms = (LinearLayout) dialog.findViewById(R.id.sms_share);
         LinearLayout referWhatsapp = (LinearLayout) dialog.findViewById(R.id.whatsapp_share);
 
@@ -73,7 +69,7 @@ public class ViewDialog {
             @Override
             public void onClick(View view) {
                 // Navigate user to edit profile screen
-                Intent completeProfileIntent = new Intent(view.getContext(), CandidateInfoActivity.class);
+                Intent completeProfileIntent = new Intent(view.getContext(), CandidateProfileActivity.class);
                 view.getContext().startActivity(completeProfileIntent);
             }
         });
