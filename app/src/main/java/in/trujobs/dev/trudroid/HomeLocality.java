@@ -584,11 +584,9 @@ public class HomeLocality extends AppCompatActivity implements
             showProgressBar = true;
             updateUIWidgets();
             Tlog.i("Triggering lat/lng fetch process with "+ mPlaceId);
-            if(mLastLocation == null){
-                mLatLngAsyncTask = new LatLngAsyncTask();
-                mLatLngAsyncTask.execute(mPlaceId);
-                Tlog.i("lat/lng fetch completed");
-            }
+            mLatLngAsyncTask = new LatLngAsyncTask();
+            mLatLngAsyncTask.execute(mPlaceId);
+            Tlog.i("lat/lng fetch completed");
             Tlog.i("skipped lat/lng fetch. Already provided via gps");
         } else {
             triggerFinalSubmission();

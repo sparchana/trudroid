@@ -22,4 +22,8 @@ public class ServerConstants {
 
     public static Integer HOMELOCALITY_YES = 1;
     public static Integer JOBPREFERENCE_YES = 1;
+
+    /* API KEYS */
+    public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
+
 }

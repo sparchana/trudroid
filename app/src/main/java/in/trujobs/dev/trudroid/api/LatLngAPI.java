@@ -23,7 +23,6 @@ public class LatLngAPI {
     private static final String TYPE_GEOCODE = "/geocode";
     private static final String OUT_JSON = "/json";
 
-    private static final String SERVER_API_KEY = "AIzaSyBNM0b5j-qfS-foVPNviZjjSO5EXHxNdrA";
 
     public static LatLngAPIHelper getLatLngFor(String placeId) {
         LatLngAPIHelper result = new LatLngAPIHelper();
@@ -33,7 +32,7 @@ public class LatLngAPI {
 
         try {
             StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_GEOCODE + OUT_JSON);
-            sb.append("?key=" + SERVER_API_KEY);
+            sb.append("?key=" + ServerConstants.GOOGLE_SERVER_API_KEY);
             sb.append("&place_id="+URLEncoder.encode(placeId, "utf8"));
 
             URL url = new URL(sb.toString());
