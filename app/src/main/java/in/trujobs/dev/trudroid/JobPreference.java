@@ -24,6 +24,7 @@ import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -116,12 +117,20 @@ public class JobPreference extends AppCompatActivity {
         });
 
         saveJobPrefBtn = (Button) findViewById(R.id.add_job_role_pref_btn);
-        saveJobPrefBtn.setEnabled(false);
         saveJobPrefBtn.setBackgroundResource(R.color.back_grey_dark);
+
+        pd = CustomProgressDialog.get(JobPreference.this);
+
         saveJobPrefBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveJobPreferences();
+                if(jobPrefOptionOne){
+                    saveJobPreferences();
+                } else{
+                    Toast.makeText(JobPreference.this, "Please select 1st Job Preference to continue",
+                            Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }
@@ -183,9 +192,6 @@ public class JobPreference extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(JobPreference.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -272,9 +278,6 @@ public class JobPreference extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(JobPreference.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -332,7 +335,6 @@ public class JobPreference extends AppCompatActivity {
                 jobPrefRemoveOne.setVisibility(View.VISIBLE);
                 jobPrefOptionOne = true;
                 jobPrefOne = jobRoleResponse.getJobRole(pos).getJobRoleId();
-                saveJobPrefBtn.setEnabled(true);
                 saveJobPrefBtn.setBackgroundResource(R.color.colorPrimary);
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionTwo){
@@ -372,7 +374,6 @@ public class JobPreference extends AppCompatActivity {
                 mJobPrefOneText.setText("1st Preference");
                 jobPrefOptionOne = false;
                 jobPrefRemoveOne.setVisibility(View.GONE);
-                saveJobPrefBtn.setEnabled(false);
                 saveJobPrefBtn.setBackgroundResource(R.color.back_grey_dark);
                 removeJobPrefValueFromStack(jobPrefOne);
                 jobPrefOne = 0L; break;

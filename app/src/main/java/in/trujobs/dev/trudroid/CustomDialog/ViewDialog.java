@@ -47,15 +47,15 @@ public class ViewDialog {
         LinearLayout referSms = (LinearLayout) dialog.findViewById(R.id.sms_share);
         LinearLayout referWhatsapp = (LinearLayout) dialog.findViewById(R.id.whatsapp_share);
 
-        if (category == 1) {
+        if (category == 1) { //complete profile now
             completeProfileLayout.setVisibility(View.VISIBLE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
-        } else if (category ==2 ) {
+        } else if (category ==2 ) { // new jobs, apply now
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.VISIBLE);
             referLayout.setVisibility(View.GONE);
-        } else if(category == 3) {
+        } else if(category == 3) { //refer now
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.VISIBLE);

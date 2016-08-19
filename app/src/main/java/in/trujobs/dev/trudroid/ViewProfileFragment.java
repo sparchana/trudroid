@@ -22,8 +22,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateInformationRequest;
 import in.trujobs.proto.GetCandidateInformationResponse;
 import in.trujobs.proto.JobRoleObject;
@@ -59,6 +61,8 @@ public class ViewProfileFragment extends Fragment {
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle(Prefs.firstName.get() + " " + Prefs.lastName.get());
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        pd = CustomProgressDialog.get(getActivity());
 
         profileStatusText = (TextView) view.findViewById(R.id.profile_status_text);
         profileMsg = (TextView) view.findViewById(R.id.profile_msg);
@@ -164,9 +168,6 @@ public class ViewProfileFragment extends Fragment {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext(),R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -181,172 +182,183 @@ public class ViewProfileFragment extends Fragment {
             pd.cancel();
 
             if (getCandidateInformationResponse == null) {
-                Toast.makeText(getContext(), "Null Candidate returned",
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("","Null candidate Response");
+                getActivity().finish();
                 return;
             } else {
-                candidateProfileActivity = (CandidateProfileActivity) getActivity();
-                candidateProfileActivity.candidateInfo = getCandidateInformationResponse;
-                TextView candidateName = (TextView) view.findViewById(R.id.user_name);
-                TextView candidateGender = (TextView) view.findViewById(R.id.candidate_gender);
-                TextView candidateMobile = (TextView) view.findViewById(R.id.candidate_phone_number);
-                TextView candidateAge = (TextView) view.findViewById(R.id.candidate_age);
-                TextView candidateLocation = (TextView) view.findViewById(R.id.candidate_location);
+                if(getCandidateInformationResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    candidateProfileActivity = (CandidateProfileActivity) getActivity();
+                    candidateProfileActivity.candidateInfo = getCandidateInformationResponse;
+                    TextView candidateName = (TextView) view.findViewById(R.id.user_name);
+                    TextView candidateGender = (TextView) view.findViewById(R.id.candidate_gender);
+                    TextView candidateMobile = (TextView) view.findViewById(R.id.candidate_phone_number);
+                    TextView candidateAge = (TextView) view.findViewById(R.id.candidate_age);
+                    TextView candidateLocation = (TextView) view.findViewById(R.id.candidate_location);
 
-                TextView candidateJobPref = (TextView) view.findViewById(R.id.candidate_job_pref);
-                TextView candidateLocalityPref = (TextView) view.findViewById(R.id.candidate_locality_pref);
-                TextView candidateShiftPref = (TextView) view.findViewById(R.id.candidate_job_time_shift);
+                    TextView candidateJobPref = (TextView) view.findViewById(R.id.candidate_job_pref);
+                    TextView candidateLocalityPref = (TextView) view.findViewById(R.id.candidate_locality_pref);
+                    TextView candidateShiftPref = (TextView) view.findViewById(R.id.candidate_job_time_shift);
 
-                TextView candidateDegree = (TextView) view.findViewById(R.id.candidate_degree);
-                TextView candidateCollege = (TextView) view.findViewById(R.id.candidate_college);
-                TextView candidateCourse = (TextView) view.findViewById(R.id.candidate_course);
+                    TextView candidateDegree = (TextView) view.findViewById(R.id.candidate_degree);
+                    TextView candidateCollege = (TextView) view.findViewById(R.id.candidate_college);
+                    TextView candidateCourse = (TextView) view.findViewById(R.id.candidate_course);
 
-                TextView candidateTotalExp = (TextView) view.findViewById(R.id.candidate_experience);
-                TextView candidateCurrentCompany = (TextView) view.findViewById(R.id.candidate_current_company);
-                TextView candidateLastWithdrawnSalary = (TextView) view.findViewById(R.id.candidate_current_salary);
+                    TextView candidateTotalExp = (TextView) view.findViewById(R.id.candidate_experience);
+                    TextView candidateCurrentCompany = (TextView) view.findViewById(R.id.candidate_current_company);
+                    TextView candidateLastWithdrawnSalary = (TextView) view.findViewById(R.id.candidate_current_salary);
 
-                candidateName.setText("Hi " + getCandidateInformationResponse.getCandidate().getCandidateFirstName());
+                    candidateName.setText("Hi " + getCandidateInformationResponse.getCandidate().getCandidateFirstName());
 
-                FloatingActionButton userIcon = (FloatingActionButton) view.findViewById(R.id.user_icon);
-                userIcon.setVisibility(View.VISIBLE);
-                userIcon.setImageResource(R.drawable.icon_male);
+                    FloatingActionButton userIcon = (FloatingActionButton) view.findViewById(R.id.user_icon);
+                    userIcon.setVisibility(View.VISIBLE);
+                    userIcon.setImageResource(R.drawable.icon_male);
 
-                if(getCandidateInformationResponse.getCandidate().getCandidateProfileCompletePercent() > 80){
-                    profileCompletePercent.setImageResource(R.drawable.thumbs_up);
-                    profileStatusText.setText("Profile Complete");
-                    profileMsg.setText("");
+                    if(getCandidateInformationResponse.getCandidate().getCandidateProfileCompletePercent() > 80){
+                        profileCompletePercent.setImageResource(R.drawable.thumbs_up);
+                        profileStatusText.setText("Profile Complete");
+                        profileMsg.setText("");
 
-                } else {
-                    profileCompletePercent.setImageResource(R.drawable.thumbs_down);
-                    profileStatusText.setText("Profile Incomplete");
-                    profileMsg.setText("Complete Profile now!");
-                    profileCompletePercent.setOnClickListener(new View.OnClickListener() {
+                    } else {
+                        profileCompletePercent.setImageResource(R.drawable.thumbs_down);
+                        profileStatusText.setText("Profile Incomplete");
+                        profileMsg.setText("Complete Profile now!");
+                        profileCompletePercent.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                CandidateProfileBasic candidateProfileBasic = new CandidateProfileBasic();
+                                candidateProfileBasic.setArguments(getActivity().getIntent().getExtras());
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.main_profile, candidateProfileBasic).commit();
+                            }
+                        });
+                    }
+
+                    candidateAge.setText("Not Specified");
+                    if(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() != 0){
+                        Date current = new Date();
+                        Date bday = new Date(getCandidateInformationResponse.getCandidate().getCandidateDobMillis());
+
+                        final Calendar calender = new GregorianCalendar();
+                        calender.set(Calendar.HOUR_OF_DAY, 0);
+                        calender.set(Calendar.MINUTE, 0);
+                        calender.set(Calendar.SECOND, 0);
+                        calender.set(Calendar.MILLISECOND, 0);
+                        calender.setTimeInMillis(current.getTime() - bday.getTime());
+
+                        int age = 0;
+                        age = calender.get(Calendar.YEAR) - 1970;
+                        age += (float) calender.get(Calendar.MONTH) / (float) 12;
+                        candidateAge.setText(age + " years ");
+                    }
+
+                    jobsApplied.setText(getCandidateInformationResponse.getCandidate().getAppliedJobs() + "");
+                    jobsApplied.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            CandidateProfileBasic candidateProfileBasic = new CandidateProfileBasic();
-                            candidateProfileBasic.setArguments(getActivity().getIntent().getExtras());
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.main_profile, candidateProfileBasic).commit();
+                            if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
+                                Intent intent = new Intent(getContext(), MyAppliedJobs.class);
+                                startActivity(intent);
+                            }
+
                         }
                     });
-                }
 
-                candidateAge.setText("Not Specified");
-                if(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() != 0){
-                    Date current = new Date();
-                    Date bday = new Date(getCandidateInformationResponse.getCandidate().getCandidateDobMillis());
-
-                    final Calendar calender = new GregorianCalendar();
-                    calender.set(Calendar.HOUR_OF_DAY, 0);
-                    calender.set(Calendar.MINUTE, 0);
-                    calender.set(Calendar.SECOND, 0);
-                    calender.set(Calendar.MILLISECOND, 0);
-                    calender.setTimeInMillis(current.getTime() - bday.getTime());
-
-                    int age = 0;
-                    age = calender.get(Calendar.YEAR) - 1970;
-                    age += (float) calender.get(Calendar.MONTH) / (float) 12;
-                    candidateAge.setText(age + " years ");
-                }
-
-                jobsApplied.setText(getCandidateInformationResponse.getCandidate().getAppliedJobs() + "");
-                jobsApplied.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
-                            Intent intent = new Intent(getContext(), MyAppliedJobs.class);
-                            startActivity(intent);
-                        }
-
+                    candidateMobile.setText(getCandidateInformationResponse.getCandidate().getCandidateMobile());
+                    if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getCandidateInstitute() != ""){
+                        candidateCollege.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getCandidateInstitute());
+                    } else{
+                        candidateCollege.setText("Not Specified");
                     }
-                });
-
-                candidateMobile.setText(getCandidateInformationResponse.getCandidate().getCandidateMobile());
-                if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getCandidateInstitute() != ""){
-                    candidateCollege.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getCandidateInstitute());
-                } else{
-                    candidateCollege.setText("Not Specified");
-                }
-                if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree().getDegreeName() != ""){
-                    candidateCourse.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree().getDegreeName());
-                } else{
-                    candidateCourse.setText("Not Specified");
-                }
-                if(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany() != ""){
-                    candidateCurrentCompany.setText(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany());
-                } else{
-                    candidateCurrentCompany.setText("Not Specified");
-                }
-                if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getEducation().getEducationName() != ""){
-                    candidateDegree.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getEducation().getEducationName());
-                } else{
-                    candidateDegree.setText("Not Specified");
-                }
-                if(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() != 0){
-                    candidateLastWithdrawnSalary.setText(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() + "");
-                } else{
-                    candidateLastWithdrawnSalary.setText("Not Specified");
-                }
-                if(getCandidateInformationResponse.getCandidate().getCandidateGender() == 0){
-                    candidateGender.setText("Male");
-                    userIcon.setImageResource(R.drawable.icon_male);
-                } else if(getCandidateInformationResponse.getCandidate().getCandidateGender() == 1){
-                    candidateGender.setText("Female");
-                    userIcon.setImageResource(R.drawable.icon_female);
-                } else{
-                    candidateGender.setText("Not specified");
-                }
-                if(getCandidateInformationResponse.getCandidate().getCandidateHomelocality().getLocalityName() != ""){
-                    candidateLocation.setText(getCandidateInformationResponse.getCandidate().getCandidateHomelocality().getLocalityName());
-                } else{
-                    candidateLocation.setText("Not Specified");
-                }
-
-                String jobRolePref = "";
-                List<JobRoleObject> jobRoleObjectList = getCandidateInformationResponse.getCandidate().getCandidateJobRolePrefList();
-                if(jobRoleObjectList.size() > 0){
-                    for(int i=0; i<jobRoleObjectList.size(); i++){
-                        jobRolePref += jobRoleObjectList.get(i).getJobRoleName();
-
-                        if(i != (jobRoleObjectList.size() - 1)){
-                            jobRolePref += ", ";
-                        }
+                    if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree().getDegreeName() != ""){
+                        candidateCourse.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getDegree().getDegreeName());
+                    } else{
+                        candidateCourse.setText("Not Specified");
                     }
-                    candidateJobPref.setText(jobRolePref);
-                } else{
-                    candidateJobPref.setText("Not Specified");
-                }
-
-                String localityPref = "";
-                List<LocalityObject> localityObjectsList = getCandidateInformationResponse.getCandidate().getCandidateLocationPrefList();
-                if(localityObjectsList.size() > 0){
-                    for(int i=0; i<localityObjectsList.size(); i++){
-                        localityPref += localityObjectsList.get(i).getLocalityName();
-
-                        if(i != (localityObjectsList.size() - 1)){
-                            localityPref += ", ";
-                        }
+                    if(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany() != ""){
+                        candidateCurrentCompany.setText(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany());
+                    } else{
+                        candidateCurrentCompany.setText("Not Specified");
                     }
-                    candidateLocalityPref.setText(localityPref);
-                } else{
-                    candidateLocalityPref.setText("Not Specified");
-                }
+                    if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getEducation().getEducationName() != ""){
+                        candidateDegree.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getEducation().getEducationName());
+                    } else{
+                        candidateDegree.setText("Not Specified");
+                    }
+                    if(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() != 0){
+                        candidateLastWithdrawnSalary.setText(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                    } else{
+                        candidateLastWithdrawnSalary.setText("Not Specified");
+                    }
+                    if(getCandidateInformationResponse.getCandidate().getCandidateGender() == 0){
+                        candidateGender.setText("Male");
+                        userIcon.setImageResource(R.drawable.icon_male);
+                    } else if(getCandidateInformationResponse.getCandidate().getCandidateGender() == 1){
+                        candidateGender.setText("Female");
+                        userIcon.setImageResource(R.drawable.icon_female);
+                    } else{
+                        candidateGender.setText("Not specified");
+                    }
+                    if(getCandidateInformationResponse.getCandidate().getCandidateHomelocality().getLocalityName() != ""){
+                        candidateLocation.setText(getCandidateInformationResponse.getCandidate().getCandidateHomelocality().getLocalityName());
+                    } else{
+                        candidateLocation.setText("Not Specified");
+                    }
 
-                if(getCandidateInformationResponse.getCandidate().getCandidateTimeShiftPref().getTimeShiftName() != ""){
-                    candidateShiftPref.setText(getCandidateInformationResponse.getCandidate().getCandidateTimeShiftPref().getTimeShiftName());
-                } else{
-                    candidateShiftPref.setText("Not Specified");
-                }
+                    String jobRolePref = "";
+                    List<JobRoleObject> jobRoleObjectList = getCandidateInformationResponse.getCandidate().getCandidateJobRolePrefList();
+                    if(jobRoleObjectList.size() > 0){
+                        for(int i=0; i<jobRoleObjectList.size(); i++){
+                            jobRolePref += jobRoleObjectList.get(i).getJobRoleName();
 
-                Integer expYears = getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() / 12;
-                Integer expMonth = getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() % 12;
-                if(expYears != 0){
-                    candidateTotalExp.setText(expYears + " years " + expMonth + " months");
-                } else if(expYears == 0 && expMonth == 0) {
-                    candidateTotalExp.setText("Fresher");
+                            if(i != (jobRoleObjectList.size() - 1)){
+                                jobRolePref += ", ";
+                            }
+                        }
+                        candidateJobPref.setText(jobRolePref);
+                    } else{
+                        candidateJobPref.setText("Not Specified");
+                    }
+
+                    String localityPref = "";
+                    List<LocalityObject> localityObjectsList = getCandidateInformationResponse.getCandidate().getCandidateLocationPrefList();
+                    if(localityObjectsList.size() > 0){
+                        for(int i=0; i<localityObjectsList.size(); i++){
+                            localityPref += localityObjectsList.get(i).getLocalityName();
+
+                            if(i != (localityObjectsList.size() - 1)){
+                                localityPref += ", ";
+                            }
+                        }
+                        candidateLocalityPref.setText(localityPref);
+                    } else{
+                        candidateLocalityPref.setText("Not Specified");
+                    }
+
+                    if(getCandidateInformationResponse.getCandidate().getCandidateTimeShiftPref().getTimeShiftName() != ""){
+                        candidateShiftPref.setText(getCandidateInformationResponse.getCandidate().getCandidateTimeShiftPref().getTimeShiftName());
+                    } else{
+                        candidateShiftPref.setText("Not Specified");
+                    }
+
+                    if(getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() != -1){
+                        Integer expYears = getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() / 12;
+                        Integer expMonth = getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() % 12;
+                        if(expYears != 0){
+                            candidateTotalExp.setText(expYears + " years " + expMonth + " months");
+                        } else if(expYears == 0 && expMonth == 0) {
+                            candidateTotalExp.setText("Fresher");
+                        } else{
+                            candidateTotalExp.setText(expMonth + " months");
+                        }
+                    } else{
+                        candidateTotalExp.setText("Not Specified");
+                    }
                 } else{
-                    candidateTotalExp.setText(expMonth + " months");
+                    Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                    getActivity().finish();
                 }
             }
         }

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:gravity="center"
+        android:textSize="20dp"
         android:textAlignment="center"
         android:text="Enter the received OTP"/>
 
@@ -22,28 +23,28 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="5dp"
-            android:layout_height="5dp"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/grey_dot"/>
 
         <ImageView
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_margin="4dp"
             android:src="@drawable/white_dot"/>
 
 
         <ImageView
-            android:layout_width="5dp"
-            android:layout_height="5dp"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/grey_dot"/>
 
     </LinearLayout>

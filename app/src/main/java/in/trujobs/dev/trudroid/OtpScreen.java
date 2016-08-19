@@ -1,7 +1,9 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,12 +16,20 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.LocalityObject;
+import in.trujobs.proto.ResetPasswordRequest;
+import in.trujobs.proto.ResetPasswordResponse;
 
 public class OtpScreen extends AppCompatActivity {
     private static String EXTRA_TITLE = "Candidate Registration";
     EditText mUserOtpOne, mUserOtpTwo, mUserOtpThree, mUserOtpFour;
+    private AsyncTask<ResetPasswordRequest, Void, ResetPasswordResponse> mAsyncTask;
+    ProgressDialog pd;
 
     public static void resetPassword(Context context, String title) {
         Intent intent = new Intent(context, OtpScreen.class);
@@ -39,6 +49,16 @@ public class OtpScreen extends AppCompatActivity {
         mUserOtpThree = (EditText) findViewById(R.id.user_otp_third_edit_text);
         mUserOtpFour = (EditText) findViewById(R.id.user_otp_fourth_edit_text);
         Button addPasswordBtn = (Button) findViewById(R.id.add_password_btn);
+        Button resendOtpBtn = (Button) findViewById(R.id.resend_otp_btn);
+
+        pd = CustomProgressDialog.get(OtpScreen.this);
+
+        resendOtpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resendOtp();
+            }
+        });
 
         mUserOtpOne.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -106,6 +126,55 @@ public class OtpScreen extends AppCompatActivity {
                 EnterPassword.resetOldPassword(OtpScreen.this, EXTRA_TITLE);
             } else{
                 Toast.makeText(OtpScreen.this, "Oops! Incorrect OTP",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public void resendOtp(){
+        ResetPasswordRequest.Builder requestBuilder = ResetPasswordRequest.newBuilder();
+        requestBuilder.setMobile(Prefs.candidateMobile.get());
+
+        mAsyncTask = new ResendOtpRequestAsyncTask();
+        mAsyncTask.execute(requestBuilder.build());
+    }
+
+    private class ResendOtpRequestAsyncTask extends AsyncTask<ResetPasswordRequest,
+            Void, ResetPasswordResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected ResetPasswordResponse doInBackground(ResetPasswordRequest... params) {
+            return HttpRequest.findUserAndSendOtp(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(ResetPasswordResponse resetPasswordResponse) {
+            super.onPostExecute(resetPasswordResponse);
+            mAsyncTask = null;
+            pd.cancel();
+            if (resetPasswordResponse == null) {
+                Toast.makeText(OtpScreen.this, "Failed to Request. Please try again.",
+                        Toast.LENGTH_LONG).show();
+                Tlog.w("Null resend otp Response");
+                return;
+            }
+
+            if (resetPasswordResponse.getStatusValue() == ServerConstants.SUCCESS){
+                Prefs.storedOtp.put(resetPasswordResponse.getOtp());
+                Toast.makeText(OtpScreen.this, "OTP Resent!",
+                        Toast.LENGTH_LONG).show();
+
+            } else if (resetPasswordResponse.getStatusValue() == ServerConstants.NO_USER_TO_SEND_OTP){
+                Toast.makeText(OtpScreen.this, "Account doesn't exists!",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(OtpScreen.this, "Something went wrong. Please try again later!",
                         Toast.LENGTH_LONG).show();
             }
         }

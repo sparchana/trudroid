@@ -3,6 +3,7 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -48,6 +50,8 @@ public class Login extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
+
+        pd = CustomProgressDialog.get(Login.this);
 
         loginBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,9 +101,6 @@ public class Login extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(Login.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -161,6 +162,7 @@ public class Login extends AppCompatActivity {
                     } else{
                         intent = new Intent(Login.this, JobActivity.class);
                     }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                     finish();
