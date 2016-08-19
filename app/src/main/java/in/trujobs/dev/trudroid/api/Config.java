@@ -20,7 +20,6 @@ public class Config {
     public static final String URL_FORGOT_PASSWORD_SEND_OTP = BASE_HTTP_URL + "/mFindUserAndSendOtp";
     public static final String URL_APPLY_JOB = BASE_HTTP_URL + "/mApplyJob";
     public static final String URL_ALL_JOB_ROLES = BASE_HTTP_URL + "/mGetAllJobRoles";
-    public static final String URL_ALL_JOB_POSTS = BASE_HTTP_URL + "/mGetAllJobPosts";
     public static final String URL_ADD_HOMELOCALITY = BASE_HTTP_URL + "/mAddHomeLocality";
     public static final String URL_ADD_JOB_PREFS = BASE_HTTP_URL + "/mAddJobPref";
     public static final String URL_GET_CANDIDATE_INFO = BASE_HTTP_URL + "/mGetCandidateInformation";
