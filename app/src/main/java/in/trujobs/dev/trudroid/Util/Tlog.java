@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
-public class Slog {
-    private Slog() {
+public class Tlog {
+    private Tlog() {
     }
 
-    public static final String LOG_TAG = "Skall";
+    public static final String LOG_TAG = "Trudroid";
 
     public static boolean isLoggable(int level) {
         return Log.isLoggable(LOG_TAG, level);

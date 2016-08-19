@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import in.trujobs.dev.trudroid.Util.Constants;
+import in.trujobs.dev.trudroid.Util.Tlog;
 
 /**
  * Asynchronously handles an intent using a worker thread. Receives a ResultReceiver object and a
@@ -57,7 +57,7 @@ public class FetchAddressIntentService extends IntentService {
 
         // Check if receiver was properly registered.
         if (mReceiver == null) {
-            Log.wtf(TAG, "No receiver received. There is nowhere to send the results.");
+            Tlog.wtf("No receiver received. There is nowhere to send the results.");
             return;
         }
 
@@ -68,7 +68,7 @@ public class FetchAddressIntentService extends IntentService {
         // send an error error message and return.
         if (location == null) {
             errorMessage = getString(R.string.no_location_data_provided);
-            Log.wtf(TAG, errorMessage);
+            Tlog.wtf(errorMessage);
             deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
             return;
         }
@@ -101,11 +101,11 @@ public class FetchAddressIntentService extends IntentService {
             // Catch network or other I/O problems.
             errorMessage = getString(R.string.service_not_available);
             Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-            Log.e(TAG, errorMessage, ioException);
+            Tlog.e(errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
             errorMessage = getString(R.string.invalid_lat_long_used);
-            Log.e(TAG, errorMessage + ". " +
+            Tlog.e(errorMessage + ". " +
                     "Latitude = " + location.getLatitude() +
                     ", Longitude = " + location.getLongitude(), illegalArgumentException);
         }
@@ -114,7 +114,7 @@ public class FetchAddressIntentService extends IntentService {
         if (addresses == null || addresses.size()  == 0) {
             if (errorMessage.isEmpty()) {
                 errorMessage = getString(R.string.no_address_found);
-                Log.e(TAG, errorMessage);
+                Tlog.e(errorMessage);
             }
             deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
         } else {
@@ -136,7 +136,7 @@ public class FetchAddressIntentService extends IntentService {
                 System.out.println("AddressLine: "+address.getAddressLine(i));
                 addressFragments.add(address.getAddressLine(i));
             }
-            Log.i(TAG, getString(R.string.address_found));
+            Tlog.i(getString(R.string.address_found));
             String localityName;
             if(addressFragments.size() < 2){
                 localityName = TextUtils.join(System.getProperty("line.separator"), addressFragments);

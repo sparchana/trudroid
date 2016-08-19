@@ -7,13 +7,12 @@ public class Config {
     /**
      * AWS prod-like-test-server for all trujobs-dev requirements is hosted @ 52.42.8.205:80
      */
-     public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
+     //public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
     /**
      * replace ip below with your local ip for development
      * and uncomment the line, also comment out aws prod-like-test-server ip above
      */
-
-/*    public static final String BASE_HTTP_URL = "http://192.168.0.113:9000";*/
+    public static final String BASE_HTTP_URL = "http://192.168.0.197:9000";
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
@@ -22,7 +21,6 @@ public class Config {
     public static final String URL_APPLY_JOB = BASE_HTTP_URL + "/mApplyJob";
     public static final String URL_ALL_JOB_ROLES = BASE_HTTP_URL + "/mGetAllJobRoles";
     public static final String URL_ALL_JOB_POSTS = BASE_HTTP_URL + "/mGetAllJobPosts";
-    public static final String URL_MATCHING_JOB_POSTS = BASE_HTTP_URL + "/mGetMatchingJobPosts";
     public static final String URL_ADD_HOMELOCALITY = BASE_HTTP_URL + "/mAddHomeLocality";
     public static final String URL_ADD_JOB_PREFS = BASE_HTTP_URL + "/mAddJobPref";
     public static final String URL_GET_CANDIDATE_INFO = BASE_HTTP_URL + "/mGetCandidateInformation";
@@ -35,4 +33,5 @@ public class Config {
     public static final String URL_UPDATE_EXPERIENCE_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateExperienceProfile";
     public static final String URL_UPDATE_EDUCATION_PROFILE = BASE_HTTP_URL + "/mCandidateUpdateEducationProfile";
     public static final String URL_CANDIDATE_STATUS_SPECIFIC_ALERT = BASE_HTTP_URL + "/mFetchCandidateAlert";
+    public static final String URL_JOB_SEARCH = BASE_HTTP_URL + "/mSearchJobs";
 }

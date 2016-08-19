@@ -31,11 +31,16 @@ import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.CandidateInformationRequest;
+import in.trujobs.proto.FetchCandidateAlertRequest;
+import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.GetCandidateInformationResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
+import in.trujobs.proto.HomeLocalityRequest;
+import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
+import in.trujobs.proto.JobSearchRequest;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
 import in.trujobs.proto.ResetPasswordRequest;
@@ -143,20 +148,11 @@ public class HttpRequest {
         }
     }
 
-    public static JobPostResponse getJobPosts() {
-        JobPostResponse.Builder requestBuilder =
-                JobPostResponse.newBuilder();
+    public static JobPostResponse searchJobs(JobSearchRequest jobSearchRequest) {
 
         String responseString;
-        if(Util.isLoggedIn() == true){
-            responseString = postToServer(Config.URL_MATCHING_JOB_POSTS + "/"+ Prefs.candidateMobile.get(),
-                    Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
-        }
-
-        else{
-            responseString = postToServer(Config.URL_ALL_JOB_POSTS,
-                    Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
-        }
+            responseString = postToServer(Config.URL_JOB_SEARCH,
+                    Base64.encodeToString(jobSearchRequest.toByteArray(), Base64.DEFAULT));
 
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
@@ -510,5 +506,22 @@ public class HttpRequest {
         }
         return candidateAlertResponse;
 
+    }
+
+    public static JobPostResponse getJobsForLatLng(JobSearchRequest jobSearchRequest) {
+        String responseString = postToServer(Config.URL_JOB_SEARCH,
+                Base64.encodeToString(jobSearchRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        JobPostResponse jobPostResponse = null;
+        try {
+            jobPostResponse = JobPostResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return jobPostResponse;
     }
 }

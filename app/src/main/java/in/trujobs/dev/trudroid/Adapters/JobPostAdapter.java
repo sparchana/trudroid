@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import java.util.List;
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.WelcomeScreen;
@@ -87,7 +87,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.mJobPostSalaryTextView = (TextView) rowView.findViewById(R.id.job_post_salary_text_view);
         if(jobPost.getJobPostMaxSalary() != 0){
             holder.mJobPostSalaryTextView.setText("₹" + formatter.format(jobPost.getJobPostMinSalary()) + " - ₹" + formatter.format(jobPost.getJobPostMaxSalary()));
-        } else{
+        } else {
             holder.mJobPostSalaryTextView.setText("₹" + formatter.format(jobPost.getJobPostMinSalary()));
         }
 
@@ -104,7 +104,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(jobPost.getJobPostCreationMillis());
         int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH);
+        int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
         holder.mJobPostPostedOnTextView.setText("Posted on: " + mDay + "-" + mMonth + "-" + mYear);
 
@@ -240,7 +240,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             if (applyJobResponse == null) {
                 Toast.makeText(getContext(), "Something went wrong. Please try again later.",
                         Toast.LENGTH_LONG).show();
-                Log.w("","Null Response");
+                Tlog.w("Null Response");
                 return;
             }
             ViewDialog alert = new ViewDialog();
