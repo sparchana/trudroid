@@ -29,8 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateSkillObject;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
 import in.trujobs.proto.JobRoleObject;
@@ -63,7 +65,6 @@ public class CandidateProfileExperience extends Fragment {
     JobRoleObject currentJobRoleValue;
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
     final List<CandidateSkillObject> candidateSkill = new ArrayList<CandidateSkillObject>();
-    final List<LanguageObject> checkedLanguage = new ArrayList<LanguageObject>();
     Integer isEmployed;
 
     CharSequence[] allLanguageList = new CharSequence[0];
@@ -84,6 +85,7 @@ public class CandidateProfileExperience extends Fragment {
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        pd = CustomProgressDialog.get(getActivity());
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -141,9 +143,6 @@ public class CandidateProfileExperience extends Fragment {
             Void, UpdateCandidateBasicProfileResponse> {
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext(),R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -157,11 +156,21 @@ public class CandidateProfileExperience extends Fragment {
             super.onPostExecute(updateCandidateBasicProfileResponse);
             pd.cancel();
 
-            CandidateProfileEducation candidateProfileEducation = new CandidateProfileEducation();
-            candidateProfileEducation.setArguments(getActivity().getIntent().getExtras());
-            getFragmentManager().beginTransaction()
-                    .addToBackStack(null)
-                    .add(R.id.main_profile, candidateProfileEducation).commit();
+            if (updateCandidateBasicProfileResponse == null) {
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                        Toast.LENGTH_LONG).show();
+            } else{
+                if(updateCandidateBasicProfileResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    CandidateProfileEducation candidateProfileEducation = new CandidateProfileEducation();
+                    candidateProfileEducation.setArguments(getActivity().getIntent().getExtras());
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack(null)
+                            .add(R.id.main_profile, candidateProfileEducation).commit();
+                } else{
+                    Toast.makeText(getContext(), "Looks like something went wrong while saving experience profile. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -169,9 +178,6 @@ public class CandidateProfileExperience extends Fragment {
             Void, GetCandidateExperienceProfileStaticResponse> {
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext(),R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -186,289 +192,295 @@ public class CandidateProfileExperience extends Fragment {
             pd.cancel();
 
             if (getCandidateExperienceProfileStaticResponse == null) {
-                Toast.makeText(getContext(), "Something went wrong in fetching data",
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("", "Null Response");
                 return;
             } else {
-                Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-                ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
+                if(getCandidateExperienceProfileStaticResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+                    ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
-                languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
+                    languageListView = (LinearLayout) view.findViewById(R.id.language_list_view);
 
-                qualificationLayout = (LinearLayout) view.findViewById(R.id.current_company_details_layout);
-                experiencedSection = (LinearLayout) view.findViewById(R.id.experienced_section);
+                    qualificationLayout = (LinearLayout) view.findViewById(R.id.current_company_details_layout);
+                    experiencedSection = (LinearLayout) view.findViewById(R.id.experienced_section);
 
-                lastWithdrawnSalary = (EditText) view.findViewById(R.id.last_withdrawn_salary);
-                currentCompany = (EditText) view.findViewById(R.id.current_company);
-                currentJobRole = (EditText) view.findViewById(R.id.currentJobRole);
+                    lastWithdrawnSalary = (EditText) view.findViewById(R.id.last_withdrawn_salary);
+                    currentCompany = (EditText) view.findViewById(R.id.current_company);
+                    currentJobRole = (EditText) view.findViewById(R.id.currentJobRole);
 
-                isExperienced = (Button) view.findViewById(R.id.is_experienced);
-                isFresher = (Button) view.findViewById(R.id.is_fresher);
-                isEmployedYes = (Button) view.findViewById(R.id.is_employed_yes);
-                isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
-                selectExp = (TextView) view.findViewById(R.id.select_experience);
+                    isExperienced = (Button) view.findViewById(R.id.is_experienced);
+                    isFresher = (Button) view.findViewById(R.id.is_fresher);
+                    isEmployedYes = (Button) view.findViewById(R.id.is_employed_yes);
+                    isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
+                    selectExp = (TextView) view.findViewById(R.id.select_experience);
 
-                lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
-                currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
-                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
-                    currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
-                    currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
-                }
-
-                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() > 0){
-                    isCandidateExperienced = 1;
-                    experiencedSection.setVisibility(View.VISIBLE);
-                    isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
-                    isExperienced.setTextColor(getResources().getColor(R.color.white));
-                    isFresher.setBackgroundResource(R.drawable.round_white_button);
-                    isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    expInYears = candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience();
-                    Integer year = expInYears / 12;
-                    Integer month = expInYears % 12;
-                    if(year == 0){
-                        selectExp.setText(month + " months");
-                    } else if(month == 0){
-                        selectExp.setText(year + " years");
-                    } else if(year != 0 && month != 0){
-                        selectExp.setText(year + " years " + month + " months");
+                    lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                    currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
+                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
+                        currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
+                        currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
                     }
-                } else {
-                    isCandidateExperienced = 0;
-                    experiencedSection.setVisibility(View.GONE);
-                }
 
-                selectExp = (TextView) view.findViewById(R.id.select_experience);
-                currentJobRolePicker = (ImageView) view.findViewById(R.id.current_job_role_picker);
-
-                experiencePicker = (ImageView) view.findViewById(R.id.experience_picker);
-                experiencePicker.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showExperiencePicker();
-                    }
-                });
-
-                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
-                    isEmployed = 1;
-                    qualificationLayout.setVisibility(View.VISIBLE);
-                    isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
-                    isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
-                    isEmployedYes.setTextColor(getResources().getColor(R.color.white));
-                } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
-                    isEmployed = 0;
-                    qualificationLayout.setVisibility(View.GONE);
-                    isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
-                    isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
-                    isEmployedNo.setTextColor(getResources().getColor(R.color.white));
-                }
-                isEmployedYes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        isEmployed = 1;
-                        qualificationLayout.setVisibility(View.VISIBLE);
-                        isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
-                        isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.white));
-                    }
-                });
-
-                isEmployedNo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        isEmployed = 0;
-                        qualificationLayout.setVisibility(View.GONE);
-                        isEmployedYes.setBackgroundColor(getResources().getColor(R.color.white));
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedNo.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedNo.setTextColor(getResources().getColor(R.color.white));
-                    }
-                });
-
-                isFresher.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        isCandidateExperienced = 0;
-                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.white));
-                        experiencedSection.setVisibility(View.GONE);
-                        qualificationLayout.setVisibility(View.GONE);
-                        isExperienced.setBackgroundResource(R.drawable.round_white_button);
-                        isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isFresher.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isFresher.setTextColor(getResources().getColor(R.color.white));
-                    }
-                });
-
-                isExperienced.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() > 0){
                         isCandidateExperienced = 1;
                         experiencedSection.setVisibility(View.VISIBLE);
                         isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                         isExperienced.setTextColor(getResources().getColor(R.color.white));
                         isFresher.setBackgroundResource(R.drawable.round_white_button);
                         isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
-                    }
-                });
-
-                getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList());
-
-                allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
-                languageIdList = new ArrayList<Integer>();
-
-                for(int i=0 ; i<getCandidateExperienceProfileStaticResponse.getLanguageObjectCount() ; i++){
-                    allLanguageList[i] = getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageName();
-                    languageIdList.add(getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageId());
-                }
-
-                final boolean[] checkedItems = new boolean[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
-                for(int i=0 ; i<3 ; i++){
-                    checkedItems[i] = true;
-                }
-
-                final CharSequence[] jobRoleList = new CharSequence[candidateProfileActivity.candidateInfo.getJobRolesCount()];
-                final List<Long> jobRoleIdList = new ArrayList<Long>();
-                for (int i = 0; i < candidateProfileActivity.candidateInfo.getJobRolesCount(); i++) {
-                    jobRoleList[i] = candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleName();
-                    jobRoleIdList.add(candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleId());
-                }
-
-                currentJobRole.setEnabled(false);
-
-                currentJobRolePicker.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final AlertDialog alertDialog = new AlertDialog.Builder(
-                                getContext())
-                                .setCancelable(true)
-                                .setPositiveButton("Cancel",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                .setTitle("Select current Job Role")
-                                .setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
-                                        currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
-                                        currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
-                                        currentJobRoleValue = currentJobRoleBuilder.build();
-                                        currentJobRole.setText(jobRoleList[which]);
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                        alertDialog.show();
-                        WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
-                        params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-                        params.height = 900;
-                        alertDialog.getWindow().setAttributes(params);
-                    }
-                });
-
-                saveExperienceBtn = (Button) view.findViewById(R.id.save_experience_btn);
-                saveExperienceBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        UpdateCandidateExperienceProfileRequest.Builder experienceBuilder = UpdateCandidateExperienceProfileRequest.newBuilder();
-                        boolean check = true;
-
-                        if(isCandidateExperienced == -1){
-                            check = false;
-                            showDialog("Please select Fresher or Experience");
-                        }
-                        if(isEmployed == null){
-                            check = false;
-                            showDialog("Please select are you employed?");
-                        } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().length() == 0)){
-                            check = false;
-                            showDialog("Please provide your current Salary");
-                        } else if(isCandidateExperienced == 1 && (expInYears == null || expInYears == 0)){
-                            check = false;
-                            showDialog("Please select total years of experience?");
-                        }
-
-                        if(check){
-                            experienceBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-                            experienceBuilder.addAllCandidateLanguage(candidateLanguageKnown);
-                            experienceBuilder.addAllCandidateSkill(candidateSkill);
-                            experienceBuilder.setCandidateIsEmployed(isEmployed);
-                            if(isCandidateExperienced == 1){
-                                experienceBuilder.setCandidateTotalExperience(expInYears);
-                            } else{
-                                experienceBuilder.setCandidateTotalExperience(0);
-                            }
-                            if(isEmployed == 1){
-                                experienceBuilder.setCurrentJobRole(currentJobRoleValue);
-                                experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
-                                experienceBuilder.setCandidateCurrentSalary(Long.parseLong(lastWithdrawnSalary.getText().toString()));
-                            }
-
-                            mUpdateExperienceAsyncTask = new UpdateExperienceProfileAsyncTask();
-                            mUpdateExperienceAsyncTask.execute(experienceBuilder.build());
-                        }
-                    }
-                });
-
-                LinearLayout skillListView = (LinearLayout) view.findViewById(R.id.skill_list_view);
-
-                for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){
-                    LayoutInflater inflater = null;
-                    inflater = (LayoutInflater) getActivity().getApplicationContext()
-                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View mLinearView = inflater.inflate(R.layout.skill_list_view, null);
-                    TextView skillName = (TextView) mLinearView
-                            .findViewById(R.id.skill_name);
-                    skillName.setText(skillObject.getSkillName());
-                    skillListView.addView(mLinearView);
-
-                    final CheckBox skillCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
-
-                    for(CandidateSkillObject skill : candidateProfileActivity.candidateInfo.getCandidate().getCandidateSkillObjectList()){
-                        if(skill.getSkillId() == skillObject.getSkillId()){
-                            if(skill.getAnswer() == true){
-                                skillCheckbox.setChecked(true);
-                                CandidateSkillObject.Builder skillBuilder = CandidateSkillObject.newBuilder();
-                                skillBuilder.setSkillId(skillObject.getSkillId());
-                                skillBuilder.setAnswer(true);
-                                candidateSkill.add(skillBuilder.build());
-                            }
-                            break;
+                        expInYears = candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience();
+                        Integer year = expInYears / 12;
+                        Integer month = expInYears % 12;
+                        if(year == 0){
+                            selectExp.setText(month + " months");
+                        } else if(month == 0){
+                            selectExp.setText(year + " years");
+                        } else if(year != 0 && month != 0){
+                            selectExp.setText(year + " years " + month + " months");
                         }
                     }
 
-                    skillCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    selectExp = (TextView) view.findViewById(R.id.select_experience);
+                    currentJobRolePicker = (ImageView) view.findViewById(R.id.current_job_role_picker);
+
+                    experiencePicker = (ImageView) view.findViewById(R.id.experience_picker);
+                    experiencePicker.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            boolean flag = false;
-                            flag = findExistingSkillObject(skillObject);
-                            CandidateSkillObject.Builder skill = CandidateSkillObject.newBuilder();
-                            if(skillCheckbox.isChecked()){
-                                if(flag){
-                                    skill.setSkillId(existingSkill.getSkillId());
-                                    skill.setAnswer(true);
-                                    candidateSkill.remove(pos);
-                                    candidateSkill.add(skill.build());
+                        public void onClick(View view) {
+                            showExperiencePicker();
+                        }
+                    });
+
+                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
+                        isEmployed = 1;
+                        qualificationLayout.setVisibility(View.VISIBLE);
+                        isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                        isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                        isEmployedYes.setTextColor(getResources().getColor(R.color.white));
+                    } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
+                        isEmployed = 0;
+                        qualificationLayout.setVisibility(View.GONE);
+                        isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
+                        isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                        isEmployedNo.setTextColor(getResources().getColor(R.color.white));
+                    }
+                    isEmployedYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            isEmployed = 1;
+                            qualificationLayout.setVisibility(View.VISIBLE);
+                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.white));
+                        }
+                    });
+
+                    isEmployedNo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            isEmployed = 0;
+                            qualificationLayout.setVisibility(View.GONE);
+                            isEmployedYes.setBackgroundColor(getResources().getColor(R.color.white));
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.white));
+                        }
+                    });
+
+                    isFresher.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            isCandidateExperienced = 0;
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            experiencedSection.setVisibility(View.GONE);
+                            qualificationLayout.setVisibility(View.GONE);
+                            isExperienced.setBackgroundResource(R.drawable.round_white_button);
+                            isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isFresher.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isFresher.setTextColor(getResources().getColor(R.color.white));
+                        }
+                    });
+
+                    isExperienced.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            isCandidateExperienced = 1;
+                            experiencedSection.setVisibility(View.VISIBLE);
+                            isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isExperienced.setTextColor(getResources().getColor(R.color.white));
+                            isFresher.setBackgroundResource(R.drawable.round_white_button);
+                            isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        }
+                    });
+
+                    getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList());
+
+                    allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
+                    languageIdList = new ArrayList<Integer>();
+
+                    for(int i=0 ; i<getCandidateExperienceProfileStaticResponse.getLanguageObjectCount() ; i++){
+                        allLanguageList[i] = getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageName();
+                        languageIdList.add(getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageId());
+                    }
+
+                    final boolean[] checkedItems = new boolean[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
+                    for(int i=0 ; i<3 ; i++){
+                        checkedItems[i] = true;
+                    }
+
+                    final CharSequence[] jobRoleList = new CharSequence[candidateProfileActivity.candidateInfo.getJobRolesCount()];
+                    final List<Long> jobRoleIdList = new ArrayList<Long>();
+                    for (int i = 0; i < candidateProfileActivity.candidateInfo.getJobRolesCount(); i++) {
+                        jobRoleList[i] = candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleName();
+                        jobRoleIdList.add(candidateProfileActivity.candidateInfo.getJobRoles(i).getJobRoleId());
+                    }
+
+                    currentJobRole.setEnabled(false);
+
+                    currentJobRolePicker.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            final AlertDialog alertDialog = new AlertDialog.Builder(
+                                    getContext())
+                                    .setCancelable(true)
+                                    .setPositiveButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog,
+                                                                    int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                    .setTitle("Select current Job Role")
+                                    .setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
+                                            currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
+                                            currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
+                                            currentJobRoleValue = currentJobRoleBuilder.build();
+                                            currentJobRole.setText(jobRoleList[which]);
+                                            dialog.dismiss();
+                                        }
+                                    }).create();
+                            alertDialog.show();
+                            WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+                            params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+                            params.height = 900;
+                            alertDialog.getWindow().setAttributes(params);
+                        }
+                    });
+
+                    saveExperienceBtn = (Button) view.findViewById(R.id.save_experience_btn);
+                    saveExperienceBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            UpdateCandidateExperienceProfileRequest.Builder experienceBuilder = UpdateCandidateExperienceProfileRequest.newBuilder();
+                            boolean check = true;
+
+                            Log.e("Valuss", "" + isCandidateExperienced + isEmployed);
+                            if(isCandidateExperienced < 0){
+                                check = false;
+                                showDialog("Please select Fresher or Experience");
+                            }
+                            if(isEmployed < 0){
+                                check = false;
+                                showDialog("Please select are you employed?");
+                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().length() == 0)){
+                                check = false;
+                                showDialog("Please provide your current Salary");
+                            } else if(isCandidateExperienced == 1 && (expInYears < 1)){
+                                check = false;
+                                showDialog("Please select total years of experience?");
+                            }
+
+                            if(check){
+                                experienceBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+                                experienceBuilder.addAllCandidateLanguage(candidateLanguageKnown);
+                                experienceBuilder.addAllCandidateSkill(candidateSkill);
+                                experienceBuilder.setCandidateIsEmployed(isEmployed);
+                                if(isCandidateExperienced == 1){
+                                    experienceBuilder.setCandidateTotalExperience(expInYears);
                                 } else{
-                                    skill.setSkillId(skillObject.getSkillId());
-                                    skill.setAnswer(true);
-                                    candidateSkill.add(skill.build());
+                                    experienceBuilder.setCandidateTotalExperience(0);
                                 }
-                            } else{
-                                skill.setSkillId(existingSkill.getSkillId());
-                                skill.setAnswer(false);
-                                candidateSkill.remove(pos);
-                                candidateSkill.add(skill.build());
+                                if(isEmployed == 1){
+                                    experienceBuilder.setCurrentJobRole(currentJobRoleValue);
+                                    experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
+                                    experienceBuilder.setCandidateCurrentSalary(Long.parseLong(lastWithdrawnSalary.getText().toString()));
+                                }
+
+                                mUpdateExperienceAsyncTask = new UpdateExperienceProfileAsyncTask();
+                                mUpdateExperienceAsyncTask.execute(experienceBuilder.build());
                             }
                         }
                     });
+
+                    LinearLayout skillListView = (LinearLayout) view.findViewById(R.id.skill_list_view);
+
+                    for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){
+                        LayoutInflater inflater = null;
+                        inflater = (LayoutInflater) getActivity().getApplicationContext()
+                                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View mLinearView = inflater.inflate(R.layout.skill_list_view, null);
+                        TextView skillName = (TextView) mLinearView
+                                .findViewById(R.id.skill_name);
+                        skillName.setText(skillObject.getSkillName());
+                        skillListView.addView(mLinearView);
+
+                        final CheckBox skillCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
+
+                        for(CandidateSkillObject skill : candidateProfileActivity.candidateInfo.getCandidate().getCandidateSkillObjectList()){
+                            if(skill.getSkillId() == skillObject.getSkillId()){
+                                if(skill.getAnswer() == true){
+                                    skillCheckbox.setChecked(true);
+                                    CandidateSkillObject.Builder skillBuilder = CandidateSkillObject.newBuilder();
+                                    skillBuilder.setSkillId(skillObject.getSkillId());
+                                    skillBuilder.setAnswer(true);
+                                    candidateSkill.add(skillBuilder.build());
+                                }
+                                break;
+                            }
+                        }
+
+                        skillCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                boolean flag = false;
+                                flag = findExistingSkillObject(skillObject);
+                                CandidateSkillObject.Builder skill = CandidateSkillObject.newBuilder();
+                                if(skillCheckbox.isChecked()){
+                                    if(flag){
+                                        skill.setSkillId(existingSkill.getSkillId());
+                                        skill.setAnswer(true);
+                                        candidateSkill.remove(pos);
+                                        candidateSkill.add(skill.build());
+                                    } else{
+                                        skill.setSkillId(skillObject.getSkillId());
+                                        skill.setAnswer(true);
+                                        candidateSkill.add(skill.build());
+                                    }
+                                } else{
+                                    skill.setSkillId(existingSkill.getSkillId());
+                                    skill.setAnswer(false);
+                                    candidateSkill.remove(pos);
+                                    candidateSkill.add(skill.build());
+                                }
+                            }
+                        });
+                    }
+                } else{
+                    Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
             }
         }

@@ -33,8 +33,14 @@ public class Util {
         return loginStatus;
     }
 
-    public static boolean isValidName(String name) {
-        return !TextUtils.isEmpty(name);
+    public static int isValidName(String name) {
+        if (name.trim().length() == 0){
+            return 0;
+        } else if(!name.matches("^[ A-z]+$")){
+            return 1;
+        } else {
+            return 2;
+        }
     }
 
     public static boolean isValidEmail(String email) {

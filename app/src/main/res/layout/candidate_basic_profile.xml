@@ -280,13 +280,16 @@
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
-                                <EditText
-                                    android:id="@+id/pref_location"
-                                    android:singleLine="true"
-                                    android:textSize="@dimen/Edit_Text_Size"
-                                    android:layout_width="match_parent"
+                                <AutoCompleteTextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:hint="Current Home Location"/>
+                                    android:id="@+id/home_locality_auto_complete_edit_text"
+                                    android:textSize="12dp"
+                                    android:focusableInTouchMode="true"
+                                    android:maxLength="50"
+                                    android:layout_gravity="center"
+                                    android:hint="Ex: Bellandur"
+                                    android:layout_weight="1"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>

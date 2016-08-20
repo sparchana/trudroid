@@ -14,8 +14,10 @@ import java.util.Collections;
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.MyAppliedJobsAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.JobPostResponse;
@@ -28,6 +30,8 @@ public class MyAppliedJobs extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_applied_jobs);
+
+        pd = CustomProgressDialog.get(MyAppliedJobs.this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("My Applied Jobs");
@@ -46,9 +50,6 @@ public class MyAppliedJobs extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(MyAppliedJobs.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -69,12 +70,18 @@ public class MyAppliedJobs extends AppCompatActivity {
                 Log.w("","Null my jobs Response");
                 return;
             } else {
-                if(candidateAppliedJobsResponse.getJobApplicationCount() > 0){
-                    MyAppliedJobsAdapter myAppliedJobsAdapter = new MyAppliedJobsAdapter(MyAppliedJobs.this, candidateAppliedJobsResponse.getJobApplicationList());
-                    myJobListView.setAdapter(myAppliedJobsAdapter);
-                } else {
-                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
-                    noJobsImageView.setVisibility(View.VISIBLE);
+                if(candidateAppliedJobsResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    if(candidateAppliedJobsResponse.getJobApplicationCount() > 0){
+                        MyAppliedJobsAdapter myAppliedJobsAdapter = new MyAppliedJobsAdapter(MyAppliedJobs.this, candidateAppliedJobsResponse.getJobApplicationList());
+                        myJobListView.setAdapter(myAppliedJobsAdapter);
+                    } else {
+                        ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+                        noJobsImageView.setVisibility(View.VISIBLE);
+                    }
+                } else{
+                    ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
+                    errorImageView.setVisibility(View.VISIBLE);
+                    myJobListView.setVisibility(View.GONE);
                 }
             }
         }

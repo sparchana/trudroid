@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -42,6 +43,8 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
+        pd = CustomProgressDialog.get(SignUp.this);
+
         loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,8 +73,12 @@ public class SignUp extends AppCompatActivity {
 
         int check = 1;
 
-        if(Util.isValidName(requestBuilder.getName()) == false){
+        if(Util.isValidName(requestBuilder.getName()) == 0){
             Toast.makeText(SignUp.this, "Enter your Name",
+                    Toast.LENGTH_LONG).show();
+            check = 0;
+        } else if(Util.isValidName(requestBuilder.getName()) == 1) {
+            Toast.makeText(SignUp.this, "Enter a valid name",
                     Toast.LENGTH_LONG).show();
             check = 0;
         } else if(Util.isValidMobile(requestBuilder.getMobile()) == false) {
@@ -95,9 +102,6 @@ public class SignUp extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(SignUp.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 

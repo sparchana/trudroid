@@ -20,6 +20,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -46,8 +47,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
     public class Holder
     {
-        TextView mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, mJobPostApplyBtn;
-        LinearLayout mApplyBtnBackground;
+        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView;
+        LinearLayout mApplyBtnBackground, applyBtn;
     }
     ProgressDialog pd;
 
@@ -62,14 +63,16 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
         holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
 
-        LinearLayout applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
+        holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
 
-        applyBtn.setEnabled(true);
+        pd = CustomProgressDialog.get(getContext());
+
+        holder.applyBtn.setEnabled(true);
         holder.mJobPostApplyBtn.setText("Apply");
         holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
 
         if(jobPost.getIsApplied() == 1){
-            applyBtn.setEnabled(false);
+            holder.applyBtn.setEnabled(false);
             holder.mJobPostApplyBtn.setText("Already Applied");
             holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
         }
@@ -148,7 +151,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
         });
 
-        applyBtn.setOnClickListener(new View.OnClickListener() {
+        holder.applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showJobLocality(jobPost);
@@ -221,9 +224,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext(),R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -245,15 +245,15 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
             ViewDialog alert = new ViewDialog();
             if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
-                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 2);
+                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
-                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 2);
+                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
-                alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 2);
+                alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
-                alert.showDialog(getContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 2);
+                alert.showDialog(getContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 0);
             } else{
-                alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact out servers", "",  R.drawable.sent, 2);
+                alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact out servers", "",  R.drawable.sent, 0);
             }
         }
     }

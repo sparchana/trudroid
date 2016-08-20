@@ -3,16 +3,19 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
+import in.trujobs.dev.trudroid.Adapters.NavigationListAdapter;
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
@@ -38,6 +42,7 @@ import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.JobFilterFragment;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -57,18 +62,21 @@ import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
 
 public class JobActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements View.OnClickListener {
 
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mAsyncTask;
     private AsyncTask<FetchCandidateAlertRequest, Void, FetchCandidateAlertResponse> mAlertAsyncTask;
 
     ProgressDialog pd;
+    private ListView mNavigationItemListView;
     public ListView jobPostListView;
     public AutoCompleteTextView mSearchJobAcTxtView;
     public TextView mSearchJobsByJobRoleTxtView;
     public String mSearchAddressOutput;
     public String mSearchedPlaceId;
+    private DrawerLayout mDrawerLayout;
     private FloatingActionButton fab;
+    private List<NavItem> mNavItems;
     private AsyncTask<String, Void, LatLngAPIHelper> mLatLngAsyncTask;
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
 
@@ -101,25 +109,41 @@ public class JobActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationItemListView = (ListView) findViewById(R.id.list_view_main_activity_list_view);
+
+        //defining navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main_activity);
+
+        //setting side ham burger icon :P
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        //setting side navigation items
+        setNavigationItems();
+
+        //on side navigation item select
+        mNavigationItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItemFromDrawer(position);
+            }
+        });
 
         selectedJobRolesNameTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
 
+        pd = CustomProgressDialog.get(JobActivity.this);
+
+        //getting all the job posts
         showJobPosts();
 
+        //filter button
         Button btnFilterJob = (Button) findViewById(R.id.btn_job_filter);
         btnFilterJob.setOnClickListener(this);
 
         JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
         fetchAllJobs.execute();
-
 
         mSearchJobsByJobRoleTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
         mSearchJobsByJobRoleTxtView.setOnClickListener(this);
@@ -143,9 +167,60 @@ public class JobActivity extends AppCompatActivity
                 mLatLngAsyncTask.execute(mSearchedPlaceId);
             }
         });
-
     }
 
+    private void setNavigationItems() {
+        mNavItems = new ArrayList<>();
+        mNavItems.add(new NavItem("Search Job", R.drawable.search_icon));
+        if (Util.isLoggedIn()) {
+            mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
+            mNavItems.add(new NavItem("My Jobs", R.drawable.list));
+            mNavItems.add(new NavItem("My Home Location", R.drawable.location_icon));
+            mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
+        } else{
+            mNavItems.add(new NavItem("Login", R.drawable.login_icon));
+        }
+        mNavigationItemListView.setAdapter(new NavigationListAdapter(this, mNavItems));
+    }
+
+    private void selectItemFromDrawer(int position) {
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        }
+
+        switch (get_index(position)) {
+            case 0:
+                if (Util.isLoggedIn()) {
+                    Prefs.onLogout();
+                    Toast.makeText(JobActivity.this, "Logout Successful",
+                            Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                } else {
+                    Intent intent = new Intent(JobActivity.this, Login.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                }
+                break;
+            case 1: break;
+
+            case 2: Intent intent = new Intent(JobActivity.this, CandidateProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+
+            case 3: intent = new Intent(JobActivity.this, MyAppliedJobs.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+
+            case 4: intent = new Intent(JobActivity.this, HomeLocality.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+
+            default:
+                break;
+        }
+    }
 
     /* dismissFilterPanel is directly getting called from filter_container_layout */
     public void dismissFilterPanel(View view) {
@@ -165,7 +240,7 @@ public class JobActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_main_activity);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -182,7 +257,6 @@ public class JobActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.btn_job_filter:
                 if (findViewById(R.id.overlay_job_filter_fragment_container) != null) {
-
                     // Create a new Fragment to be placed in the activity layout
                     jobFilterFragment = new JobFilterFragment();
 
@@ -213,36 +287,6 @@ public class JobActivity extends AppCompatActivity
             default:
                 break;
         }
-    }
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-        if (id == R.id.nav_logout) {
-            Prefs.onLogout();
-            Toast.makeText(JobActivity.this, "Logout Successful",
-                    Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-        } else if (id == R.id.nav_my_jobs) {
-            Intent intent = new Intent(JobActivity.this, MyAppliedJobs.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-        } else if (id == R.id.nav_profile) {
-            Intent intent = new Intent(JobActivity.this, CandidateProfileActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-        } else if (id == R.id.nav_home_locality) {
-            Intent intent = new Intent(JobActivity.this, HomeLocality.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-        }
-        return true;
     }
 
     /* ----------------- Activity Required AsyncTasK Below ------------------- */
@@ -318,9 +362,6 @@ public class JobActivity extends AppCompatActivity
     }
 
     private void loaderStart() {
-        pd = new ProgressDialog(JobActivity.this, R.style.SpinnerTheme);
-        pd.setCancelable(false);
-        pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
         pd.show();
     }
     private void loaderStop(){
@@ -630,5 +671,23 @@ public class JobActivity extends AppCompatActivity
         super.onStop();
         mSearchLat = null;
         mSearchLng = null;
+    }
+
+    private int get_index(int position){
+        String title = mNavItems.get(position).mTitle;
+        if(title.equals("Logout"))
+            return 0;
+        else if(title.equals("Login"))
+            return 0;
+        else if(title.equals("Search Job"))
+            return 1;
+        else if(title.equals("My Profile"))
+            return 2;
+        else if(title.equals("My Jobs"))
+            return 3;
+        else if(title.equals("My Home Location"))
+            return 4;
+        else
+            return -1;
     }
 }

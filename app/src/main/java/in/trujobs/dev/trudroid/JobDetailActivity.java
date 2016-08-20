@@ -32,6 +32,7 @@ import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -77,6 +78,9 @@ public class JobDetailActivity extends AppCompatActivity {
                 alert.showDialog(JobDetailActivity.this, "Refer Job to your friends", "If one of your friends gets hired, you get Rs. 50 recharge coupon!", "", R.drawable.refer, 3);
             }
         });
+
+        pd = CustomProgressDialog.get(JobDetailActivity.this);
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Job"));
         tabLayout.addTab(tabLayout.newTab().setText("Company"));
@@ -123,9 +127,6 @@ public class JobDetailActivity extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(JobDetailActivity.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -137,6 +138,7 @@ public class JobDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final GetJobPostDetailsResponse getJobPostDetailsResponse) {
             super.onPostExecute(getJobPostDetailsResponse);
+
             ImageView companyLogo = (ImageView) findViewById(R.id.company_logo);
 
             //job Tab values
@@ -161,7 +163,6 @@ public class JobDetailActivity extends AppCompatActivity {
 
             pd.cancel();
 
-            Tlog.e("jobActivity", "Data: "+ getJobPostDetailsResponse);
             if (getJobPostDetailsResponse == null) {
                 Toast.makeText(JobDetailActivity.this, "Failed to Fetch details. Please try again.",
                         Toast.LENGTH_LONG).show();
