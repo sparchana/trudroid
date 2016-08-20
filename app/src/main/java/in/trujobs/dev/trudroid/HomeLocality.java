@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -49,6 +50,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.HomeLocalityRequest;
@@ -65,6 +67,8 @@ public class HomeLocality extends AppCompatActivity implements
 
     protected boolean GET_LOCALITY_FROM_GPS = false;
     protected boolean GET_LOCALITY_FROM_AUTOCOMPLETE = false;
+
+    public Toast mToast;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -143,6 +147,7 @@ public class HomeLocality extends AppCompatActivity implements
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
         mSaveHomeLocality = (Button) findViewById(R.id.saveHomeLocality);
+        activateOrDeactivateSubmitButton(false);
 
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
@@ -165,6 +170,7 @@ public class HomeLocality extends AppCompatActivity implements
                 Tlog.i("mAddressOutput ------ "+ mAddressOutput
                         +"\nplaceId:"+mPlaceId);
                 showProgressBar = false;
+                activateOrDeactivateSubmitButton(true);
                 updateUIWidgets();
             }
         });
@@ -185,6 +191,17 @@ public class HomeLocality extends AppCompatActivity implements
         buildGoogleApiClient();
 
         // Open the autocomplete activity when the button is clicked.
+    }
+    public void activateOrDeactivateSubmitButton(boolean shouldActivate){
+        if(shouldActivate){
+            mSaveHomeLocality.setEnabled(true);
+            mSaveHomeLocality.setBackgroundColor(Color.parseColor("#2d77ba"));
+            mSaveHomeLocality.setBackgroundResource(R.color.colorPrimary);
+        } else {
+            mSaveHomeLocality.setEnabled(false);
+            //mSaveHomeLocality.setBackgroundColor(Color.GRAY);
+            mSaveHomeLocality.setBackgroundResource(R.color.back_grey_dark);
+        }
     }
 
     /**
@@ -238,6 +255,11 @@ public class HomeLocality extends AppCompatActivity implements
     }
 
     private void satisfyLocationSettings() {
+        /* Before all check if network is available */
+        if (!Util.isConnectedToInternet(this)) {
+            Toast.makeText(this, "Please turn on your wifi/mobile data in order to use this feature",
+                    Toast.LENGTH_LONG).show();
+        }
         buildGoogleApiClient();
         GET_LOCALITY_FROM_GPS = true;
         GET_LOCALITY_FROM_AUTOCOMPLETE = false;
@@ -373,7 +395,14 @@ public class HomeLocality extends AppCompatActivity implements
             // fetchAddressButtonHandler()) . Instead, we start the intent service here if the
             // user has requested an address, since we now have a connection to GoogleApiClient.
             if (mAddressRequested) {
+                showProgressBar = true;
+                updateUIWidgets();
                 startIntentService();
+                if(mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))){
+                    showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
+                }
+                showProgressBar = false;
+                updateUIWidgets();
             }
         }
     }
@@ -434,23 +463,29 @@ public class HomeLocality extends AppCompatActivity implements
         if (showProgressBar) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
-            mSaveHomeLocality.setEnabled(false);
-        }
-        if (mAddressRequested) {
+            activateOrDeactivateSubmitButton(false);
+        } else if (mAddressRequested) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
         } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
             mFetchAddressButton.setEnabled(true);
-            mSaveHomeLocality.setEnabled(true);
+            activateOrDeactivateSubmitButton(true);
         }
     }
 
     /**
      * Shows a toast with the given text.
      */
-    protected void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    protected void showToast(String msg) {
+        try{ mToast.getView().isShown();     // true if visible
+            mToast.setText(msg);
+        } catch (Exception e) {         // invisible if exception
+            mToast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
+        }
+        mToast.show();
+
+
     }
 
     @Override
@@ -594,7 +629,7 @@ public class HomeLocality extends AppCompatActivity implements
     }
 
     public void triggerFinalSubmission(){
-        if(mAddressOutput != null && mLastLocation != null) {
+        if(mAddressOutput != null && !mAddressOutput.trim().isEmpty() && mLastLocation != null) {
             // submission only when address and lat/lng is available
             mSearchHomeLocalityTxtView.setText(mAddressOutput);
             mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
@@ -672,7 +707,7 @@ public class HomeLocality extends AppCompatActivity implements
                 showProgressBar=false;
                 updateUIWidgets();
                 Tlog.e("Something went wrong while saving home locality. Please try again later!");
-                Toast.makeText(HomeLocality.this, "Something went wrong while saving home locality. Please try again later!",
+                Toast.makeText(HomeLocality.this, ServerConstants.ERROR_WHILE_SAVING_HOME_LOCALITY,
                         Toast.LENGTH_LONG).show();
             }
         }

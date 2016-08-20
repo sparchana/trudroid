@@ -45,7 +45,7 @@
                    android:focusableInTouchMode="true"
                    android:maxLength="50"
                    android:layout_gravity="center"
-                   android:hint="Ex: Bellandur"
+                   android:hint="All Bangalore"
                    android:layout_weight="1"/>
 
                <ImageView

@@ -10,7 +10,7 @@
         <!--Start of filter-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
             <!--Filter Start-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 <ScrollView
                     android:scrollbars="none"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"

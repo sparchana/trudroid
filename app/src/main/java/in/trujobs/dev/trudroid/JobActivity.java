@@ -43,6 +43,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.FetchCandidateAlertRequest;
@@ -618,7 +619,7 @@ public class JobActivity extends AppCompatActivity
             selectedJobRoleList.clear();
             if(jobRoles!=null)jobRoles.clear();
             Arrays.fill(checkedItems, false);
-            mSelectedJobsName.add("No JobRole Selected");
+            mSelectedJobsName.add(ServerConstants.ALL_JOBS);
         }
         selectedJobRolesNameTxtView.setText(TextUtils.join(", ", mSelectedJobsName));
 

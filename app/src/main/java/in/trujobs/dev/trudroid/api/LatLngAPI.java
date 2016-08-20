@@ -73,7 +73,7 @@ public class LatLngAPI {
                 result.setPlaceId( predsJsonObj.getString("place_id"));
             }
         } catch (JSONException e) {
-            Tlog.e("Cannot process JSON results", e);
+            Tlog.e("Cannot process JSON results ->"+jsonResults.toString(), e);
         }
         Tlog.i("fetched lat : " + result.getLatitude());
         return result;

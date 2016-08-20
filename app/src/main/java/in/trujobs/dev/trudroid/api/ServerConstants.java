@@ -23,6 +23,9 @@ public class ServerConstants {
     public static Integer HOMELOCALITY_YES = 1;
     public static Integer JOBPREFERENCE_YES = 1;
 
+    public static String ALL_JOBS = "All Jobs";
+    public static final String ERROR_WHILE_SAVING_HOME_LOCALITY = "Something went wrong while saving home locality. Please try again later!";
+
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
 
