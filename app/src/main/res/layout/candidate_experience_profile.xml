@@ -114,7 +114,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_top_text"
                             android:layout_marginBottom="@dimen/margin_bottom_text"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.48"
                             android:layout_gravity="center">
                             <TextView
                                 android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.52"
                             android:layout_gravity="center"
                             android:gravity="center_horizontal">
                             <LinearLayout
@@ -142,7 +142,6 @@
                                     android:textColor="@color/colorPrimary"
                                     android:layout_margin="2dp"
                                     android:background="@drawable/round_white_button"
-                                    android:padding="8dp"
                                     android:id="@+id/is_fresher"
                                     android:textSize="9dp"
                                     android:text="Fresher"/>
@@ -154,7 +153,6 @@
                                     android:textColor="@color/colorPrimary"
                                     android:layout_margin="2dp"
                                     android:background="@drawable/round_white_button"
-                                    android:padding="8dp"
                                     android:id="@+id/is_experienced"
                                     android:textSize="9dp"
                                     android:text="Experienced"/>
@@ -166,6 +164,7 @@
                     <LinearLayout
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -182,7 +181,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/margin_top_text"
                                 android:layout_marginBottom="@dimen/margin_bottom_text"
-                                android:layout_weight="0.5"
+                                android:layout_weight="0.48"
                                 android:layout_gravity="center">
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -194,7 +193,7 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
+                                android:layout_weight="0.52"
                                 android:layout_gravity="center"
                                 android:gravity="center_horizontal">
 
@@ -247,7 +246,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/margin_top_text"
                                 android:layout_marginBottom="@dimen/margin_bottom_text"
-                                android:layout_weight="0.5"
+                                android:layout_weight="0.48"
                                 android:layout_gravity="center">
                                 <TextView
                                     android:padding="6dp"
@@ -259,7 +258,7 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
+                                android:layout_weight="0.52"
                                 android:layout_gravity="center"
                                 android:gravity="center_horizontal">
                                 <LinearLayout
@@ -292,27 +291,6 @@
                                         android:textSize="9dp"
                                         android:text="No"/>
 
-<!--                                    <Button
-                                        android:layout_width="0dp"
-                                        android:layout_weight="0.5"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/colorPrimary"
-                                        android:background="@color/white"
-                                        android:padding="8dp"
-                                        android:id="@+id/is_employed_yes"
-                                        android:textSize="12dp"
-                                        android:text="Yes"/>
-
-                                    <Button
-                                        android:layout_width="0dp"
-                                        android:layout_weight="0.5"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/colorPrimary"
-                                        android:padding="8dp"
-                                        android:background="@color/white"
-                                        android:id="@+id/is_employed_no"
-                                        android:textSize="12dp"
-                                        android:text="No"/>-->
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
@@ -323,6 +301,7 @@
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="fill_parent"
+                        android:visibility="gone"
                         android:id="@+id/current_company_details_layout"
                         android:layout_height="match_parent">
 

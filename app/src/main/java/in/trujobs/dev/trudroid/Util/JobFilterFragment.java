@@ -136,6 +136,8 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
             assignSearchedLatLng();
         }
 
+        pd = CustomProgressDialog.get(getActivity());
+
         ftrSortByDatePosted.setOnClickListener(this);
         ftrSortBySalary.setOnClickListener(this);
         ftrGenderMale.setOnClickListener(this);
@@ -590,9 +592,6 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
             if (jobPostListView != null) {
                 jobPostListView.setAdapter(null);
             }
-            pd = new ProgressDialog(getActivity(), R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 

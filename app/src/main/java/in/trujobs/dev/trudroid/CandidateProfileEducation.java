@@ -21,8 +21,10 @@ import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
@@ -70,6 +72,8 @@ public class CandidateProfileEducation extends Fragment {
         collapsingToolbarLayout.setTitle("Education Profile");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
+        pd = CustomProgressDialog.get(getActivity());
+
         mAsyncTask = new GetEducationStaticAsyncTask();
         mAsyncTask.execute();
 
@@ -80,9 +84,6 @@ public class CandidateProfileEducation extends Fragment {
             Void, UpdateCandidateBasicProfileResponse> {
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext(),R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -95,8 +96,17 @@ public class CandidateProfileEducation extends Fragment {
         protected void onPostExecute(UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse) {
             super.onPostExecute(updateCandidateBasicProfileResponse);
             pd.cancel();
-
-            getActivity().finish();
+            if(updateCandidateBasicProfileResponse == null){
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                        Toast.LENGTH_LONG).show();
+            } else{
+                if(updateCandidateBasicProfileResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    getActivity().finish();
+                } else{
+                    Toast.makeText(getContext(), "Looks like something went wrong while saving education profile. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -104,9 +114,7 @@ public class CandidateProfileEducation extends Fragment {
             Void, GetCandidateEducationProfileStaticResponse> {
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext(),R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            pd = CustomProgressDialog.get(getActivity());
             pd.show();
         }
 
@@ -121,178 +129,183 @@ public class CandidateProfileEducation extends Fragment {
             pd.cancel();
 
             if (getCandidateEducationProfileStaticResponse == null) {
-                Toast.makeText(getContext(), "Something went wrong in fetching data",
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("", "Null Response");
                 return;
             } else {
-                candidateProfileActivity = (CandidateProfileActivity) getActivity();
+                if(getCandidateEducationProfileStaticResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    candidateProfileActivity = (CandidateProfileActivity) getActivity();
 
-                updateEducationProfile = (Button) view.findViewById(R.id.save_education);
-                final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
-                final Spinner candidateDegree = (Spinner) view.findViewById(R.id.candidate_degree);
+                    updateEducationProfile = (Button) view.findViewById(R.id.save_education);
+                    final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
+                    final Spinner candidateDegree = (Spinner) view.findViewById(R.id.candidate_degree);
 
-                qualificationLevel = new String[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
-                qualificationId = new Long[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
+                    qualificationLevel = new String[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
+                    qualificationId = new Long[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
 
-                degreeName = new String[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
-                degreeId = new Long[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
+                    degreeName = new String[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
+                    degreeId = new Long[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
 
-                qualificationLevel[0] = "Select Education Level";
-                qualificationId[0] = Long.valueOf(-1);
-                for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getEducationObjectCount() ; i++){
-                    qualificationLevel[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationName();
-                    qualificationId[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
-                    if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
-                        qualificationSelected = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
-                        qualificationPos = i;
-                        firstTimeSetting = 1;
+                    qualificationLevel[0] = "Select Education Level";
+                    qualificationId[0] = Long.valueOf(-1);
+                    for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getEducationObjectCount() ; i++){
+                        qualificationLevel[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationName();
+                        qualificationId[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
+                        if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
+                            qualificationSelected = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
+                            qualificationPos = i;
+                            firstTimeSetting = 1;
+                        }
                     }
-                }
 
-                degreeName[0] = "Select Highest Degree";
-                degreeId[0] = Long.valueOf(-1);
-                for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getDegreeObjectCount() ; i++){
-                    degreeName[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeName();
-                    degreeId[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
-                    if(getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getDegree().getDegreeId()){
-                        degreeSelected = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
-                        degreePos = i;
+                    degreeName[0] = "Select Highest Degree";
+                    degreeId[0] = Long.valueOf(-1);
+                    for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getDegreeObjectCount() ; i++){
+                        degreeName[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeName();
+                        degreeId[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
+                        if(getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getDegree().getDegreeId()){
+                            degreeSelected = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
+                            degreePos = i;
+                        }
                     }
-                }
 
-                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel);
-                candidateQualification.setAdapter(adapter);
+                    adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel);
+                    candidateQualification.setAdapter(adapter);
 
-                candidateCollege = (EditText) view.findViewById(R.id.candidate_college);
+                    candidateCollege = (EditText) view.findViewById(R.id.candidate_college);
 
-                degreeSection = (LinearLayout) view.findViewById(R.id.degree_section);
-                degreeSection.setVisibility(View.GONE);
+                    degreeSection = (LinearLayout) view.findViewById(R.id.degree_section);
+                    degreeSection.setVisibility(View.GONE);
 
-                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, degreeName);
-                candidateDegree.setAdapter(adapter);
+                    adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, degreeName);
+                    candidateDegree.setAdapter(adapter);
 
-                //pre-filling data
-                candidateQualification.setSelection(qualificationPos);
-                candidateDegree.setSelection(degreePos);
+                    //pre-filling data
+                    candidateQualification.setSelection(qualificationPos);
+                    candidateDegree.setSelection(degreePos);
 
-                if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
-                    candidateCollege.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
-                }
+                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
+                        candidateCollege.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
+                    }
 
-                qualificationStatus = candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
-                candidateQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-                {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                    qualificationStatus = candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
+                    candidateQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
                     {
-                        if(position != 0){
-                            if(firstTimeSetting == 0){
-                                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                alertDialog.setMessage("Have you successfully completed this course?");
-                                alertDialog.setCanceledOnTouchOutside(false);
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                qualificationStatus = 1;
-                                                qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                                qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+                        @Override
+                        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                        {
+                            if(position != 0){
+                                if(firstTimeSetting == 0){
+                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                                    alertDialog.setMessage("Have you successfully completed this course?");
+                                    alertDialog.setCanceledOnTouchOutside(false);
+                                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    qualificationStatus = 1;
+                                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
 
-                                                qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                                qualificationStatusText.setText("Pass");
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                qualificationStatus = 0;
-                                                qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                                qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+                                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                                    qualificationStatusText.setText("Pass");
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    qualificationStatus = 0;
+                                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
 
-                                                qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                                qualificationStatusText.setText("Fail");
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.show();
-                            } else {
-                                if(qualificationStatus == 1){
-                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+                                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                                    qualificationStatusText.setText("Fail");
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                } else {
+                                    if(qualificationStatus == 1){
+                                        qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                        qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
 
-                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                    qualificationStatusText.setText("Pass");
-                                } else if(qualificationStatus == 0){
-                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
+                                        qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                        qualificationStatusText.setText("Pass");
+                                    } else if(qualificationStatus == 0){
+                                        qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
+                                        qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
 
-                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                    qualificationStatusText.setText("Fail");
+                                        qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                                        qualificationStatusText.setText("Fail");
 
+                                    }
+                                    firstTimeSetting = 0;
                                 }
-                                firstTimeSetting = 0;
+                            } else{
+                                qualificationStatus = 0;
+                                qualificationSelected = Long.valueOf(0);
                             }
-                        } else{
-                            qualificationStatus = 0;
-                            qualificationSelected = Long.valueOf(0);
+
+                            if(position > 3){
+                                degreeSection.setVisibility(View.VISIBLE);
+                            } else {
+                                degreeSection.setVisibility(View.GONE);
+                            }
+                            qualificationSelected = qualificationId[position];
                         }
 
-                        if(position > 3){
-                            degreeSection.setVisibility(View.VISIBLE);
-                        } else {
-                            degreeSection.setVisibility(View.GONE);
-                        }
-                        qualificationSelected = qualificationId[position];
-                    }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parentView) {}
+                    });
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {}
-                });
-
-                candidateDegree.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-                {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                    candidateDegree.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
                     {
-                        degreeSelected = degreeId[position];
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {}
-                });
-
-                updateEducationProfile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        boolean check = true;
-                        if(qualificationSelected < 1){
-                            showDialog("Please select your Education");
-                            check = false;
-                        } else if(qualificationSelected > 2 && degreeSelected < 1){
-                            check = false;
-                            showDialog("Please select your Degree");
-                        } else if(qualificationStatus == -1){
-                            check = false;
-                            showDialog("Please select \"have you completed this course?\"");
+                        @Override
+                        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                        {
+                            degreeSelected = degreeId[position];
                         }
 
-                        if(check){
-                            UpdateCandidateEducationProfileRequest.Builder educationBuilder = UpdateCandidateEducationProfileRequest.newBuilder();
-                            educationBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-                            educationBuilder.setCandidateEducationLevel(qualificationSelected);
-                            if(qualificationSelected > 3){
-                                educationBuilder.setCandidateDegree(degreeSelected);
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parentView) {}
+                    });
+
+                    updateEducationProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            boolean check = true;
+                            if(qualificationSelected < 1){
+                                showDialog("Please select your Education");
+                                check = false;
+                            } else if(qualificationSelected > 3 && degreeSelected < 1){
+                                check = false;
+                                showDialog("Please select your Degree");
+                            } else if(qualificationStatus == -1){
+                                check = false;
+                                showDialog("Please select \"have you completed this course?\"");
                             }
-                            educationBuilder.setCandidateEducationCompletionStatus(qualificationStatus);
-                            educationBuilder.setCandidateEducationInstitute(candidateCollege.getText().toString());
 
-                            UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
-                            UpdateEducationAsyncTask.execute(educationBuilder.build());
+                            if(check){
+                                UpdateCandidateEducationProfileRequest.Builder educationBuilder = UpdateCandidateEducationProfileRequest.newBuilder();
+                                educationBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+                                educationBuilder.setCandidateEducationLevel(qualificationSelected);
+                                if(qualificationSelected > 3){
+                                    educationBuilder.setCandidateDegree(degreeSelected);
+                                }
+                                educationBuilder.setCandidateEducationCompletionStatus(qualificationStatus);
+                                educationBuilder.setCandidateEducationInstitute(candidateCollege.getText().toString());
 
+                                UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
+                                UpdateEducationAsyncTask.execute(educationBuilder.build());
+                            }
                         }
-                    }
-                });
+                    });
+                } else{
+                    Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -29,6 +30,8 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        pd = CustomProgressDialog.get(ForgotPassword.this);
 
         Button buttonGetMobile = (Button) findViewById(R.id.add_mobile_reset_password_btn);
         buttonGetMobile.setOnClickListener(new View.OnClickListener() {
@@ -62,9 +65,6 @@ public class ForgotPassword extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(ForgotPassword.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
