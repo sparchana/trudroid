@@ -27,7 +27,7 @@ public class WelcomeScreen extends AppCompatActivity {
 
         buttonSkip.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(WelcomeScreen.this, JobActivity.class);
+                Intent intent = new Intent(WelcomeScreen.this, SearchJobsActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }

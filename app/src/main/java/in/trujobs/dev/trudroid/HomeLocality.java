@@ -18,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,14 +49,14 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
-import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
 
-public class HomeLocality extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class HomeLocality extends TruJobsBaseActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     public static final String TAG = "HomeLocationActivity";
 
@@ -256,11 +255,13 @@ public class HomeLocality extends AppCompatActivity implements
 
     private void satisfyLocationSettings() {
         /* Before all check if network is available */
-        if (!Util.isConnectedToInternet(this)) {
-            Toast.makeText(this, "Please turn on your wifi/mobile data in order to use this feature",
-                    Toast.LENGTH_LONG).show();
-        }
+
         buildGoogleApiClient();
+        if(!CheckNetworkStatus()){
+            showProgressBar = false;
+            updateUIWidgets();
+            return;
+        }
         GET_LOCALITY_FROM_GPS = true;
         GET_LOCALITY_FROM_AUTOCOMPLETE = false;
         LocationRequest mLocationRequestHighAccuracy = new LocationRequest();
@@ -399,6 +400,7 @@ public class HomeLocality extends AppCompatActivity implements
                 updateUIWidgets();
                 startIntentService();
                 if(mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))){
+                    mAddressOutput = "";
                     showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
                 }
                 showProgressBar = false;
@@ -474,20 +476,6 @@ public class HomeLocality extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Shows a toast with the given text.
-     */
-    protected void showToast(String msg) {
-        try{ mToast.getView().isShown();     // true if visible
-            mToast.setText(msg);
-        } catch (Exception e) {         // invisible if exception
-            mToast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
-        }
-        mToast.show();
-
-
-    }
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save whether the address has been requested.
@@ -517,7 +505,12 @@ public class HomeLocality extends AppCompatActivity implements
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
             // Display the address string or an error message sent from the intent service.
-            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            if(resultData.getString(Constants.RESULT_DATA_KEY).equalsIgnoreCase(getString(R.string.service_not_available))){
+                Tlog.e("service_not_available string received onReceiveResult");
+                showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
+            } else {
+                mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            }
             displayAddressOutput();
 
             // Show a toast message if an address was found.
@@ -526,6 +519,7 @@ public class HomeLocality extends AppCompatActivity implements
             }
 
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            showProgressBar = false;
             mAddressRequested = false;
             updateUIWidgets();
         }
@@ -697,7 +691,7 @@ public class HomeLocality extends AppCompatActivity implements
                 Log.w("","Null Response");
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Intent intent = new Intent(HomeLocality.this, JobActivity.class);
+                Intent intent = new Intent(HomeLocality.this, SearchJobsActivity.class);
                 Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
@@ -706,13 +700,14 @@ public class HomeLocality extends AppCompatActivity implements
             else {
                 showProgressBar=false;
                 updateUIWidgets();
-                Tlog.e("Something went wrong while saving home locality. Please try again later!");
-                Toast.makeText(HomeLocality.this, ServerConstants.ERROR_WHILE_SAVING_HOME_LOCALITY,
-                        Toast.LENGTH_LONG).show();
+                if(!CheckNetworkStatus()){
+                    showToast(ServerConstants.NETWORK_NOT_FOUND);
+                }  else {
+                    Tlog.e("Server issue !!");
+                    showToast(ServerConstants.ERROR_WHILE_SAVING_HOME_LOCALITY);
+                }
             }
         }
     }
-
-
 
 }

@@ -70,7 +70,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".JobActivity"
+            android:name=".SearchJobsActivity"
             android:label="@string/title_activity_job"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

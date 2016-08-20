@@ -48,7 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
                         intent = new Intent(SplashScreenActivity.this, HomeLocality.class);
                     } else{
-                        intent = new Intent(SplashScreenActivity.this, JobActivity.class);
+                        intent = new Intent(SplashScreenActivity.this, SearchJobsActivity.class);
 /*                        intent = new Intent(SplashScreenActivity.this, CandidateProfileActivity.class);*/
 
                     }

@@ -117,7 +117,7 @@ public class EnterPassword extends AppCompatActivity {
                     } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
                         intent = new Intent(EnterPassword.this, HomeLocality.class);
                     } else{
-                        intent = new Intent(EnterPassword.this, JobActivity.class);
+                        intent = new Intent(EnterPassword.this, SearchJobsActivity.class);
                     }
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

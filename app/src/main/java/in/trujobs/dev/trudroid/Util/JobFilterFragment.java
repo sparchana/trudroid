@@ -21,7 +21,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
-import in.trujobs.dev.trudroid.JobActivity;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.JobFilterRequest;
@@ -125,9 +125,9 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
         txtFilterByFemale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_female);
 
 
-        if(JobActivity.jobFilterRequestBkp != null && jobFilterRequest == null){
+        if(SearchJobsActivity.jobFilterRequestBkp != null && jobFilterRequest == null){
             Tlog.i("jobFilterRequest is preserved");
-            jobFilterRequest = JobActivity.jobFilterRequestBkp.toBuilder();
+            jobFilterRequest = SearchJobsActivity.jobFilterRequestBkp.toBuilder();
             onLoadUpdateFilterFragmentUI(jobFilterRequest.build());
         } else {
             jobFilterRequest = JobFilterRequest.newBuilder();
@@ -357,16 +357,16 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
                 if(jobFilterRequest.isInitialized()){
                     assignSearchedLatLng();
                     jobSearchRequest.setJobFilterRequest(jobFilterRequest.build());
-                    if(JobActivity.jobRoles != null)jobSearchRequest.setJobSearchByJobRoleRequest(JobActivity.jobRoles);
+                    if(SearchJobsActivity.jobRoles != null)jobSearchRequest.setJobSearchByJobRoleRequest(SearchJobsActivity.jobRoles);
                     mJobSearchAsyncTask = new JobSearchAsyncTask();
                     mJobSearchAsyncTask.execute(jobSearchRequest.build());
-                    JobActivity.jobFilterRequestBkp = jobFilterRequest.build();
+                    SearchJobsActivity.jobFilterRequestBkp = jobFilterRequest.build();
                 }
                 break;
             case R.id.ftr_clear_all:
                 jobFilterRequest.clear();
-                if(JobActivity.jobFilterRequestBkp!= null)
-                    JobActivity.jobFilterRequestBkp.toBuilder().clear();
+                if(SearchJobsActivity.jobFilterRequestBkp!= null)
+                    SearchJobsActivity.jobFilterRequestBkp.toBuilder().clear();
                 assignSearchedLatLng();
                 resetFragmentUI();
                 break;
@@ -516,16 +516,16 @@ public class JobFilterFragment extends Fragment implements OnClickListener {
     private void assignSearchedLatLng() {
         jobSearchRequest = JobSearchRequest.newBuilder();
         jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
-        if(JobActivity.getmSearchLat()!=null){
-            jobSearchRequest.setLatitude(JobActivity.getmSearchLat());
-            jobFilterRequest.setJobSearchLatitude(JobActivity.getmSearchLat());
-            Tlog.i("filter set to searched lat : "+JobActivity.getmSearchLat());
+        if(SearchJobsActivity.getmSearchLat()!=null){
+            jobSearchRequest.setLatitude(SearchJobsActivity.getmSearchLat());
+            jobFilterRequest.setJobSearchLatitude(SearchJobsActivity.getmSearchLat());
+            Tlog.i("filter set to searched lat : "+ SearchJobsActivity.getmSearchLat());
 
         }
-        if(JobActivity.getmSearchLng() != null){
-            jobSearchRequest.setLongitude(JobActivity.getmSearchLng());
-            jobFilterRequest.setJobSearchLongitude(JobActivity.getmSearchLng());
-            Tlog.i("filter set to searched ln : "+JobActivity.getmSearchLng());
+        if(SearchJobsActivity.getmSearchLng() != null){
+            jobSearchRequest.setLongitude(SearchJobsActivity.getmSearchLng());
+            jobFilterRequest.setJobSearchLongitude(SearchJobsActivity.getmSearchLng());
+            Tlog.i("filter set to searched ln : "+ SearchJobsActivity.getmSearchLng());
         }
     }
 

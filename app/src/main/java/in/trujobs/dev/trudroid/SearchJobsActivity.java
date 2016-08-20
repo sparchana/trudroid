@@ -3,20 +3,15 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -38,9 +33,9 @@ import in.trujobs.dev.trudroid.Adapters.NavigationListAdapter;
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
-import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.JobFilterFragment;
@@ -49,8 +44,6 @@ import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
-import in.trujobs.proto.CandidateAppliedJobsRequest;
-import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.JobFilterRequest;
@@ -61,7 +54,7 @@ import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
 
-public class JobActivity extends AppCompatActivity
+public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
 
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mAsyncTask;
@@ -133,7 +126,7 @@ public class JobActivity extends AppCompatActivity
 
         selectedJobRolesNameTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
 
-        pd = CustomProgressDialog.get(JobActivity.this);
+        pd = CustomProgressDialog.get(SearchJobsActivity.this);
 
         //getting all the job posts
         showJobPosts();
@@ -192,28 +185,28 @@ public class JobActivity extends AppCompatActivity
             case 0:
                 if (Util.isLoggedIn()) {
                     Prefs.onLogout();
-                    Toast.makeText(JobActivity.this, "Logout Successful",
+                    Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
+                    Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 } else {
-                    Intent intent = new Intent(JobActivity.this, Login.class);
+                    Intent intent = new Intent(SearchJobsActivity.this, Login.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 }
                 break;
             case 1: break;
 
-            case 2: Intent intent = new Intent(JobActivity.this, CandidateProfileActivity.class);
+            case 2: Intent intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
-            case 3: intent = new Intent(JobActivity.this, MyAppliedJobs.class);
+            case 3: intent = new Intent(SearchJobsActivity.this, MyAppliedJobs.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
-            case 4: intent = new Intent(JobActivity.this, HomeLocality.class);
+            case 4: intent = new Intent(SearchJobsActivity.this, HomeLocality.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
@@ -398,7 +391,7 @@ public class JobActivity extends AppCompatActivity
                 if(jobPostResponse.getJobPostList().size() > 0){
                     returnedJobPostResponse = jobPostResponse;
                     pd.cancel();
-                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, returnedJobPostResponse.getJobPostList());
+                    JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, returnedJobPostResponse.getJobPostList());
                     jobPostListView.setAdapter(jobPostAdapter);
                 } else {
                     ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
@@ -415,7 +408,7 @@ public class JobActivity extends AppCompatActivity
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
             Tlog.i("DataSize: " + jobPostObjectList.size());
-            JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostObjectList);
+            JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
             if(jobPostListView.getVisibility() == View.GONE
                     || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
@@ -452,11 +445,11 @@ public class JobActivity extends AppCompatActivity
                 ViewDialog alert = new ViewDialog();
 
                 if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_PROFILE) {
-                    alert.showDialog(JobActivity.this,
+                    alert.showDialog(SearchJobsActivity.this,
                             "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.assesment, 1);
                 } else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
-                    alert.showDialog(JobActivity.this,
+                    alert.showDialog(SearchJobsActivity.this,
                             "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.assesment, 2);
                 }
@@ -629,13 +622,6 @@ public class JobActivity extends AppCompatActivity
 
         final AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
         searchByJobRoleDialog.show();
-    }
-
-    /**
-     * Shows a toast with the given text.
-     */
-    public void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     public static Double getmSearchLat() {

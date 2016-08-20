@@ -25,6 +25,7 @@ public class ServerConstants {
 
     public static String ALL_JOBS = "All Jobs";
     public static final String ERROR_WHILE_SAVING_HOME_LOCALITY = "Something went wrong while saving home locality. Please try again later!";
+    public static final String NETWORK_NOT_FOUND = "Please turn on your wifi/mobile data in order to use this feature";
 
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
