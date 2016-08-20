@@ -271,7 +271,7 @@ public class JobActivity extends AppCompatActivity
                 break;
             case R.id.fab:
                 FetchCandidateAlertRequest.Builder requestBuilder = FetchCandidateAlertRequest.newBuilder();
-                requestBuilder.setCandidateMobile(Prefs.candidateMobile.toString());
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
 
                 mAlertAsyncTask = new FetchAlertAsyncTask();
                 mAlertAsyncTask.execute(requestBuilder.build());
