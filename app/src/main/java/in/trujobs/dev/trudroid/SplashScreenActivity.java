@@ -1,15 +1,14 @@
 package in.trujobs.dev.trudroid;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends TruJobsBaseActivity {
 
     private final int SPLASH_TIME_OUT = 2000;
     @Override

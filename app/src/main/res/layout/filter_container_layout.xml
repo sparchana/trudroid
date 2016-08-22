@@ -433,33 +433,35 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.9"
-                    android:padding="8dp"
+                    android:layout_weight="0.99"
                     android:clickable="true"
                     android:background="@color/colorPrimary">
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.4"
                         android:id="@+id/ftr_clear_all">
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|left"
+                            android:padding="8dp"
                             android:textColor="#fff"
                             android:textSize="16dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="Clear All"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.4"
-                        android:gravity="right|center"
                         android:id="@+id/ftr_done">
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:padding="8dp"
                             android:textColor="#fff"
                             android:textSize="16dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
                             android:text="Done"/>
                     </LinearLayout>
                 </LinearLayout>

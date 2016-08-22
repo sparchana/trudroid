@@ -166,8 +166,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 mAddressOutput = placeAPIHelper.getDescription();
                 Toast.makeText(HomeLocality.this, mAddressOutput, Toast.LENGTH_SHORT).show();
                 mPlaceId = placeAPIHelper.getPlaceId();
-                Tlog.i("mAddressOutput ------ "+ mAddressOutput
-                        +"\nplaceId:"+mPlaceId);
+                Tlog.i("mAddressOutput ------ " + mAddressOutput
+                        + "\nplaceId:" + mPlaceId);
                 showProgressBar = false;
                 activateOrDeactivateSubmitButton(true);
                 updateUIWidgets();
@@ -191,8 +191,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
 
         // Open the autocomplete activity when the button is clicked.
     }
-    public void activateOrDeactivateSubmitButton(boolean shouldActivate){
-        if(shouldActivate){
+
+    public void activateOrDeactivateSubmitButton(boolean shouldActivate) {
+        if (shouldActivate) {
             mSaveHomeLocality.setEnabled(true);
             mSaveHomeLocality.setBackgroundColor(Color.parseColor("#2d77ba"));
             mSaveHomeLocality.setBackgroundResource(R.color.colorPrimary);
@@ -244,7 +245,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
      */
     public void fetchAddressButtonHandler(View view) {
         Tlog.i("user current location triggered..");
-        showProgressBar=true;
+        showProgressBar = true;
         updateUIWidgets();
         satisfyLocationSettings();
         /*final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
@@ -257,7 +258,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
         /* Before all check if network is available */
 
         buildGoogleApiClient();
-        if(!CheckNetworkStatus()){
+        if (!CheckNetworkStatus()) {
             showProgressBar = false;
             updateUIWidgets();
             return;
@@ -358,7 +359,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-    triggerGPS();
+        triggerGPS();
     }
 
     /**
@@ -399,7 +400,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 showProgressBar = true;
                 updateUIWidgets();
                 startIntentService();
-                if(mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))){
+                if (mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))) {
                     mAddressOutput = "";
                     showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
                 }
@@ -412,7 +413,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
     private void triggerGPS() {
         // Gets the best and most recent location currently available, which may be null
         // in rare cases when a location is not available.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             showToast("Location Permission Not Granted. Please Enter Your Home Location.");
             ActivityCompat.requestPermissions(this,
@@ -421,9 +423,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
             return;
         }
         /* enable gps */
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) &&
-                !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ) {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Tlog.w("gps not enabled...popped up question");
             buildAlertMessageNoGps();
             mLocationEnabled = false;
@@ -436,6 +438,13 @@ public class HomeLocality extends TruJobsBaseActivity implements
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
+        triggerGPS();
+        if (result.getErrorCode() == 2) {
+            showProgressBar = false;
+            updateUIWidgets();
+            satisfyLocationSettings();
+            showToast("Please Update Google Services");
+        }
         Tlog.i( "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
@@ -636,12 +645,16 @@ public class HomeLocality extends TruJobsBaseActivity implements
             mAsyncTask = new HomeLocalityAsyncTask();
             mAsyncTask.execute(mHomeLocalityRequest.build());
 
+            /* update prefs values */
+            Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
+            Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
+
             mAddressRequested = false;
             showProgressBar = false;
             updateUIWidgets();
         } else {
-            Tlog.e("No Location Provided");
-            showToast("No Home Location Provided! Please enter home locality");
+            Tlog.e("No/Invalid Location Provided");
+            showToast("Invalid Home Location Provided! Please enter a valid home locality (Ex: Bellandur)");
         }
     }
 

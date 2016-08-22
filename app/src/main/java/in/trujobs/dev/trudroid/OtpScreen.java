@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,18 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.List;
-
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
-import in.trujobs.proto.LocalityObject;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 
-public class OtpScreen extends AppCompatActivity {
+public class OtpScreen extends TruJobsBaseActivity {
     private static String EXTRA_TITLE = "Candidate Registration";
     EditText mUserOtpOne, mUserOtpTwo, mUserOtpThree, mUserOtpFour;
     private AsyncTask<ResetPasswordRequest, Void, ResetPasswordResponse> mAsyncTask;

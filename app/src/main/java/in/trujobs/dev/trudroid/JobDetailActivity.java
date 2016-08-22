@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +41,7 @@ import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.LocalityObject;
 
-public class JobDetailActivity extends AppCompatActivity {
+public class JobDetailActivity extends TruJobsBaseActivity {
     private static String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
     private static final List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
     private FloatingActionButton fab;

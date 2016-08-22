@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +20,7 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
 
-public class EnterPassword extends AppCompatActivity {
+public class EnterPassword extends TruJobsBaseActivity {
     EditText mUserNewPassword;
     private static String EXTRA_TITLE = "Candidate Registration";
     private AsyncTask<LogInRequest, Void, LogInResponse> mAsyncTask;

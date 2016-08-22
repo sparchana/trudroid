@@ -103,7 +103,7 @@
                     android:textAllCaps="false"
                     android:drawableLeft="@drawable/ic_filter"
                     android:text="Filter"
-                    android:textColor="@color/back_grey_dark_item"
+                    android:textColor="@color/back_grey_dark"
                     android:background="@color/white"/>
             </LinearLayout>
         </LinearLayout>

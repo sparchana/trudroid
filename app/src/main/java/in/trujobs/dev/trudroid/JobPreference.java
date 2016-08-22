@@ -394,7 +394,7 @@ public class JobPreference extends AppCompatActivity {
         }
     }
 
-    public void removeJobPrefValueFromStack(Long jobRoleId){
+    public void removeJobPrefValueFromStack(Long jobRoleId) {
         for(int i=0 ; i<jobPrefStack.size(); i++){
             if(jobPrefStack.get(i) == jobRoleId){
                 jobPrefStack.remove(i);

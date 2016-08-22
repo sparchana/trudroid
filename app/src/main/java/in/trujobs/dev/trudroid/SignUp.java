@@ -2,8 +2,6 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import in.trujobs.dev.trudroid.Util.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -20,7 +19,7 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.SignUpRequest;
 import in.trujobs.proto.SignUpResponse;
 
-public class SignUp extends AppCompatActivity {
+public class SignUp extends TruJobsBaseActivity {
 
     private AsyncTask<SignUpRequest, Void, SignUpResponse> mAsyncTask;
     EditText mName;

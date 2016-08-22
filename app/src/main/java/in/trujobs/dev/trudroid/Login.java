@@ -146,7 +146,7 @@ public class Login extends TruJobsBaseActivity {
 
                 if(Prefs.loginCheckStatus.get() == 1){
                     finish();
-                } else{
+                } else {
                     Intent intent;
                     if(Prefs.candidateJobPrefStatus.get() == 0){
                         intent = new Intent(Login.this, JobPreference.class);
