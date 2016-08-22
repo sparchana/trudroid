@@ -3,7 +3,6 @@ package in.trujobs.dev.trudroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -16,15 +15,7 @@ public class SplashScreenActivity extends TruJobsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
-
-        if (!Util.isConnectedToInternet(this)) {
-            Toast.makeText(SplashScreenActivity.this, "No internet connection. Please check your network settings.",
-                    Toast.LENGTH_LONG).show();
-            new Handler().postDelayed(closeSplashRunnable(), SPLASH_TIME_OUT);
-            return;
-        }
         new Handler().postDelayed(getSplashRunnable(), SPLASH_TIME_OUT);
-
     }
 
     private Runnable closeSplashRunnable() {

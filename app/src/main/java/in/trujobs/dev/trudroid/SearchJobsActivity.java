@@ -90,8 +90,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     TextView selectedJobRolesNameTxtView;
 
-    JobPostResponse returnedJobPostResponse;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +138,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         /* Filter Actions */
         mSearchJobAcTxtView = (AutoCompleteTextView) findViewById(R.id.search_jobs_by_place);
+        mSearchJobAcTxtView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b && mSearchJobAcTxtView.getHint().toString().trim().equalsIgnoreCase("All Bangalore")){
+                    mSearchJobAcTxtView.setHint("Start typing a location in Bangalore");
+                } else if(mSearchJobAcTxtView.getHint().toString().trim().equalsIgnoreCase("Start typing a location in Bangalore")){
+                    mSearchJobAcTxtView.setHint("All Bangalore");
+                }
+            }
+        });
         mSearchJobAcTxtView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.place_autocomplete_list_item));
         mSearchJobAcTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

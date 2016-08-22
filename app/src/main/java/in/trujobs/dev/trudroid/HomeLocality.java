@@ -423,13 +423,15 @@ public class HomeLocality extends TruJobsBaseActivity implements
             return;
         }
         /* enable gps */
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
                 !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Tlog.w("gps not enabled...popped up question");
             buildAlertMessageNoGps();
             mLocationEnabled = false;
-        } else mLocationEnabled = true;
+        } else {
+            mLocationEnabled = true;
+        }
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
@@ -633,25 +635,31 @@ public class HomeLocality extends TruJobsBaseActivity implements
 
     public void triggerFinalSubmission(){
         if(mAddressOutput != null && !mAddressOutput.trim().isEmpty() && mLastLocation != null) {
-            // submission only when address and lat/lng is available
-            mSearchHomeLocalityTxtView.setText(mAddressOutput);
-            mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
-            mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-            mHomeLocalityRequest.setAddress(mAddressOutput);
+            if(mSearchHomeLocalityTxtView.getText().toString().trim().isEmpty()){
+                Tlog.e("Please type your Home Locality");
+                showToast("Please type your home locality (Ex: Bellandur)");
+            } else {
+                // submission only when address and lat/lng is available
+                mSearchHomeLocalityTxtView.setText(mAddressOutput);
+                mSearchHomeLocalityTxtView.dismissDropDown();
+                mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
+                mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
+                mHomeLocalityRequest.setAddress(mAddressOutput);
 
-            mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
-            mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+                mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
+                mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
 
-            mAsyncTask = new HomeLocalityAsyncTask();
-            mAsyncTask.execute(mHomeLocalityRequest.build());
+                mAsyncTask = new HomeLocalityAsyncTask();
+                mAsyncTask.execute(mHomeLocalityRequest.build());
 
             /* update prefs values */
-            Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
-            Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
+                Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
+                Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
 
-            mAddressRequested = false;
-            showProgressBar = false;
-            updateUIWidgets();
+                mAddressRequested = false;
+                showProgressBar = false;
+                updateUIWidgets();
+            }
         } else {
             Tlog.e("No/Invalid Location Provided");
             showToast("Invalid Home Location Provided! Please enter a valid home locality (Ex: Bellandur)");

@@ -35,7 +35,6 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostObject;
@@ -112,9 +111,6 @@ public class JobDetailActivity extends TruJobsBaseActivity {
         requestBuilder.setJobPostId(Prefs.jobPostId.get());
         if(Util.isLoggedIn()){
             requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-        } else{
-            //sending 0 because Prefs is empty because user is not logged in
-            requestBuilder.setCandidateMobile("0");
         }
         mAsyncTask = new JobPostDetailAsyncTask();
         mAsyncTask.execute(requestBuilder.build());
@@ -169,7 +165,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 return;
             }
 
-            if(getJobPostDetailsResponse.getStatusValue() == ServerConstants.SUCCESS){
+            if(getJobPostDetailsResponse.getStatus() == GetJobPostDetailsResponse.Status.SUCCESS){
                 //Set job page
 
                 //breaking a lot of localities in 3 localities and rest as "more"
