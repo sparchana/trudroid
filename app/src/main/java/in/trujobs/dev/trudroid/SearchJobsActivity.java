@@ -447,7 +447,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                             R.drawable.job_apply, 2);
                 }
                 else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_ASSESSMENT) {
-                    alert.showDialog(JobActivity.this,
+                    alert.showDialog(SearchJobsActivity.this,
                             "Complete Skill Assessment", candidateAlertResponse.getAlertMessage(),
                             "Call us to know more",
                             R.drawable.assesment, 4);
