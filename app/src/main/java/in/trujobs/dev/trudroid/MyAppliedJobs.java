@@ -1,7 +1,6 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -9,9 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.util.Collections;
-
-import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.MyAppliedJobsAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -20,9 +16,8 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
-import in.trujobs.proto.JobPostResponse;
 
-public class MyAppliedJobs extends AppCompatActivity {
+public class MyAppliedJobs extends TruJobsBaseActivity {
 
     private AsyncTask<CandidateAppliedJobsRequest, Void, CandidateAppliedJobsResponse> mAsyncTask;
     ProgressDialog pd;

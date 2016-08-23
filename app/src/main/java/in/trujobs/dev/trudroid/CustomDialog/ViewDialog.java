@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.trujobs.dev.trudroid.CandidateProfileActivity;
-import in.trujobs.dev.trudroid.JobActivity;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
 
 /**
@@ -96,7 +96,7 @@ public class ViewDialog {
             @Override
             public void onClick(View view) {
                 // Navigate user to search jobs screen
-                Intent applyJobsIntent = new Intent(view.getContext(), JobActivity.class);
+                Intent applyJobsIntent = new Intent(view.getContext(), SearchJobsActivity.class);
                 view.getContext().startActivity(applyJobsIntent);
             }
         });

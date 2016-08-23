@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,13 +35,12 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.LocalityObject;
 
-public class JobDetailActivity extends AppCompatActivity {
+public class JobDetailActivity extends TruJobsBaseActivity {
     private static String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
     private static final List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
     private FloatingActionButton fab;
@@ -114,9 +111,6 @@ public class JobDetailActivity extends AppCompatActivity {
         requestBuilder.setJobPostId(Prefs.jobPostId.get());
         if(Util.isLoggedIn()){
             requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-        } else{
-            //sending 0 because Prefs is empty because user is not logged in
-            requestBuilder.setCandidateMobile("0");
         }
         mAsyncTask = new JobPostDetailAsyncTask();
         mAsyncTask.execute(requestBuilder.build());
@@ -171,7 +165,7 @@ public class JobDetailActivity extends AppCompatActivity {
                 return;
             }
 
-            if(getJobPostDetailsResponse.getStatusValue() == ServerConstants.SUCCESS){
+            if(getJobPostDetailsResponse.getStatus() == GetJobPostDetailsResponse.Status.SUCCESS){
                 //Set job page
 
                 //breaking a lot of localities in 3 localities and rest as "more"

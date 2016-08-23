@@ -23,8 +23,8 @@
     <string name="address_found">Address Located</string>
     <string name="no_geocoder_available">No geo coder available</string>
 
-    <string name="google_api_key" templateMergeStrategy="preserve">
-        AIzaSyDocvZoY9pmasuD9dR6aJLRXD-uoTeo6mg
+    <string name="google_android_api_key" templateMergeStrategy="preserve">
+        AIzaSyD_X5WIQmcstjwPnDaUawx_W-eqF_Bjt8I
     </string>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -302,14 +302,14 @@ public class JobPreference extends AppCompatActivity {
                 if(addJobRoleResponse.getStatusValue() == 1){
                     Intent intent;
                     Prefs.candidateJobPrefStatus.put(ServerConstants.JOBPREFERENCE_YES);
-                    if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                    if(Prefs.candidateHomeLocalityStatus.get() == 0){ // 0: no home locality provided
                         intent = new Intent(JobPreference.this, HomeLocality.class);
                     } else{
-                        intent = new Intent(JobPreference.this, JobActivity.class);
+                        intent = new Intent(JobPreference.this, SearchJobsActivity.class);
+                        finish();
                     }
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                    finish();
                 } else{
                     Toast.makeText(JobPreference.this, "Something went wrong. Please try again later",
                             Toast.LENGTH_LONG).show();
@@ -394,7 +394,7 @@ public class JobPreference extends AppCompatActivity {
         }
     }
 
-    public void removeJobPrefValueFromStack(Long jobRoleId){
+    public void removeJobPrefValueFromStack(Long jobRoleId) {
         for(int i=0 ; i<jobPrefStack.size(); i++){
             if(jobPrefStack.get(i) == jobRoleId){
                 jobPrefStack.remove(i);

@@ -3,20 +3,15 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -38,18 +33,17 @@ import in.trujobs.dev.trudroid.Adapters.NavigationListAdapter;
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
-import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
-import in.trujobs.dev.trudroid.Util.JobFilterFragment;
+import in.trujobs.dev.trudroid.Util.FilterJobFragment;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
-import in.trujobs.proto.CandidateAppliedJobsRequest;
-import in.trujobs.proto.CandidateAppliedJobsResponse;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.JobFilterRequest;
@@ -60,7 +54,7 @@ import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
 
-public class JobActivity extends AppCompatActivity
+public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
 
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mAsyncTask;
@@ -79,12 +73,12 @@ public class JobActivity extends AppCompatActivity
     private AsyncTask<String, Void, LatLngAPIHelper> mLatLngAsyncTask;
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
 
-    private JobFilterFragment jobFilterFragment;
+    private FilterJobFragment filterJobFragment;
     private static Double mSearchLat;
     private static Double mSearchLng;
     private JobSearchRequest.Builder jobSearchRequest;
-    public static JobSearchByJobRoleRequest.Builder jobRoles;
-    public static JobFilterRequest jobFilterRequestBkp;
+    public static JobSearchByJobRoleRequest.Builder jobRolesFilter;
+    public static JobFilterRequest.Builder jobFilterRequestBkp;
     public List<JobRoleObject> jobRoleObjectList;
     public List<Long> selectedJobRoleList;
     public List<Long> jobRoleIdList;
@@ -95,8 +89,6 @@ public class JobActivity extends AppCompatActivity
     public CharSequence[] jobRoleNameList = null;
 
     TextView selectedJobRolesNameTxtView;
-
-    JobPostResponse returnedJobPostResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,10 +131,7 @@ public class JobActivity extends AppCompatActivity
 
         selectedJobRolesNameTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
 
-        pd = CustomProgressDialog.get(JobActivity.this);
-
-        //getting all the job posts
-        showJobPosts();
+        pd = CustomProgressDialog.get(SearchJobsActivity.this);
 
         //filter button
         Button btnFilterJob = (Button) findViewById(R.id.btn_job_filter);
@@ -156,6 +145,16 @@ public class JobActivity extends AppCompatActivity
 
         /* Filter Actions */
         mSearchJobAcTxtView = (AutoCompleteTextView) findViewById(R.id.search_jobs_by_place);
+        mSearchJobAcTxtView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b && mSearchJobAcTxtView.getHint().toString().trim().equalsIgnoreCase("All Bangalore")){
+                    mSearchJobAcTxtView.setHint("Start typing a location in Bangalore");
+                } else if(mSearchJobAcTxtView.getHint().toString().trim().equalsIgnoreCase("Start typing a location in Bangalore")){
+                    mSearchJobAcTxtView.setHint("All Bangalore");
+                }
+            }
+        });
         mSearchJobAcTxtView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.place_autocomplete_list_item));
         mSearchJobAcTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -173,6 +172,8 @@ public class JobActivity extends AppCompatActivity
                 mLatLngAsyncTask.execute(mSearchedPlaceId);
             }
         });
+        //getting all the job posts
+        showJobPosts();
     }
 
     private void setNavigationItems() {
@@ -198,28 +199,28 @@ public class JobActivity extends AppCompatActivity
             case 0:
                 if (Util.isLoggedIn()) {
                     Prefs.onLogout();
-                    Toast.makeText(JobActivity.this, "Logout Successful",
+                    Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(JobActivity.this, WelcomeScreen.class);
+                    Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 } else {
-                    Intent intent = new Intent(JobActivity.this, Login.class);
+                    Intent intent = new Intent(SearchJobsActivity.this, Login.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 }
                 break;
             case 1: break;
 
-            case 2: Intent intent = new Intent(JobActivity.this, CandidateProfileActivity.class);
+            case 2: Intent intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
-            case 3: intent = new Intent(JobActivity.this, MyAppliedJobs.class);
+            case 3: intent = new Intent(SearchJobsActivity.this, MyAppliedJobs.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
-            case 4: intent = new Intent(JobActivity.this, HomeLocality.class);
+            case 4: intent = new Intent(SearchJobsActivity.this, HomeLocality.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
@@ -230,8 +231,8 @@ public class JobActivity extends AppCompatActivity
 
     /* dismissFilterPanel is directly getting called from filter_container_layout */
     public void dismissFilterPanel(View view) {
-        if (jobFilterFragment != null) {
-            jobFilterRequestBkp = jobFilterFragment.jobFilterRequest.build();
+        if (filterJobFragment != null) {
+            jobFilterRequestBkp = filterJobFragment.jobFilterRequest;
             getSupportFragmentManager().beginTransaction()
                     .remove(getSupportFragmentManager().findFragmentById(
                             R.id.overlay_job_filter_fragment_container)).commit();
@@ -240,7 +241,7 @@ public class JobActivity extends AppCompatActivity
 
     private void showJobPosts() {
         JobSearchReqInit();
-        mAsyncTask = new JobPostAsyncTask();
+        mAsyncTask = new JobSearchAsyncTask();
         mAsyncTask.execute(jobSearchRequest.build());
     }
 
@@ -264,16 +265,16 @@ public class JobActivity extends AppCompatActivity
             case R.id.btn_job_filter:
                 if (findViewById(R.id.overlay_job_filter_fragment_container) != null) {
                     // Create a new Fragment to be placed in the activity layout
-                    jobFilterFragment = new JobFilterFragment();
+                    filterJobFragment = new FilterJobFragment();
 
                     // In case this activity was started with special instructions from an
                     // Intent, pass the Intent's extras to the fragment as arguments
-                    jobFilterFragment.setArguments(getIntent().getExtras());
+                    filterJobFragment.setArguments(getIntent().getExtras());
 
                     // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
                     getSupportFragmentManager().beginTransaction()
                             .addToBackStack(null)
-                            .add(R.id.overlay_job_filter_fragment_container, jobFilterFragment).commit();
+                            .add(R.id.overlay_job_filter_fragment_container, filterJobFragment).commit();
                 }
                 break;
             case R.id.fab:
@@ -303,7 +304,15 @@ public class JobActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            jobPostListView.clearChoices();
+            loaderStart();
+            Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
+            Tlog.i("------ Before Calling JobSearchAsyncTask -----");
+            Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
+            Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
+            Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
+            if(jobPostListView != null) {
+                jobPostListView.clearChoices();
+            }
         }
 
         @Override
@@ -338,11 +347,16 @@ public class JobActivity extends AppCompatActivity
                 Tlog.i("trigger job search on lat/lng");
                 JobSearchReqInit();
                 if(jobFilterRequestBkp != null) {
-                    jobFilterRequestBkp.toBuilder().setJobSearchLatitude(mSearchLat);
-                    jobFilterRequestBkp.toBuilder().setJobSearchLongitude(mSearchLng);
+                    jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
+                    jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
                     jobSearchRequest.setJobFilterRequest(jobFilterRequestBkp);
-                    if(jobRoles != null)jobSearchRequest.setJobSearchByJobRoleRequest(jobRoles);
-                    else Tlog.i("no jobRoles found");
+                    if(jobRolesFilter != null){
+                        jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
+                        Tlog.i("setting the jobSearchReq obj: "
+                                +jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne()
+                        +" | actual jobRoleFitlerObj: "+jobRolesFilter.getJobRoleIdOne());
+                    }
+                    else Tlog.i("no jobRolesFilter found");
                 }
                 mJobSearchAsyncTask = new JobSearchAsyncTask();
                 mJobSearchAsyncTask.execute(jobSearchRequest.build());
@@ -355,17 +369,20 @@ public class JobActivity extends AppCompatActivity
     private void JobSearchReqInit() {
         jobSearchRequest = JobSearchRequest.newBuilder();
         if(mSearchLat!= null)jobSearchRequest.setLatitude(mSearchLat);
-        else if(Prefs.candidateHomeLat.get()!=null){
+        else if(Prefs.candidateHomeLat.get() != null){
             jobSearchRequest.setLatitude(Double.parseDouble(Prefs.candidateHomeLat.get()));
             mSearchLat = Double.parseDouble(Prefs.candidateHomeLat.get());
         }
         if(mSearchLng!= null)jobSearchRequest.setLongitude(mSearchLng);
-        else if(Prefs.candidateHomeLng.get()!=null){
+        else if(Prefs.candidateHomeLng.get() != null){
             jobSearchRequest.setLongitude(Double.parseDouble(Prefs.candidateHomeLng.get()));
             mSearchLng = Double.parseDouble(Prefs.candidateHomeLng.get());
         }
-        if(Prefs.candidateMobile.get() != null){
+        if(Prefs.candidateMobile.get() != null && !Prefs.candidateMobile.get().trim().isEmpty()){
+            Tlog.i("mobile set:"+Prefs.candidateMobile.get());
             jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
+        } else {
+            Tlog.e("Candidate Mobile Null in Prefs");
         }
     }
 
@@ -378,52 +395,12 @@ public class JobActivity extends AppCompatActivity
         }
     }
 
-    private class JobPostAsyncTask extends AsyncTask<JobSearchRequest,
-            Void, JobPostResponse> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loaderStart();
-        }
-
-        @Override
-        protected JobPostResponse doInBackground(JobSearchRequest... params) {
-            return HttpRequest.searchJobs(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(JobPostResponse jobPostResponse) {
-            super.onPostExecute(jobPostResponse);
-            loaderStop();
-            jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
-            if (jobPostResponse == null) {
-                ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
-                errorImageView.setVisibility(View.VISIBLE);
-                jobPostListView.setVisibility(View.GONE);
-                Tlog.w("Null JobPosts Response");
-                return;
-            } else {
-                if(jobPostResponse.getJobPostList().size() > 0){
-                    returnedJobPostResponse = jobPostResponse;
-                    pd.cancel();
-                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, returnedJobPostResponse.getJobPostList());
-                    jobPostListView.setAdapter(jobPostAdapter);
-                } else {
-                    ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
-                    noJobsImageView.setVisibility(View.VISIBLE);
-                    showToast("No jobs found in your locality");
-                }
-            }
-            updateJobPostUI(jobPostResponse.getJobPostList());
-        }
-    }
-
     private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
         jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
             Tlog.i("DataSize: " + jobPostObjectList.size());
-            JobPostAdapter jobPostAdapter = new JobPostAdapter(JobActivity.this, jobPostObjectList);
+            JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
             if(jobPostListView.getVisibility() == View.GONE
                     || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
@@ -461,11 +438,11 @@ public class JobActivity extends AppCompatActivity
                 ViewDialog alert = new ViewDialog();
 
                 if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_PROFILE) {
-                    alert.showDialog(JobActivity.this,
+                    alert.showDialog(SearchJobsActivity.this,
                             "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.profile_icon, 1);
                 } else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
-                    alert.showDialog(JobActivity.this,
+                    alert.showDialog(SearchJobsActivity.this,
                             "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.job_apply, 2);
                 }
@@ -494,12 +471,12 @@ public class JobActivity extends AppCompatActivity
         protected void onPostExecute(final JobRoleResponse jobRoleResponse) {
             super.onPostExecute(jobRoleResponse);
             if(jobRoleResponse!= null){
-                Tlog.i("fetched all jobRoles successfully + " + jobRoleResponse.getJobRoleList().size());
+                Tlog.i("fetched all jobRolesFilter successfully + " + jobRoleResponse.getJobRoleList().size());
                 jobRoleObjectList = jobRoleResponse.getJobRoleList();
                  /* Search By Job Roles */
                  initJobRoleVars();
                  setJobRoleIdFromPrefs();
-                setSelectedJobRolesNameTxtView();
+                 setSelectedJobRolesNameTxtView();
             } else {
                 showToast("Something went wrong. Please try later");
             }
@@ -532,26 +509,28 @@ public class JobActivity extends AppCompatActivity
     }
 
     private void setJobRoleIdFromPrefs() {
-        Tlog.i("setting jobroleId form pref");
-        if(Prefs.candidatePrefJobRoleIdOne.get() != 0){
-            Tlog.i("found candidate pref job Role one..");
-            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdOne.get());
-            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
-        }
-        if(Prefs.candidatePrefJobRoleIdTwo.get() != 0){
-            Tlog.i("found candidate pref job Role two..");
-            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdTwo.get());
-            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdTwo.get())] = true;
-        }
-        if(Prefs.candidatePrefJobRoleIdThree.get() != 0){
-            Tlog.i("found candidate pref job Role three..");
-            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdThree.get());
-            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdThree.get())] = true;
-        } else {
-            Tlog.i("pref jobRole val are one: " + Prefs.candidatePrefJobRoleIdOne.get() +
-                "two " + Prefs.candidatePrefJobRoleIdTwo.get() +
-                "three " + Prefs.candidatePrefJobRoleIdThree.get()
-            );
+        Tlog.i("setting jobroleId from pref");
+        if(selectedJobRoleList.size() == 0){
+            if(Prefs.candidatePrefJobRoleIdOne.get() != 0){
+                Tlog.i("found candidate pref job Role one..");
+                selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdOne.get());
+                checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
+            }
+            if(Prefs.candidatePrefJobRoleIdTwo.get() != 0){
+                Tlog.i("found candidate pref job Role two..");
+                selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdTwo.get());
+                checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdTwo.get())] = true;
+            }
+            if(Prefs.candidatePrefJobRoleIdThree.get() != 0){
+                Tlog.i("found candidate pref job Role three..");
+                selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdThree.get());
+                checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdThree.get())] = true;
+            } else {
+                Tlog.i("pref jobRole val are one: " + Prefs.candidatePrefJobRoleIdOne.get() +
+                        "two " + Prefs.candidatePrefJobRoleIdTwo.get() +
+                        "three " + Prefs.candidatePrefJobRoleIdThree.get()
+                );
+            }
         }
     }
 
@@ -561,25 +540,47 @@ public class JobActivity extends AppCompatActivity
         if(jobSearchRequest != null){
             /* take prev jobSearchReq into account before making a new jobSearch request */
             /* sets lat, lng, mobile, filter */
+            Tlog.i("found jobSearchRequest");
             jobSearch = jobSearchRequest;
         } else {
+            Tlog.i("Not found jobSearchRequest. Hence created one");
             jobSearch = JobSearchRequest.newBuilder();
             jobSearch.setLatitude(mSearchLat);
             jobSearch.setLongitude(mSearchLng);
             jobSearch.setCandidateMobile(Prefs.candidateMobile.get());
         }
-        if(jobFilterRequestBkp!=null)jobSearch.setJobFilterRequest(jobFilterRequestBkp);
-        if(selectedJobRoleList.size()>0){
-            jobRoles = JobSearchByJobRoleRequest.newBuilder();
-            if(selectedJobRoleList.size() > 0)jobRoles.setJobRoleIdOne(selectedJobRoleList.get(0));
-            if(selectedJobRoleList.size() > 1)jobRoles.setJobRoleIdTwo(selectedJobRoleList.get(1));
-            if(selectedJobRoleList.size() > 2)jobRoles.setJobRoleIdThree(selectedJobRoleList.get(2));
+        if(jobFilterRequestBkp != null){
+            Tlog.i("found jobFilterRequestBkp -- Misc JobFilter options set. attaching jobFilterRequestBkp to jobSearch");
+            jobSearch.setJobFilterRequest(jobFilterRequestBkp);
+        }
+        if(selectedJobRoleList.size()>0) {
+            Tlog.i("found selected jobroles, selectedJobRoleList size:"+selectedJobRoleList.size());
+            jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
+            if(selectedJobRoleList.size() > 0) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(0));
+            if(selectedJobRoleList.size() > 1) jobRolesFilter.setJobRoleIdTwo(selectedJobRoleList.get(1));
+            if(selectedJobRoleList.size() > 2) jobRolesFilter.setJobRoleIdThree(selectedJobRoleList.get(2));
 
-            if(selectedJobRoleList.size() > 0)jobSearch.setJobSearchByJobRoleRequest(jobRoles.build());
-
+            if(selectedJobRoleList.size() > 0){
+                jobSearch.setJobSearchByJobRoleRequest(jobRolesFilter.build());
+                Tlog.i("setting the jobSearchReq obj: "
+                        +jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne()
+                        +" | actual jobRoleFitlerObj: "+jobRolesFilter.getJobRoleIdOne());
+            }
+        } else {
+            Tlog.i("No selected jobroles");
+            if(jobRolesFilter != null){
+                jobRolesFilter.clear();
+                updateJobSearchObject();
+            }
         }
         JobSearchAsyncTask jobSearchAsyncTask = new JobSearchAsyncTask();
         jobSearchAsyncTask.execute(jobSearch.build());
+    }
+
+    private void updateJobSearchObject() {
+        if(jobSearchRequest.hasJobSearchByJobRoleRequest()){
+            jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
+        }
     }
 
     private void showJobRolesAlertUI(List<JobRoleObject> jobRoleObjectList) {
@@ -595,22 +596,10 @@ public class JobActivity extends AppCompatActivity
                     mSelectedJobsName.clear();
                 }
                 mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
-                if(selectedJobRoleList.isEmpty()){
-                    showToast("Please select atleast one JobRole (max: 3)");
-                } else{
-                    searchJobsByJobRole();
-                }
+                searchJobsByJobRole();
             }
         });
-        searchByJobRoleBuilder.setNegativeButton("Clear All", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                selectedJobRoleList.clear();
-                Arrays.fill(checkedItems, false);
-                selectedJobRolesNameTxtView.setText("");
-                jobPostListView.setVisibility(View.INVISIBLE);
-                showToast("Selection Cleared. Please select atleast one Job Role (Ex: Driver)");
-            }
-        });
+        searchByJobRoleBuilder.setNeutralButton("Clear All", null);
         searchByJobRoleBuilder.setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
@@ -621,17 +610,8 @@ public class JobActivity extends AppCompatActivity
                         Tlog.i("checkBox["+which+"] for item:"+jobRoleIdList.get(which));
                     } else {
                         checkedItems[which] = false;
-                        dialogInterface.dismiss();
-                        if(selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
-                            for(int j=0; j<selectedJobRoleList.size();j++){
-                                String jobRoleName = jobRoleNameList[invBiMap
-                                        .get(selectedJobRoleList.get(j))].toString();
-                                mSelectedJobsName.add(jobRoleName);
-                            }
-                            selectedJobRolesNameTxtView.setText(TextUtils.join(", ", mSelectedJobsName));
-                        }
-                        searchJobsByJobRole();
-                        showToast("Maximum 3 preference allowed.");
+                        ((AlertDialog) dialogInterface).getListView().setItemChecked(which, false);
+                        showToast("Please select only maximum of 3 job roles.");
                     }
                 } else if(selectedJobRoleList.contains(jobRoleIdList.get(which))) {
                     checkedItems[which] = false;
@@ -641,16 +621,31 @@ public class JobActivity extends AppCompatActivity
                 Tlog.i("Total SelectedJobRoleSize:" + selectedJobRoleList.size());
             }
         });
-
         final AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
-        searchByJobRoleDialog.show();
-    }
 
-    /**
-     * Shows a toast with the given text.
-     */
-    public void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        searchByJobRoleDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = searchByJobRoleDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectedJobRoleList.clear();
+                        Arrays.fill(checkedItems, false);
+                        selectedJobRolesNameTxtView.setText("");
+                        jobPostListView.setVisibility(View.INVISIBLE);
+                        showToast("Selection Cleared.");
+                        for(int which=0; which<checkedItems.length; which++){
+                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                        }
+                        //Dismiss once everything is OK.
+                    }
+                });
+            }
+        });
+        searchByJobRoleDialog.show();
     }
 
     public static Double getmSearchLat() {
@@ -665,7 +660,7 @@ public class JobActivity extends AppCompatActivity
         List<String> mSelectedJobsName = new ArrayList<>();
         if (selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
             for(int j=0; j<selectedJobRoleList.size();j++){
-                Tlog.i("search job for jobRoles: "+selectedJobRoleList.get(j));
+                Tlog.i("search job for jobRolesFilter: "+selectedJobRoleList.get(j));
                 String jobRoleName = jobRoleNameList[invBiMap
                         .get(selectedJobRoleList.get(j))].toString();
                 mSelectedJobsName.add(jobRoleName);
@@ -673,9 +668,14 @@ public class JobActivity extends AppCompatActivity
         } else {
             Tlog.i("clearing selectedJobRoleList");
             selectedJobRoleList.clear();
-            if(jobRoles!=null)jobRoles.clear();
+            if(jobRolesFilter != null){
+                jobRolesFilter.clear();
+                updateJobSearchObject();
+                Tlog.i("after clearing jobRolesFilter: size -> "+ jobRolesFilter.getJobRoleIdOne());
+            }
+            Tlog.i("after clearing selectedJobRoleList: size -> "+ selectedJobRoleList.size());
             Arrays.fill(checkedItems, false);
-            mSelectedJobsName.add("No JobRole Selected");
+            mSelectedJobsName.add(ServerConstants.ALL_JOBS);
         }
         selectedJobRolesNameTxtView.setText(TextUtils.join(", ", mSelectedJobsName));
 
