@@ -252,6 +252,16 @@ public class CandidateProfileExperience extends Fragment {
                         isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
                         expInYears = candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience();
                         qualificationLayout.setVisibility(View.GONE);
+                    } else{
+                        isCandidateExperienced = -1;
+                        experiencedSection.setVisibility(View.GONE);
+                        isFresher.setBackgroundResource(R.drawable.round_white_button);
+                        isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        isExperienced.setBackgroundResource(R.drawable.round_white_button);
+                        isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        expInYears = 0;
+                        qualificationLayout.setVisibility(View.GONE);
+
                     }
 
                     selectExp = (TextView) view.findViewById(R.id.select_experience);
@@ -267,6 +277,7 @@ public class CandidateProfileExperience extends Fragment {
 
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
                         isEmployed = 1;
+                        experiencedSection.setVisibility(View.VISIBLE);
                         qualificationLayout.setVisibility(View.VISIBLE);
                         isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
                         isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -274,6 +285,7 @@ public class CandidateProfileExperience extends Fragment {
                         isEmployedYes.setTextColor(getResources().getColor(R.color.white));
                     } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
                         isEmployed = 0;
+                        experiencedSection.setVisibility(View.VISIBLE);
                         qualificationLayout.setVisibility(View.GONE);
                         isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                         isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -311,8 +323,8 @@ public class CandidateProfileExperience extends Fragment {
                             isEmployed = 0;
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
-                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.white));
                             experiencedSection.setVisibility(View.GONE);
                             qualificationLayout.setVisibility(View.GONE);
                             isExperienced.setBackgroundResource(R.drawable.round_white_button);
