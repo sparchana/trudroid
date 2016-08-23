@@ -42,6 +42,7 @@ import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -86,8 +87,8 @@ public class CandidateProfileBasic extends Fragment {
 
     //UI References
     private EditText candidateDob, firstName, secondName, mobileNumber;
-    Integer genderValue;
-    Long shiftValue;
+    Integer genderValue = -1;
+    Long shiftValue = Long.valueOf(-1);
 
     private Button maleBtn, femaleBtn;
     private DatePickerDialog dobDatePicker;
@@ -416,9 +417,21 @@ public class CandidateProfileBasic extends Fragment {
                             boolean check = true;
                             int pos = shift_option.getSelectedItemPosition();
                             shiftValue = Long.valueOf(shiftIds.get(pos));
-                            if(firstName.getText().toString().trim().isEmpty()){
+
+                            if(Util.isValidName(firstName.getText().toString()) == 0){
+                                showDialog("First Name Cannot be blank. Please enter your first name");
                                 check = false;
-                                showDialog("Please enter your Name");
+                            } else if(Util.isValidName(firstName.getText().toString()) == 1) {
+                                showDialog("First Name cannot have special characters or numbers. Please enter a valid first name");
+                                check = false;
+                            } else if(!secondName.getText().toString().isEmpty()){
+                                if(Util.isValidName(secondName.getText().toString()) == 0) {
+                                    showDialog("Second Name Cannot be blank. Please enter your second name");
+                                    check = false;
+                                } else if(Util.isValidName(secondName.getText().toString()) == 1) {
+                                    showDialog("Second Name cannot have special characters or numbers. Please enter a valid second name");
+                                    check = false;
+                                }
                             } else if(candidateDob.getText().toString().trim().isEmpty()){
                                 check = false;
                                 showDialog("Please enter your Date of Birth");
@@ -444,7 +457,7 @@ public class CandidateProfileBasic extends Fragment {
                                 UpdateCandidateBasicProfileRequest.Builder requestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
                                 requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                                 requestBuilder.setCandidateFirstName(firstName.getText().toString());
-                                if(secondName.getText().toString() != null){
+                                if(!secondName.getText().toString().isEmpty()){
                                     requestBuilder.setCandidateLastName(secondName.getText().toString());
                                 }
                                 requestBuilder.setCandidateDOB(candidateDob.getText().toString());

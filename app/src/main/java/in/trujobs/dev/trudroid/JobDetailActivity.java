@@ -201,16 +201,22 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     if (workingDays.length() > 7) {
                         workingDays = workingDays.substring(2, 8);
                     }
+                    Tlog.e(workingDays + " === ");
                     for (int i = 0; i < 7; i++) {
                         char c = workingDays.charAt(i);
-                        switch (c){
-                            case '0': daysOff += "Mon,"; break;
-                            case '1': daysOff += "Tue,"; break;
-                            case '2': daysOff += "Wed,"; break;
-                            case '3': daysOff += "Thu,"; break;
-                            case '4': daysOff += "Fri,"; break;
-                            case '5': daysOff += "Sat,"; break;
-                            case '6': daysOff += "Sun,"; break;
+
+                        if(c == '0'){ //checking an off day
+                            Tlog.e(c + " <=== " + daysOff);
+                            switch (i){
+                                case 0: daysOff += "Mon,"; break;
+                                case 1: daysOff += "Tue,"; break;
+                                case 2: daysOff += "Wed,"; break;
+                                case 3: daysOff += "Thu,"; break;
+                                case 4: daysOff += "Fri,"; break;
+                                case 5: daysOff += "Sat,"; break;
+                                case 6: daysOff += "Sun,"; break;
+                            }
+                            Tlog.e(c + " <===> " + daysOff);
                         }
                     }
                     jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length() - 1)) + " holiday");

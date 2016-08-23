@@ -57,7 +57,7 @@ public class ViewDialog {
             completeProfileLayout.setVisibility(View.VISIBLE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
-        } else if (category ==2 ) { // new jobs, apply now
+        } else if (category == 2 ) { // new jobs, apply now
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.VISIBLE);
             referLayout.setVisibility(View.GONE);

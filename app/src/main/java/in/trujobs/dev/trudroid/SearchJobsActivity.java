@@ -133,9 +133,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
         fetchAllJobs.execute();
 
-        userNameTextView = (TextView) findViewById(R.id.userName);
-        userMobileTextView = (TextView) findViewById(R.id.userMobile);
-
         mSearchJobsByJobRoleTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
         mSearchJobsByJobRoleTxtView.setOnClickListener(this);
 
@@ -174,20 +171,24 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void setNavigationItems() {
         mNavItems = new ArrayList<>();
+        userNameTextView = (TextView) findViewById(R.id.userName);
+        userMobileTextView = (TextView) findViewById(R.id.userMobile);
+
         mNavItems.add(new NavItem("Search Job", R.drawable.search_icon));
         if (Util.isLoggedIn()) {
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("My Home Location", R.drawable.location_icon));
+            mNavItems.add(new NavItem("Refer friends", R.drawable.location_icon));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 
-            userMobileTextView.setText(Prefs.firstName.get());
+            userNameTextView.setText(Prefs.firstName.get());
             userMobileTextView.setText(Prefs.candidateMobile.get());
         } else{
             mNavItems.add(new NavItem("Login/Sign Up", R.drawable.login_icon));
 
-            userMobileTextView.setText("Guest User");
-            userMobileTextView.setText("User not logged in");
+            userNameTextView.setText("Guest User");
+            userMobileTextView.setText("Candidate not logged in");
         }
         mNavigationItemListView.setAdapter(new NavigationListAdapter(this, mNavItems));
     }
@@ -220,6 +221,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             case 4: intent = new Intent(SearchJobsActivity.this, HomeLocality.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+
+            case 5: //TODO refer friends
+                break;
 
             default:
                 break;
@@ -276,7 +280,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 break;
             case R.id.fab:
                 FetchCandidateAlertRequest.Builder requestBuilder = FetchCandidateAlertRequest.newBuilder();
-                requestBuilder.setCandidateMobile(Prefs.candidateMobile.toString());
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
 
                 mAlertAsyncTask = new FetchAlertAsyncTask();
                 mAlertAsyncTask.execute(requestBuilder.build());
@@ -641,6 +645,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             return 3;
         else if(title.equals("My Home Location"))
             return 4;
+        else if(title.equals("Refer friends"))
+            return 5;
         else
             return -1;
     }
