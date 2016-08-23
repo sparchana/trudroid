@@ -412,6 +412,12 @@ public class CandidateProfileExperience extends Fragment {
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
                                 showDialog("Please select total years of experience?");
+                            } else if(candidateLanguageKnown.size() < 1){
+                                check = false;
+                                showDialog("Please select at least 1 language?");
+                            } else if(candidateSkill.size() < 1){
+                                check = false;
+                                showDialog("Please select at least 1 skill?");
                             }
 
                             if(check){
