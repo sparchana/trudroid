@@ -454,20 +454,20 @@ public class CandidateProfileBasic extends Fragment {
                                 triggerFinalSubmission();
 
                                 //update other basic information
-                                UpdateCandidateBasicProfileRequest.Builder requestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
-                                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-                                requestBuilder.setCandidateFirstName(firstName.getText().toString());
+                                UpdateCandidateBasicProfileRequest.Builder updateCandidateBasicProfileRequestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
+                                updateCandidateBasicProfileRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+                                updateCandidateBasicProfileRequestBuilder.setCandidateFirstName(firstName.getText().toString());
                                 if(!secondName.getText().toString().isEmpty()){
-                                    requestBuilder.setCandidateLastName(secondName.getText().toString());
+                                    updateCandidateBasicProfileRequestBuilder.setCandidateLastName(secondName.getText().toString());
                                 }
-                                requestBuilder.setCandidateDOB(candidateDob.getText().toString());
-                                requestBuilder.setCandidateTimeshiftPref(shiftValue);
-                                requestBuilder.setCandidateGender(genderValue);
-                                requestBuilder.addAllJobRolePref(selectedJobRoles);
-                                requestBuilder.setCandidateTimeshiftPref(shiftIds.get(shift_option.getSelectedItemPosition()));
+                                updateCandidateBasicProfileRequestBuilder.setCandidateDOB(candidateDob.getText().toString());
+                                updateCandidateBasicProfileRequestBuilder.setCandidateTimeshiftPref(shiftValue);
+                                updateCandidateBasicProfileRequestBuilder.setCandidateGender(genderValue);
+                                updateCandidateBasicProfileRequestBuilder.addAllJobRolePref(selectedJobRoles);
+                                updateCandidateBasicProfileRequestBuilder.setCandidateTimeshiftPref(shiftIds.get(shift_option.getSelectedItemPosition()));
 
                                 mSaveBasicProfileAsyncTask = new UpdateBasicProfileAsyncTask();
-                                mSaveBasicProfileAsyncTask.execute(requestBuilder.build());
+                                mSaveBasicProfileAsyncTask.execute(updateCandidateBasicProfileRequestBuilder.build());
                             }
                         }
                     });
@@ -576,11 +576,23 @@ public class CandidateProfileBasic extends Fragment {
                     getFragmentManager().beginTransaction()
                             .addToBackStack(null)
                             .add(R.id.main_profile, candidateProfileExperience).commit();
+                    updatePrefs();
                 } else{
                     Toast.makeText(getContext(), "Looks like something went wrong while saving basic profile. Please try again.",
                             Toast.LENGTH_LONG).show();
                 }
             }
+        }
+    }
+
+    private void updatePrefs() {
+        if(selectedJobRoles.size()>0){
+            Prefs.candidatePrefJobRoleIdOne.remove();
+            Prefs.candidatePrefJobRoleIdTwo.remove();
+            Prefs.candidatePrefJobRoleIdThree.remove();
+            if(selectedJobRoles.size()>0 && selectedJobRoles.get(0).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdOne.put(selectedJobRoles.get(0).getJobRoleId());
+            if(selectedJobRoles.size()>1 && selectedJobRoles.get(1).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdTwo.put(selectedJobRoles.get(1).getJobRoleId());
+            if(selectedJobRoles.size()>2 && selectedJobRoles.get(2).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdThree.put(selectedJobRoles.get(2).getJobRoleId());
         }
     }
 
