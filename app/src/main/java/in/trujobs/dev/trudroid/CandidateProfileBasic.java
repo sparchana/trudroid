@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -30,14 +34,21 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
+import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
+import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
+import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
+import in.trujobs.proto.HomeLocalityRequest;
+import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobRoleObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
@@ -47,9 +58,32 @@ import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
  */
 public class CandidateProfileBasic extends Fragment {
 
+    private AsyncTask<HomeLocalityRequest, Void, HomeLocalityResponse> mUpdateLocatlityAsyncTask;
     private AsyncTask<Void, Void, GetCandidateBasicProfileStaticResponse> mAsyncTask;
     private AsyncTask<UpdateCandidateBasicProfileRequest, Void, UpdateCandidateBasicProfileResponse> mSaveBasicProfileAsyncTask;
     ProgressDialog pd;
+    private AutoCompleteTextView mHomeLocalityTxtView;
+
+    /**
+     * The formatted address.
+     */
+    public String mAddressOutput;
+
+    /**
+     * Represents a google's  place_id.
+     */
+    protected String mPlaceId;
+
+    /**
+     * Represents a geographical location.
+     */
+    protected Location mLastLocation;
+
+    protected boolean GET_LOCALITY_FROM_GPS = false;
+    protected boolean GET_LOCALITY_FROM_AUTOCOMPLETE = false;
+
+    private AsyncTask<String, Void, LatLngAPIHelper> mLatLngAsyncTask;
+    private static HomeLocalityRequest.Builder mHomeLocalityRequest = HomeLocalityRequest.newBuilder();
 
     //UI References
     private EditText candidateDob, firstName, secondName, mobileNumber;
@@ -142,10 +176,31 @@ public class CandidateProfileBasic extends Fragment {
                     secondName = (EditText) view.findViewById(R.id.last_name_edit_text);
                     candidateDob = (EditText) view.findViewById(R.id.date_of_birth_edit_text);
                     mobileNumber = (EditText) view.findViewById(R.id.phone_number);
+                    mHomeLocalityTxtView = (AutoCompleteTextView) view.findViewById(R.id.home_locality_auto_complete_edit_text);
 
                     maleBtn = (Button) view.findViewById(R.id.gender_male);
                     femaleBtn = (Button) view.findViewById(R.id.gender_female);
 
+                    mHomeLocalityTxtView.setAdapter(new PlacesAutoCompleteAdapter(getContext(), R.layout.place_autocomplete_list_item));
+                    mHomeLocalityTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // Get data associated with the specified position
+                            // in the list (AdapterView)
+                            //mAddressOutput = (String) parent.getItemAtPosition(position);
+                            GET_LOCALITY_FROM_GPS = false;
+                            GET_LOCALITY_FROM_AUTOCOMPLETE = true;
+                            PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
+                            mAddressOutput = placeAPIHelper.getDescription();
+                            Toast.makeText(getContext(), mAddressOutput, Toast.LENGTH_SHORT).show();
+                            mPlaceId = placeAPIHelper.getPlaceId();
+                            Tlog.i("mAddressOutput ------ " + mAddressOutput
+                                    + "\nplaceId:" + mPlaceId);
+
+                            mLatLngAsyncTask = new LatLngAsyncTask();
+                            mLatLngAsyncTask.execute(mPlaceId);
+                        }
+                    });
                     maleBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -299,6 +354,13 @@ public class CandidateProfileBasic extends Fragment {
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastName() != null){
                         secondName.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastName());
                     }
+                    if(candidateProfileActivity.candidateInfo.getCandidate().hasCandidateHomelocality()){
+                        mLastLocation = new Location("");
+                        mAddressOutput = candidateProfileActivity.candidateInfo.getCandidate().getCandidateHomelocality().getLocalityName();
+                        mLastLocation.setLatitude(candidateProfileActivity.candidateInfo.getCandidate().getCandidateHomelocality().getLat());
+                        mLastLocation.setLongitude(candidateProfileActivity.candidateInfo.getCandidate().getCandidateHomelocality().getLng());
+                        mHomeLocalityTxtView.setText(mAddressOutput);
+                    }
                     mobileNumber.setText(Prefs.candidateMobile.get());
                     mobileNumber.setEnabled(false);
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
@@ -376,6 +438,9 @@ public class CandidateProfileBasic extends Fragment {
                             } else if(genderValue < 0){
                                 check = false;
                                 showDialog("Please provide your gender");
+                            } else if(mHomeLocalityTxtView.getText().toString().length() == 0 ){
+                                check = false;
+                                showDialog("Please provide your Home Locality");
                             } else if(shiftValue < 1 ){
                                 check = false;
                                 showDialog("Please provide your preferred Time Shift");
@@ -385,6 +450,10 @@ public class CandidateProfileBasic extends Fragment {
                             }
 
                             if(check){
+                                //adding candidate's home locality
+                                triggerFinalSubmission();
+
+                                //update other basic information
                                 UpdateCandidateBasicProfileRequest.Builder requestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
                                 requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                                 requestBuilder.setCandidateFirstName(firstName.getText().toString());
@@ -411,11 +480,78 @@ public class CandidateProfileBasic extends Fragment {
         }
     }
 
+    public void triggerFinalSubmission(){
+        mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
+        mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
+        mHomeLocalityRequest.setAddress(mAddressOutput);
+
+        mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
+        mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+
+        mUpdateLocatlityAsyncTask = new HomeLocalityAsyncTask();
+        mUpdateLocatlityAsyncTask.execute(mHomeLocalityRequest.build());
+
+            /* update prefs values */
+        Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
+        Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
+    }
+
+    private class HomeLocalityAsyncTask extends AsyncTask<HomeLocalityRequest,
+            Void, HomeLocalityResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+                pd.show();
+            }
+
+        @Override
+        protected HomeLocalityResponse doInBackground(HomeLocalityRequest... params) {
+            return HttpRequest.addHomeLocality(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(HomeLocalityResponse homeLocalityResponse) {
+            super.onPostExecute(homeLocalityResponse);
+            mAsyncTask = null;
+            if (homeLocalityResponse == null) {
+                Toast.makeText(getContext(), "Failed to set Home PlaceAPIHelper. Please try again.",
+                        Toast.LENGTH_LONG).show();
+                Log.w("","Null Response");
+                return;
+            } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
+                Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
+                Tlog.e("SUCCESS!! YAY!!");
+            }
+            else {
+                Tlog.e("OOPS!! FAILED");
+            }
+        }
+    }
+
+    private class LatLngAsyncTask extends BasicLatLngAsyncTask {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Tlog.i("Fetching LatLng ....");
+        }
+
+        @Override
+        protected void onPostExecute(LatLngAPIHelper latLngAPIHelper) {
+            super.onPostExecute(latLngAPIHelper);
+            mLatLngAsyncTask = null;
+            if(latLngAPIHelper!=null){
+                mLastLocation = new Location("");
+                mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
+                mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
+            }
+        }
+    }
+
+
     private class UpdateBasicProfileAsyncTask extends AsyncTask<UpdateCandidateBasicProfileRequest,
             Void, UpdateCandidateBasicProfileResponse> {
         protected void onPreExecute() {
             super.onPreExecute();
-            pd.show();
         }
 
         @Override

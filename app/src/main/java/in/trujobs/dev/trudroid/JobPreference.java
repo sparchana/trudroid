@@ -305,7 +305,7 @@ public class JobPreference extends AppCompatActivity {
                     if(Prefs.candidateHomeLocalityStatus.get() == 0){
                         intent = new Intent(JobPreference.this, HomeLocality.class);
                     } else{
-                        intent = new Intent(JobPreference.this, JobActivity.class);
+                        intent = new Intent(JobPreference.this, SearchJobsActivity.class);
                     }
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
@@ -394,7 +394,7 @@ public class JobPreference extends AppCompatActivity {
         }
     }
 
-    public void removeJobPrefValueFromStack(Long jobRoleId){
+    public void removeJobPrefValueFromStack(Long jobRoleId) {
         for(int i=0 ; i<jobPrefStack.size(); i++){
             if(jobPrefStack.get(i) == jobRoleId){
                 jobPrefStack.remove(i);

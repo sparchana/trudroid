@@ -3,9 +3,8 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.IntentCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -25,7 +23,7 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
 
-public class Login extends AppCompatActivity {
+public class Login extends TruJobsBaseActivity {
 
     private AsyncTask<LogInRequest, Void, LogInResponse> mAsyncTask;
     EditText mMobile;
@@ -78,12 +76,10 @@ public class Login extends AppCompatActivity {
 
         int check = 1;
         if(Util.isValidMobile(requestBuilder.getCandidateMobile()) == false){
-            Toast.makeText(Login.this, "Enter a valid mobile number",
-                    Toast.LENGTH_LONG).show();
+            showToast("Enter a valid mobile number");
             check = 0;
         } else if(Util.isValidPassword(requestBuilder.getCandidatePassword()) == false){
-            Toast.makeText(Login.this, "Enter a password of minimum 6 characters",
-                    Toast.LENGTH_LONG).show();
+            showToast("Enter a password of minimum 6 characters");
             check = 0;
         }
         if(check == 1){
@@ -115,20 +111,17 @@ public class Login extends AppCompatActivity {
             mAsyncTask = null;
             pd.cancel();
             if (logInResponse == null) {
-                Toast.makeText(Login.this, "Failed to Login. Please try again.",
-                        Toast.LENGTH_LONG).show();
+                showToast("Failed to Login. Please try again.");
                 Log.w("","Null signIn Response");
                 return;
             }
 
             if(logInResponse.getStatusValue() == ServerConstants.NO_USER){
-                Toast.makeText(Login.this, "User does not exist. Please Sign Up!",
-                        Toast.LENGTH_LONG).show();
+                showToast("User does not exist. Please Sign Up!");
             }
 
             else if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Toast.makeText(Login.this, "Log In Successful!",
-                        Toast.LENGTH_LONG).show();
+                showToast("Log In Successful!");
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mPassword.getWindowToken(), 0);
 
@@ -153,14 +146,14 @@ public class Login extends AppCompatActivity {
 
                 if(Prefs.loginCheckStatus.get() == 1){
                     finish();
-                } else{
+                } else {
                     Intent intent;
                     if(Prefs.candidateJobPrefStatus.get() == 0){
                         intent = new Intent(Login.this, JobPreference.class);
                     } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
                         intent = new Intent(Login.this, HomeLocality.class);
                     } else{
-                        intent = new Intent(Login.this, JobActivity.class);
+                        intent = new Intent(Login.this, SearchJobsActivity.class);
                     }
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -169,13 +162,11 @@ public class Login extends AppCompatActivity {
                 }
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
-                Toast.makeText(Login.this, "Incorrect password. Click \"Forgot Password\" to reset",
-                        Toast.LENGTH_LONG).show();
+                showToast("Incorrect password. Click \"Forgot Password\" to reset");
             }
 
             else {
-                Toast.makeText(Login.this, "Something went wrong. Please try again later!",
-                        Toast.LENGTH_LONG).show();
+                showToast("Something went wrong. Please try again later!");
             }
         }
     }

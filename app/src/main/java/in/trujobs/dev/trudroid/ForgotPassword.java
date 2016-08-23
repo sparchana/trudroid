@@ -3,7 +3,6 @@ package in.trujobs.dev.trudroid;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +18,7 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 
-public class ForgotPassword extends AppCompatActivity {
+public class ForgotPassword extends TruJobsBaseActivity {
 
     private AsyncTask<ResetPasswordRequest, Void, ResetPasswordResponse> mAsyncTask;
     EditText mUserMobile;

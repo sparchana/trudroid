@@ -1,15 +1,13 @@
 package in.trujobs.dev.trudroid;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.Handler;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends TruJobsBaseActivity {
 
     private final int SPLASH_TIME_OUT = 2000;
     @Override
@@ -17,15 +15,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
-
-        if (!Util.isConnectedToInternet(this)) {
-            Toast.makeText(SplashScreenActivity.this, "No internet connection. Please check your network settings.",
-                    Toast.LENGTH_LONG).show();
-            new Handler().postDelayed(closeSplashRunnable(), SPLASH_TIME_OUT);
-            return;
-        }
         new Handler().postDelayed(getSplashRunnable(), SPLASH_TIME_OUT);
-
     }
 
     private Runnable closeSplashRunnable() {
@@ -48,7 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
                         intent = new Intent(SplashScreenActivity.this, HomeLocality.class);
                     } else{
-                        intent = new Intent(SplashScreenActivity.this, JobActivity.class);
+                        intent = new Intent(SplashScreenActivity.this, SearchJobsActivity.class);
 /*                        intent = new Intent(SplashScreenActivity.this, CandidateProfileActivity.class);*/
 
                     }

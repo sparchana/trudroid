@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,8 +54,9 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
 
-public class HomeLocality extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class HomeLocality extends TruJobsBaseActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     public static final String TAG = "HomeLocationActivity";
 
@@ -65,6 +66,8 @@ public class HomeLocality extends AppCompatActivity implements
 
     protected boolean GET_LOCALITY_FROM_GPS = false;
     protected boolean GET_LOCALITY_FROM_AUTOCOMPLETE = false;
+
+    public Toast mToast;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -143,6 +146,7 @@ public class HomeLocality extends AppCompatActivity implements
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
         mSaveHomeLocality = (Button) findViewById(R.id.saveHomeLocality);
+        activateOrDeactivateSubmitButton(false);
 
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
@@ -162,9 +166,10 @@ public class HomeLocality extends AppCompatActivity implements
                 mAddressOutput = placeAPIHelper.getDescription();
                 Toast.makeText(HomeLocality.this, mAddressOutput, Toast.LENGTH_SHORT).show();
                 mPlaceId = placeAPIHelper.getPlaceId();
-                Tlog.i("mAddressOutput ------ "+ mAddressOutput
-                        +"\nplaceId:"+mPlaceId);
+                Tlog.i("mAddressOutput ------ " + mAddressOutput
+                        + "\nplaceId:" + mPlaceId);
                 showProgressBar = false;
+                activateOrDeactivateSubmitButton(true);
                 updateUIWidgets();
             }
         });
@@ -185,6 +190,18 @@ public class HomeLocality extends AppCompatActivity implements
         buildGoogleApiClient();
 
         // Open the autocomplete activity when the button is clicked.
+    }
+
+    public void activateOrDeactivateSubmitButton(boolean shouldActivate) {
+        if (shouldActivate) {
+            mSaveHomeLocality.setEnabled(true);
+            mSaveHomeLocality.setBackgroundColor(Color.parseColor("#2d77ba"));
+            mSaveHomeLocality.setBackgroundResource(R.color.colorPrimary);
+        } else {
+            mSaveHomeLocality.setEnabled(false);
+            //mSaveHomeLocality.setBackgroundColor(Color.GRAY);
+            mSaveHomeLocality.setBackgroundResource(R.color.back_grey_dark);
+        }
     }
 
     /**
@@ -228,7 +245,7 @@ public class HomeLocality extends AppCompatActivity implements
      */
     public void fetchAddressButtonHandler(View view) {
         Tlog.i("user current location triggered..");
-        showProgressBar=true;
+        showProgressBar = true;
         updateUIWidgets();
         satisfyLocationSettings();
         /*final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
@@ -238,7 +255,14 @@ public class HomeLocality extends AppCompatActivity implements
     }
 
     private void satisfyLocationSettings() {
+        /* Before all check if network is available */
+
         buildGoogleApiClient();
+        if (!CheckNetworkStatus()) {
+            showProgressBar = false;
+            updateUIWidgets();
+            return;
+        }
         GET_LOCALITY_FROM_GPS = true;
         GET_LOCALITY_FROM_AUTOCOMPLETE = false;
         LocationRequest mLocationRequestHighAccuracy = new LocationRequest();
@@ -335,7 +359,7 @@ public class HomeLocality extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-    triggerGPS();
+        triggerGPS();
     }
 
     /**
@@ -373,7 +397,15 @@ public class HomeLocality extends AppCompatActivity implements
             // fetchAddressButtonHandler()) . Instead, we start the intent service here if the
             // user has requested an address, since we now have a connection to GoogleApiClient.
             if (mAddressRequested) {
+                showProgressBar = true;
+                updateUIWidgets();
                 startIntentService();
+                if (mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))) {
+                    mAddressOutput = "";
+                    showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
+                }
+                showProgressBar = false;
+                updateUIWidgets();
             }
         }
     }
@@ -381,7 +413,8 @@ public class HomeLocality extends AppCompatActivity implements
     private void triggerGPS() {
         // Gets the best and most recent location currently available, which may be null
         // in rare cases when a location is not available.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             showToast("Location Permission Not Granted. Please Enter Your Home Location.");
             ActivityCompat.requestPermissions(this,
@@ -390,13 +423,15 @@ public class HomeLocality extends AppCompatActivity implements
             return;
         }
         /* enable gps */
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) &&
-                !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ) {
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Tlog.w("gps not enabled...popped up question");
             buildAlertMessageNoGps();
             mLocationEnabled = false;
-        } else mLocationEnabled = true;
+        } else {
+            mLocationEnabled = true;
+        }
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
@@ -405,6 +440,13 @@ public class HomeLocality extends AppCompatActivity implements
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
+        triggerGPS();
+        if (result.getErrorCode() == 2) {
+            showProgressBar = false;
+            updateUIWidgets();
+            satisfyLocationSettings();
+            showToast("Please Update Google Services");
+        }
         Tlog.i( "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
@@ -434,23 +476,15 @@ public class HomeLocality extends AppCompatActivity implements
         if (showProgressBar) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
-            mSaveHomeLocality.setEnabled(false);
-        }
-        if (mAddressRequested) {
+            activateOrDeactivateSubmitButton(false);
+        } else if (mAddressRequested) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
         } else {
             mProgressBar.setVisibility(ProgressBar.GONE);
             mFetchAddressButton.setEnabled(true);
-            mSaveHomeLocality.setEnabled(true);
+            activateOrDeactivateSubmitButton(true);
         }
-    }
-
-    /**
-     * Shows a toast with the given text.
-     */
-    protected void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -482,7 +516,12 @@ public class HomeLocality extends AppCompatActivity implements
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
             // Display the address string or an error message sent from the intent service.
-            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            if(resultData.getString(Constants.RESULT_DATA_KEY).equalsIgnoreCase(getString(R.string.service_not_available))){
+                Tlog.e("service_not_available string received onReceiveResult");
+                showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
+            } else {
+                mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            }
             displayAddressOutput();
 
             // Show a toast message if an address was found.
@@ -491,6 +530,7 @@ public class HomeLocality extends AppCompatActivity implements
             }
 
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            showProgressBar = false;
             mAddressRequested = false;
             updateUIWidgets();
         }
@@ -584,11 +624,9 @@ public class HomeLocality extends AppCompatActivity implements
             showProgressBar = true;
             updateUIWidgets();
             Tlog.i("Triggering lat/lng fetch process with "+ mPlaceId);
-            if(mLastLocation == null){
-                mLatLngAsyncTask = new LatLngAsyncTask();
-                mLatLngAsyncTask.execute(mPlaceId);
-                Tlog.i("lat/lng fetch completed");
-            }
+            mLatLngAsyncTask = new LatLngAsyncTask();
+            mLatLngAsyncTask.execute(mPlaceId);
+            Tlog.i("lat/lng fetch completed");
             Tlog.i("skipped lat/lng fetch. Already provided via gps");
         } else {
             triggerFinalSubmission();
@@ -596,25 +634,35 @@ public class HomeLocality extends AppCompatActivity implements
     }
 
     public void triggerFinalSubmission(){
-        if(mAddressOutput != null && mLastLocation != null) {
-            // submission only when address and lat/lng is available
-            mSearchHomeLocalityTxtView.setText(mAddressOutput);
-            mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
-            mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-            mHomeLocalityRequest.setAddress(mAddressOutput);
+        if(mAddressOutput != null && !mAddressOutput.trim().isEmpty() && mLastLocation != null) {
+            if(mSearchHomeLocalityTxtView.getText().toString().trim().isEmpty()){
+                Tlog.e("Please type your Home Locality");
+                showToast("Please type your home locality (Ex: Bellandur)");
+            } else {
+                // submission only when address and lat/lng is available
+                mSearchHomeLocalityTxtView.setText(mAddressOutput);
+                mSearchHomeLocalityTxtView.dismissDropDown();
+                mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
+                mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
+                mHomeLocalityRequest.setAddress(mAddressOutput);
 
-            mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
-            mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+                mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
+                mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
 
-            mAsyncTask = new HomeLocalityAsyncTask();
-            mAsyncTask.execute(mHomeLocalityRequest.build());
+                mAsyncTask = new HomeLocalityAsyncTask();
+                mAsyncTask.execute(mHomeLocalityRequest.build());
 
-            mAddressRequested = false;
-            showProgressBar = false;
-            updateUIWidgets();
+            /* update prefs values */
+                Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
+                Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
+
+                mAddressRequested = false;
+                showProgressBar = false;
+                updateUIWidgets();
+            }
         } else {
-            Tlog.e("No Location Provided");
-            showToast("No Home Location Provided! Please enter home locality");
+            Tlog.e("No/Invalid Location Provided");
+            showToast("Invalid Home Location Provided! Please enter a valid home locality (Ex: Bellandur)");
         }
     }
 
@@ -664,7 +712,7 @@ public class HomeLocality extends AppCompatActivity implements
                 Log.w("","Null Response");
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Intent intent = new Intent(HomeLocality.this, JobActivity.class);
+                Intent intent = new Intent(HomeLocality.this, SearchJobsActivity.class);
                 Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
@@ -673,13 +721,14 @@ public class HomeLocality extends AppCompatActivity implements
             else {
                 showProgressBar=false;
                 updateUIWidgets();
-                Tlog.e("Something went wrong while saving home locality. Please try again later!");
-                Toast.makeText(HomeLocality.this, "Something went wrong while saving home locality. Please try again later!",
-                        Toast.LENGTH_LONG).show();
+                if(!CheckNetworkStatus()){
+                    showToast(ServerConstants.NETWORK_NOT_FOUND);
+                }  else {
+                    Tlog.e("Server issue !!");
+                    showToast(ServerConstants.ERROR_WHILE_SAVING_HOME_LOCALITY);
+                }
             }
         }
     }
-
-
 
 }

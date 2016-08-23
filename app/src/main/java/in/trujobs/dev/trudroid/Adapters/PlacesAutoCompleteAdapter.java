@@ -75,8 +75,6 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<Object> implements F
                 }
             }
         };
-
-        Tlog.i("filter:");
         return filter;
     }
 }

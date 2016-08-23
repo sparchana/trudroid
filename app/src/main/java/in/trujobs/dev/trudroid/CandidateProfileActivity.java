@@ -1,14 +1,11 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import in.trujobs.proto.GetCandidateInformationResponse;
 
-public class CandidateProfileActivity extends AppCompatActivity {
+public class CandidateProfileActivity extends TruJobsBaseActivity {
 
     public GetCandidateInformationResponse candidateInfo;
     @Override

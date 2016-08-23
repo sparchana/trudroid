@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,7 +99,6 @@ public class FetchAddressIntentService extends IntentService {
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             errorMessage = getString(R.string.service_not_available);
-            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
             Tlog.e(errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.

@@ -35,41 +35,21 @@
                    android:layout_width="16dp"
                    android:layout_height="16dp"
                    android:layout_gravity="center"
-                   android:src="@drawable/job_apply"/>
+                   android:src="@drawable/location"/>
 
                <AutoCompleteTextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:id="@+id/search_jobs_by_place"
                    android:textSize="12dp"
+                   android:paddingLeft="8dp"
                    android:focusableInTouchMode="true"
                    android:maxLength="50"
                    android:layout_gravity="center"
-                   android:hint="Ex: Bellandur"
+                   android:hint="All Bangalore"
                    android:layout_weight="1"/>
 
-               <ImageView
-                   android:layout_width="16dp"
-                   android:layout_height="16dp"
-                   android:layout_gravity="center"
-                   android:src="@drawable/job_apply"/>
            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:layout_margin="2dp">
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:drawablePadding="-30dp"
-                    android:layout_gravity="center|right"
-                    android:textAllCaps="false"
-                    android:id="@+id/btn_job_search"
-                    android:text="Search"
-                    android:textColor="@color/back_grey_dark_item"
-                    android:background="@color/white"/>
-            </LinearLayout>
 
         </LinearLayout>
         <LinearLayout
@@ -95,24 +75,19 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/job_apply"/>
+                    android:src="@drawable/job"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/search_jobs_by_job_role"
+                    android:paddingLeft="8dp"
                     android:textSize="12dp"
                     android:maxLength="100"
                     android:text="All Jobs"
                     android:hint="Ex: Driver"
                     android:layout_weight="1"/>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center|right"
-                    android:src="@drawable/job_apply"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,7 +103,7 @@
                     android:textAllCaps="false"
                     android:drawableLeft="@drawable/ic_filter"
                     android:text="Filter"
-                    android:textColor="@color/back_grey_dark_item"
+                    android:textColor="@color/back_grey_dark"
                     android:background="@color/white"/>
             </LinearLayout>
         </LinearLayout>
