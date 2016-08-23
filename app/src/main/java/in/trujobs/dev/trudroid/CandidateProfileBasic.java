@@ -53,8 +53,8 @@ public class CandidateProfileBasic extends Fragment {
 
     //UI References
     private EditText candidateDob, firstName, secondName, mobileNumber;
-    Integer genderValue;
-    Long shiftValue;
+    Integer genderValue = -1;
+    Long shiftValue = Long.valueOf(-1);
 
     private Button maleBtn, femaleBtn;
     private DatePickerDialog dobDatePicker;

@@ -24,6 +24,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateInformationRequest;
@@ -236,7 +237,8 @@ public class ViewProfileFragment extends Fragment {
                     }
 
                     candidateAge.setText("Not Specified");
-                    if(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() != 0){
+                    Tlog.e(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() + "==== >>");
+                    if(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() != -1){
                         Date current = new Date();
                         Date bday = new Date(getCandidateInformationResponse.getCandidate().getCandidateDobMillis());
 

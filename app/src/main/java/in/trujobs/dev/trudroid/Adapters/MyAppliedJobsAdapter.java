@@ -74,7 +74,7 @@ public class MyAppliedJobsAdapter extends ArrayAdapter<JobApplicationObject> {
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH);
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        holder.mJobApplicationApplyTextView.setText("Applied on: " + mDay + "-" + mMonth + "-" + mYear);
+        holder.mJobApplicationApplyTextView.setText("Applied on: " + mDay + "-" + (mMonth + 1) + "-" + mYear);
 
         return rowView;
     }

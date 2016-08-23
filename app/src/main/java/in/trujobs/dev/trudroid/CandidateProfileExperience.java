@@ -61,11 +61,11 @@ public class CandidateProfileExperience extends Fragment {
     Integer isCandidateExperienced = -1;
 
     // values
-    Integer expInYears;
+    Integer expInYears = 0;
     JobRoleObject currentJobRoleValue;
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
     final List<CandidateSkillObject> candidateSkill = new ArrayList<CandidateSkillObject>();
-    Integer isEmployed;
+    Integer isEmployed = -1;
 
     CharSequence[] allLanguageList = new CharSequence[0];
     List<Integer> languageIdList = new ArrayList<Integer>();
@@ -216,7 +216,9 @@ public class CandidateProfileExperience extends Fragment {
                     isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
                     selectExp = (TextView) view.findViewById(R.id.select_experience);
 
-                    lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() > 0){
+                        lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                    }
                     currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
                         currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
@@ -386,15 +388,14 @@ public class CandidateProfileExperience extends Fragment {
                             UpdateCandidateExperienceProfileRequest.Builder experienceBuilder = UpdateCandidateExperienceProfileRequest.newBuilder();
                             boolean check = true;
 
-                            Log.e("Valuss", "" + isCandidateExperienced + isEmployed);
                             if(isCandidateExperienced < 0){
                                 check = false;
                                 showDialog("Please select Fresher or Experience");
                             }
-                            if(isEmployed < 0){
+                            if(expInYears > 1 && isEmployed < 0){
                                 check = false;
                                 showDialog("Please select are you employed?");
-                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().length() == 0)){
+                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
                                 showDialog("Please provide your current Salary");
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){

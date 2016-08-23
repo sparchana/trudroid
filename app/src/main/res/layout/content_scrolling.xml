@@ -53,7 +53,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="Welcome to TruJobs.in your job seraching partner"/>
+                        android:text="Welcome to TruJobs.in your job searching partner"/>
                 </LinearLayout>
                 <!--Status Container-->
                 <LinearLayout
@@ -83,19 +83,25 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:orientation="vertical">
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal">
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:paddingTop="16dp"
+                                android:src="@drawable/ring" />
                             <TextView
                                 android:layout_height="60dp"
-                                android:layout_width="match_parent"
+                                android:layout_width="60dp"
                                 android:id="@+id/candidate_applied_job_no"
-                                android:paddingTop="16dp"
-                                android:textSize="24dp"
+                                android:paddingTop="24dp"
+                                android:textSize="20dp"
                                 android:textColor="@color/colorPrimary"
                                 android:textAlignment="center" >
                             </TextView>
-                        </LinearLayout>
+                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -495,7 +501,7 @@
                                 android:layout_marginLeft="34dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Current Home Location"
+                                android:text="Location Preference(s)"
                                 android:textSize="@dimen/label_size" />
                         </LinearLayout>
                     </LinearLayout>
