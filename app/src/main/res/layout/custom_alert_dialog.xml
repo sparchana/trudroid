@@ -1,48 +1,50 @@
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/transparent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:id="@+id/alert_image_view"
-                android:gravity="center"
-                android:src="@drawable/job_apply"
-                android:scaleType="fitCenter" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Text Msg"
-                android:id="@+id/text_dialog"
-                android:layout_below="@+id/alert_image_view"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="16dp"
-                android:textSize="18sp"
-                android:textColor="#ff000000"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="0.9">
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:id="@+id/alert_image_view"
+                    android:gravity="center"
+                    android:src="@drawable/job_apply"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Text Msg"
+                    android:id="@+id/text_dialog"
+                    android:layout_below="@+id/alert_image_view"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="16dp"
+                    android:textSize="18sp"
+                    android:textColor="#ff000000"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center_horizontal" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,6 +68,34 @@
                     android:layout_marginTop="4dp"
                     android:textColor="@color/colorPrimary"
                     android:id="@+id/heading_two" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="0.1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                android:id="@+id/completeassessment_dialog"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/colorPrimary">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/phone_landline"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:textColor="@color/white"
+                    android:text="Call Now"/>
             </LinearLayout>
 
             <LinearLayout
@@ -165,7 +195,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
 
     </LinearLayout>
 </ScrollView>

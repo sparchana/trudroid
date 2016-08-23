@@ -240,7 +240,7 @@ public class ViewProfileFragment extends Fragment {
                     }
 
                     candidateAge.setText("Not Specified");
-                    if(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() != -1){
+                    if(getCandidateInformationResponse.getCandidate().getCandidateDobMillis() != 0){
                         Date current = new Date();
                         Date bday = new Date(getCandidateInformationResponse.getCandidate().getCandidateDobMillis());
 
