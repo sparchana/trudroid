@@ -31,6 +31,7 @@ import java.util.List;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateSkillObject;
@@ -61,11 +62,11 @@ public class CandidateProfileExperience extends Fragment {
     Integer isCandidateExperienced = -1;
 
     // values
-    Integer expInYears;
+    Integer expInYears = 0;
     JobRoleObject currentJobRoleValue;
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
     final List<CandidateSkillObject> candidateSkill = new ArrayList<CandidateSkillObject>();
-    Integer isEmployed;
+    Integer isEmployed = -1;
 
     CharSequence[] allLanguageList = new CharSequence[0];
     List<Integer> languageIdList = new ArrayList<Integer>();
@@ -216,7 +217,9 @@ public class CandidateProfileExperience extends Fragment {
                     isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
                     selectExp = (TextView) view.findViewById(R.id.select_experience);
 
-                    lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() > 0){
+                        lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                    }
                     currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
                         currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
@@ -240,6 +243,25 @@ public class CandidateProfileExperience extends Fragment {
                         } else if(year != 0 && month != 0){
                             selectExp.setText(year + " years " + month + " months");
                         }
+                    } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() == 0){
+                        isCandidateExperienced = 0;
+                        experiencedSection.setVisibility(View.GONE);
+                        isFresher.setBackgroundResource(R.drawable.rounded_corner_button);
+                        isFresher.setTextColor(getResources().getColor(R.color.white));
+                        isExperienced.setBackgroundResource(R.drawable.round_white_button);
+                        isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        expInYears = candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience();
+                        qualificationLayout.setVisibility(View.GONE);
+                    } else{
+                        isCandidateExperienced = -1;
+                        experiencedSection.setVisibility(View.GONE);
+                        isFresher.setBackgroundResource(R.drawable.round_white_button);
+                        isFresher.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        isExperienced.setBackgroundResource(R.drawable.round_white_button);
+                        isExperienced.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        expInYears = 0;
+                        qualificationLayout.setVisibility(View.GONE);
+
                     }
 
                     selectExp = (TextView) view.findViewById(R.id.select_experience);
@@ -255,6 +277,7 @@ public class CandidateProfileExperience extends Fragment {
 
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
                         isEmployed = 1;
+                        experiencedSection.setVisibility(View.VISIBLE);
                         qualificationLayout.setVisibility(View.VISIBLE);
                         isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
                         isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -262,6 +285,7 @@ public class CandidateProfileExperience extends Fragment {
                         isEmployedYes.setTextColor(getResources().getColor(R.color.white));
                     } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
                         isEmployed = 0;
+                        experiencedSection.setVisibility(View.VISIBLE);
                         qualificationLayout.setVisibility(View.GONE);
                         isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                         isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -296,10 +320,11 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onClick(View view) {
                             isCandidateExperienced = 0;
+                            isEmployed = 0;
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
-                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.white));
                             experiencedSection.setVisibility(View.GONE);
                             qualificationLayout.setVisibility(View.GONE);
                             isExperienced.setBackgroundResource(R.drawable.round_white_button);
@@ -386,20 +411,25 @@ public class CandidateProfileExperience extends Fragment {
                             UpdateCandidateExperienceProfileRequest.Builder experienceBuilder = UpdateCandidateExperienceProfileRequest.newBuilder();
                             boolean check = true;
 
-                            Log.e("Valuss", "" + isCandidateExperienced + isEmployed);
                             if(isCandidateExperienced < 0){
                                 check = false;
                                 showDialog("Please select Fresher or Experience");
                             }
-                            if(isEmployed < 0){
+                            if(expInYears > 1 && isEmployed < 0){
                                 check = false;
                                 showDialog("Please select are you employed?");
-                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().length() == 0)){
+                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
                                 showDialog("Please provide your current Salary");
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
                                 showDialog("Please select total years of experience?");
+                            } else if(candidateLanguageKnown.size() < 1){
+                                check = false;
+                                showDialog("Please select at least 1 language?");
+                            } else if(candidateSkill.size() < 1){
+                                check = false;
+                                showDialog("Please select at least 1 skill?");
                             }
 
                             if(check){
@@ -411,6 +441,7 @@ public class CandidateProfileExperience extends Fragment {
                                     experienceBuilder.setCandidateTotalExperience(expInYears);
                                 } else{
                                     experienceBuilder.setCandidateTotalExperience(0);
+                                    isEmployed = 0;
                                 }
                                 if(isEmployed == 1){
                                     experienceBuilder.setCurrentJobRole(currentJobRoleValue);

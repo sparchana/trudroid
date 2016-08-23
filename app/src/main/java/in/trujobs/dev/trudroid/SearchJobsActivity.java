@@ -64,7 +64,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     private ListView mNavigationItemListView;
     public ListView jobPostListView;
     public AutoCompleteTextView mSearchJobAcTxtView;
-    public TextView mSearchJobsByJobRoleTxtView;
+    public TextView mSearchJobsByJobRoleTxtView, userNameTextView, userMobileTextView;
     public String mSearchAddressOutput;
     public String mSearchedPlaceId;
     private DrawerLayout mDrawerLayout;
@@ -178,14 +178,24 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void setNavigationItems() {
         mNavItems = new ArrayList<>();
+        userNameTextView = (TextView) findViewById(R.id.userName);
+        userMobileTextView = (TextView) findViewById(R.id.userMobile);
+
         mNavItems.add(new NavItem("Search Job", R.drawable.search_icon));
         if (Util.isLoggedIn()) {
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("My Home Location", R.drawable.location_icon));
+            mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
+
+            userNameTextView.setText(Prefs.firstName.get());
+            userMobileTextView.setText(Prefs.candidateMobile.get());
         } else{
-            mNavItems.add(new NavItem("Login", R.drawable.login_icon));
+            mNavItems.add(new NavItem("Login/Sign Up", R.drawable.login_icon));
+
+            userNameTextView.setText("Guest User");
+            userMobileTextView.setText("Candidate not logged in");
         }
         mNavigationItemListView.setAdapter(new NavigationListAdapter(this, mNavItems));
     }
@@ -201,18 +211,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     Prefs.onLogout();
                     Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                } else {
-                    Intent intent = new Intent(SearchJobsActivity.this, Login.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                 }
-                break;
+                Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
             case 1: break;
 
-            case 2: Intent intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
+            case 2: intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
@@ -221,6 +226,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
             case 4: intent = new Intent(SearchJobsActivity.this, HomeLocality.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+
+            case 5: intent = new Intent(SearchJobsActivity.this, ReferFriends.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
@@ -692,7 +701,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         String title = mNavItems.get(position).mTitle;
         if(title.equals("Logout"))
             return 0;
-        else if(title.equals("Login"))
+        else if(title.equals("Login/Sign Up"))
             return 0;
         else if(title.equals("Search Job"))
             return 1;
@@ -702,6 +711,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             return 3;
         else if(title.equals("My Home Location"))
             return 4;
+        else if(title.equals("Refer friends"))
+            return 5;
         else
             return -1;
     }

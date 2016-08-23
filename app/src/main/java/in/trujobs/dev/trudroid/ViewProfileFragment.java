@@ -24,6 +24,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateInformationRequest;
@@ -191,6 +192,7 @@ public class ViewProfileFragment extends Fragment {
                 if(getCandidateInformationResponse.getStatusValue() == ServerConstants.SUCCESS){
                     candidateProfileActivity = (CandidateProfileActivity) getActivity();
                     candidateProfileActivity.candidateInfo = getCandidateInformationResponse;
+
                     TextView candidateName = (TextView) view.findViewById(R.id.user_name);
                     TextView candidateGender = (TextView) view.findViewById(R.id.candidate_gender);
                     TextView candidateMobile = (TextView) view.findViewById(R.id.candidate_phone_number);
@@ -224,7 +226,9 @@ public class ViewProfileFragment extends Fragment {
                         profileCompletePercent.setImageResource(R.drawable.thumbs_down);
                         profileStatusText.setText("Profile Incomplete");
                         profileMsg.setText("Complete Profile now!");
-                        profileCompletePercent.setOnClickListener(new View.OnClickListener() {
+
+                        LinearLayout profileStatusLayout = (LinearLayout) view.findViewById(R.id.profile_status_layout);
+                        profileStatusLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 CandidateProfileBasic candidateProfileBasic = new CandidateProfileBasic();
@@ -254,7 +258,8 @@ public class ViewProfileFragment extends Fragment {
                     }
 
                     jobsApplied.setText(getCandidateInformationResponse.getCandidate().getAppliedJobs() + "");
-                    jobsApplied.setOnClickListener(new View.OnClickListener() {
+                    LinearLayout myJobStatusLayout = (LinearLayout) view.findViewById(R.id.my_jobs_status_layout);
+                    myJobStatusLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){

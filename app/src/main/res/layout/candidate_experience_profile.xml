@@ -299,9 +299,9 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:orientation="vertical"
                         android:layout_width="fill_parent"
-                        android:visibility="gone"
                         android:id="@+id/current_company_details_layout"
                         android:layout_height="match_parent">
 
@@ -359,7 +359,7 @@
                                     android:singleLine="true"
                                     android:inputType="number"
                                     android:paddingLeft="4dp"
-                                    android:drawableLeft="@drawable/rupee_role_small"
+                                    android:drawableLeft="@drawable/indian_rupee_icon"
                                     android:hint="Last Drawn Salary"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
@@ -379,7 +379,7 @@
                                     android:layout_height="wrap_content"
                                     android:textSize="10dp"
                                     android:layout_marginLeft="20dp"
-                                    android:text="Preferred Shift Timing"/>
+                                    android:text="Current Job Role"/>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -395,7 +395,7 @@
                                         android:singleLine="true"
                                         android:inputType="number"
                                         android:paddingLeft="4dp"
-                                        android:drawableLeft="@drawable/rupee_role_small"
+                                        android:drawableLeft="@drawable/job_role_small"
                                         android:textColor="@drawable/edit_text_selector"
                                         android:hint="Select Current Job Role"/>
 
@@ -411,6 +411,7 @@
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
+
                 </LinearLayout>
                 <!--Language-->
 
@@ -429,7 +430,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="Language"
+                        android:text="Language Proficiency"
                         android:textSize="18dp"/>
 
                     <LinearLayout
@@ -445,7 +446,7 @@
                     android:layout_width="wrap_content"
                     android:padding="5dp"
                     android:layout_height="wrap_content"
-                    android:text="Languages you know"/>
+                    android:text="Languages you know (Tick all that apply)"/>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -551,7 +552,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Let us know about your skills "/>
+                            android:text="Let us know about your skills (Tick all that apply)"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
