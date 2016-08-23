@@ -198,7 +198,6 @@
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="fill_parent"
-                        android:visibility="gone"
                         android:layout_height="match_parent">
                         <LinearLayout
                             android:layout_width="fill_parent"
