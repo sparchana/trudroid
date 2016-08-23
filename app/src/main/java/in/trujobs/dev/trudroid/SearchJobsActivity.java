@@ -98,7 +98,14 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+
+        // Show the floating action button only if the user is logged-in
+        if (Util.isLoggedIn()) {
+            fab.setOnClickListener(this);
+        }
+        else {
+            fab.setVisibility(View.GONE);
+        }
 
         mNavigationItemListView = (ListView) findViewById(R.id.list_view_main_activity_list_view);
 
@@ -272,9 +279,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 break;
             case R.id.fab:
                 FetchCandidateAlertRequest.Builder requestBuilder = FetchCandidateAlertRequest.newBuilder();
-                requestBuilder.setCandidateMobile(Prefs.candidateMobile.toString());
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+                loaderStart();
 
                 mAlertAsyncTask = new FetchAlertAsyncTask();
+
                 mAlertAsyncTask.execute(requestBuilder.build());
                 break;
             case R.id.search_jobs_by_job_role:
@@ -420,6 +429,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         @Override
         protected void onPostExecute(FetchCandidateAlertResponse candidateAlertResponse) {
+            loaderStop();
             super.onPostExecute(candidateAlertResponse);
             if (candidateAlertResponse == null) {
                 Tlog.e("Null Candidate Alert Response");
@@ -430,11 +440,17 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_PROFILE) {
                     alert.showDialog(SearchJobsActivity.this,
                             "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
-                            R.drawable.assesment, 1);
+                            R.drawable.profile_icon, 1);
                 } else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
                     alert.showDialog(SearchJobsActivity.this,
                             "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
-                            R.drawable.assesment, 2);
+                            R.drawable.job_apply, 2);
+                }
+                else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.COMPLETE_ASSESSMENT) {
+                    alert.showDialog(JobActivity.this,
+                            "Complete Skill Assessment", candidateAlertResponse.getAlertMessage(),
+                            "Call us to know more",
+                            R.drawable.assesment, 4);
                 }
             }
         }
