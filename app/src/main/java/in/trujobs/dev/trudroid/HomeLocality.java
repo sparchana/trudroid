@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -137,9 +138,10 @@ public class HomeLocality extends TruJobsBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Tlog.wtf("Home Locality Activity created");
         setContentView(R.layout.activity_home_locality);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hi " + Prefs.firstName.get() + "!");
-
 
         mResultReceiver = new AddressResultReceiver(new Handler());
 
@@ -662,7 +664,19 @@ public class HomeLocality extends TruJobsBaseActivity implements
             }
         } else {
             Tlog.e("No/Invalid Location Provided");
-            showToast("Invalid Home Location Provided! Please enter a valid home locality (Ex: Bellandur)");
+            showToast("Please enter a valid locality within Bengaluru to search jobs (Ex: Bellandur)");
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

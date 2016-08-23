@@ -314,7 +314,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             super.onPreExecute();
             loaderStart();
             Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
-            if(jobPostListView != null){
+            Tlog.i("------ Before Calling JobSearchAsyncTask -----");
+            Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
+            Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
+            Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
+            if(jobPostListView != null) {
                 jobPostListView.clearChoices();
             }
         }
@@ -354,7 +358,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
                     jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
                     jobSearchRequest.setJobFilterRequest(jobFilterRequestBkp);
-                    if(jobRolesFilter != null)jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
+                    if(jobRolesFilter != null){
+                        jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
+                        Tlog.i("setting the jobSearchReq obj: "
+                                +jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne()
+                        +" | actual jobRoleFitlerObj: "+jobRolesFilter.getJobRoleIdOne());
+                    }
                     else Tlog.i("no jobRolesFilter found");
                 }
                 mJobSearchAsyncTask = new JobSearchAsyncTask();
@@ -475,7 +484,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                  /* Search By Job Roles */
                  initJobRoleVars();
                  setJobRoleIdFromPrefs();
-                setSelectedJobRolesNameTxtView();
+                 setSelectedJobRolesNameTxtView();
             } else {
                 showToast("Something went wrong. Please try later");
             }
@@ -508,26 +517,28 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     }
 
     private void setJobRoleIdFromPrefs() {
-        Tlog.i("setting jobroleId form pref");
-        if(Prefs.candidatePrefJobRoleIdOne.get() != 0){
-            Tlog.i("found candidate pref job Role one..");
-            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdOne.get());
-            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
-        }
-        if(Prefs.candidatePrefJobRoleIdTwo.get() != 0){
-            Tlog.i("found candidate pref job Role two..");
-            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdTwo.get());
-            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdTwo.get())] = true;
-        }
-        if(Prefs.candidatePrefJobRoleIdThree.get() != 0){
-            Tlog.i("found candidate pref job Role three..");
-            selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdThree.get());
-            checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdThree.get())] = true;
-        } else {
-            Tlog.i("pref jobRole val are one: " + Prefs.candidatePrefJobRoleIdOne.get() +
-                "two " + Prefs.candidatePrefJobRoleIdTwo.get() +
-                "three " + Prefs.candidatePrefJobRoleIdThree.get()
-            );
+        Tlog.i("setting jobroleId from pref");
+        if(selectedJobRoleList.size() == 0){
+            if(Prefs.candidatePrefJobRoleIdOne.get() != 0){
+                Tlog.i("found candidate pref job Role one..");
+                selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdOne.get());
+                checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdOne.get())] = true;
+            }
+            if(Prefs.candidatePrefJobRoleIdTwo.get() != 0){
+                Tlog.i("found candidate pref job Role two..");
+                selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdTwo.get());
+                checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdTwo.get())] = true;
+            }
+            if(Prefs.candidatePrefJobRoleIdThree.get() != 0){
+                Tlog.i("found candidate pref job Role three..");
+                selectedJobRoleList.add(Prefs.candidatePrefJobRoleIdThree.get());
+                checkedItems[invBiMap.get(Prefs.candidatePrefJobRoleIdThree.get())] = true;
+            } else {
+                Tlog.i("pref jobRole val are one: " + Prefs.candidatePrefJobRoleIdOne.get() +
+                        "two " + Prefs.candidatePrefJobRoleIdTwo.get() +
+                        "three " + Prefs.candidatePrefJobRoleIdThree.get()
+                );
+            }
         }
     }
 
@@ -537,25 +548,47 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         if(jobSearchRequest != null){
             /* take prev jobSearchReq into account before making a new jobSearch request */
             /* sets lat, lng, mobile, filter */
+            Tlog.i("found jobSearchRequest");
             jobSearch = jobSearchRequest;
         } else {
+            Tlog.i("Not found jobSearchRequest. Hence created one");
             jobSearch = JobSearchRequest.newBuilder();
             jobSearch.setLatitude(mSearchLat);
             jobSearch.setLongitude(mSearchLng);
             jobSearch.setCandidateMobile(Prefs.candidateMobile.get());
         }
-        if(jobFilterRequestBkp != null)jobSearch.setJobFilterRequest(jobFilterRequestBkp);
-        if(selectedJobRoleList.size()>0){
+        if(jobFilterRequestBkp != null){
+            Tlog.i("found jobFilterRequestBkp -- Misc JobFilter options set. attaching jobFilterRequestBkp to jobSearch");
+            jobSearch.setJobFilterRequest(jobFilterRequestBkp);
+        }
+        if(selectedJobRoleList.size()>0) {
+            Tlog.i("found selected jobroles, selectedJobRoleList size:"+selectedJobRoleList.size());
             jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
             if(selectedJobRoleList.size() > 0) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(0));
             if(selectedJobRoleList.size() > 1) jobRolesFilter.setJobRoleIdTwo(selectedJobRoleList.get(1));
             if(selectedJobRoleList.size() > 2) jobRolesFilter.setJobRoleIdThree(selectedJobRoleList.get(2));
 
-            if(selectedJobRoleList.size() > 0)jobSearch.setJobSearchByJobRoleRequest(jobRolesFilter.build());
-
+            if(selectedJobRoleList.size() > 0){
+                jobSearch.setJobSearchByJobRoleRequest(jobRolesFilter.build());
+                Tlog.i("setting the jobSearchReq obj: "
+                        +jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne()
+                        +" | actual jobRoleFitlerObj: "+jobRolesFilter.getJobRoleIdOne());
+            }
+        } else {
+            Tlog.i("No selected jobroles");
+            if(jobRolesFilter != null){
+                jobRolesFilter.clear();
+                updateJobSearchObject();
+            }
         }
         JobSearchAsyncTask jobSearchAsyncTask = new JobSearchAsyncTask();
         jobSearchAsyncTask.execute(jobSearch.build());
+    }
+
+    private void updateJobSearchObject() {
+        if(jobSearchRequest.hasJobSearchByJobRoleRequest()){
+            jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
+        }
     }
 
     private void showJobRolesAlertUI(List<JobRoleObject> jobRoleObjectList) {
@@ -571,22 +604,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     mSelectedJobsName.clear();
                 }
                 mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
-                if(selectedJobRoleList.isEmpty()){
-                    showToast("Please select atleast one JobRole (max: 3)");
-                } else{
-                    searchJobsByJobRole();
-                }
+                searchJobsByJobRole();
             }
         });
-        searchByJobRoleBuilder.setNegativeButton("Clear All", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                selectedJobRoleList.clear();
-                Arrays.fill(checkedItems, false);
-                selectedJobRolesNameTxtView.setText("");
-                jobPostListView.setVisibility(View.INVISIBLE);
-                showToast("Selection Cleared. Please select atleast one Job Role (Ex: Driver)");
-            }
-        });
+        searchByJobRoleBuilder.setNeutralButton("Clear All", null);
         searchByJobRoleBuilder.setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
@@ -598,7 +619,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     } else {
                         checkedItems[which] = false;
                         ((AlertDialog) dialogInterface).getListView().setItemChecked(which, false);
-                        showToast("Maximum 3 preference allowed.");
+                        showToast("Please select only maximum of 3 job roles.");
                     }
                 } else if(selectedJobRoleList.contains(jobRoleIdList.get(which))) {
                     checkedItems[which] = false;
@@ -609,6 +630,29 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
         });
         final AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
+
+        searchByJobRoleDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = searchByJobRoleDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectedJobRoleList.clear();
+                        Arrays.fill(checkedItems, false);
+                        selectedJobRolesNameTxtView.setText("");
+                        jobPostListView.setVisibility(View.INVISIBLE);
+                        showToast("Selection Cleared.");
+                        for(int which=0; which<checkedItems.length; which++){
+                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                        }
+                        //Dismiss once everything is OK.
+                    }
+                });
+            }
+        });
         searchByJobRoleDialog.show();
     }
 
@@ -632,7 +676,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.i("clearing selectedJobRoleList");
             selectedJobRoleList.clear();
-            if(jobRolesFilter !=null) jobRolesFilter.clear();
+            if(jobRolesFilter != null){
+                jobRolesFilter.clear();
+                updateJobSearchObject();
+                Tlog.i("after clearing jobRolesFilter: size -> "+ jobRolesFilter.getJobRoleIdOne());
+            }
+            Tlog.i("after clearing selectedJobRoleList: size -> "+ selectedJobRoleList.size());
             Arrays.fill(checkedItems, false);
             mSelectedJobsName.add(ServerConstants.ALL_JOBS);
         }

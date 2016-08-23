@@ -591,6 +591,10 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             if (jobPostListView != null) {
                 jobPostListView.setAdapter(null);
             }
+            Tlog.i("------ Before Calling JobSearchAsyncTask (FilterJobFragment)-----");
+            Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
+            Tlog.i("jobSearchByJobRoleRequest status: "+jobSearchRequest.hasJobSearchByJobRoleRequest());
+            Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
             pd.show();
         }
 
