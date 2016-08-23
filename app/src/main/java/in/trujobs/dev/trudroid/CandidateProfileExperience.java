@@ -61,11 +61,11 @@ public class CandidateProfileExperience extends Fragment {
     Integer isCandidateExperienced = -1;
 
     // values
-    Integer expInYears;
+    Integer expInYears = -1;
     JobRoleObject currentJobRoleValue;
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
     final List<CandidateSkillObject> candidateSkill = new ArrayList<CandidateSkillObject>();
-    Integer isEmployed;
+    Integer isEmployed = 0;
 
     CharSequence[] allLanguageList = new CharSequence[0];
     List<Integer> languageIdList = new ArrayList<Integer>();
@@ -386,7 +386,6 @@ public class CandidateProfileExperience extends Fragment {
                             UpdateCandidateExperienceProfileRequest.Builder experienceBuilder = UpdateCandidateExperienceProfileRequest.newBuilder();
                             boolean check = true;
 
-                            Log.e("Valuss", "" + isCandidateExperienced + isEmployed);
                             if(isCandidateExperienced < 0){
                                 check = false;
                                 showDialog("Please select Fresher or Experience");

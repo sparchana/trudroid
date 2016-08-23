@@ -507,10 +507,10 @@ public class CandidateProfileBasic extends Fragment {
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
                 Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
-                Tlog.e("SUCCESS!! YAY!!");
+                Tlog.e("SUCCESS!");
             }
             else {
-                Tlog.e("OOPS!! FAILED");
+                Tlog.e("FAILED");
             }
         }
     }

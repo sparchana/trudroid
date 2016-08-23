@@ -429,7 +429,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="Language"
+                        android:text="Language Proficiency"
                         android:textSize="18dp"/>
 
                     <LinearLayout
@@ -445,7 +445,7 @@
                     android:layout_width="wrap_content"
                     android:padding="5dp"
                     android:layout_height="wrap_content"
-                    android:text="Languages you know"/>
+                    android:text="'Languages you know (Tick all that apply)"/>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -551,7 +551,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Let us know about your skills "/>
+                            android:text="Let us know about your skills (Tick all that apply)"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"

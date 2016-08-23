@@ -51,7 +51,6 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
     public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
         Intent intent = new Intent(context, JobDetailActivity.class);
-        Log.e("Other job post in", "data: " + jobRole);
         EXTRA_LOCALITY.clear();
         EXTRA_JOB_TITLE = jobRole;
         for(LocalityObject localityObject : jobPostLocalityList){
@@ -276,40 +275,48 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     jobPostIncentives.setText("Information not available");
                 }
 
-                //setting other jobs in Other job section
-
+                TextView otherJobTextView = (TextView) findViewById(R.id.other_job_header);
                 LinearLayout otherJobListView = (LinearLayout) findViewById(R.id.other_job_list_view);
+                //setting other jobs in Other job section
+                if(getJobPostDetailsResponse.getCompany().getCompanyOtherJobsCount() > 0){
 
-                //set adapter for other jobs
-                for(final JobPostObject jobPostObject : getJobPostDetailsResponse.getCompany().getCompanyOtherJobsList()){
-                    LayoutInflater inflater = null;
-                    inflater = (LayoutInflater) JobDetailActivity.this
-                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View mLinearView = inflater.inflate(R.layout.company_other_jobs_list_item, null);
-                    TextView mJobPostTitleTextView = (TextView) mLinearView.findViewById(R.id.company_other_job_title);
-                    TextView mJobPostSalary = (TextView) mLinearView.findViewById(R.id.company_other_job_min_salary);
+                    otherJobTextView.setText("Other Jobs at " + getJobPostDetailsResponse.getCompany().getCompanyName());
+                    //set adapter for other jobs
+                    for(final JobPostObject jobPostObject : getJobPostDetailsResponse.getCompany().getCompanyOtherJobsList()){
+                        LayoutInflater inflater = null;
+                        inflater = (LayoutInflater) JobDetailActivity.this
+                                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View mLinearView = inflater.inflate(R.layout.company_other_jobs_list_item, null);
+                        TextView mJobPostTitleTextView = (TextView) mLinearView.findViewById(R.id.company_other_job_title);
+                        TextView mJobPostSalary = (TextView) mLinearView.findViewById(R.id.company_other_job_min_salary);
 
-                    //setting title of the job Post
-                    mJobPostTitleTextView.setText(jobPostObject.getJobPostTitle());
+                        //setting title of the job Post
+                        mJobPostTitleTextView.setText(jobPostObject.getJobPostTitle());
 
-                    //setting salary of the job post
-                    if(jobPostObject.getJobPostMaxSalary() != 0){
-                        mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()) + " - ₹" + formatter.format(jobPostObject.getJobPostMaxSalary()));
-                    } else{
-                        mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()));
-                    }
-                    //adding the job view
-                    otherJobListView.addView(mLinearView);
-
-                    mLinearView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Log.e("Other job post", "data: " + jobPostObject);
-                            Prefs.jobPostId.put(jobPostObject.getJobPostId());
-                            JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole(), jobPostObject.getJobPostLocalityList());
+                        //setting salary of the job post
+                        if(jobPostObject.getJobPostMaxSalary() != 0){
+                            mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()) + " - ₹" + formatter.format(jobPostObject.getJobPostMaxSalary()));
+                        } else{
+                            mJobPostSalary.setText("₹" + formatter.format(jobPostObject.getJobPostMinSalary()));
                         }
-                    });
+                        //adding the job view
+                        otherJobListView.addView(mLinearView);
+
+                        mLinearView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Log.e("Other job post", "data: " + jobPostObject);
+                                Prefs.jobPostId.put(jobPostObject.getJobPostId());
+                                JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole(), jobPostObject.getJobPostLocalityList());
+                            }
+                        });
+                    }
+                } else{
+                    //no other jobs found
+                    otherJobTextView.setVisibility(View.GONE);
                 }
+
+
 
                 //setting company tab info
                 //setting logo
@@ -355,7 +362,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                         @Override
                         public void onClick(View view) {
                             ViewDialog alert = new ViewDialog();
-                            alert.showDialog(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyName() , getJobPostDetailsResponse.getCompany().getCompanyDescription() , "", R.drawable.company_icon, 2);
+                            alert.showDialog(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyName() , getJobPostDetailsResponse.getCompany().getCompanyDescription() , "", R.drawable.company_icon, -1);
                         }
                     });
                 } else{

@@ -3,8 +3,10 @@ package in.trujobs.dev.trudroid.CustomDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +25,10 @@ public class ViewDialog {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+        params.height = 900;
+        dialog.getWindow().setAttributes(params);
 
         TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
         TextView headOne = (TextView) dialog.findViewById(R.id.heading_one);
