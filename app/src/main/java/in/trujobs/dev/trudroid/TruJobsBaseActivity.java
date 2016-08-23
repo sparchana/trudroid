@@ -18,7 +18,7 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CheckNetworkStatus();
-        Tlog.i("Parent oncreate triggered");
+        Tlog.i("TruJobsBaseActivity Parent onCreate triggered");
     }
 
     @Override
