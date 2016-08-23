@@ -92,6 +92,7 @@
             android:name=".JobDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".MyAppliedJobs" />
+        <activity android:name=".ReferFriends"></activity>
     </application>
 
 </manifest>

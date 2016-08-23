@@ -186,7 +186,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("My Home Location", R.drawable.location_icon));
-            mNavItems.add(new NavItem("Refer friends", R.drawable.location_icon));
+            mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 
             userNameTextView.setText(Prefs.firstName.get());
@@ -229,8 +229,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
-            case 5: //TODO refer friends
-                break;
+            case 5: intent = new Intent(SearchJobsActivity.this, ReferFriends.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
 
             default:
                 break;
