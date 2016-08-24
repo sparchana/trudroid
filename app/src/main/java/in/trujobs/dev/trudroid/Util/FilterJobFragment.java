@@ -518,17 +518,14 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     private void assignSearchedLatLng() {
         jobSearchRequest = JobSearchRequest.newBuilder();
         jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
-        if(SearchJobsActivity.getmSearchLat()!=null){
-            jobSearchRequest.setLatitude(SearchJobsActivity.getmSearchLat());
-            jobFilterRequest.setJobSearchLatitude(SearchJobsActivity.getmSearchLat());
-            Tlog.i("filter set to searched lat : "+ SearchJobsActivity.getmSearchLat());
-
-        }
-        if(SearchJobsActivity.getmSearchLng() != null){
-            jobSearchRequest.setLongitude(SearchJobsActivity.getmSearchLng());
-            jobFilterRequest.setJobSearchLongitude(SearchJobsActivity.getmSearchLng());
-            Tlog.i("filter set to searched ln : "+ SearchJobsActivity.getmSearchLng());
-        }
+        Double lat = SearchJobsActivity.getmSearchLat()!=null?SearchJobsActivity.getmSearchLat()
+                : Double.parseDouble(Prefs.candidateHomeLat.get());
+        Double lng = SearchJobsActivity.getmSearchLng()!=null?SearchJobsActivity.getmSearchLng()
+                : Double.parseDouble(Prefs.candidateHomeLng.get());
+        jobSearchRequest.setLatitude(lat);
+        jobFilterRequest.setJobSearchLatitude(lat);
+        jobSearchRequest.setLongitude(lng);
+        jobFilterRequest.setJobSearchLongitude(lng);
     }
 
     private void onLoadUpdateFilterFragmentUI(JobFilterRequest jobFilterRequest) {
@@ -594,7 +591,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             if (jobPostListView != null) {
                 jobPostListView.setAdapter(null);
             }
-            Tlog.i("------ Before Calling JobSearchAsyncTask (FilterJobFragment)-----");
+            Tlog.i("------ [FilterJobs] Before Calling JobSearchAsyncTask (FilterJobFragment)-----");
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: "+jobSearchRequest.hasJobSearchByJobRoleRequest());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());

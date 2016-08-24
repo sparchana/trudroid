@@ -156,6 +156,8 @@ public class Login extends TruJobsBaseActivity {
                 Prefs.candidatePrefJobRoleIdTwo.put(logInResponse.getCandidatePrefJobRoleIdTwo());
                 Prefs.candidatePrefJobRoleIdThree.put(logInResponse.getCandidatePrefJobRoleIdThree());
                 Prefs.candidateHomeLocalityName.put(logInResponse.getCandidateHomeLocalityName());
+                /* TODO find a better way to clear jobFilterbkp on login */
+                SearchJobsActivity.jobFilterRequestBkp = null;
                 Tlog.i("Login.java : "+logInResponse.getCandidatePrefJobRoleIdOne());
 
                 if(Prefs.loginCheckStatus.get() == 1){

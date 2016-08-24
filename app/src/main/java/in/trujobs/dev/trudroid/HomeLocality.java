@@ -405,6 +405,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 if (mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))) {
                     mAddressOutput = "";
                     showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
+                } else if(mAddressOutput.trim().isEmpty()){
+                    /* this case deals with lat/lat that are resolved to only city level address */
+                    showToast("Unable to detect location. Please manually type the location");
                 }
                 showProgressBar = false;
                 updateUIWidgets();
@@ -696,8 +699,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 if(mLastLocation == null){
                     mLastLocation = new Location("");
                 }
-                mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
-                mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
+                if(latLngAPIHelper.getLatitude()!=0)mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
+                if(latLngAPIHelper.getLongitude()!=0)mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
                 triggerFinalSubmission();
             }
         }
