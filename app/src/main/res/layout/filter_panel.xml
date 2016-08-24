@@ -49,6 +49,11 @@
                    android:hint="All Bangalore"
                    android:layout_weight="1"/>
 
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/edit"/>
            </LinearLayout>
 
         </LinearLayout>
@@ -88,6 +93,11 @@
                     android:text="All Jobs"
                     android:hint="Ex: Driver"
                     android:layout_weight="1"/>
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/edit"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
