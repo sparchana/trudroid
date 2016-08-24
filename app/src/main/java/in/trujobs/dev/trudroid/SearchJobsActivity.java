@@ -168,7 +168,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchedPlaceId = placeAPIHelper.getPlaceId();
                 Tlog.i("mAddressOutput ------ " + mSearchAddressOutput
                         + "\nplaceId:" + mSearchedPlaceId);
-                mSearchJobAcTxtView.setText(mSearchAddressOutput.split(",")[0] + ", " + mSearchAddressOutput.split(",")[1]);
+                mSearchJobAcTxtView.setText(mSearchAddressOutput);
                 mLatLngAsyncTask = new LatLngAsyncTask();
                 mLatLngAsyncTask.execute(mSearchedPlaceId);
             }
@@ -177,7 +177,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         String candidateLocalityName = Prefs.candidateHomeLocalityName.get();
         if(!candidateLocalityName.trim().isEmpty()){
             /* TODO: Find a way to make this independent of states */
-            mSearchJobAcTxtView.setText(candidateLocalityName + ", Bengaluru");
+            mSearchJobAcTxtView.setText(candidateLocalityName);
         }
         //getting all the job posts
         showJobPosts();
