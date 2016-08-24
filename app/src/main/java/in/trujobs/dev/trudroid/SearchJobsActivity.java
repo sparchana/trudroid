@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -228,7 +229,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                             Toast.LENGTH_LONG).show();
                 }
                 Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                finish();
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
             case 1: break;
 

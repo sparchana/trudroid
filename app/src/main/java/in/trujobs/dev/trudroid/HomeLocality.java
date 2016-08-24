@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -729,6 +730,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
                 Intent intent = new Intent(HomeLocality.this, SearchJobsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 Prefs.candidateHomeLocalityName.put(mAddressOutput);
                 Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
                 startActivity(intent);
