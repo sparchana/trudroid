@@ -87,7 +87,7 @@ public class PlaceAPI {
                     List<String> address = Arrays.asList(description.split(","));
                     if(address.size() >= 4 && (address.get(address.size() - 3).toLowerCase().contains("bengaluru")
                             || address.get(address.size() - 3).toLowerCase().contains("bangalore") )){
-                        System.out.println("[API] --> " + predsJsonArray.getJSONObject(i).getString("description"));
+                        //System.out.println("[API] --> " + predsJsonArray.getJSONObject(i).getString("description"));
                         placeAPIHelper.setPlaceId(predsJsonArray.getJSONObject(i).getString("place_id"));
                         placeAPIHelper.setDescription(predsJsonArray.getJSONObject(i).getString("description").split(",")[0]);
                         resultList.add(placeAPIHelper);

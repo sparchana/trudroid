@@ -380,7 +380,6 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void resetFragmentUI() {
          /* deactivate all */
-        Tlog.i("Reset Filter UI");
         SalaryBtnManipulation(null, false);
         EduBtnManipulation(null, false);
         ExpBtnManipulation(null, false);

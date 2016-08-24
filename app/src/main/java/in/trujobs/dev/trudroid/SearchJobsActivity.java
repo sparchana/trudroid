@@ -187,7 +187,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Tlog.w("---> searchJobs onDestroy");
         SearchJobsActivity.jobFilterRequestBkp = null;
     }
 
