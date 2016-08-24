@@ -129,18 +129,17 @@ public class FetchAddressIntentService extends IntentService {
             // getFeatureName() ("Cherry Lane", for example)
             // getThoroughfare() ("Margosa Avenue", for example)
             // getSubThroughfare() ("101", for example)
+            Tlog.i("GPS Detected Location"+address);
+            String localityName ="";
+            try{
+                localityName = address.getAddressLine(1);
+                String[] localityStack = localityName.split(", ");
+                localityName = localityStack.length>1 ? localityStack[localityStack.length-1]:localityName;
+                Tlog.i("finalized localityName from gps: " + localityName);
+            } catch (NullPointerException np){
 
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                System.out.println("AddressLine: "+address.getAddressLine(i));
-                addressFragments.add(address.getAddressLine(i));
             }
-            Tlog.i(getString(R.string.address_found));
-            String localityName;
-            if(addressFragments.size() < 2){
-                localityName = TextUtils.join(System.getProperty("line.separator"), addressFragments);
-            } else {
-                localityName = addressFragments.get(addressFragments.size() - 2);
-            }
+
             deliverResultToReceiver(Constants.SUCCESS_RESULT, localityName);
         }
     }
