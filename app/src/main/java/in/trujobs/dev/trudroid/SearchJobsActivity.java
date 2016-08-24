@@ -189,6 +189,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     protected void onDestroy() {
         super.onDestroy();
         SearchJobsActivity.jobFilterRequestBkp = null;
+        SearchJobsActivity.jobRolesFilter = null;
     }
 
     private void setNavigationItems() {
@@ -332,7 +333,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             super.onPreExecute();
             loaderStart();
             Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
-            Tlog.i("------ Before Calling JobSearchAsyncTask -----");
+            Tlog.i("------[SearchJobs] Before Calling JobSearchAsyncTask -----");
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
@@ -396,11 +397,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         jobSearchRequest = JobSearchRequest.newBuilder();
         if(mSearchLat!= null)jobSearchRequest.setLatitude(mSearchLat);
         else if(Prefs.candidateHomeLat.get() != null){
+            Tlog.i("pref lat : "+Prefs.candidateHomeLat.get());
             jobSearchRequest.setLatitude(Double.parseDouble(Prefs.candidateHomeLat.get()));
             mSearchLat = Double.parseDouble(Prefs.candidateHomeLat.get());
         }
         if(mSearchLng!= null)jobSearchRequest.setLongitude(mSearchLng);
         else if(Prefs.candidateHomeLng.get() != null){
+            Tlog.i("pref lng : "+Prefs.candidateHomeLng.get());
             jobSearchRequest.setLongitude(Double.parseDouble(Prefs.candidateHomeLng.get()));
             mSearchLng = Double.parseDouble(Prefs.candidateHomeLng.get());
         }

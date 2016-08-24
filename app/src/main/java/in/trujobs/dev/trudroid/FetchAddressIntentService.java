@@ -130,16 +130,25 @@ public class FetchAddressIntentService extends IntentService {
             // getThoroughfare() ("Margosa Avenue", for example)
             // getSubThroughfare() ("101", for example)
             if(address!= null && address.getAddressLine(1)!=null) {
-                Tlog.i("GPS Detected Location"+address);
-                String localityName = address.getAddressLine(1);
-                String[] localityStack = localityName.split(", ");
-                localityName = localityStack.length > 1 ? localityStack[localityStack.length - 1] : localityName;
-                Tlog.i("finalized localityName from gps: " + localityName);
-                deliverResultToReceiver(Constants.SUCCESS_RESULT, localityName);
+                if(performSanityCheck(address.getAddressLine(1))){
+                    Tlog.i("GPS Detected Location"+address);
+                    String localityName = address.getAddressLine(1);
+                    String[] localityStack = localityName.split(", ");
+                    localityName = localityStack.length > 1 ? localityStack[localityStack.length - 1] : localityName;
+                    Tlog.i("finalized localityName from gps: " + localityName);
+                    deliverResultToReceiver(Constants.SUCCESS_RESULT, localityName);
+                }
             } else {
                 deliverResultToReceiver(Constants.FAILURE_RESULT, "");
             }
         }
+    }
+
+    private boolean performSanityCheck(String addressLine) {
+        if(!addressLine.contains("India") && !addressLine.contains("india")){
+                return true;
+        }
+        return false;
     }
 
     /**

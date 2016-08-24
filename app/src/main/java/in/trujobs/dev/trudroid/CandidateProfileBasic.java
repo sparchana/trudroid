@@ -608,10 +608,15 @@ public class CandidateProfileBasic extends Fragment {
             Prefs.candidatePrefJobRoleIdOne.remove();
             Prefs.candidatePrefJobRoleIdTwo.remove();
             Prefs.candidatePrefJobRoleIdThree.remove();
-            if(selectedJobRoles.size()>0 && selectedJobRoles.get(0).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdOne.put(selectedJobRoles.get(0).getJobRoleId());
+            if(selectedJobRoles.size()>0 && selectedJobRoles.get(0).getJobRoleId() != 0) {
+                Prefs.candidatePrefJobRoleIdOne.put(selectedJobRoles.get(0).getJobRoleId());
+                Prefs.candidateJobPrefStatus.put(ServerConstants.JOBPREFERENCE_YES);
+            }
             if(selectedJobRoles.size()>1 && selectedJobRoles.get(1).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdTwo.put(selectedJobRoles.get(1).getJobRoleId());
             if(selectedJobRoles.size()>2 && selectedJobRoles.get(2).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdThree.put(selectedJobRoles.get(2).getJobRoleId());
             Prefs.candidateHomeLocalityName.put(mAddressOutput);
+            Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
+            Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
         }
     }
 
