@@ -339,7 +339,8 @@
                                     android:textSize="@dimen/Edit_Text_Size"
                                     android:singleLine="true"
                                     android:paddingLeft="4dp"
-                                    android:drawableLeft="@drawable/building_small"
+                                    android:drawablePadding="6dp"
+                                    android:drawableLeft="@drawable/building"
                                     android:hint="Current Company"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
@@ -359,6 +360,7 @@
                                     android:singleLine="true"
                                     android:inputType="number"
                                     android:paddingLeft="4dp"
+                                    android:drawablePadding="6dp"
                                     android:drawableLeft="@drawable/indian_rupee_icon"
                                     android:hint="Last Drawn Salary"/>
                             </android.support.design.widget.TextInputLayout>
@@ -378,7 +380,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="10dp"
-                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginLeft="24dp"
                                     android:text="Current Job Role"/>
 
                                 <LinearLayout
@@ -395,6 +397,7 @@
                                         android:singleLine="true"
                                         android:inputType="number"
                                         android:paddingLeft="4dp"
+                                        android:drawablePadding="6dp"
                                         android:drawableLeft="@drawable/job_role_small"
                                         android:textColor="@drawable/edit_text_selector"
                                         android:hint="Select Current Job Role"/>
@@ -423,13 +426,13 @@
                     <ImageView
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:layout_margin="8dp"
+                        android:layout_margin="16dp"
                         android:src="@drawable/language_profile"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="22dp"
                         android:text="Language Proficiency"
                         android:textSize="18dp"/>
 
@@ -438,7 +441,7 @@
                         android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="4dp"
-                        android:layout_marginTop="26dp"
+                        android:layout_marginTop="36dp"
                         android:background="@color/back_grey"/>
                 </LinearLayout>
 
@@ -516,13 +519,13 @@
                     <ImageView
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:layout_margin="8dp"
+                        android:layout_margin="16dp"
                         android:src="@drawable/skill_profile"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="22dp"
                         android:text="Skills"
                         android:textSize="18dp"/>
 
@@ -531,7 +534,7 @@
                         android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="4dp"
-                        android:layout_marginTop="26dp"
+                        android:layout_marginTop="36dp"
                         android:background="@color/back_grey"/>
                 </LinearLayout>
                 <LinearLayout

@@ -28,9 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -415,10 +419,18 @@ public class CandidateProfileBasic extends Fragment {
                         @Override
                         public void onClick(View view) {
                             boolean check = true;
+
+                            String str[] = candidateDob.getText().toString().split("-");
+                            int year = Integer.parseInt(str[2]);
+                            int ageDiff = ((Calendar.getInstance().get(Calendar.YEAR) - 18) - year);
+
                             int pos = shift_option.getSelectedItemPosition();
                             shiftValue = Long.valueOf(shiftIds.get(pos));
 
-                            if(Util.isValidName(firstName.getText().toString()) == 0){
+                            if(ageDiff < 0){
+                                check = false;
+                                showDialog("Please provide a valid date of birth (above 18 yrs)");
+                            } else if(Util.isValidName(firstName.getText().toString()) == 0){
                                 showDialog("First Name Cannot be blank. Please enter your first name");
                                 check = false;
                             } else if(Util.isValidName(firstName.getText().toString()) == 1) {
@@ -435,6 +447,9 @@ public class CandidateProfileBasic extends Fragment {
                             } else if(candidateDob.getText().toString().trim().isEmpty()){
                                 check = false;
                                 showDialog("Please enter your Date of Birth");
+                            } else if(ageDiff < 0){
+                                check = false;
+                                showDialog("Please provide a valid date of birth (above 18 yrs)");
                             } else if(genderValue < 0){
                                 check = false;
                                 showDialog("Please provide your gender");

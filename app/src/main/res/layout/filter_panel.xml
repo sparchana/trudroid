@@ -101,7 +101,8 @@
                     android:drawablePadding="-24dp"
                     android:layout_gravity="center|right"
                     android:textAllCaps="false"
-                    android:drawableLeft="@drawable/ic_filter"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/filter"
                     android:text="Filter"
                     android:textColor="@color/back_grey_dark"
                     android:background="@color/white"/>

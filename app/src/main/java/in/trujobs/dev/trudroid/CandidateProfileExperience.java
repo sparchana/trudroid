@@ -309,9 +309,9 @@ public class CandidateProfileExperience extends Fragment {
                         public void onClick(View view) {
                             isEmployed = 0;
                             qualificationLayout.setVisibility(View.GONE);
-                            isEmployedYes.setBackgroundColor(getResources().getColor(R.color.white));
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            isEmployedNo.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
                             isEmployedNo.setTextColor(getResources().getColor(R.color.white));
                         }
                     });

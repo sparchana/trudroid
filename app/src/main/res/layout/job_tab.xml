@@ -114,7 +114,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginLeft="6dp"
-                                android:src="@drawable/job_role" />
+                                android:src="@drawable/job_role_small" />
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginLeft="6dp"
-                                android:src="@drawable/location_role" />
+                                android:src="@drawable/location_sharp" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -237,7 +237,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginLeft="6dp"
-                                android:src="@drawable/rupee_role" />
+                                android:src="@drawable/indian_rupee_icon" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
