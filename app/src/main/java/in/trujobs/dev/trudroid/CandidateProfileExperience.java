@@ -417,19 +417,19 @@ public class CandidateProfileExperience extends Fragment {
                             }
                             if(expInYears > 1 && isEmployed < 0){
                                 check = false;
-                                showDialog("Please select are you employed?");
+                                showDialog("Please answer the question: Are you currently working?");
                             } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
                                 showDialog("Please provide your current Salary");
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
-                                showDialog("Please select total years of experience?");
+                                showDialog("Please answer the question: Total Work Experience");
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
-                                showDialog("Please select at least 1 language?");
+                                showDialog("Please select at least one language that you know");
                             } else if(candidateSkill.size() < 1){
                                 check = false;
-                                showDialog("Please select at least 1 skill?");
+                                showDialog("Please select at least one skill that you know");
                             }
 
                             if(check){

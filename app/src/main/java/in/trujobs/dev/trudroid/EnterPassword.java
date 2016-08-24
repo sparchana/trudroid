@@ -16,6 +16,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
@@ -53,12 +54,11 @@ public class EnterPassword extends TruJobsBaseActivity {
         mUserNewPassword = (EditText) findViewById(R.id.user_new_password_edit_text);
 
         LogInRequest.Builder requestBuilder = LogInRequest.newBuilder();
-        requestBuilder.setCandidateMobile(Prefs.candidateMobile.get().toString());
+        requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
         requestBuilder.setCandidatePassword(mUserNewPassword.getText().toString());
 
-        if(Util.isValidPassword(requestBuilder.getCandidatePassword()) == false){
-            Toast.makeText(EnterPassword.this, "Enter a password of minimum 4 characters",
-                    Toast.LENGTH_LONG).show();
+        if(!Util.isValidPassword(requestBuilder.getCandidatePassword())){
+            showToast(MessageConstants.ENTER_VALID_PASSWORD);
         } else{
             if (mAsyncTask != null) {
                 mAsyncTask.cancel(true);
@@ -90,8 +90,7 @@ public class EnterPassword extends TruJobsBaseActivity {
             mAsyncTask = null;
             pd.cancel();
             if (logInResponse == null) {
-                Toast.makeText(EnterPassword.this, "Failed to Login. Please try again.",
-                        Toast.LENGTH_LONG).show();
+                showToast(MessageConstants.FAILED_REQUEST);
                 Tlog.w("Null signIn Response");
                 return;
             }
@@ -112,8 +111,10 @@ public class EnterPassword extends TruJobsBaseActivity {
                 } else{
                     Intent intent;
                     if(Prefs.candidateJobPrefStatus.get() == 0){
+                        showToast(MessageConstants.SIGNUP_SUCCESS_PRE_JOB_PREF);
                         intent = new Intent(EnterPassword.this, JobPreference.class);
                     } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        showToast(MessageConstants.SIGNUP_SUCCESS_PRE_HOME_LOCALITY);
                         intent = new Intent(EnterPassword.this, HomeLocality.class);
                     } else{
                         intent = new Intent(EnterPassword.this, SearchJobsActivity.class);
@@ -126,8 +127,7 @@ public class EnterPassword extends TruJobsBaseActivity {
 
             }
             else {
-                Toast.makeText(EnterPassword.this, "Something went wrong. Please try again later!",
-                        Toast.LENGTH_LONG).show();
+                showToast(MessageConstants.SOMETHING_WENT_WRONG);
             }
         }
     }

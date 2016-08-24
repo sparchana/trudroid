@@ -17,6 +17,7 @@ public class Config {
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
     public static final String URL_ADD_PASSWORD = BASE_HTTP_URL + "/mAddPassword";
+    public static final String URL_RESEND_OTP = BASE_HTTP_URL + "/mResendOtp";
     public static final String URL_FORGOT_PASSWORD_SEND_OTP = BASE_HTTP_URL + "/mFindUserAndSendOtp";
     public static final String URL_APPLY_JOB = BASE_HTTP_URL + "/mApplyJob";
     public static final String URL_ALL_JOB_ROLES = BASE_HTTP_URL + "/mGetAllJobRoles";

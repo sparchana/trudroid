@@ -14,6 +14,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
@@ -89,11 +90,11 @@ public class ForgotPassword extends TruJobsBaseActivity {
                 OtpScreen.resetPassword(ForgotPassword.this, "Reset Password");
 
             } else if (resetPasswordResponse.getStatusValue() == ServerConstants.NO_USER_TO_SEND_OTP){
-                Toast.makeText(ForgotPassword.this, "Account doesn't exists!",
+                Toast.makeText(ForgotPassword.this, MessageConstants.NO_USER,
                         Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(ForgotPassword.this, "Something went wrong. Please try again later!",
+                Toast.makeText(ForgotPassword.this, MessageConstants.SOMETHING_WENT_WRONG,
                         Toast.LENGTH_LONG).show();
             }
         }

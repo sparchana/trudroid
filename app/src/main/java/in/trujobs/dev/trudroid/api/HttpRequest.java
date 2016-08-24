@@ -524,4 +524,21 @@ public class HttpRequest {
         }
         return jobPostResponse;
     }
+
+    public static ResetPasswordResponse resendOtp(ResetPasswordRequest resetPasswordRequest) {
+        String responseString = postToServer(Config.URL_RESEND_OTP,
+                Base64.encodeToString(resetPasswordRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        ResetPasswordResponse resetPasswordResponse = null;
+        try {
+            resetPasswordResponse = ResetPasswordResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return resetPasswordResponse;
+    }
 }
