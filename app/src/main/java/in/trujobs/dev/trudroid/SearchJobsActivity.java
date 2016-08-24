@@ -27,6 +27,7 @@ import com.google.common.collect.HashBiMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Filter;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.NavigationListAdapter;
@@ -167,13 +168,27 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchedPlaceId = placeAPIHelper.getPlaceId();
                 Tlog.i("mAddressOutput ------ " + mSearchAddressOutput
                         + "\nplaceId:" + mSearchedPlaceId);
-                mSearchJobAcTxtView.setText(mSearchAddressOutput.split(",")[0] + ", " + mSearchAddressOutput.split(",")[1]);
+                mSearchJobAcTxtView.setText(mSearchAddressOutput);
                 mLatLngAsyncTask = new LatLngAsyncTask();
                 mLatLngAsyncTask.execute(mSearchedPlaceId);
             }
         });
+
+        String candidateLocalityName = Prefs.candidateHomeLocalityName.get();
+        if(!candidateLocalityName.trim().isEmpty()){
+            /* TODO: Find a way to make this independent of states */
+            mSearchJobAcTxtView.setText(candidateLocalityName);
+        }
         //getting all the job posts
         showJobPosts();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Tlog.w("---> searchJobs onDestroy");
+        SearchJobsActivity.jobFilterRequestBkp = null;
     }
 
     private void setNavigationItems() {

@@ -155,6 +155,7 @@ public class Login extends TruJobsBaseActivity {
                 Prefs.candidatePrefJobRoleIdOne.put(logInResponse.getCandidatePrefJobRoleIdOne());
                 Prefs.candidatePrefJobRoleIdTwo.put(logInResponse.getCandidatePrefJobRoleIdTwo());
                 Prefs.candidatePrefJobRoleIdThree.put(logInResponse.getCandidatePrefJobRoleIdThree());
+                Prefs.candidateHomeLocalityName.put(logInResponse.getCandidateHomeLocalityName());
                 Tlog.i("Login.java : "+logInResponse.getCandidatePrefJobRoleIdOne());
 
                 if(Prefs.loginCheckStatus.get() == 1){

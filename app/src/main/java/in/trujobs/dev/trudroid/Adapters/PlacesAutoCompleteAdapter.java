@@ -52,7 +52,7 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<Object> implements F
                 if (constraint != null && constraint.length() > 2) {
                     resultList = mPlaceAPI.autocomplete(constraint.toString());
                     ArrayList<String> suggestions = new ArrayList<>();
-                    for(PlaceAPIHelper apiHelper: resultList){
+                    for(PlaceAPIHelper apiHelper: resultList) {
                         suggestions.add(apiHelper.getDescription());
                     }
 

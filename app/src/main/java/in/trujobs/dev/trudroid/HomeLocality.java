@@ -635,7 +635,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
         }
     }
 
-    public void triggerFinalSubmission(){
+    public void triggerFinalSubmission() {
         if(mAddressOutput != null && !mAddressOutput.trim().isEmpty() && mLastLocation != null) {
             if(mSearchHomeLocalityTxtView.getText().toString().trim().isEmpty()){
                 Tlog.e("Please type your Home Locality");
@@ -727,6 +727,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 return;
             } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
                 Intent intent = new Intent(HomeLocality.this, SearchJobsActivity.class);
+                Prefs.candidateHomeLocalityName.put(mAddressOutput);
                 Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);

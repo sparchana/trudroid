@@ -2,6 +2,7 @@ package in.trujobs.dev.trudroid.Util;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.io.ByteArrayDataInput;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.List;
@@ -123,7 +125,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         txtFilterByMale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_male);
         txtFilterByFemale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_female);
 
-
+        resetFragmentUI();
         if(SearchJobsActivity.jobFilterRequestBkp != null && jobFilterRequest == null){
             Tlog.i("jobFilterRequest is preserved");
             jobFilterRequest = SearchJobsActivity.jobFilterRequestBkp;
@@ -173,6 +175,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         //Save the fragment's state here
         Tlog.i("InstanceState");
         outState.putInt("int", 10);
+        outState.putByteArray("jobFilterRequest", jobFilterRequest.buildPartial().toByteArray());
     }
 
     @Override
@@ -375,8 +378,9 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void resetFragmentUI() {
-         /* deactivate all then enable one */
+    public void resetFragmentUI() {
+         /* deactivate all */
+        Tlog.i("Reset Filter UI");
         SalaryBtnManipulation(null, false);
         EduBtnManipulation(null, false);
         ExpBtnManipulation(null, false);

@@ -608,6 +608,7 @@ public class CandidateProfileBasic extends Fragment {
             if(selectedJobRoles.size()>0 && selectedJobRoles.get(0).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdOne.put(selectedJobRoles.get(0).getJobRoleId());
             if(selectedJobRoles.size()>1 && selectedJobRoles.get(1).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdTwo.put(selectedJobRoles.get(1).getJobRoleId());
             if(selectedJobRoles.size()>2 && selectedJobRoles.get(2).getJobRoleId() != 0) Prefs.candidatePrefJobRoleIdThree.put(selectedJobRoles.get(2).getJobRoleId());
+            Prefs.candidateHomeLocalityName.put(mAddressOutput);
         }
     }
 
