@@ -197,16 +197,13 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
                 if(workingDays.length() > 6) {
                     String daysOff = "";
-                    Tlog.e(workingDays.length() + "");
                     if (workingDays.length() > 7) {
                         workingDays = workingDays.substring(2, 8);
                     }
-                    Tlog.e(workingDays + " === ");
                     for (int i = 0; i < 7; i++) {
                         char c = workingDays.charAt(i);
 
                         if(c == '0'){ //checking an off day
-                            Tlog.e(c + " <=== " + daysOff);
                             switch (i){
                                 case 0: daysOff += "Mon,"; break;
                                 case 1: daysOff += "Tue,"; break;
@@ -216,12 +213,11 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                 case 5: daysOff += "Sat,"; break;
                                 case 6: daysOff += "Sun,"; break;
                             }
-                            Tlog.e(c + " <===> " + daysOff);
                         }
                     }
                     jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length() - 1)) + " holiday");
                 } else{
-                    jobPostWorkingDays.setText("Off days not available");
+                    jobPostWorkingDays.setText("Off days: Info not specified");
                 }
 
                 //setting min requirements
@@ -278,7 +274,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 if(getJobPostDetailsResponse.getJobPost().getJobPostIncentives() != ""){
                     jobPostIncentives.setText(getJobPostDetailsResponse.getJobPost().getJobPostIncentives());
                 } else{
-                    jobPostIncentives.setText("Information not available");
+                    jobPostIncentives.setText("Incentives: Not Specified");
                 }
 
                 TextView otherJobTextView = (TextView) findViewById(R.id.other_job_header);
@@ -337,25 +333,25 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 if(getJobPostDetailsResponse.getCompany().getCompanyLocality() != null){
                     companyLocation.setText(getJobPostDetailsResponse.getCompany().getCompanyLocality().getLocalityName());
                 } else{
-                    companyLocation.setText("Info not available");
+                    companyLocation.setText("Company Location: Info Not Specified");
                 }
 
                 if(getJobPostDetailsResponse.getCompany().getCompanyEmployeeCount() != ""){
                     companyEmployees.setText(getJobPostDetailsResponse.getCompany().getCompanyEmployeeCount() + " employees");
                 } else{
-                    companyEmployees.setText("Info not available");
+                    companyEmployees.setText("No. of Employees: Info Not Specified");
                 }
 
                 if(getJobPostDetailsResponse.getCompany().getCompanyWebsite() != ""){
                     companyWebsite.setText(getJobPostDetailsResponse.getCompany().getCompanyWebsite());
                 } else {
-                    companyWebsite.setText("website not available");
+                    companyWebsite.setText("Company website: Info Not Specified");
                 }
 
                 if(getJobPostDetailsResponse.getCompany().getCompanyType() != null){
                     companyType.setText(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName());
                 } else{
-                    companyType.setText("Info not Available");
+                    companyType.setText("Company Type: Info Not Specified");
                 }
 
                 if(getJobPostDetailsResponse.getCompany().getCompanyDescription() != ""){
@@ -372,7 +368,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                         }
                     });
                 } else{
-                    companyDescription.setText("Description not available");
+                    companyDescription.setText("Company Description: Info Not Specified");
                 }
 
                 jobTabApplyBtn = (Button) findViewById(R.id.job_detail_apply_btn);

@@ -76,7 +76,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.1"
                     android:layout_height="match_parent"
-                    android:src="@drawable/locality"/>
+                    android:padding="4dp"
+                    android:src="@drawable/location_sharp"/>
 
                 <Button
                     android:layout_width="0dp"

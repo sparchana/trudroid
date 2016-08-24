@@ -65,7 +65,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
 
-        pd = CustomProgressDialog.get(getContext());
+        pd = CustomProgressDialog.get(parent.getContext());
 
         holder.applyBtn.setEnabled(true);
         holder.mJobPostApplyBtn.setText("Apply");
@@ -224,6 +224,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         protected void onPreExecute() {
             super.onPreExecute();
+            pd = CustomProgressDialog.get(getContext());
             pd.show();
         }
 

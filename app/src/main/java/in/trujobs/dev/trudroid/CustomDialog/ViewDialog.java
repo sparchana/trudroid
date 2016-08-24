@@ -29,10 +29,6 @@ public class ViewDialog {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog);
-        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-        params.height = 900;
-        dialog.getWindow().setAttributes(params);
 
         TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
         TextView headOne = (TextView) dialog.findViewById(R.id.heading_one);
@@ -48,6 +44,7 @@ public class ViewDialog {
         headTwo.setText(subHeading);
 
         ImageView alertImage = (ImageView) dialog.findViewById(R.id.alert_image_view);
+        ImageView closeDialog = (ImageView) dialog.findViewById(R.id.close_dialog);
         alertImage.setImageResource(image_res);
 
         LinearLayout completeProfileLayout = (LinearLayout) dialog.findViewById(R.id.completeprofile_dialog);
@@ -88,6 +85,13 @@ public class ViewDialog {
             referLayout.setVisibility(View.GONE);
             assessmentLayout.setVisibility(View.GONE);
         }
+
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
 
         completeProfileLayout.setOnClickListener(new View.OnClickListener() {
             @Override

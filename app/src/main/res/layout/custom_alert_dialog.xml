@@ -1,200 +1,222 @@
-<ScrollView
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:gravity="center_horizontal|center_vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
-            android:layout_weight="0.9">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp">
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:layout_weight="0.9">
 
-                <ImageView
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:id="@+id/alert_image_view"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:id="@+id/alert_image_view"
+                        android:gravity="center"
+                        android:src="@drawable/job_apply"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Text Msg"
+                        android:id="@+id/text_dialog"
+                        android:layout_below="@+id/alert_image_view"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginBottom="16dp"
+                        android:textSize="18sp"
+                        android:textColor="#ff000000"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center_horizontal" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:orientation="vertical"
+                    android:background="@color/back_grey">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/heading_one"
+                        android:textAlignment="center"
+                        android:textSize="15dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textSize="9dp"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/colorPrimary"
+                        android:id="@+id/heading_two" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:layout_weight="0.1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="18dp"
+                    android:id="@+id/completeassessment_dialog"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:src="@drawable/job_apply"
-                    android:scaleType="fitCenter" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Text Msg"
-                    android:id="@+id/text_dialog"
-                    android:layout_below="@+id/alert_image_view"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginBottom="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#ff000000"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center_horizontal" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="vertical"
-                android:background="@color/back_grey">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/heading_one"
-                    android:textAlignment="center"
-                    android:textSize="15dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textSize="9dp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/colorPrimary"
-                    android:id="@+id/heading_two" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            android:layout_weight="0.1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="18dp"
-                android:id="@+id/completeassessment_dialog"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@color/colorPrimary">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/phone_landline"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="6dp"
-                    android:textColor="@color/white"
-                    android:text="Call Now"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="18dp"
-                android:id="@+id/completeprofile_dialog"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@color/colorPrimary">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/profile"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="6dp"
-                    android:textColor="@color/white"
-                    android:text="Complete Now"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="18dp"
-                android:id="@+id/newjob_dialog"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@color/colorPrimary">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/sent"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:textColor="@color/white"
-                    android:text="Apply Now"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/refer_dialog">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:padding="12dp"
-                    android:id="@+id/sms_share"
-                    android:orientation="horizontal"
                     android:background="@color/colorPrimary">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_weight="0.45"
+                        android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:paddingLeft="108dp"
-                        android:src="@drawable/sms" />
+                        android:src="@drawable/phone_landline"/>
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="0.55"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="6dp"
                         android:textColor="@color/white"
-                        android:text="SMS"/>
+                        android:text="Call Now"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:padding="12dp"
-                    android:id="@+id/whatsapp_share"
+                    android:padding="18dp"
+                    android:id="@+id/completeprofile_dialog"
                     android:orientation="horizontal"
+                    android:gravity="center"
                     android:background="@color/colorPrimary">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_weight="0.45"
+                        android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:paddingLeft="108dp"
-                        android:src="@drawable/whatsapp" />
+                        android:src="@drawable/profile"/>
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="0.55"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="6dp"
                         android:textColor="@color/white"
-                        android:text="Whatsapp"/>
+                        android:text="Complete Now"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="18dp"
+                    android:id="@+id/newjob_dialog"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/sent"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:textColor="@color/white"
+                        android:text="Apply Now"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/refer_dialog">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:padding="12dp"
+                        android:id="@+id/sms_share"
+                        android:orientation="horizontal"
+                        android:background="@color/colorPrimary">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="0.45"
+                            android:layout_height="28dp"
+                            android:paddingLeft="108dp"
+                            android:src="@drawable/sms" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="0.55"
+                            android:layout_height="wrap_content"
+                            android:padding="6dp"
+                            android:textColor="@color/white"
+                            android:text="SMS"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:padding="12dp"
+                        android:id="@+id/whatsapp_share"
+                        android:orientation="horizontal"
+                        android:background="@color/colorPrimary">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="0.45"
+                            android:layout_height="28dp"
+                            android:paddingLeft="108dp"
+                            android:src="@drawable/whatsapp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="0.55"
+                            android:layout_height="wrap_content"
+                            android:padding="6dp"
+                            android:textColor="@color/white"
+                            android:text="Whatsapp"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="right">
+        <ImageView
+            android:id="@+id/close_dialog"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:src="@drawable/cross"/>
 
     </LinearLayout>
-</ScrollView>
+
+</RelativeLayout>
+

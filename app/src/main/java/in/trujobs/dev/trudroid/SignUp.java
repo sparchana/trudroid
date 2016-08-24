@@ -16,6 +16,7 @@ import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.proto.SignUpRequest;
 import in.trujobs.proto.SignUpResponse;
 
@@ -48,6 +49,7 @@ public class SignUp extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SignUp.this, Login.class);
+                finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
@@ -73,15 +75,15 @@ public class SignUp extends TruJobsBaseActivity {
         int check = 1;
 
         if(Util.isValidName(requestBuilder.getName()) == 0){
-            Toast.makeText(SignUp.this, "Enter your Name",
+            Toast.makeText(SignUp.this, MessageConstants.ENTER_NAME,
                     Toast.LENGTH_LONG).show();
             check = 0;
         } else if(Util.isValidName(requestBuilder.getName()) == 1) {
-            Toast.makeText(SignUp.this, "Enter a valid name",
+            Toast.makeText(SignUp.this, MessageConstants.ENTER_VALID_NAME,
                     Toast.LENGTH_LONG).show();
             check = 0;
-        } else if(Util.isValidMobile(requestBuilder.getMobile()) == false) {
-            Toast.makeText(SignUp.this, "Enter a valid mobile number",
+        } else if(!Util.isValidMobile(requestBuilder.getMobile())) {
+            Toast.makeText(SignUp.this, MessageConstants.ENTER_VALID_MOBILE,
                     Toast.LENGTH_LONG).show();
             check = 0;
         }
@@ -115,7 +117,7 @@ public class SignUp extends TruJobsBaseActivity {
             mAsyncTask = null;
             pd.cancel();
             if (signUpResponse == null) {
-                Toast.makeText(SignUp.this, "Failed to Login. Please try again.",
+                Toast.makeText(SignUp.this, MessageConstants.FAILED_REQUEST,
                         Toast.LENGTH_LONG).show();
                 Log.w("","Null signIn Response");
                 return;
@@ -127,10 +129,10 @@ public class SignUp extends TruJobsBaseActivity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             } else if(signUpResponse.getStatusValue() == 3){
-                Toast.makeText(SignUp.this, "Candidate already Exists. Please Login to continue",
+                Toast.makeText(SignUp.this, MessageConstants.EXISTING_USER,
                         Toast.LENGTH_LONG).show();
             } else{
-                Toast.makeText(SignUp.this, "Something went wrong. Please try again later",
+                Toast.makeText(SignUp.this, MessageConstants.SOMETHING_WENT_WRONG,
                         Toast.LENGTH_LONG).show();
             }
         }

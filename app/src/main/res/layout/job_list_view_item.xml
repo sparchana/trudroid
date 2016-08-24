@@ -97,7 +97,7 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/location_role"/>
+                            android:src="@drawable/location_sharp"/>
 
                     </LinearLayout>
 
@@ -138,7 +138,7 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/rupee_role"/>
+                            android:src="@drawable/indian_rupee_icon"/>
 
                     </LinearLayout>
 

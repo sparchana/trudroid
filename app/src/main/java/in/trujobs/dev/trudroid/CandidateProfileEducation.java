@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +25,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
@@ -103,8 +103,9 @@ public class CandidateProfileEducation extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else{
                 if(updateCandidateBasicProfileResponse.getStatusValue() == ServerConstants.SUCCESS){
-                    Intent intent = new Intent(getContext(), SearchJobsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    Toast.makeText(getContext(), MessageConstants.PROFILE_UPDATED,
+                            Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getContext(), CandidateProfileActivity.class);
                     getActivity().finish();
                     getContext().startActivity(intent);
                 } else{
@@ -281,7 +282,7 @@ public class CandidateProfileEducation extends Fragment {
                         public void onClick(View view) {
                             boolean check = true;
                             if(qualificationSelected < 1){
-                                showDialog("Please select your Education");
+                                showDialog("Please select your education level");
                                 check = false;
                             } else if(qualificationSelected > 3 && degreeSelected < 1){
                                 check = false;

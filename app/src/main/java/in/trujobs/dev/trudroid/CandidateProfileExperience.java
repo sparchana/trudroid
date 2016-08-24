@@ -31,7 +31,6 @@ import java.util.List;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateSkillObject;
@@ -309,9 +308,9 @@ public class CandidateProfileExperience extends Fragment {
                         public void onClick(View view) {
                             isEmployed = 0;
                             qualificationLayout.setVisibility(View.GONE);
-                            isEmployedYes.setBackgroundColor(getResources().getColor(R.color.white));
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            isEmployedNo.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
                             isEmployedNo.setTextColor(getResources().getColor(R.color.white));
                         }
                     });
@@ -417,19 +416,19 @@ public class CandidateProfileExperience extends Fragment {
                             }
                             if(expInYears > 1 && isEmployed < 0){
                                 check = false;
-                                showDialog("Please select are you employed?");
+                                showDialog("Please answer the question: Are you currently working?");
                             } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
                                 showDialog("Please provide your current Salary");
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
-                                showDialog("Please select total years of experience?");
+                                showDialog("Please answer the question: Total Work Experience");
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
-                                showDialog("Please select at least 1 language?");
+                                showDialog("Please select at least one language that you know");
                             } else if(candidateSkill.size() < 1){
                                 check = false;
-                                showDialog("Please select at least 1 skill?");
+                                showDialog("Please select at least one skill that you know");
                             }
 
                             if(check){

@@ -27,10 +27,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:padding="4dp"
-                    android:src="@drawable/job_role"/>
+                    android:src="@drawable/job_role_small"/>
 
                 <TextView
                     android:padding="3dp"
@@ -49,10 +49,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:padding="4dp"
-                    android:src="@drawable/rupee_role"/>
+                    android:src="@drawable/indian_rupee_icon"/>
 
                 <TextView
                     android:padding="3dp"

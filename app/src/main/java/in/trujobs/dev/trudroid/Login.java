@@ -19,6 +19,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
@@ -38,12 +39,24 @@ public class Login extends TruJobsBaseActivity {
 
         Button loginSubmitBtn = (Button) findViewById(R.id.login_submit_btn);
         TextView forgotPasswordTextView = (TextView) findViewById(R.id.forgot_password_text);
+        TextView alreadyAUserTextView = (TextView) findViewById(R.id.already_user);
         ImageView loginBackArrow = (ImageView) findViewById(R.id.login_back_arrow);
 
         forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this, ForgotPassword.class);
+                finish();
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+            }
+        });
+
+        alreadyAUserTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Login.this, SignUp.class);
+                finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
@@ -75,11 +88,11 @@ public class Login extends TruJobsBaseActivity {
         requestBuilder.setCandidatePassword(mPassword.getText().toString());
 
         int check = 1;
-        if(Util.isValidMobile(requestBuilder.getCandidateMobile()) == false){
-            showToast("Enter a valid mobile number");
+        if(!Util.isValidMobile(requestBuilder.getCandidateMobile())){
+            showToast(MessageConstants.ENTER_VALID_MOBILE);
             check = 0;
-        } else if(Util.isValidPassword(requestBuilder.getCandidatePassword()) == false){
-            showToast("Enter a password of minimum 6 characters");
+        } else if(!Util.isValidPassword(requestBuilder.getCandidatePassword())){
+            showToast(MessageConstants.ENTER_VALID_PASSWORD);
             check = 0;
         }
         if(check == 1){
@@ -111,13 +124,13 @@ public class Login extends TruJobsBaseActivity {
             mAsyncTask = null;
             pd.cancel();
             if (logInResponse == null) {
-                showToast("Failed to Login. Please try again.");
+                showToast(MessageConstants.FAILED_REQUEST);
                 Log.w("","Null signIn Response");
                 return;
             }
 
             if(logInResponse.getStatusValue() == ServerConstants.NO_USER){
-                showToast("User does not exist. Please Sign Up!");
+                showToast(MessageConstants.NO_USER);
             }
 
             else if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
@@ -163,11 +176,11 @@ public class Login extends TruJobsBaseActivity {
                 }
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
-                showToast("Incorrect password. Click \"Forgot Password\" to reset");
+                showToast(MessageConstants.INCORRECT_PASSWORD);
             }
 
             else {
-                showToast("Something went wrong. Please try again later!");
+                showToast(MessageConstants.SOMETHING_WENT_WRONG);
             }
         }
     }

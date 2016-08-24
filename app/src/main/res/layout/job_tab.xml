@@ -114,7 +114,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginLeft="6dp"
-                                android:src="@drawable/job_role" />
+                                android:src="@drawable/job_role_small" />
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginLeft="6dp"
-                                android:src="@drawable/location_role" />
+                                android:src="@drawable/location_sharp" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -237,7 +237,7 @@
                                 android:layout_height="20dp"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginLeft="6dp"
-                                android:src="@drawable/rupee_role" />
+                                android:src="@drawable/indian_rupee_icon" />
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -283,12 +283,21 @@
                                 android:src="@drawable/incentive" />
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingTop="7dp"
                                 android:paddingBottom="15dp"
                                 android:text="Job Incentives"
                                 android:paddingLeft="6dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:padding="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="16dp"
+                                android:background="@color/back_grey"/>
                         </LinearLayout>
                     </LinearLayout>
 

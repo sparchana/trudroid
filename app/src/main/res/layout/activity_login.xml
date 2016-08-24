@@ -62,13 +62,30 @@
         android:textColor="#5291ea"
         style="@style/Widget.AppCompat.Button.Colored" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:id="@+id/forgot_password_text"
-        android:layout_marginTop="24dp"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:text="Forgot Password?"/>
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:id="@+id/already_user"
+            android:gravity="left"
+            android:text="No Account? Sign Up!"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:id="@+id/forgot_password_text"
+            android:gravity="right"
+            android:text="Forgot Password?"/>
+
+    </LinearLayout>
+
 </LinearLayout>
