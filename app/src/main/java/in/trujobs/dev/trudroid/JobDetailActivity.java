@@ -259,7 +259,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                             }
                         }
                         ViewDialog alert = new ViewDialog();
-                        alert.showDialog(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyName() + "'s " + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, 2);
+                        alert.showDialog(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyName() + "'s " + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, -1);
                     }
                 });
 

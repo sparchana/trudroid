@@ -137,7 +137,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                         }
                     }
                     ViewDialog alert = new ViewDialog();
-                    alert.showDialog(getContext(), jobPost.getJobPostCompanyName() + "'s " + jobPost.getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, 2);
+                    alert.showDialog(getContext(), jobPost.getJobPostCompanyName() + "'s " + jobPost.getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, -1);
                 }
             });
         }

@@ -41,6 +41,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         app:fabSize="normal"
+        android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorCaution"
         app:pressedTranslationZ="12dp"
         android:src="@drawable/referral" />

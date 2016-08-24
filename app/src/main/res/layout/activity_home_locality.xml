@@ -59,6 +59,36 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_marginTop="6dp"
+                android:layout_height="1dp"
+                android:background="@color/back_grey_dark"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:textAlignment="center"
+                android:text="OR"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="1dp"
+                android:layout_marginTop="6dp"
+                android:background="@color/back_grey_dark"/>
+
+        </LinearLayout>
+
         <android.support.v7.widget.CardView
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
@@ -76,7 +106,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.1"
                     android:layout_height="match_parent"
-                    android:padding="4dp"
                     android:src="@drawable/location_sharp"/>
 
                 <Button
