@@ -629,7 +629,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
             mLatLngAsyncTask = new LatLngAsyncTask();
             mLatLngAsyncTask.execute(mPlaceId);
             Tlog.i("lat/lng fetch completed");
-            Tlog.i("skipped lat/lng fetch. Already provided via gps");
         } else {
             triggerFinalSubmission();
         }
@@ -654,7 +653,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 mAsyncTask = new HomeLocalityAsyncTask();
                 mAsyncTask.execute(mHomeLocalityRequest.build());
 
-            /* update prefs values */
+                /* update prefs values */
                 Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
                 Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
 
@@ -696,9 +695,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
             if(latLngAPIHelper!=null){
                 if(mLastLocation == null){
                     mLastLocation = new Location("");
-                    mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
-                    mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
                 }
+                mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
+                mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
                 triggerFinalSubmission();
             }
         }
