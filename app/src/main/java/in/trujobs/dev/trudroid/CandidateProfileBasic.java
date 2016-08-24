@@ -420,17 +420,17 @@ public class CandidateProfileBasic extends Fragment {
                         public void onClick(View view) {
                             boolean check = true;
 
-                            String str[] = candidateDob.getText().toString().split("-");
-                            int year = Integer.parseInt(str[2]);
-                            int ageDiff = ((Calendar.getInstance().get(Calendar.YEAR) - 18) - year);
+                            int year, ageDiff = 0;
+                            if(candidateDob.getText().toString().length() > 0){
+                                String str[] = candidateDob.getText().toString().split("-");
+                                year = Integer.parseInt(str[2]);
+                                ageDiff = ((Calendar.getInstance().get(Calendar.YEAR) - 18) - year);
+                            }
 
                             int pos = shift_option.getSelectedItemPosition();
                             shiftValue = Long.valueOf(shiftIds.get(pos));
 
-                            if(ageDiff < 0){
-                                check = false;
-                                showDialog("Please provide a valid date of birth (above 18 yrs)");
-                            } else if(Util.isValidName(firstName.getText().toString()) == 0){
+                            if(Util.isValidName(firstName.getText().toString()) == 0){
                                 showDialog("First Name Cannot be blank. Please enter your first name");
                                 check = false;
                             } else if(Util.isValidName(firstName.getText().toString()) == 1) {
@@ -447,6 +447,9 @@ public class CandidateProfileBasic extends Fragment {
                             } else if(candidateDob.getText().toString().trim().isEmpty()){
                                 check = false;
                                 showDialog("Please enter your Date of Birth");
+                            } else if(ageDiff < 0){
+                                check = false;
+                                showDialog("Please provide a valid date of birth (above 18 yrs)");
                             } else if(ageDiff < 0){
                                 check = false;
                                 showDialog("Please provide a valid date of birth (above 18 yrs)");
