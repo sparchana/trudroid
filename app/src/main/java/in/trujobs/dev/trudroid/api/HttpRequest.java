@@ -139,7 +139,7 @@ public class HttpRequest {
         try {
             jobRoleResponse =
                     jobRoleResponse.parseFrom(responseByteArray);
-        } catch (InvalidProtocolBufferException e) {}
+        } catch (InvalidProtocolBufferException ignored) {}
 
         if (jobRoleResponse != null && jobRoleResponse.getJobRoleCount() != 0) {
             return jobRoleResponse;

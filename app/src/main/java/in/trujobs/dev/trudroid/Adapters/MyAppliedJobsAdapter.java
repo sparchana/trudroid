@@ -11,7 +11,6 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import in.trujobs.dev.trudroid.MyAppliedJobs;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.proto.JobApplicationObject;
 
