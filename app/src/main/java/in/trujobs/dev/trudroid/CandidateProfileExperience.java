@@ -31,6 +31,7 @@ import java.util.List;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateSkillObject;
@@ -219,11 +220,6 @@ public class CandidateProfileExperience extends Fragment {
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() > 0){
                         lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
                     }
-                    currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
-                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
-                        currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
-                        currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
-                    }
 
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() > 0){
                         isCandidateExperienced = 1;
@@ -242,6 +238,31 @@ public class CandidateProfileExperience extends Fragment {
                         } else if(year != 0 && month != 0){
                             selectExp.setText(year + " years " + month + " months");
                         }
+
+                        if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
+                            isEmployed = 1;
+                            //setting current company details
+                            currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
+                            if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
+                                currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
+                                currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
+                            }
+                            experiencedSection.setVisibility(View.VISIBLE);
+                            qualificationLayout.setVisibility(View.VISIBLE);
+                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.white));
+                        } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
+                            isEmployed = 0;
+                            experiencedSection.setVisibility(View.VISIBLE);
+                            qualificationLayout.setVisibility(View.GONE);
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.white));
+                        }
+
                     } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() == 0){
                         isCandidateExperienced = 0;
                         experiencedSection.setVisibility(View.GONE);
@@ -274,23 +295,6 @@ public class CandidateProfileExperience extends Fragment {
                         }
                     });
 
-                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
-                        isEmployed = 1;
-                        experiencedSection.setVisibility(View.VISIBLE);
-                        qualificationLayout.setVisibility(View.VISIBLE);
-                        isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
-                        isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.white));
-                    } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
-                        isEmployed = 0;
-                        experiencedSection.setVisibility(View.VISIBLE);
-                        qualificationLayout.setVisibility(View.GONE);
-                        isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isEmployedNo.setTextColor(getResources().getColor(R.color.white));
-                    }
                     isEmployedYes.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
