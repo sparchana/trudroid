@@ -203,15 +203,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         showJobPosts();
 
         //post login/signup apply
-
         if(Util.isLoggedIn()){
             if(Prefs.jobToApplyStatus.get() == 1L){
                 //apply to the job
                 GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
                 requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
-                if(Util.isLoggedIn()){
-                    requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-                }
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+                
                 mJobPostAsyncTask = new JobPostDetailAsyncTask();
                 mJobPostAsyncTask.execute(requestBuilder.build());
             }
