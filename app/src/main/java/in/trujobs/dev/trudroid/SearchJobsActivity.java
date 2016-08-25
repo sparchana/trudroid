@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +66,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     ProgressDialog pd;
     private ListView mNavigationItemListView;
     public ListView jobPostListView;
+    public LinearLayout endOfSearchLayout;
     public AutoCompleteTextView mSearchJobAcTxtView;
     public TextView mSearchJobsByJobRoleTxtView, userNameTextView, userMobileTextView;
     public String mSearchAddressOutput;
@@ -350,6 +352,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
+                endOfSearchLayout.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
                 return;
             }
@@ -426,6 +429,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
         jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
+        endOfSearchLayout = (LinearLayout) findViewById(R.id.end_of_result);
+        ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
             Tlog.i("DataSize: " + jobPostObjectList.size());
@@ -433,11 +438,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             if(jobPostListView.getVisibility() == View.GONE
                     || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
+                endOfSearchLayout.setVisibility(View.VISIBLE);
+                noJobsImageView.setVisibility(View.GONE);
             }
             jobPostListView.setAdapter(jobPostAdapter);
         } else {
             jobPostListView.setVisibility(View.GONE);
-            ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+            endOfSearchLayout.setVisibility(View.GONE);
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }
@@ -664,6 +671,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         selectedJobRoleList.clear();
                         Arrays.fill(checkedItems, false);
                         selectedJobRolesNameTxtView.setText("");
+                        endOfSearchLayout.setVisibility(View.INVISIBLE);
                         jobPostListView.setVisibility(View.INVISIBLE);
                         showToast("Selection Cleared.");
                         for(int which=0; which<checkedItems.length; which++){
