@@ -269,7 +269,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         List<JobPostObject> list = new ArrayList<JobPostObject>();
                         list.add(getJobPostDetailsResponse.getJobPost());
                         JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list);
-                        jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex]);
+                        jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
                         dialog.dismiss();
                         Prefs.jobToApplyStatus.put(0);
                         Prefs.getJobToApplyJobId.put(0L);

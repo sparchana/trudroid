@@ -1,7 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +11,6 @@ import android.support.v4.content.IntentCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +24,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -412,7 +408,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                     List<JobPostObject> list = new ArrayList<JobPostObject>();
                                     list.add(getJobPostDetailsResponse.getJobPost());
                                     JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
-                                    jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex]);
+                                    jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], jobTabApplyBtn);
                                     dialog.dismiss();
                                 }
                             });
