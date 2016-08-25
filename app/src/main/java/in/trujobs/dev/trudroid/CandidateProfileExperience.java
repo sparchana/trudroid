@@ -1,6 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,12 +8,12 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,16 +27,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateSkillObject;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
-import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobRoleObject;
 import in.trujobs.proto.LanguageKnownObject;
 import in.trujobs.proto.LanguageObject;
@@ -94,6 +90,8 @@ public class CandidateProfileExperience extends Fragment {
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle("Experience Profile");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        selectExp = (TextView) view.findViewById(R.id.select_experience);
 
         candidateProfileActivity = (CandidateProfileActivity) getActivity();
         mAsyncTask = new GetExperienceStaticAsyncTask();
@@ -217,7 +215,6 @@ public class CandidateProfileExperience extends Fragment {
                     isFresher = (Button) view.findViewById(R.id.is_fresher);
                     isEmployedYes = (Button) view.findViewById(R.id.is_employed_yes);
                     isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
-                    selectExp = (TextView) view.findViewById(R.id.select_experience);
 
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() > 0){
                         lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
@@ -417,9 +414,13 @@ public class CandidateProfileExperience extends Fragment {
                                 showDialog("Please answer the question: Are you currently working?");
                             } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
+                                lastWithdrawnSalary.setError("Please provide your Home Locality");
+                                lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                                 showDialog("Please provide your current Salary");
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
+                                selectExp.setError("Please provide your Home Locality");
+                                selectExp.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                                 showDialog("Please answer the question: Total Work Experience");
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
@@ -513,6 +514,28 @@ public class CandidateProfileExperience extends Fragment {
             }
         }
     }
+
+    private class GenericTextWatcher implements TextWatcher {
+        private View view;
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable) {
+            switch(view.getId()){
+                case R.id.last_withdrawn_salary:
+                    lastWithdrawnSalary.setError(null);
+                    break;
+                case R.id.select_experience:
+                    selectExp.setError(null);
+                    break;
+            }
+        }
+    }
+
 
     public boolean findExistingLanguageKnownObject(LanguageObject languageObject){
         boolean flag = false;

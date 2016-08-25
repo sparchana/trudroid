@@ -4,11 +4,15 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -353,34 +358,48 @@ public class CandidateProfileBasic extends Fragment {
 
                             if(Util.isValidName(firstName.getText().toString()) == 0){
                                 showDialog("First Name Cannot be blank. Please enter your first name");
+                                firstName.setError("Enter your first name");
+                                firstName.addTextChangedListener(new GenericTextWatcher(firstName));
                                 check = false;
                             } else if(Util.isValidName(firstName.getText().toString()) == 1) {
                                 showDialog("First Name cannot have special characters or numbers. Please enter a valid first name");
+                                firstName.setError("Enter a valid second name");
+                                firstName.addTextChangedListener(new GenericTextWatcher(firstName));
                                 check = false;
                             } else if(!secondName.getText().toString().isEmpty() && (Util.isValidName(secondName.getText().toString()) == 1)) {
                                 showDialog("Second Name cannot have special characters or numbers. Please enter a valid second name");
+                                secondName.setError("Enter your second name");
+                                secondName.addTextChangedListener(new GenericTextWatcher(secondName));
+                                check = false;
+                            } else if(!secondName.getText().toString().isEmpty() && (Util.isValidName(secondName.getText().toString()) == 0)) {
+                                showDialog("Second Name Cannot be blank. Please enter your second name");
+                                secondName.setError("Enter valid second name");
+                                secondName.addTextChangedListener(new GenericTextWatcher(secondName));
                                 check = false;
                             } else if(candidateDob.getText().toString().trim().isEmpty()){
                                 check = false;
+                                candidateDob.setError("Select date of birth");
+                                candidateDob.addTextChangedListener(new GenericTextWatcher(candidateDob));
                                 showDialog("Please enter your Date of Birth");
                             } else if(ageDiff < 0){
                                 check = false;
+                                candidateDob.setError("Select valid date of birth (min: 18 yrs)");
+                                candidateDob.addTextChangedListener(new GenericTextWatcher(candidateDob));
                                 showDialog("Please provide a valid date of birth (above 18 yrs)");
                             } else if(genderValue < 0){
                                 check = false;
                                 showDialog("Please provide your gender");
                             } else if(mHomeLocalityTxtView.getText().toString().length() == 0 ){
                                 check = false;
+                                mHomeLocalityTxtView.setError("Please provide your Home Locality");
+                                mHomeLocalityTxtView.addTextChangedListener(new GenericTextWatcher(mHomeLocalityTxtView));
                                 showDialog("Please provide your Home Locality");
-                            } else if(shiftValue < 1 ){
-                                check = false;
-                                showDialog("Please provide your preferred Time Shift");
                             } else if(selectedJobRoles.size() == 0){
                                 check = false;
                                 showDialog("Please provide your preferred Job Roles");
-                            } else if(!secondName.getText().toString().isEmpty() && (Util.isValidName(secondName.getText().toString()) == 0)) {
-                                showDialog("Second Name Cannot be blank. Please enter your second name");
+                            }  else if(shiftValue < 1 ){
                                 check = false;
+                                showDialog("Please provide your preferred Time Shift");
                             }
 
                             if(check){
@@ -410,6 +429,37 @@ public class CandidateProfileBasic extends Fragment {
                             Toast.LENGTH_LONG).show();
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
+            }
+        }
+    }
+
+    private class GenericTextWatcher implements TextWatcher {
+
+        private View view;
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable) {
+            switch(view.getId()){
+                case R.id.first_name_edit_text:
+                    firstName.setError(null);
+                    break;
+                case R.id.last_name_edit_text:
+                    firstName.setError(null);
+                    break;
+                case R.id.date_of_birth_edit_text:
+                    candidateDob.setError(null);
+                    break;
+                case R.id.home_locality_auto_complete_edit_text:
+                    mHomeLocalityTxtView.setError(null);
+                    break;
+                case R.id.pref_job_roles:
+                    jobPrefEditText.setError(null);
+                    break;
             }
         }
     }
