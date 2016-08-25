@@ -209,7 +209,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
                 requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
                 requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-                
+
                 mJobPostAsyncTask = new JobPostDetailAsyncTask();
                 mJobPostAsyncTask.execute(requestBuilder.build());
             }

@@ -4,41 +4,28 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
@@ -370,20 +357,12 @@ public class CandidateProfileBasic extends Fragment {
                             } else if(Util.isValidName(firstName.getText().toString()) == 1) {
                                 showDialog("First Name cannot have special characters or numbers. Please enter a valid first name");
                                 check = false;
-                            } else if(!secondName.getText().toString().isEmpty()){
-                                if(Util.isValidName(secondName.getText().toString()) == 0) {
-                                    showDialog("Second Name Cannot be blank. Please enter your second name");
-                                    check = false;
-                                } else if(Util.isValidName(secondName.getText().toString()) == 1) {
-                                    showDialog("Second Name cannot have special characters or numbers. Please enter a valid second name");
-                                    check = false;
-                                }
+                            } else if(!secondName.getText().toString().isEmpty() && (Util.isValidName(secondName.getText().toString()) == 1)) {
+                                showDialog("Second Name cannot have special characters or numbers. Please enter a valid second name");
+                                check = false;
                             } else if(candidateDob.getText().toString().trim().isEmpty()){
                                 check = false;
                                 showDialog("Please enter your Date of Birth");
-                            } else if(ageDiff < 0){
-                                check = false;
-                                showDialog("Please provide a valid date of birth (above 18 yrs)");
                             } else if(ageDiff < 0){
                                 check = false;
                                 showDialog("Please provide a valid date of birth (above 18 yrs)");
@@ -399,6 +378,9 @@ public class CandidateProfileBasic extends Fragment {
                             } else if(selectedJobRoles.size() == 0){
                                 check = false;
                                 showDialog("Please provide your preferred Job Roles");
+                            } else if(!secondName.getText().toString().isEmpty() && (Util.isValidName(secondName.getText().toString()) == 0)) {
+                                showDialog("Second Name Cannot be blank. Please enter your second name");
+                                check = false;
                             }
 
                             if(check){
