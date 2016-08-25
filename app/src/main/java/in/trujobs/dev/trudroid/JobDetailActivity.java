@@ -1,5 +1,6 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -422,11 +424,11 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                     }).create();
                             alertDialog.show();
                         } else{
-                            Prefs.loginCheckStatus.put(1);
                             Intent intent = new Intent(JobDetailActivity.this, WelcomeScreen.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                            Prefs.loginCheckStatus.put(0);
+                            finish();
                         }
                     }
                 });

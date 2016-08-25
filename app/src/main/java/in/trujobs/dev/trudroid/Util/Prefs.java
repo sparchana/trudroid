@@ -34,6 +34,11 @@ public class Prefs {
     public static final File.SharedPreference<Integer> loginCheckStatus = sFile.intValue("loginCheckStatus", 0);
 
     public static final File.SharedPreference<String> jobPrefString = sFile.stringValue("jobPrefString", "");
+
+    // apply job flags for not logged in
+    public static final File.SharedPreference<Integer> jobToApplyStatus = sFile.intValue("jobToApplyFlag", 0);
+    public static final File.SharedPreference<Long> getJobToApplyJobId = sFile.longValue("getJobToApplyJobId", 0L);
+
     public static void onLogout() {
         Prefs.leadId.remove();
         Prefs.candidateId.remove();

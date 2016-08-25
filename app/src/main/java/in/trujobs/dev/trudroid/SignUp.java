@@ -63,6 +63,13 @@ public class SignUp extends TruJobsBaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Prefs.jobToApplyStatus.put(0);
+        Prefs.getJobToApplyJobId.put(0L);
+    }
+
     private void performSignUp() {
         mName = (EditText) findViewById(R.id.sign_up_name_edit_text);
         mMobile = (EditText) findViewById(R.id.sign_up_mobile_edit_text);

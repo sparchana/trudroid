@@ -20,6 +20,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -199,10 +200,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     }).create();
             alertDialog.show();
         } else{
-            Prefs.loginCheckStatus.put(1);
-            Intent intent = new Intent(getContext(), WelcomeScreen.class);
-            getContext().startActivity(intent);
-            Prefs.loginCheckStatus.put(0);
+            Prefs.jobToApplyStatus.put(1);
+            Prefs.getJobToApplyJobId.put(jobPost.getJobPostId());
+            ((Activity)getContext()).finish();
         }
     }
 
