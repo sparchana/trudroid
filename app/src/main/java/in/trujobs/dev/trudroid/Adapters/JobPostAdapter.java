@@ -252,9 +252,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
             ViewDialog alert = new ViewDialog();
             if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
-                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
-                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
                 alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){

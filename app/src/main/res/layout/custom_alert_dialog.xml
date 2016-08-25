@@ -86,6 +86,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="18dp"
+                    android:id="@+id/view_my_jobs"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/sent"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:textColor="@color/white"
+                        android:text="View Applied Jobs"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="18dp"
                     android:id="@+id/completeassessment_dialog"
                     android:orientation="horizontal"
                     android:gravity="center"
@@ -200,6 +221,8 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+
 
         </LinearLayout>
     </ScrollView>
