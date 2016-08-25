@@ -79,6 +79,13 @@ public class Login extends TruJobsBaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Prefs.jobToApplyStatus.put(0);
+        Prefs.getJobToApplyJobId.put(0L);
+    }
+
     private void performLogIn() {
         mMobile = (EditText) findViewById(R.id.user_mobile_edit_text);
         mPassword = (EditText) findViewById(R.id.user_password_edit_text);

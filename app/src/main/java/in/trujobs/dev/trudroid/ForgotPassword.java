@@ -41,6 +41,14 @@ public class ForgotPassword extends TruJobsBaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Prefs.jobToApplyStatus.put(0);
+        Prefs.getJobToApplyJobId.put(0L);
+    }
+
+
     private void performPasswordReset() {
         mUserMobile = (EditText) findViewById(R.id.forgot_password_mobile_edit_text);
 

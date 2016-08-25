@@ -5,21 +5,27 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -47,14 +53,17 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
     public class Holder
     {
-        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView;
+        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, nApplyingJobBtnTextView;
         LinearLayout mApplyBtnBackground, applyBtn;
     }
+    public LinearLayout applyingJobButton;
+    public TextView applyingJobBtnTextView;
+    public Button applyingJobButtonDetail;
     ProgressDialog pd;
 
     @Override
     public View getView(int position, View rowView, ViewGroup parent) {
-        Holder holder = new Holder();
+        final Holder holder = new Holder();
         final JobPostObject jobPost = getItem(position);
         if(rowView == null) {
             rowView = LayoutInflater.from(getContext()).inflate(
@@ -70,6 +79,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.applyBtn.setEnabled(true);
         holder.mJobPostApplyBtn.setText("Apply");
         holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+        holder.nApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
 
         if(jobPost.getIsApplied() == 1){
             holder.applyBtn.setEnabled(false);
@@ -154,6 +165,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                applyingJobButton = holder.mApplyBtnBackground;
+                applyingJobBtnTextView = holder.nApplyingJobBtnTextView;
                 showJobLocality(jobPost);
             }
         });
@@ -161,7 +174,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
 
     public void showJobLocality(final JobPostObject jobPost){
-        if(Util.isLoggedIn() == true){
+        if(Util.isLoggedIn()){
             preScreenLocationIndex = 0;
             final CharSequence[] localityList = new CharSequence[jobPost.getJobPostLocalityCount()];
             final Long[] localityId = new Long[jobPost.getJobPostLocalityCount()];
@@ -170,43 +183,48 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 localityId[i] = jobPost.getJobPostLocality(i).getLocalityId();
             }
 
-            final AlertDialog alertDialog = new AlertDialog.Builder(
-                    getContext())
-                    .setCancelable(true)
-                    .setTitle("You are applying for " + jobPost.getJobPostTitle() + " job at " + jobPost.getJobPostCompanyName() + ". Please select a job Location" )
-                    .setPositiveButton("Apply",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex]);
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            preScreenLocationIndex = which;
-                        }
-                    }).create();
-            alertDialog.show();
+            LinearLayout customTitleLayout = new LinearLayout(getContext());
+            customTitleLayout.setPadding(30,30,30,30);
+            TextView customTitle = new TextView(getContext());
+            String title = "You are applying for <b>" + jobPost.getJobPostTitle() + "</b>  job at <b>" + jobPost.getJobPostCompanyName()
+                    + "</b>. Please select a job Location";
+            customTitle.setText(Html.fromHtml(title));
+            customTitle.setTextSize(16);
+            customTitleLayout.addView(customTitle);
+
+            final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+            applyDialogBuilder.setCancelable(true);
+            applyDialogBuilder.setCustomTitle(customTitleLayout);
+            applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex], null);
+                    dialog.dismiss();
+                }
+            });
+            applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    preScreenLocationIndex = which;
+                }
+            });
+            final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+            applyDialog.show();
         } else{
-            Prefs.loginCheckStatus.put(1);
-            Intent intent = new Intent(getContext(), WelcomeScreen.class);
-            getContext().startActivity(intent);
-            Prefs.loginCheckStatus.put(0);
+            Prefs.jobToApplyStatus.put(1);
+            Prefs.getJobToApplyJobId.put(jobPost.getJobPostId());
+            ((Activity)getContext()).finish();
         }
     }
 
-    public void applyJob(Long jobPostId, Long localityId){
+    public void applyJob(Long jobPostId, Long localityId, Button detailPageApplyBtn){
+        if(detailPageApplyBtn != null){
+            applyingJobButtonDetail = detailPageApplyBtn;
+        }
         ApplyJobRequest.Builder requestBuilder = ApplyJobRequest.newBuilder();
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setLocalityId(localityId);
@@ -246,9 +264,27 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
             ViewDialog alert = new ViewDialog();
             if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
-                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
+                //setting "already applied" to apply button of the jobs list
+                try {
+                    applyingJobButton.setEnabled(false);
+                    applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                    applyingJobBtnTextView.setText("Already Applied");
+                } catch (Exception ignored){}
+
+                //setting "already applied" to job detail activity button
+                try{
+                    applyingJobButtonDetail.setText("Already Applied");
+                    applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                    applyingJobButtonDetail.setEnabled(false);
+                } catch (Exception ignored){}
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
-                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
+                try {
+                    applyingJobButton.setEnabled(false);
+                    applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                    applyingJobBtnTextView.setText("Already Applied");
+                } catch (Exception ignored){}
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
                 alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
@@ -258,4 +294,5 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
         }
     }
+
 }

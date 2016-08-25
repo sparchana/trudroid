@@ -1,9 +1,12 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.view.GravityCompat;
@@ -11,22 +14,31 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Filter;
 
@@ -48,6 +60,8 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
+import in.trujobs.proto.GetJobPostDetailsRequest;
+import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.JobFilterRequest;
 import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobPostResponse;
@@ -60,11 +74,14 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
 
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mAsyncTask;
+    private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mJobPostAsyncTask;
     private AsyncTask<FetchCandidateAlertRequest, Void, FetchCandidateAlertResponse> mAlertAsyncTask;
 
     ProgressDialog pd;
+    int preScreenLocationIndex = 0;
     private ListView mNavigationItemListView;
     public ListView jobPostListView;
+    public LinearLayout endOfSearchLayout;
     public AutoCompleteTextView mSearchJobAcTxtView;
     public TextView mSearchJobsByJobRoleTxtView, userNameTextView, userMobileTextView;
     public String mSearchAddressOutput;
@@ -89,6 +106,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     public BiMap<Integer, Long> biMap = null;
     public BiMap<Long, Integer> invBiMap = null;
     public CharSequence[] jobRoleNameList = null;
+
+    boolean doubleBackToExitPressedOnce = false;
 
     TextView selectedJobRolesNameTxtView;
 
@@ -182,6 +201,100 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
         //getting all the job posts
         showJobPosts();
+
+        //post login/signup apply
+        if(Util.isLoggedIn()){
+            if(Prefs.jobToApplyStatus.get() == 1L){
+                //apply to the job
+                GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
+                requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+
+                mJobPostAsyncTask = new JobPostDetailAsyncTask();
+                mJobPostAsyncTask.execute(requestBuilder.build());
+            }
+        }
+    }
+
+    private class JobPostDetailAsyncTask extends AsyncTask<GetJobPostDetailsRequest,
+            Void, GetJobPostDetailsResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected GetJobPostDetailsResponse doInBackground(GetJobPostDetailsRequest... params) {
+            return HttpRequest.getJobPostDetails(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(final GetJobPostDetailsResponse getJobPostDetailsResponse) {
+            super.onPostExecute(getJobPostDetailsResponse);
+
+            pd.cancel();
+
+            if (getJobPostDetailsResponse == null) {
+                Toast.makeText(SearchJobsActivity.this, "Failed to Fetch details. Please try again.",
+                        Toast.LENGTH_LONG).show();
+                Tlog.w("","Null signIn Response");
+                finish();
+                return;
+            }
+
+            if(getJobPostDetailsResponse.getStatus() == GetJobPostDetailsResponse.Status.SUCCESS){
+                preScreenLocationIndex = 0;
+                final CharSequence[] localityList = new CharSequence[getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount()];
+                final Long[] localityId = new Long[getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount()];
+                for (int i = 0; i < getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount(); i++) {
+                    localityList[i] = getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityName();
+                    localityId[i] = getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityId();
+                }
+
+                LinearLayout customTitleLayout = new LinearLayout(SearchJobsActivity.this);
+                customTitleLayout.setPadding(30,30,30,30);
+                TextView customTitle = new TextView(SearchJobsActivity.this);
+                String title = "You are applying for <b>" + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + "</b>  job at <b>" + getJobPostDetailsResponse.getJobPost().getJobPostCompanyName()
+                        + "</b>. Please select a job Location";
+                customTitle.setText(Html.fromHtml(title));
+                customTitle.setTextSize(16);
+                customTitleLayout.addView(customTitle);
+
+                final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(SearchJobsActivity.this);
+                applyDialogBuilder.setCancelable(true);
+                applyDialogBuilder.setCustomTitle(customTitleLayout);
+                applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<JobPostObject> list = new ArrayList<JobPostObject>();
+                        list.add(getJobPostDetailsResponse.getJobPost());
+                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list);
+                        jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
+                        dialog.dismiss();
+                        Prefs.jobToApplyStatus.put(0);
+                        Prefs.getJobToApplyJobId.put(0L);
+                    }
+                });
+                applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        preScreenLocationIndex = which;
+                    }
+                });
+                final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+                applyDialog.show();
+
+                Prefs.jobToApplyStatus.put(0);
+                Prefs.getJobToApplyJobId.put(0L);
+            } else {
+                showToast("Something went wrong. Unable to fetch job details!");
+            }
+        }
     }
 
 
@@ -284,6 +397,19 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             getFragmentManager().popBackStack();
             super.onBackPressed();
         }
+
+        if(Util.isLoggedIn()){
+            this.doubleBackToExitPressedOnce = true;
+            showToast("Please press back again to exit");
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2500);
+        }
     }
 
     @Override
@@ -350,6 +476,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
+                endOfSearchLayout.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
                 return;
             }
@@ -426,6 +553,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
         jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
+        endOfSearchLayout = (LinearLayout) findViewById(R.id.end_of_result);
+        ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
             Tlog.i("DataSize: " + jobPostObjectList.size());
@@ -433,11 +562,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             if(jobPostListView.getVisibility() == View.GONE
                     || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
+                endOfSearchLayout.setVisibility(View.VISIBLE);
+                noJobsImageView.setVisibility(View.GONE);
             }
             jobPostListView.setAdapter(jobPostAdapter);
         } else {
             jobPostListView.setVisibility(View.GONE);
-            ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+            endOfSearchLayout.setVisibility(View.GONE);
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }
@@ -664,6 +795,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         selectedJobRoleList.clear();
                         Arrays.fill(checkedItems, false);
                         selectedJobRolesNameTxtView.setText("");
+                        endOfSearchLayout.setVisibility(View.INVISIBLE);
                         jobPostListView.setVisibility(View.INVISIBLE);
                         showToast("Selection Cleared.");
                         for(int which=0; which<checkedItems.length; which++){

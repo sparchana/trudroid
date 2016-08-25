@@ -49,6 +49,13 @@ public class EnterPassword extends TruJobsBaseActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Prefs.jobToApplyStatus.put(0);
+        Prefs.getJobToApplyJobId.put(0L);
+    }
+
     private void performSavePassword() {
         mUserNewPassword = (EditText) findViewById(R.id.user_new_password_edit_text);
 

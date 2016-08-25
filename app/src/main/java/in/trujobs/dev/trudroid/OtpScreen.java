@@ -174,6 +174,14 @@ public class OtpScreen extends TruJobsBaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Prefs.jobToApplyStatus.put(0);
+        Prefs.getJobToApplyJobId.put(0L);
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

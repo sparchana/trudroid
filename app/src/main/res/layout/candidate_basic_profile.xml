@@ -252,7 +252,7 @@
                                         android:textSize="@dimen/Edit_Text_Size"
                                         android:singleLine="true"
                                         android:layout_width="0dp"
-                                        android:layout_weight="0.88"
+                                        android:layout_weight="0.85"
                                         android:inputType="number"
                                         android:textColor="@drawable/edit_text_selector"
                                         android:layout_height="wrap_content"
@@ -261,9 +261,9 @@
                                     <ImageView
                                         android:id="@+id/job_role_pref_picker"
                                         android:layout_width="0dp"
-                                        android:paddingTop="4dp"
+                                        android:paddingTop="14dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="0.12"
+                                        android:layout_weight="0.15"
                                         android:src="@drawable/down_arrow"/>
                                 </LinearLayout>
                             </android.support.design.widget.TextInputLayout>
