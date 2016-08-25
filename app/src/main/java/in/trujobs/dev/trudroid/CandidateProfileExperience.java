@@ -28,6 +28,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
@@ -36,6 +37,7 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateSkillObject;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
+import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobRoleObject;
 import in.trujobs.proto.LanguageKnownObject;
 import in.trujobs.proto.LanguageObject;
@@ -376,34 +378,26 @@ public class CandidateProfileExperience extends Fragment {
                     currentJobRolePicker.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            final AlertDialog alertDialog = new AlertDialog.Builder(
-                                    getContext())
-                                    .setCancelable(true)
-                                    .setPositiveButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                    .setTitle("Select current Job Role")
-                                    .setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
-                                            currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
-                                            currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
-                                            currentJobRoleValue = currentJobRoleBuilder.build();
-                                            currentJobRole.setText(jobRoleList[which]);
-                                            dialog.dismiss();
-                                        }
-                                    }).create();
-                            alertDialog.show();
-                            WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
-                            params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-                            params.height = 900;
-                            alertDialog.getWindow().setAttributes(params);
+                            final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+                            applyDialogBuilder.setCancelable(true);
+                            applyDialogBuilder.setTitle("Select current Job Role");
+                            applyDialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            applyDialogBuilder.setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
+                                    currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
+                                    currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
+                                    currentJobRoleValue = currentJobRoleBuilder.build();
+                                    currentJobRole.setText(jobRoleList[which]);
+                                }
+                            });
+                            final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+                            applyDialog.show();
                         }
                     });
 

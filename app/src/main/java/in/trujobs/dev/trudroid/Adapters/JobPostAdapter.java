@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -162,7 +165,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
 
     public void showJobLocality(final JobPostObject jobPost){
-        if(Util.isLoggedIn() == true){
+        if(Util.isLoggedIn()){
             preScreenLocationIndex = 0;
             final CharSequence[] localityList = new CharSequence[jobPost.getJobPostLocalityCount()];
             final Long[] localityId = new Long[jobPost.getJobPostLocalityCount()];
@@ -171,34 +174,37 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 localityId[i] = jobPost.getJobPostLocality(i).getLocalityId();
             }
 
-            final AlertDialog alertDialog = new AlertDialog.Builder(
-                    getContext())
-                    .setCancelable(true)
-                    .setTitle("You are applying for " + jobPost.getJobPostTitle() + " job at " + jobPost.getJobPostCompanyName() + ". Please select a job Location" )
-                    .setPositiveButton("Apply",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex]);
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            preScreenLocationIndex = which;
-                        }
-                    }).create();
-            alertDialog.show();
+            LinearLayout customTitleLayout = new LinearLayout(getContext());
+            customTitleLayout.setPadding(30,30,30,30);
+            TextView customTitle = new TextView(getContext());
+            String title = "You are applying for <b>" + jobPost.getJobPostTitle() + "</b>  job at <b>" + jobPost.getJobPostCompanyName()
+                    + "</b>. Please select a job Location";
+            customTitle.setText(Html.fromHtml(title));
+            customTitle.setTextSize(16);
+            customTitleLayout.addView(customTitle);
+
+            final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+            applyDialogBuilder.setCancelable(true);
+            applyDialogBuilder.setCustomTitle(customTitleLayout);
+            applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex]);
+                    dialog.dismiss();
+                }
+            });
+            applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    preScreenLocationIndex = which;
+                }
+            });
+            final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+            applyDialog.show();
         } else{
             Prefs.jobToApplyStatus.put(1);
             Prefs.getJobToApplyJobId.put(jobPost.getJobPostId());

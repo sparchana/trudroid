@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -90,7 +92,7 @@ public class CandidateProfileBasic extends Fragment {
     private static HomeLocalityRequest.Builder mHomeLocalityRequest = HomeLocalityRequest.newBuilder();
 
     //UI References
-    private EditText candidateDob, firstName, secondName, mobileNumber;
+    private EditText candidateDob, firstName, secondName, mobileNumber, jobPrefEditText;
     Integer genderValue = -1;
     Long shiftValue = Long.valueOf(-1);
 
@@ -243,7 +245,7 @@ public class CandidateProfileBasic extends Fragment {
                     SpinnerAdapter adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, categories);
                     shift_option.setAdapter(adapter);
 
-                    final EditText jobPrefEditText = (EditText) view.findViewById(R.id.pref_job_roles);
+                    jobPrefEditText = (EditText) view.findViewById(R.id.pref_job_roles);
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
                         selectedJobRoles.addAll(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefList());
                         for(int i=0; i<selectedJobRoles.size(); i++ ){
@@ -277,79 +279,11 @@ public class CandidateProfileBasic extends Fragment {
                     }
                     jobPrefEditText.setEnabled(false);
                     ImageView jobRolePrefPicker = (ImageView) view.findViewById(R.id.job_role_pref_picker);
+
                     jobRolePrefPicker.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            final AlertDialog alertDialog = new AlertDialog.Builder(
-                                    getContext())
-                                    .setCancelable(false)
-                                    .setTitle("Select Job Role preference (Max 3)")
-                                    .setPositiveButton("Done",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    jobRoleSelectedString = "";
-                                                    jobRoleSelectedId = "";
-                                                    for(int i=0; i<selectedJobRoles.size(); i++ ){
-                                                        jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
-                                                        jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
-                                                        if(i != (selectedJobRoles.size() - 1)){
-                                                            jobRoleSelectedString += ", ";
-                                                            jobRoleSelectedId += ",";
-                                                        }
-                                                    }
-                                                    Prefs.jobPrefString.put(jobRoleSelectedId);
-                                                    jobPrefEditText.setText(jobRoleSelectedString);
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                    .setMultiChoiceItems(jobRoleList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                                            JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
-                                            if (b) {
-                                                // If the user checked the item, add it to the selected items
-                                                if(selectedJobRoles.size() < 3){
-                                                    currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[i]));
-                                                    currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(i));
-                                                    selectedJobRoles.add(currentJobRoleBuilder.build());
-                                                    if(selectedJobRoles.size() == 3){
-                                                        //forcefully closing the dialog
-                                                        jobRoleSelectedString = "";
-                                                        jobRoleSelectedId = "";
-                                                        for(int x=0; x<selectedJobRoles.size(); x++ ){
-                                                            jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(x).getJobRoleName();
-                                                            jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(x).getJobRoleId();
-                                                            if(x != (selectedJobRoles.size() - 1)){
-                                                                jobRoleSelectedString += ", ";
-                                                                jobRoleSelectedId += ",";
-                                                            }
-                                                        }
-                                                        Prefs.jobPrefString.put(jobRoleSelectedId);
-                                                        jobPrefEditText.setText(jobRoleSelectedString);
-                                                        dialogInterface.dismiss();
-                                                    }
-                                                } else{
-                                                    dialogInterface.dismiss();
-                                                    Toast.makeText(getContext(), "Maximum 3 preference allowed.", Toast.LENGTH_LONG).show();
-                                                }
-                                            } else{
-                                                for(int x=0; x<selectedJobRoles.size(); x++){
-                                                    if(selectedJobRoles.get(x).getJobRoleId() == jobRoleIdList.get(i)){
-                                                        selectedJobRoles.remove(x);
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }).create();
-                            alertDialog.show();
-                            WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
-                            params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-                            params.height = 900;
-                            alertDialog.getWindow().setAttributes(params);
-
+                            showJobRolePrefPopup(jobRoleList, jobRoleIdList, checkedItems);
                         }
                     });
 
@@ -632,4 +566,56 @@ public class CandidateProfileBasic extends Fragment {
                 });
         alertDialog.show();
     }
+
+    private void showJobRolePrefPopup(final CharSequence[] jobRoleNameList, final List<Long> jobRoleIdList, final boolean[] checkedItems) {
+
+        final android.support.v7.app.AlertDialog.Builder searchByJobRoleBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+        searchByJobRoleBuilder.setCancelable(false);
+        searchByJobRoleBuilder.setTitle("Select Job Role preference (Max 3)");
+        searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                jobRoleSelectedString = "";
+                jobRoleSelectedId = "";
+                for(int x=0; x<selectedJobRoles.size(); x++ ){
+                    jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(x).getJobRoleName();
+                    jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(x).getJobRoleId();
+                    if(x != (selectedJobRoles.size() - 1)){
+                        jobRoleSelectedString += ", ";
+                        jobRoleSelectedId += ",";
+                    }
+                }
+                Prefs.jobPrefString.put(jobRoleSelectedId);
+                jobPrefEditText.setText(jobRoleSelectedString);
+                dialog.cancel();
+            }
+        });
+        searchByJobRoleBuilder.setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
+                JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
+                if(isChecked) {
+                    if (selectedJobRoles.size() < 3) {
+                        currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleNameList[which]));
+                        currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
+                        selectedJobRoles.add(currentJobRoleBuilder.build());
+                    } else {
+                        checkedItems[which] = false;
+                        ((android.support.v7.app.AlertDialog) dialogInterface).getListView().setItemChecked(which, false);
+                        Toast.makeText(getContext(), "Please select only maximum of 3 job roles.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    for(int i=0; i< selectedJobRoles.size(); i++){
+                        if(selectedJobRoles.get(i).getJobRoleId() == jobRoleIdList.get(which)){
+                            selectedJobRoles.remove(i);
+                            break;
+                        }
+                    }
+                    checkedItems[which] = false;
+                }
+            }
+        });
+        final android.support.v7.app.AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
+        searchByJobRoleDialog.show();
+    }
+
 }
