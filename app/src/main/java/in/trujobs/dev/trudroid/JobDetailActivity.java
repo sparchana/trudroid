@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -51,7 +50,6 @@ public class JobDetailActivity extends TruJobsBaseActivity {
     Button jobTabApplyBtn;
     ProgressDialog pd;
     int preScreenLocationIndex = 0;
-    public Typeface custom_font;
     private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mAsyncTask;
 
     public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
@@ -76,11 +74,6 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //bold font
-        custom_font = Typeface.createFromAsset(getAssets(),  "fonts/trufont_bold.ttf");
-        toolbarTitle.setTypeface(custom_font);
-        //regular font
-
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,19 +89,6 @@ public class JobDetailActivity extends TruJobsBaseActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Job"));
         tabLayout.addTab(tabLayout.newTab().setText("Company"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
-        int tabsCount = vg.getChildCount();
-        for (int j = 0; j < tabsCount; j++) {
-            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildCount = vgTab.getChildCount();
-            for (int i = 0; i < tabChildCount; i++) {
-                View tabViewChild = vgTab.getChildAt(i);
-                if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(custom_font);
-                }
-            }
-        }
 
         //get details of a jobPost via AsyncTask
         getDetails();
