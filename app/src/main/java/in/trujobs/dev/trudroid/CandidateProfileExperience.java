@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -101,7 +102,7 @@ public class CandidateProfileExperience extends Fragment {
 
     public void showExperiencePicker(){
         final Dialog expDialog = new Dialog(getActivity());
-        expDialog.setTitle("Select Experience");
+        expDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         expDialog.setContentView(R.layout.experience_picker);
         Button setBtn = (Button) expDialog.findViewById(R.id.setBtn);
 

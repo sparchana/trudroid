@@ -87,12 +87,14 @@
             android:name=".CandidateProfileActivity"
             android:label="Profile"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemeNoAction" />
         <activity
             android:name=".JobDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MyAppliedJobs" />
-        <activity android:name=".ReferFriends"></activity>
+        <activity android:name=".MyAppliedJobs"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ReferFriends"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

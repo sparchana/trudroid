@@ -392,23 +392,30 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             drawer.closeDrawer(GravityCompat.START);
         }
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
+            //double press exit
+            if(Util.isLoggedIn()){
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+
+                this.doubleBackToExitPressedOnce = true;
+                showToast("Please press back again to exit");
+
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce=false;
+                    }
+                }, 2500);
+            }
+            else{
+                this.finish();
+            }
         } else {
             getFragmentManager().popBackStack();
             super.onBackPressed();
-        }
-
-        if(Util.isLoggedIn()){
-            this.doubleBackToExitPressedOnce = true;
-            showToast("Please press back again to exit");
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce=false;
-                }
-            }, 2500);
         }
     }
 
