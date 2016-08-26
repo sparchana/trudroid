@@ -1,14 +1,11 @@
 package in.trujobs.dev.trudroid.Adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,25 +16,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
-import in.trujobs.dev.trudroid.WelcomeScreen;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
-import in.trujobs.proto.CandidateAppliedJobsResponse;
-import in.trujobs.proto.JobApplicationObject;
 import in.trujobs.proto.JobPostObject;
 
 /**
@@ -53,7 +45,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
     public class Holder
     {
-        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, nApplyingJobBtnTextView;
+        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, mApplyingJobBtnTextView;
         LinearLayout mApplyBtnBackground, applyBtn;
     }
     public LinearLayout applyingJobButton;
@@ -69,9 +61,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             rowView = LayoutInflater.from(getContext()).inflate(
                     R.layout.job_list_view_item, parent, false);
         }
-        holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
-        holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
 
+        holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
+
+        holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
         holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
 
         pd = CustomProgressDialog.get(parent.getContext());
@@ -80,7 +73,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.mJobPostApplyBtn.setText("Apply");
         holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
 
-        holder.nApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
+        holder.mApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
 
         if(jobPost.getIsApplied() == 1){
             holder.applyBtn.setEnabled(false);
@@ -166,7 +159,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             @Override
             public void onClick(View view) {
                 applyingJobButton = holder.mApplyBtnBackground;
-                applyingJobBtnTextView = holder.nApplyingJobBtnTextView;
+                applyingJobBtnTextView = holder.mApplyingJobBtnTextView;
                 showJobLocality(jobPost);
             }
         });

@@ -68,7 +68,7 @@
                                 android:textSize="14dp"
                                 android:textColor="#2678AD"
                                 android:text="Company and Job Title"
-                                android:id="@+id/company_ho_title" />
+                                android:id="@+id/company_job_title" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
                                 android:textSize="14dp"
                                 android:textColor="#2678AD"
                                 android:text="Location(s)"
-                                android:id="@+id/job_location" />
+                                android:id="@+id/job_location_title" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -209,7 +209,7 @@
                                 android:textSize="14dp"
                                 android:textColor="#2678AD"
                                 android:text="Salary and Benefits"
-                                android:id="@+id/salary_benefits" />
+                                android:id="@+id/salary_benefits_title" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -338,7 +338,7 @@
                                 android:textSize="14dp"
                                 android:textColor="#2678AD"
                                 android:text="Work Details"
-                                android:id="@+id/job_work_details" />
+                                android:id="@+id/job_work_details_title" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -422,7 +422,7 @@
                                 android:textColor="#2678AD"
                                 android:textSize="14dp"
                                 android:text="Requirements"
-                                android:id="@+id/requirements" />
+                                android:id="@+id/requirements_title" />
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"

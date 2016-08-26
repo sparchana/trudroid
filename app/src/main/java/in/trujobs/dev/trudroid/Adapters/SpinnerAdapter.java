@@ -1,6 +1,7 @@
 package in.trujobs.dev.trudroid.Adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
