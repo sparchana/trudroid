@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;

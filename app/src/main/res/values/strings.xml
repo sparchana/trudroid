@@ -12,7 +12,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_job">Search Jobs</string>
+    <string name="title_activity_job"></string>
     <string name="title_activity_home">Locality</string>
 
     <string name="question_fresher_experienced">Are you a fresher or experienced candidate?</string>

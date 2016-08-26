@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -109,6 +110,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         setContentView(R.layout.activity_job);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Search jobs");
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -176,6 +179,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 }
             }
         });
+
+        //changing font from assets folder
+
         mSearchJobAcTxtView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.place_autocomplete_list_item));
         mSearchJobAcTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -438,15 +444,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mAlertAsyncTask.execute(requestBuilder.build());
                 break;
             case R.id.search_jobs_by_job_role:
-                if(jobRoleObjectList == null || jobRoleObjectList.size() == 0){
-                    JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
-                    fetchAllJobs.execute();
-                }
                 showJobRolesAlertUI(jobRoleObjectList);
                 break;
 
             case R.id.edit_job_roles_filter:
-                showJobRolesAlertUI(jobRoleObjectList); break;
+                showJobRolesAlertUI(jobRoleObjectList);
+                break;
 
             case R.id.clear_location_filter:
                 mSearchJobAcTxtView.getText().clear();
@@ -752,6 +755,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     }
 
     private void showJobRolesAlertUI(List<JobRoleObject> jobRoleObjectList) {
+        if(jobRoleObjectList == null || jobRoleObjectList.size() == 0){
+            JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
+            fetchAllJobs.execute();
+        }
 
         final List<String> mSelectedJobsName = new ArrayList<>();
         final AlertDialog.Builder searchByJobRoleBuilder = new AlertDialog.Builder(this);

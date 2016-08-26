@@ -2,6 +2,7 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -65,8 +66,11 @@ public class ViewProfileFragment extends Fragment {
         pd = CustomProgressDialog.get(getActivity());
 
         profileStatusText = (TextView) view.findViewById(R.id.profile_status_text);
+
         profileMsg = (TextView) view.findViewById(R.id.profile_msg);
+
         jobsApplied = (TextView) view.findViewById(R.id.candidate_applied_job_no);
+
         bodyOpen = true;
         preferenceOpen = false;
         educationOpen = false;
@@ -194,21 +198,34 @@ public class ViewProfileFragment extends Fragment {
                     candidateProfileActivity.candidateInfo = getCandidateInformationResponse;
 
                     TextView candidateName = (TextView) view.findViewById(R.id.user_name);
+
                     TextView candidateGender = (TextView) view.findViewById(R.id.candidate_gender);
+
                     TextView candidateMobile = (TextView) view.findViewById(R.id.candidate_phone_number);
+
                     TextView candidateAge = (TextView) view.findViewById(R.id.candidate_age);
+
                     TextView candidateLocation = (TextView) view.findViewById(R.id.candidate_location);
 
+                    //pref
                     TextView candidateJobPref = (TextView) view.findViewById(R.id.candidate_job_pref);
+
                     TextView candidateLocalityPref = (TextView) view.findViewById(R.id.candidate_locality_pref);
+
                     TextView candidateShiftPref = (TextView) view.findViewById(R.id.candidate_job_time_shift);
 
+                    //education
                     TextView candidateDegree = (TextView) view.findViewById(R.id.candidate_degree);
+
                     TextView candidateCollege = (TextView) view.findViewById(R.id.candidate_college);
+
                     TextView candidateCourse = (TextView) view.findViewById(R.id.candidate_course);
 
+                    //experience
                     TextView candidateTotalExp = (TextView) view.findViewById(R.id.candidate_experience);
+
                     TextView candidateCurrentCompany = (TextView) view.findViewById(R.id.candidate_current_company);
+
                     TextView candidateLastWithdrawnSalary = (TextView) view.findViewById(R.id.candidate_current_salary);
 
                     candidateName.setText("Hi " + getCandidateInformationResponse.getCandidate().getCandidateFirstName());

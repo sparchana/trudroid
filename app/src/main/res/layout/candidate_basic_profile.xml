@@ -236,6 +236,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="10dp"
                                 android:layout_marginLeft="4dp"
+                                android:id="@+id/job_role_pref_title"
                                 android:text="Preferred Job Roles(s)"/>
 
                             <android.support.design.widget.TextInputLayout
@@ -312,6 +313,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="10dp"
                                 android:layout_marginLeft="4dp"
+                                android:id="@+id/shift_pref_title"
                                 android:text="Preferred Shift Timing"/>
 
                             <android.support.design.widget.TextInputLayout

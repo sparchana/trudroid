@@ -4,16 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +51,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
     Button jobTabApplyBtn;
     ProgressDialog pd;
     int preScreenLocationIndex = 0;
+    public Typeface custom_font;
     private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mAsyncTask;
 
     public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
@@ -64,8 +68,18 @@ public class JobDetailActivity extends TruJobsBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
-        setTitle(EXTRA_JOB_TITLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(EXTRA_JOB_TITLE);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //bold font
+        custom_font = Typeface.createFromAsset(getAssets(),  "fonts/trufont_bold.ttf");
+        toolbarTitle.setTypeface(custom_font);
+        //regular font
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +96,19 @@ public class JobDetailActivity extends TruJobsBaseActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Job"));
         tabLayout.addTab(tabLayout.newTab().setText("Company"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(custom_font);
+                }
+            }
+        }
 
         //get details of a jobPost via AsyncTask
         getDetails();
@@ -279,6 +306,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 }
 
                 TextView otherJobTextView = (TextView) findViewById(R.id.other_job_header);
+
                 LinearLayout otherJobListView = (LinearLayout) findViewById(R.id.other_job_list_view);
                 //setting other jobs in Other job section
                 if(getJobPostDetailsResponse.getCompany().getCompanyOtherJobsCount() > 0){
@@ -349,7 +377,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     companyWebsite.setText("Company website: Info Not Specified");
                 }
 
-                if(getJobPostDetailsResponse.getCompany().getCompanyType() != null){
+                if(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName() != ""){
                     companyType.setText(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName());
                 } else{
                     companyType.setText("Company Type: Info Not Specified");
@@ -456,4 +484,5 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }
