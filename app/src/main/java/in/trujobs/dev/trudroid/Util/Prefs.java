@@ -31,7 +31,6 @@ public class Prefs {
 
     public static final File.SharedPreference<Integer> candidateJobPrefStatus = sFile.intValue("candidateJobPrefStatus", 0);
     public static final File.SharedPreference<Integer> candidateHomeLocalityStatus = sFile.intValue("candidateHomeLocalityStatus", 0);
-    public static final File.SharedPreference<Integer> loginCheckStatus = sFile.intValue("loginCheckStatus", 0);
 
     public static final File.SharedPreference<String> jobPrefString = sFile.stringValue("jobPrefString", "");
 
@@ -39,30 +38,27 @@ public class Prefs {
     public static final File.SharedPreference<Integer> jobToApplyStatus = sFile.intValue("jobToApplyFlag", 0);
     public static final File.SharedPreference<Long> getJobToApplyJobId = sFile.longValue("getJobToApplyJobId", 0L);
 
-    // apply job status flag
-    public static final File.SharedPreference<Integer> jobApplyStatus = sFile.intValue("jobApplyStatus", 0);
-
-    public static void onLogout() {
-        Prefs.leadId.remove();
-        Prefs.candidateId.remove();
-        Prefs.candidateMobile.remove();
-        Prefs.candidateGender.remove();
+    public static void clearPrefValues() {
         Prefs.firstName.remove();
         Prefs.lastName.remove();
+        Prefs.leadId.remove();
+        Prefs.candidateId.remove();
         Prefs.candidateMinProfile.remove();
+        Prefs.candidateGender.remove();
         Prefs.isAssessed.remove();
-        Prefs.storedOtp.remove();
         Prefs.sessionId.remove();
         Prefs.sessionExpiry.remove();
+        Prefs.storedOtp.remove();
+        Prefs.jobPostId.remove();
+        Prefs.candidateHomeLocalityName.remove();
         Prefs.candidateHomeLat.remove();
         Prefs.candidateHomeLng.remove();
         Prefs.candidatePrefJobRoleIdOne.remove();
         Prefs.candidatePrefJobRoleIdTwo.remove();
         Prefs.candidatePrefJobRoleIdThree.remove();
-        Prefs.candidateHomeLocalityStatus.remove();
         Prefs.candidateJobPrefStatus.remove();
+        Prefs.candidateHomeLocalityStatus.remove();
         Prefs.jobPrefString.remove();
-        Prefs.candidateHomeLocalityName.remove();
     }
 
     /* TODO maintain session and authToken across server and app */

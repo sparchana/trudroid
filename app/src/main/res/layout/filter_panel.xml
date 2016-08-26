@@ -14,25 +14,26 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="4dp"
             android:focusableInTouchMode="true"
-            android:background="@color/back_grey"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="42dp"
                 android:layout_margin="2dp"
                 android:layout_weight=".2"
                 android:layout_gravity="center_vertical"
-                android:background="@color/white"
+                android:background="@drawable/round_white_button"
                 android:orientation="horizontal">
 
                <ImageView
                    android:layout_width="16dp"
                    android:layout_height="16dp"
+                   android:layout_margin="8dp"
                    android:layout_gravity="center"
                    android:src="@drawable/location"/>
 
@@ -41,7 +42,8 @@
                    android:layout_height="wrap_content"
                    android:id="@+id/search_jobs_by_place"
                    android:textSize="12dp"
-                   android:paddingLeft="8dp"
+                   android:textColor="@color/back_grey_dark"
+                   android:background="@android:color/transparent"
                    android:focusableInTouchMode="true"
                    android:maxLength="50"
                    android:layout_gravity="center"
@@ -51,8 +53,11 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
+                    android:layout_margin="8dp"
+                    android:padding="2dp"
+                    android:id="@+id/clear_location_filter"
                     android:layout_gravity="center"
-                    android:src="@drawable/edit"/>
+                    android:src="@drawable/cross"/>
            </LinearLayout>
 
         </LinearLayout>
@@ -61,24 +66,26 @@
             android:layout_width="match_parent"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:paddingBottom="5dp"
             android:focusableInTouchMode="true"
-            android:background="@color/back_grey"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:layout_weight=".2"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight=".86"
                 android:layout_gravity="center_vertical"
                 android:focusableInTouchMode="true"
-                android:background="@color/white"
+                android:background="@drawable/round_white_button"
                 android:layout_margin="2dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center"
+                    android:layout_margin="8dp"
                     android:src="@drawable/job"/>
 
                 <TextView
@@ -86,35 +93,33 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/search_jobs_by_job_role"
-                    android:paddingLeft="8dp"
                     android:textSize="12dp"
                     android:maxLength="100"
                     android:text="All Jobs"
                     android:hint="Ex: Driver"
                     android:layout_weight="1"/>
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
+                    android:layout_margin="9dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/edit"/>
+                    android:id="@+id/edit_job_roles_filter"
+                    android:src="@drawable/edit_grey"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".5"
+                android:layout_weight=".14"
                 android:layout_margin="2dp">
-                <Button
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/btn_job_filter"
-                    android:drawablePadding="-24dp"
-                    android:layout_gravity="center|right"
                     android:textAllCaps="false"
-                    android:padding="8dp"
-                    android:drawableLeft="@drawable/filter"
-                    android:text="Filter"
-                    android:textColor="@color/back_grey_dark"
-                    android:background="@color/white"/>
+                    android:padding="9dp"
+                    android:src="@drawable/filter_not_selected"
+                    android:background="@color/transparent"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

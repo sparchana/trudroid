@@ -1,6 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,12 +15,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -33,14 +29,10 @@ import android.widget.Toast;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Filter;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.NavigationListAdapter;
@@ -154,9 +146,17 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         pd = CustomProgressDialog.get(SearchJobsActivity.this);
 
-        //filter button
-        Button btnFilterJob = (Button) findViewById(R.id.btn_job_filter);
+        //filter_selected button
+        ImageView btnFilterJob = (ImageView) findViewById(R.id.btn_job_filter);
         btnFilterJob.setOnClickListener(this);
+
+        //job role edit icon
+        ImageView editJobRole = (ImageView) findViewById(R.id.edit_job_roles_filter);
+        editJobRole.setOnClickListener(this);
+
+        //job role edit icon
+        ImageView clearLocationFilter = (ImageView) findViewById(R.id.clear_location_filter);
+        clearLocationFilter.setOnClickListener(this);
 
         JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
         fetchAllJobs.execute();
@@ -337,7 +337,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         switch (get_index(position)) {
             case 0:
                 if (Util.isLoggedIn()) {
-                    Prefs.onLogout();
+                    Prefs.clearPrefValues();
                     Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
                 }
@@ -366,16 +366,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
             default:
                 break;
-        }
-    }
-
-    /* dismissFilterPanel is directly getting called from filter_container_layout */
-    public void dismissFilterPanel(View view) {
-        if (filterJobFragment != null) {
-            jobFilterRequestBkp = filterJobFragment.jobFilterRequest;
-            getSupportFragmentManager().beginTransaction()
-                    .remove(getSupportFragmentManager().findFragmentById(
-                            R.id.overlay_job_filter_fragment_container)).commit();
         }
     }
 
@@ -434,6 +424,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
                     getSupportFragmentManager().beginTransaction()
                             .addToBackStack(null)
+                            .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                             .add(R.id.overlay_job_filter_fragment_container, filterJobFragment).commit();
                 }
                 break;
@@ -453,6 +444,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 }
                 showJobRolesAlertUI(jobRoleObjectList);
                 break;
+
+            case R.id.edit_job_roles_filter:
+                showJobRolesAlertUI(jobRoleObjectList); break;
+
+            case R.id.clear_location_filter:
+                mSearchJobAcTxtView.getText().clear();
+                mSearchJobAcTxtView.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
+
             default:
                 break;
         }
@@ -706,7 +707,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         JobSearchRequest.Builder jobSearch;
         if(jobSearchRequest != null){
             /* take prev jobSearchReq into account before making a new jobSearch request */
-            /* sets lat, lng, mobile, filter */
+            /* sets lat, lng, mobile, filter_selected */
             Tlog.i("found jobSearchRequest");
             jobSearch = jobSearchRequest;
         } else {

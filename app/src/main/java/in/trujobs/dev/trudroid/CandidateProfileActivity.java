@@ -17,6 +17,7 @@ public class CandidateProfileActivity extends TruJobsBaseActivity {
         viewProfileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
+                .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                 .add(R.id.main_profile, viewProfileFragment).commit();
 
     }

@@ -559,6 +559,7 @@ public class CandidateProfileBasic extends Fragment {
                     candidateProfileExperience.setArguments(getActivity().getIntent().getExtras());
                     getFragmentManager().beginTransaction()
                             .addToBackStack(null)
+                            .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                             .add(R.id.main_profile, candidateProfileExperience).commit();
                     updatePrefs();
                 } else{
