@@ -438,15 +438,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mAlertAsyncTask.execute(requestBuilder.build());
                 break;
             case R.id.search_jobs_by_job_role:
-                if(jobRoleObjectList == null || jobRoleObjectList.size() == 0){
-                    JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
-                    fetchAllJobs.execute();
-                }
                 showJobRolesAlertUI(jobRoleObjectList);
                 break;
 
             case R.id.edit_job_roles_filter:
-                showJobRolesAlertUI(jobRoleObjectList); break;
+                showJobRolesAlertUI(jobRoleObjectList);
+                break;
 
             case R.id.clear_location_filter:
                 mSearchJobAcTxtView.getText().clear();
@@ -752,6 +749,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     }
 
     private void showJobRolesAlertUI(List<JobRoleObject> jobRoleObjectList) {
+        if(jobRoleObjectList == null || jobRoleObjectList.size() == 0){
+            JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
+            fetchAllJobs.execute();
+        }
 
         final List<String> mSelectedJobsName = new ArrayList<>();
         final AlertDialog.Builder searchByJobRoleBuilder = new AlertDialog.Builder(this);
