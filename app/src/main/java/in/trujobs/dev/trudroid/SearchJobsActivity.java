@@ -169,6 +169,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         /* Filter Actions */
         mSearchJobAcTxtView = (AutoCompleteTextView) findViewById(R.id.search_jobs_by_place);
+        mSearchJobAcTxtView.setOnClickListener(this);
         mSearchJobAcTxtView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -455,6 +456,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchJobAcTxtView.getText().clear();
                 mSearchJobAcTxtView.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
+
+            case R.id.search_jobs_by_place:
+                mSearchJobAcTxtView.requestFocus();
+                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
 
             default:
