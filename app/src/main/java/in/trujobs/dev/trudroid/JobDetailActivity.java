@@ -434,6 +434,8 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
                             applyDialog.show();
                         } else{
+                            Toast.makeText(JobDetailActivity.this, "Please login/sign up to apply.",
+                                    Toast.LENGTH_LONG).show();
                             Prefs.jobToApplyStatus.put(1);
                             Prefs.getJobToApplyJobId.put(getJobPostDetailsResponse.getJobPost().getJobPostId());
                             Intent intent = new Intent(JobDetailActivity.this, WelcomeScreen.class);

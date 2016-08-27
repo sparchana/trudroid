@@ -208,6 +208,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
             applyDialog.show();
         } else{
+            Toast.makeText(getContext(), "Please login/sign up to apply.",
+                    Toast.LENGTH_LONG).show();
             Prefs.jobToApplyStatus.put(1);
             Prefs.getJobToApplyJobId.put(jobPost.getJobPostId());
             ((Activity)getContext()).finish();
