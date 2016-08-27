@@ -347,11 +347,12 @@ public class CandidateProfileBasic extends Fragment {
                         public void onClick(View view) {
                             boolean check = true;
 
-                            int year, ageDiff = 0;
+                            int year, ageDiff = 0, minAgeDiff = 0;
                             if(candidateDob.getText().toString().length() > 0){
                                 String str[] = candidateDob.getText().toString().split("-");
                                 year = Integer.parseInt(str[2]);
                                 ageDiff = ((Calendar.getInstance().get(Calendar.YEAR) - 18) - year);
+                                minAgeDiff = ((Calendar.getInstance().get(Calendar.YEAR) - 80) - year);
                             }
 
                             int pos = shift_option.getSelectedItemPosition();
@@ -382,11 +383,11 @@ public class CandidateProfileBasic extends Fragment {
                                 candidateDob.setError("Select date of birth");
                                 candidateDob.addTextChangedListener(new GenericTextWatcher(candidateDob));
                                 showDialog("Please enter your Date of Birth");
-                            } else if(ageDiff < 0){
+                            } else if(ageDiff < 0 || minAgeDiff > 0){
                                 check = false;
-                                candidateDob.setError("Select valid date of birth (min: 18 yrs)");
+                                candidateDob.setError("Select valid date of birth (min: 18 yrs, max: 80 yrs)");
                                 candidateDob.addTextChangedListener(new GenericTextWatcher(candidateDob));
-                                showDialog("Please provide a valid date of birth (above 18 yrs)");
+                                showDialog("Please provide a valid date of birth (min: 18 yrs, max: 80 yrs  )");
                             } else if(genderValue < 0){
                                 check = false;
                                 showDialog("Please provide your gender");
