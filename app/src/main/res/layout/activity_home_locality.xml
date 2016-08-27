@@ -54,8 +54,10 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="0.1"
+                    android:id="@+id/home_locality_auto_complete_clear"
+                    android:padding="9dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/edit"/>
+                    android:src="@drawable/cross"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

@@ -42,6 +42,7 @@ public class Prefs {
         Prefs.firstName.remove();
         Prefs.lastName.remove();
         Prefs.leadId.remove();
+        Prefs.candidateMobile.remove();
         Prefs.candidateId.remove();
         Prefs.candidateMinProfile.remove();
         Prefs.candidateGender.remove();

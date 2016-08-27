@@ -91,6 +91,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         //super.onCreateView(inflater, container, savedInstanceState);
         View jobFilterRootView = inflater.inflate(R.layout.filter_container_layout, container, false);
 
+        //checking if device android version is above 5 or not
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
             Tlog.e("Device has android 5 or above");
