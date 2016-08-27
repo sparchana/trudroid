@@ -95,8 +95,6 @@ public class EnterPassword extends TruJobsBaseActivity {
             }
 
             if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Prefs.clearPrefValues();
-
                 Prefs.firstName.put(logInResponse.getCandidateFirstName());
                 Prefs.lastName.put(logInResponse.getCandidateLastName());
                 Prefs.candidateGender.put(logInResponse.getCandidateGender());

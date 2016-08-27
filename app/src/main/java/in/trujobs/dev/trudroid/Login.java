@@ -143,7 +143,6 @@ public class Login extends TruJobsBaseActivity {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mPassword.getWindowToken(), 0);
 
-                Prefs.clearPrefValues();
                 Prefs.candidateMobile.put(mMobile.getText().toString());
                 Prefs.firstName.put(logInResponse.getCandidateFirstName());
                 Prefs.lastName.put(logInResponse.getCandidateLastName());

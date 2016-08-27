@@ -574,6 +574,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
+
             Tlog.i("DataSize: " + jobPostObjectList.size());
             endOfSearchLayout.setVisibility(View.VISIBLE);
             JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
