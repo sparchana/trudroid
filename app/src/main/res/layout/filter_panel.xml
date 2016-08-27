@@ -76,7 +76,6 @@
                 android:layout_gravity="center_vertical"
                 android:focusableInTouchMode="true"
                 android:background="@drawable/round_white_button"
-                android:layout_margin="2dp"
                 android:orientation="horizontal">
 
                 <ImageView
