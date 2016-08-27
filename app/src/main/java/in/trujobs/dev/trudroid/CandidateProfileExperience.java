@@ -58,7 +58,7 @@ public class CandidateProfileExperience extends Fragment {
 
     public CandidateProfileActivity candidateProfileActivity;
 
-    LinearLayout qualificationLayout, experiencedSection, languageListView;
+    LinearLayout qualificationLayout, experiencedSection, languageListView, fresherExperienceLayout, isEmployedLayout;
     Integer isCandidateExperienced = -1;
 
     // values
@@ -85,6 +85,9 @@ public class CandidateProfileExperience extends Fragment {
         ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fresherExperienceLayout = (LinearLayout) view.findViewById(R.id.fresher_experienced_layout);
+        isEmployedLayout = (LinearLayout) view.findViewById(R.id.is_employed_layout);
 
         pd = CustomProgressDialog.get(getActivity());
 
@@ -311,6 +314,7 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onClick(View view) {
                             isEmployed = 1;
+                            isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             qualificationLayout.setVisibility(View.VISIBLE);
                             isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -323,6 +327,7 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onClick(View view) {
                             isEmployed = 0;
+                            isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             qualificationLayout.setVisibility(View.GONE);
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -336,6 +341,10 @@ public class CandidateProfileExperience extends Fragment {
                         public void onClick(View view) {
                             isCandidateExperienced = 0;
                             isEmployed = 0;
+                            expInYears = 0;
+                            selectExp.setText("Select Totla Experience");
+                            isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+                            fresherExperienceLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
                             isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
@@ -353,6 +362,12 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onClick(View view) {
                             isCandidateExperienced = 1;
+                            isEmployed = -1;
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            fresherExperienceLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             experiencedSection.setVisibility(View.VISIBLE);
                             isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                             isExperienced.setTextColor(getResources().getColor(R.color.white));
@@ -421,20 +436,21 @@ public class CandidateProfileExperience extends Fragment {
                             if(isCandidateExperienced < 0){
                                 check = false;
                                 showDialog("Please select Fresher or Experience");
-                            }
-                            if(expInYears > 1 && isEmployed < 0){
-                                check = false;
-                                showDialog("Please answer the question: Are you currently working?");
-                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
-                                check = false;
-                                lastWithdrawnSalary.setError("Please provide your Home Locality");
-                                lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
-                                showDialog("Please provide your current Salary");
+                                fresherExperienceLayout.setBackgroundResource(R.drawable.border);
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
-                                selectExp.setError("Please provide your Home Locality");
+                                selectExp.setError("Please answer the question: Total Work Experience");
                                 selectExp.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                                 showDialog("Please answer the question: Total Work Experience");
+                            } else if(expInYears > 1 && isEmployed < 0){
+                                check = false;
+                                showDialog("Please answer the question: Are you currently working?");
+                                isEmployedLayout.setBackgroundResource(R.drawable.border);
+                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
+                                check = false;
+                                lastWithdrawnSalary.setError("Please provide your current Salary");
+                                lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
+                                showDialog("Please provide your current Salary");
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
                                 showDialog("Please select at least one language that you know");
@@ -455,9 +471,11 @@ public class CandidateProfileExperience extends Fragment {
                                     isEmployed = 0;
                                 }
                                 if(isEmployed == 1){
-                                    experienceBuilder.setCurrentJobRole(currentJobRoleValue);
-                                    experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
                                     experienceBuilder.setCandidateCurrentSalary(Long.parseLong(lastWithdrawnSalary.getText().toString()));
+                                    if(currentJobRoleValue != null) {
+                                        experienceBuilder.setCurrentJobRole(currentJobRoleValue);
+                                    }
+                                    experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
                                 }
 
                                 mUpdateExperienceAsyncTask = new UpdateExperienceProfileAsyncTask();

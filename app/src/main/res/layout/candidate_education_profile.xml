@@ -112,6 +112,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_top_text"
+                            android:id="@+id/qualification_layout"
                             android:layout_marginBottom="@dimen/margin_bottom_text">
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
@@ -144,6 +145,7 @@
                             <LinearLayout
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
+                                android:id="@+id/degree_layout"
                                 android:layout_marginTop="@dimen/margin_top_text"
                                 android:layout_marginBottom="@dimen/margin_bottom_text">
                                 <android.support.design.widget.TextInputLayout

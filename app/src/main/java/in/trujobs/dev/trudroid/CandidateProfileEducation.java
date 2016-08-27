@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,6 +43,8 @@ public class CandidateProfileEducation extends Fragment {
 
     LinearLayout degreeSection;
     LinearLayout qualificationBackground;
+    LinearLayout qualificationLayout;
+    LinearLayout degreeLayout;
     EditText candidateCollege;
     Button updateEducationProfile;
     TextView qualificationStatusText;
@@ -69,6 +72,8 @@ public class CandidateProfileEducation extends Fragment {
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        qualificationLayout = (LinearLayout) view.findViewById(R.id.qualification_layout);
+        degreeLayout = (LinearLayout) view.findViewById(R.id.degree_layout);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle("Education Profile");
@@ -178,6 +183,13 @@ public class CandidateProfileEducation extends Fragment {
 
                     adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel);
                     candidateQualification.setAdapter(adapter);
+                    candidateQualification.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            qualificationLayout.setBackgroundResource(0);
+                            return false;
+                        }
+                    });
 
                     candidateCollege = (EditText) view.findViewById(R.id.candidate_college);
 
@@ -186,6 +198,14 @@ public class CandidateProfileEducation extends Fragment {
 
                     adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, degreeName);
                     candidateDegree.setAdapter(adapter);
+
+                    candidateDegree.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            degreeLayout.setBackgroundResource(0);
+                            return false;
+                        }
+                    });
 
                     //pre-filling data
                     candidateQualification.setSelection(qualificationPos);
@@ -283,10 +303,12 @@ public class CandidateProfileEducation extends Fragment {
                             boolean check = true;
                             if(qualificationSelected < 1){
                                 showDialog("Please select your education level");
+                                qualificationLayout.setBackgroundResource(R.drawable.border);
                                 check = false;
                             } else if(qualificationSelected > 3 && degreeSelected < 1){
                                 check = false;
                                 showDialog("Please select your Degree");
+                                degreeLayout.setBackgroundResource(R.drawable.border);
                             } else if(qualificationStatus == -1){
                                 check = false;
                                 showDialog("Please select \"have you completed this course?\"");

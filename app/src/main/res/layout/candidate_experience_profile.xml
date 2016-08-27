@@ -133,6 +133,7 @@
                                 android:orientation="horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="42dp"
+                                android:id="@+id/fresher_experienced_layout"
                                 android:padding="1dp">
 
                                 <Button
@@ -264,6 +265,7 @@
                                 android:layout_gravity="center"
                                 android:gravity="center_horizontal">
                                 <LinearLayout
+                                    android:id="@+id/is_employed_layout"
                                     android:orientation="horizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="42dp"

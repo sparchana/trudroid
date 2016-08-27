@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +98,10 @@ public class CandidateProfileBasic extends Fragment {
     String jobRoleSelectedString = "";
     String jobRoleSelectedId = "";
 
+    public LinearLayout genderBtnLayout;
+
+    public android.support.design.widget.TextInputLayout shiftLayout;
+
     View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,6 +118,8 @@ public class CandidateProfileBasic extends Fragment {
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle("Basic Profile");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        shiftLayout = (android.support.design.widget.TextInputLayout) view.findViewById(R.id.shift_layout);
 
         pd = CustomProgressDialog.get(getActivity());
         mAsyncTask = new GetBasicStaticAsyncTask();
@@ -176,6 +183,7 @@ public class CandidateProfileBasic extends Fragment {
                     candidateDob = (EditText) view.findViewById(R.id.date_of_birth_edit_text);
                     mobileNumber = (EditText) view.findViewById(R.id.phone_number);
                     mHomeLocalityTxtView = (AutoCompleteTextView) view.findViewById(R.id.home_locality_auto_complete_edit_text);
+                    genderBtnLayout = (LinearLayout) view.findViewById(R.id.gender_button_layout);
 
                     maleBtn = (Button) view.findViewById(R.id.gender_male);
                     femaleBtn = (Button) view.findViewById(R.id.gender_female);
@@ -204,6 +212,7 @@ public class CandidateProfileBasic extends Fragment {
                         @Override
                         public void onClick(View view) {
                             genderValue = 0;
+                            genderBtnLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             maleBtn.setBackgroundResource(R.drawable.rounded_corner_button);
                             maleBtn.setTextColor(getResources().getColor(R.color.white));
                             femaleBtn.setBackgroundResource(R.drawable.round_white_button);
@@ -215,6 +224,7 @@ public class CandidateProfileBasic extends Fragment {
                         @Override
                         public void onClick(View view) {
                             genderValue = 1;
+                            genderBtnLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             femaleBtn.setBackgroundResource(R.drawable.rounded_corner_button);
                             femaleBtn.setTextColor(getResources().getColor(R.color.white));
                             maleBtn.setBackgroundResource(R.drawable.round_white_button);
@@ -237,6 +247,14 @@ public class CandidateProfileBasic extends Fragment {
 
                     SpinnerAdapter adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, categories);
                     shift_option.setAdapter(adapter);
+
+                    shift_option.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            shiftLayout.setBackgroundResource(0);
+                            return false;
+                        }
+                    });
 
                     jobPrefEditText = (EditText) view.findViewById(R.id.pref_job_roles);
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
@@ -390,6 +408,7 @@ public class CandidateProfileBasic extends Fragment {
                                 showDialog("Please provide a valid date of birth (min: 18 yrs, max: 80 yrs  )");
                             } else if(genderValue < 0){
                                 check = false;
+                                genderBtnLayout.setBackgroundResource(R.drawable.border);
                                 showDialog("Please provide your gender");
                             } else if(mHomeLocalityTxtView.getText().toString().length() == 0 ){
                                 check = false;
@@ -402,6 +421,7 @@ public class CandidateProfileBasic extends Fragment {
                             }  else if(shiftValue < 1 ){
                                 check = false;
                                 showDialog("Please provide your preferred Time Shift");
+                                shiftLayout.setBackgroundResource(R.drawable.border);
                             }
 
                             if(check){
