@@ -575,11 +575,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
             Tlog.i("DataSize: " + jobPostObjectList.size());
+            endOfSearchLayout.setVisibility(View.VISIBLE);
             JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
             if(jobPostListView.getVisibility() == View.GONE
                     || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
-                endOfSearchLayout.setVisibility(View.VISIBLE);
                 noJobsImageView.setVisibility(View.GONE);
             }
             jobPostListView.setAdapter(jobPostAdapter);

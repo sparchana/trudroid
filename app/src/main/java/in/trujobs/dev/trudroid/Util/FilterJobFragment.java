@@ -3,6 +3,7 @@ package in.trujobs.dev.trudroid.Util;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -88,6 +90,24 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //super.onCreateView(inflater, container, savedInstanceState);
         View jobFilterRootView = inflater.inflate(R.layout.filter_container_layout, container, false);
+
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+            Tlog.e("Device has android 5 or above");
+            int result = 0;
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = getResources().getDimensionPixelSize(resourceId);
+            }
+            LinearLayout filterContainer = (LinearLayout) jobFilterRootView.findViewById(R.id.filter_panel_main_container);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            Tlog.e("Device has android 5 or above + statusbar height = " + result);
+            layoutParams.setMargins(0, result, 0, 0);
+            filterContainer.setLayoutParams(layoutParams);
+        }
 
         /* Sort by */
         ftrSortBySalary = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_sort_by_salary);

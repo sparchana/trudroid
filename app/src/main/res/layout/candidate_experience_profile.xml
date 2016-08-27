@@ -119,7 +119,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/question_fresher_experienced"/>
+                                android:text="@string/question_fresher_experienced"
+                                android:id="@+id/are_you_fresher_experience_label" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -186,6 +187,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="6dp"
+                                    android:id="@+id/total_exp_label"
                                     android:text="Total Work Experience"/>
                             </LinearLayout>
 
@@ -251,6 +253,7 @@
                                     android:padding="6dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:id="@+id/currently_working_label"
                                     android:text="Are you currently working?"/>
                             </LinearLayout>
 

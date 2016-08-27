@@ -251,7 +251,9 @@ public class ViewProfileFragment extends Fragment {
                                 CandidateProfileBasic candidateProfileBasic = new CandidateProfileBasic();
                                 candidateProfileBasic.setArguments(getActivity().getIntent().getExtras());
                                 getFragmentManager().beginTransaction()
-                                        .replace(R.id.main_profile, candidateProfileBasic).commit();
+                                        .addToBackStack(null)
+                                        .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                                        .add(R.id.main_profile, candidateProfileBasic).commit();
                             }
                         });
                     }

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
+        android:id="@+id/filter_panel_main_container"
         android:orientation="horizontal"
         android:padding="12dp"
         android:background="@color/colorPrimary">
@@ -291,7 +292,7 @@
                     <TextView
                         android:textSize="@dimen/box_option_text"
                         android:textColor="@color/boxOption"
-                        android:text="Less then 10th"
+                        android:text="Less than 10th"
                         android:layout_width="0dp"
                         android:layout_height="42dp"
                         android:layout_weight="0.23"

@@ -19,7 +19,7 @@
     <color name="colorOrange">#f77032</color>
     <color name="colorCaution">#e41b10</color>
     <color name="colorGreen">#09ac58</color>
-    <color name="colorYellow">#e4d04b</color>
+    <color name="colorYellow">#c0fdf1a4</color>
 
     <color name="enabled_color">#000000</color>
     <color name="disabled_color">#4d4d4d</color>

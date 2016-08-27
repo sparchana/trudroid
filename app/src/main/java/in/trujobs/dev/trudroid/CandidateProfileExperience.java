@@ -9,6 +9,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,6 +92,16 @@ public class CandidateProfileExperience extends Fragment {
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle("Experience Profile");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        TextView areYouFresherExperienceLabel = (TextView) view.findViewById(R.id.are_you_fresher_experience_label);
+        TextView totalExpLabel = (TextView) view.findViewById(R.id.total_exp_label);
+        TextView currentlyWorkingLabel = (TextView) view.findViewById(R.id.currently_working_label);
+
+        String astrix = "<font color='#EE0000'> *</font>";
+
+        areYouFresherExperienceLabel.setText(Html.fromHtml(areYouFresherExperienceLabel.getText() + astrix));
+        totalExpLabel.setText(Html.fromHtml(totalExpLabel.getText() + astrix));
+        currentlyWorkingLabel.setText(Html.fromHtml(currentlyWorkingLabel.getText() + astrix));
 
         selectExp = (TextView) view.findViewById(R.id.select_experience);
 
