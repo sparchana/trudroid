@@ -71,8 +71,11 @@ public class OtpScreen extends TruJobsBaseActivity {
 
         mUserOtpTwo.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if (s.length() ==1) {
+                if (s.length() == 1) {
                     mUserOtpThree.requestFocus();
+                }
+                else if (s.length() == 0) {
+                    mUserOtpOne.requestFocus();
                 }
             }
             public void beforeTextChanged(CharSequence s, int start, int count,
@@ -83,8 +86,11 @@ public class OtpScreen extends TruJobsBaseActivity {
 
         mUserOtpThree.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if (s.length() ==1) {
+                if (s.length() == 1) {
                     mUserOtpFour.requestFocus();
+                }
+                else if (s.length() == 0) {
+                    mUserOtpTwo.requestFocus();
                 }
             }
             public void beforeTextChanged(CharSequence s, int start, int count,
@@ -95,8 +101,11 @@ public class OtpScreen extends TruJobsBaseActivity {
 
         mUserOtpFour.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if (s.length() ==1) {
+                if (s.length() == 1) {
                     checkOtp();
+                }
+                else if (s.length() == 0) {
+                    mUserOtpThree.requestFocus();
                 }
             }
             public void beforeTextChanged(CharSequence s, int start, int count,
