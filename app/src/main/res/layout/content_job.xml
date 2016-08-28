@@ -13,12 +13,17 @@
 
     <include layout="@layout/filter_panel" />
 
-    <ListView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/transparent"
-        android:id="@+id/jobs_list_view">
-    </ListView>
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/transparent"
+            android:id="@+id/jobs_list_view">
+        </ListView>
+    </LinearLayout>
 
     <ImageView
         android:layout_width="360dp"

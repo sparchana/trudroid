@@ -3,7 +3,6 @@ package in.trujobs.dev.trudroid.Adapters;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,10 +47,12 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     {
         TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, mApplyingJobBtnTextView;
         LinearLayout mApplyBtnBackground, applyBtn;
+        ImageView mJobColor;
     }
     public LinearLayout applyingJobButton;
     public TextView applyingJobBtnTextView;
     public Button applyingJobButtonDetail;
+    public ImageView applyingJobColor;
     ProgressDialog pd;
 
     @Override
@@ -62,10 +64,11 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     R.layout.job_list_view_item, parent, false);
         }
 
+        holder.mJobColor = (ImageView) rowView.findViewById(R.id.job_color);
         holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
 
         holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
-        holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
+        holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
 
         pd = CustomProgressDialog.get(parent.getContext());
 
@@ -77,9 +80,23 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         if(jobPost.getIsApplied() == 1){
             holder.applyBtn.setEnabled(false);
+            holder.mJobColor.setImageResource(R.drawable.orange_dot);
             holder.mJobPostApplyBtn.setText("Already Applied");
             holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
         }
+
+        holder.mJobColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(jobPost.getIsApplied() == 1){
+                    Toast.makeText(getContext(), "You have already applied to this job",
+                            Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(getContext(), "You have not applied to this job",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         //set job post title
         holder.mJobPostTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
@@ -160,9 +177,11 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             public void onClick(View view) {
                 applyingJobButton = holder.mApplyBtnBackground;
                 applyingJobBtnTextView = holder.mApplyingJobBtnTextView;
+                applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
             }
         });
+
         return rowView;
     }
 
@@ -262,6 +281,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
                 //setting "already applied" to apply button of the jobs list
                 try {
+                    applyingJobColor.setImageResource(R.drawable.orange_dot);
                     applyingJobButton.setEnabled(false);
                     applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
                     applyingJobBtnTextView.setText("Already Applied");

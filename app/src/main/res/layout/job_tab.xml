@@ -66,7 +66,7 @@
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
                                 android:textSize="14dp"
-                                android:textColor="#2678AD"
+                                android:textColor="@color/colorPrimary"
                                 android:text="Company and Job Title"
                                 android:id="@+id/company_job_title" />
                         </LinearLayout>
@@ -139,7 +139,7 @@
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
                                 android:textSize="14dp"
-                                android:textColor="#2678AD"
+                                android:textColor="@color/colorPrimary"
                                 android:text="Location(s)"
                                 android:id="@+id/job_location_title" />
                         </LinearLayout>
@@ -207,7 +207,7 @@
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
                                 android:textSize="14dp"
-                                android:textColor="#2678AD"
+                                android:textColor="@color/colorPrimary"
                                 android:text="Salary and Benefits"
                                 android:id="@+id/salary_benefits_title" />
                         </LinearLayout>
@@ -336,7 +336,7 @@
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
                                 android:textSize="14dp"
-                                android:textColor="#2678AD"
+                                android:textColor="@color/colorPrimary"
                                 android:text="Work Details"
                                 android:id="@+id/job_work_details_title" />
                         </LinearLayout>
@@ -419,7 +419,7 @@
                                 android:paddingTop="10dp"
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
-                                android:textColor="#2678AD"
+                                android:textColor="@color/colorPrimary"
                                 android:textSize="14dp"
                                 android:text="Requirements"
                                 android:id="@+id/requirements_title" />

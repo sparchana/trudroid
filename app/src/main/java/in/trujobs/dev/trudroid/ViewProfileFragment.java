@@ -2,12 +2,12 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +44,7 @@ public class ViewProfileFragment extends Fragment {
     Boolean bodyOpen, preferenceOpen, experienceOpen, educationOpen;
     ImageView profileCompletePercent;
     TextView profileStatusText, profileMsg, jobsApplied;
+    TextView myJobsHeading,  myJobsSubHeading;
 
     public CandidateProfileActivity candidateProfileActivity;
 
@@ -75,6 +76,9 @@ public class ViewProfileFragment extends Fragment {
         preferenceOpen = false;
         educationOpen = false;
         experienceOpen = false;
+
+        myJobsHeading = (TextView) view.findViewById(R.id.my_jobs_header);
+        myJobsSubHeading = (TextView) view.findViewById(R.id.assessment_msg);
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,15 +281,27 @@ public class ViewProfileFragment extends Fragment {
                     }
 
                     jobsApplied.setText(getCandidateInformationResponse.getCandidate().getAppliedJobs() + "");
+
+                    //setting my jobs header message if candidate has applied in any one of the jobs
+                    if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
+                        myJobsHeading.setText("Jobs you have applied");
+                        myJobsSubHeading.setText("Go to my Jobs");
+                    } else{
+                        myJobsHeading.setText("No Jobs Applied");
+                        myJobsSubHeading.setText("Apply Now");
+                    }
                     LinearLayout myJobStatusLayout = (LinearLayout) view.findViewById(R.id.my_jobs_status_layout);
                     myJobStatusLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Intent intent;
                             if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
-                                Intent intent = new Intent(getContext(), MyAppliedJobs.class);
-                                startActivity(intent);
+                                intent = new Intent(getContext(), MyAppliedJobs.class);
+                            } else{
+                                intent = new Intent(getContext(), SearchJobsActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                             }
-
+                            startActivity(intent);
                         }
                     });
 

@@ -133,14 +133,13 @@
         android:layout_centerInParent="true" />
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="12dp"
-        android:layout_marginTop="36dp"
-        android:padding="48dp"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="48dp"
+        android:paddingRight="48dp"
         android:layout_gravity="center"
         android:id="@+id/job_pref_image_view"
-        android:background="@drawable/big_image"/>
+        android:src="@drawable/big_image"/>
 
     <LinearLayout
         android:layout_width="match_parent"
