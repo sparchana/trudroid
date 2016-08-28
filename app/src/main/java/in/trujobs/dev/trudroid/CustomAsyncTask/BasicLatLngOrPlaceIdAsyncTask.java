@@ -8,7 +8,7 @@ import in.trujobs.proto.LocalityObjectResponse;
 /**
  * Created by zero on 27/8/16.
  */
-public class BasicLocalityFromLatLngOrPlaceIdAsyncTask extends AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> {
+public class BasicLatLngOrPlaceIdAsyncTask extends AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> {
 
     @Override
     protected LocalityObjectResponse doInBackground(LatLngOrPlaceIdRequest... params) {

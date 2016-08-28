@@ -48,7 +48,7 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<Object> implements F
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
-                if (constraint != null && constraint.length() > 2) {
+                if (constraint != null && constraint.length() > 2 && mPlaceAPI!=null) {
                     resultList = mPlaceAPI.autocomplete(constraint.toString());
                     ArrayList<String> suggestions = new ArrayList<>();
                     for(PlaceAPIHelper apiHelper: resultList) {

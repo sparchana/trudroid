@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -39,7 +40,7 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
-import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLocalityFromLatLngOrPlaceIdAsyncTask;
+import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
@@ -154,6 +155,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
                 Toast.makeText(HomeLocality.this, mAddressOutput, Toast.LENGTH_SHORT).show();
                 mPlaceId = placeAPIHelper.getPlaceId();
+                mAddressOutput = placeAPIHelper.getDescription();
                 Tlog.i("mAddressOutput ------ " + mAddressOutput
                         + "\nplaceId:" + mPlaceId);
                 triggerPlaceIdToLocalityResolver(mPlaceId);
@@ -361,16 +363,16 @@ public class HomeLocality extends TruJobsBaseActivity implements
             latLngOrPlaceIdRequest.setLatitude(mLastLocation.getLatitude());
             latLngOrPlaceIdRequest.setLongitude(mLastLocation.getLongitude());
         }
-        LocalityFromLatLngAsyncTask localityFromLatLngAsyncTask = new LocalityFromLatLngAsyncTask();
-        localityFromLatLngAsyncTask.execute(latLngOrPlaceIdRequest.build());
+        LatLngOrPlaceIdAsyncTask localityFromLatLngOrPlaceIdAsyncTask = new LatLngOrPlaceIdAsyncTask();
+        localityFromLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
     }
     protected void triggerPlaceIdToLocalityResolver(String placeId) {
         LatLngOrPlaceIdRequest.Builder latLngOrPlaceIdRequest = LatLngOrPlaceIdRequest.newBuilder();
         if(!placeId.trim().isEmpty()){
             latLngOrPlaceIdRequest.setPlaceId(placeId);
         }
-        LocalityFromLatLngAsyncTask localityFromLatLngAsyncTask = new LocalityFromLatLngAsyncTask();
-        localityFromLatLngAsyncTask.execute(latLngOrPlaceIdRequest.build());
+        LatLngOrPlaceIdAsyncTask localityFromLatLngOrPlaceIdAsyncTask = new LatLngOrPlaceIdAsyncTask();
+        localityFromLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
     }
 
     private void fetchCurrentAddress() {
@@ -539,7 +541,13 @@ public class HomeLocality extends TruJobsBaseActivity implements
         if(mAddressOutput == null || mAddressOutput.trim().isEmpty()){
             mSearchHomeLocalityTxtView.setText("");
             mSearchHomeLocalityTxtView.didTouchFocusSelect();
+            mSearchHomeLocalityTxtView.dismissDropDown();
             showToast("No locality entered. Please select locality within Bengaluru.");
+        } else if(!mSearchHomeLocalityTxtView.getText().toString().trim().equalsIgnoreCase(mAddressOutput)) {
+            mSearchHomeLocalityTxtView.setText("");
+            mSearchHomeLocalityTxtView.didTouchFocusSelect();
+            mSearchHomeLocalityTxtView.dismissDropDown();
+            showToast("Please select valid locality within Bengaluru.");
         } else {
             triggerFinalSubmission();
         }
@@ -552,15 +560,13 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 showToast("Please type your home locality (Ex: Bellandur)");
             } else {
                 // submission only when address and lat/lng is available
-                mSearchHomeLocalityTxtView.setText(mAddressOutput);
-                mSearchHomeLocalityTxtView.dismissDropDown();
                 mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
                 mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
 
                 mHomeLocalityRequest.setLocalityName(mAddressOutput);
                 mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
                 mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
-                mHomeLocalityRequest.setPlaceId(mPlaceId);
+                if(mPlaceId!=null)mHomeLocalityRequest.setPlaceId(mPlaceId);
 
                 mAsyncTask = new HomeLocalityAsyncTask();
                 mAsyncTask.execute(mHomeLocalityRequest.build());
@@ -591,11 +597,12 @@ public class HomeLocality extends TruJobsBaseActivity implements
         }
     }
 
-    private class LocalityFromLatLngAsyncTask extends BasicLocalityFromLatLngOrPlaceIdAsyncTask {
+    private class LatLngOrPlaceIdAsyncTask extends BasicLatLngOrPlaceIdAsyncTask {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mSearchHomeLocalityTxtView.setText("");
+            showProgressBar = true;
+            updateUIWidgets();
             Tlog.i("Fetching Locality Object from latlng....");
         }
 
