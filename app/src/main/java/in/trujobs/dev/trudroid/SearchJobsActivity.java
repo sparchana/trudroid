@@ -38,9 +38,8 @@ import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.NavigationListAdapter;
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
-import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
+import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
-import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -61,6 +60,8 @@ import in.trujobs.proto.JobRoleObject;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
+import in.trujobs.proto.LatLngOrPlaceIdRequest;
+import in.trujobs.proto.LocalityObjectResponse;
 
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
@@ -80,7 +81,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton fab;
     private List<NavItem> mNavItems;
-    private AsyncTask<String, Void, LatLngAPIHelper> mLatLngAsyncTask;
+    private AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> mLatLngOrPlaceIdAsyncTask;
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
 
     private FilterJobFragment filterJobFragment;
@@ -194,8 +195,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 Tlog.i("mAddressOutput ------ " + mSearchAddressOutput
                         + "\nplaceId:" + mSearchedPlaceId);
                 mSearchJobAcTxtView.setText(mSearchAddressOutput);
-                mLatLngAsyncTask = new LatLngAsyncTask();
-                mLatLngAsyncTask.execute(mSearchedPlaceId);
+                mLatLngOrPlaceIdAsyncTask = new LatLngOrPlaceIdAsyncTask();
+                LatLngOrPlaceIdRequest.Builder latLngOrPlaceIdRequest = LatLngOrPlaceIdRequest.newBuilder();
+                if(!mSearchedPlaceId.trim().isEmpty()){
+                    latLngOrPlaceIdRequest.setPlaceId(mSearchedPlaceId);
+                }
+                mLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
             }
         });
 
@@ -498,98 +503,50 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    private class LatLngAsyncTask extends BasicLatLngAsyncTask {
+    private class LatLngOrPlaceIdAsyncTask extends BasicLatLngOrPlaceIdAsyncTask {
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             loaderStart();
+            super.onPreExecute();
         }
 
         @Override
-        protected void onPostExecute(LatLngAPIHelper latLngAPIHelper) {
-            super.onPostExecute(latLngAPIHelper);
-            mSearchLat = latLngAPIHelper.getLatitude();
-            mSearchLng = latLngAPIHelper.getLongitude();
-            Tlog.i("mSearchLatLng Fetched.." + mSearchLat+"/"+mSearchLng);
-            if(mSearchLat != null && mSearchLng != null ){
-                Tlog.i("trigger job search on lat/lng");
-                JobSearchReqInit();
-                if(jobFilterRequestBkp != null) {
-                    jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
-                    jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
-                    jobSearchRequest.setJobFilterRequest(jobFilterRequestBkp);
-                    if(jobRolesFilter != null){
-                        jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
-                        Tlog.i("setting the jobSearchReq obj: "
-                                +jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne()
-                        +" | actual jobRoleFitlerObj: "+jobRolesFilter.getJobRoleIdOne());
+        protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
+            super.onPostExecute(localityObjectResponse);
+            if(localityObjectResponse!=null){
+                if (localityObjectResponse.getStatus() == LocalityObjectResponse.Status.SUCCESS
+                        && localityObjectResponse.getType() == LocalityObjectResponse.Type.FOR_PLACEID) {
+                    mSearchLat = localityObjectResponse.getLocality().getLat();
+                    mSearchLng = localityObjectResponse.getLocality().getLng();
+                    mSearchAddressOutput = localityObjectResponse.getLocality().getLocalityName();
+                    Tlog.i("mSearchLatLng Fetched.." + mSearchLat + "/" + mSearchLng);
+                    if (mSearchLat != null && mSearchLng != null) {
+                        Tlog.i("trigger job search on lat/lng");
+                        JobSearchReqInit();
+                        if (jobFilterRequestBkp != null) {
+                            jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
+                            jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
+                            jobSearchRequest.setJobFilterRequest(jobFilterRequestBkp);
+                            if (jobRolesFilter != null) {
+                                jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter);
+                                Tlog.d("setting the jobSearchReq obj: "
+                                        + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne()
+                                        + " | actual jobRoleFitlerObj: " + jobRolesFilter.getJobRoleIdOne());
+                            } else Tlog.i("no jobRolesFilter found");
+                        }
+                        /* search by location input ui update */
+                        mSearchJobAcTxtView.setText(mSearchAddressOutput);
+                        mSearchJobAcTxtView.dismissDropDown();
+
+                        mJobSearchAsyncTask = new JobSearchAsyncTask();
+                        mJobSearchAsyncTask.execute(jobSearchRequest.build());
+                    } else {
+                        showToast("Opps Something went wrong during search. Please try again");
                     }
-                    else Tlog.i("no jobRolesFilter found");
                 }
-                mJobSearchAsyncTask = new JobSearchAsyncTask();
-                mJobSearchAsyncTask.execute(jobSearchRequest.build());
-            } else {
-                showToast("Opps Something went wrong during search. Please try again");
             }
         }
     }
-
-    private void JobSearchReqInit() {
-        jobSearchRequest = JobSearchRequest.newBuilder();
-        if(mSearchLat!= null)jobSearchRequest.setLatitude(mSearchLat);
-        else if(Prefs.candidateHomeLat.get() != null){
-            Tlog.i("pref lat : "+Prefs.candidateHomeLat.get());
-            jobSearchRequest.setLatitude(Double.parseDouble(Prefs.candidateHomeLat.get()));
-            mSearchLat = Double.parseDouble(Prefs.candidateHomeLat.get());
-        }
-        if(mSearchLng!= null)jobSearchRequest.setLongitude(mSearchLng);
-        else if(Prefs.candidateHomeLng.get() != null){
-            Tlog.i("pref lng : "+Prefs.candidateHomeLng.get());
-            jobSearchRequest.setLongitude(Double.parseDouble(Prefs.candidateHomeLng.get()));
-            mSearchLng = Double.parseDouble(Prefs.candidateHomeLng.get());
-        }
-        if(Prefs.candidateMobile.get() != null && !Prefs.candidateMobile.get().trim().isEmpty()){
-            Tlog.i("mobile set:"+Prefs.candidateMobile.get());
-            jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
-        } else {
-            Tlog.e("Candidate Mobile Null in Prefs");
-        }
-    }
-
-    private void loaderStart() {
-        pd.show();
-    }
-    private void loaderStop(){
-        if(pd != null){
-            pd.cancel();
-        }
-    }
-
-    private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
-        jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
-
-        ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
-        Tlog.w("Job Search Response received...");
-        if (jobPostObjectList.size() > 0) {
-            Tlog.i("DataSize: " + jobPostObjectList.size());
-            //adding end of search result footer view
-            if(jobPostListView.getFooterViewsCount() == 0){
-                jobPostListView.addFooterView(getLayoutInflater().inflate(R.layout.end_of_jobs, null));
-            }
-            JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
-            if(jobPostListView.getVisibility() == View.GONE
-                    || jobPostListView.getVisibility() == View.INVISIBLE){
-                jobPostListView.setVisibility(View.VISIBLE);
-                noJobsImageView.setVisibility(View.GONE);
-            }
-            jobPostListView.setAdapter(jobPostAdapter);
-        } else {
-            jobPostListView.setVisibility(View.GONE);
-            noJobsImageView.setVisibility(View.VISIBLE);
-            showToast("No jobs found !!");
-        }
-    }
-
 
     private class FetchAlertAsyncTask extends AsyncTask<FetchCandidateAlertRequest,
             Void, FetchCandidateAlertResponse> {
@@ -656,6 +613,62 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             } else {
                 showToast("Something went wrong. Please try later");
             }
+        }
+    }
+
+
+    private void JobSearchReqInit() {
+        jobSearchRequest = JobSearchRequest.newBuilder();
+        if(mSearchLat!= null)jobSearchRequest.setLatitude(mSearchLat);
+        else if(Prefs.candidateHomeLat.get() != null){
+            Tlog.i("pref lat : "+Prefs.candidateHomeLat.get());
+            jobSearchRequest.setLatitude(Double.parseDouble(Prefs.candidateHomeLat.get()));
+            mSearchLat = Double.parseDouble(Prefs.candidateHomeLat.get());
+        }
+        if(mSearchLng!= null)jobSearchRequest.setLongitude(mSearchLng);
+        else if(Prefs.candidateHomeLng.get() != null){
+            Tlog.i("pref lng : "+Prefs.candidateHomeLng.get());
+            jobSearchRequest.setLongitude(Double.parseDouble(Prefs.candidateHomeLng.get()));
+            mSearchLng = Double.parseDouble(Prefs.candidateHomeLng.get());
+        }
+        if(Prefs.candidateMobile.get() != null && !Prefs.candidateMobile.get().trim().isEmpty()){
+            Tlog.i("mobile set:"+Prefs.candidateMobile.get());
+            jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
+        } else {
+            Tlog.e("Candidate Mobile Null in Prefs");
+        }
+    }
+
+    private void loaderStart() {
+        pd.show();
+    }
+    private void loaderStop(){
+        if(pd != null){
+            pd.cancel();
+        }
+    }
+
+    private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
+        jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
+
+        Tlog.w("Job Search Response received...");
+        if (jobPostObjectList.size() > 0) {
+            Tlog.i("DataSize: " + jobPostObjectList.size());
+            //adding end of search result footer view
+            if(jobPostListView.getFooterViewsCount() == 0){
+                jobPostListView.addFooterView(getLayoutInflater().inflate(R.layout.end_of_jobs, null));
+            }
+            JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
+            if(jobPostListView.getVisibility() == View.GONE
+                    || jobPostListView.getVisibility() == View.INVISIBLE){
+                jobPostListView.setVisibility(View.VISIBLE);
+            }
+            jobPostListView.setAdapter(jobPostAdapter);
+        } else {
+            jobPostListView.setVisibility(View.GONE);
+            ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+            noJobsImageView.setVisibility(View.VISIBLE);
+            showToast("No jobs found !!");
         }
     }
 

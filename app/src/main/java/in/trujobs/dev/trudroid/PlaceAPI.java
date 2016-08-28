@@ -40,7 +40,6 @@ public class PlaceAPI {
         try {
             StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
             sb.append("?key=" + SERVER_API_KEY);
-            sb.append("&types=(regions)");
             sb.append("&components=country:in");
             sb.append("&input=" + URLEncoder.encode(input, "utf8"));
 
@@ -82,16 +81,10 @@ public class PlaceAPI {
                 String description = predsJsonArray.getJSONObject(i).getString("description");
                 String subLocality_level = predsJsonArray.getJSONObject(i).getJSONArray("types").getString(0);
                 System.out.print(subLocality_level);
-                if((description.toLowerCase().contains("bengaluru") || description.toLowerCase().contains("bangalore"))
-                        && subLocality_level .equalsIgnoreCase("sublocality_level_1")) {
-                    List<String> address = Arrays.asList(description.split(","));
-                    if(address.size() >= 4 && (address.get(address.size() - 3).toLowerCase().contains("bengaluru")
-                            || address.get(address.size() - 3).toLowerCase().contains("bangalore") )){
-                        //System.out.println("[API] --> " + predsJsonArray.getJSONObject(i).getString("description"));
-                        placeAPIHelper.setPlaceId(predsJsonArray.getJSONObject(i).getString("place_id"));
-                        placeAPIHelper.setDescription(predsJsonArray.getJSONObject(i).getString("description").split(",")[0]);
-                        resultList.add(placeAPIHelper);
-                    }
+                if((description.toLowerCase().contains("bengaluru") || description.toLowerCase().contains("bangalore"))) {
+                    placeAPIHelper.setPlaceId(predsJsonArray.getJSONObject(i).getString("place_id"));
+                    placeAPIHelper.setDescription(predsJsonArray.getJSONObject(i).getString("description"));
+                    resultList.add(placeAPIHelper);
                 }
             }
         } catch (JSONException e) {

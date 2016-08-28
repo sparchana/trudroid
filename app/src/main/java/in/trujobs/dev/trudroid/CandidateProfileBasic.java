@@ -32,20 +32,21 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
-import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
-import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
+import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobRoleObject;
+import in.trujobs.proto.LatLngOrPlaceIdRequest;
+import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 
@@ -53,7 +54,7 @@ import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
  * Created by batcoder1 on 2/8/16.
  */
 public class CandidateProfileBasic extends Fragment {
-
+    private Toast mBaseToastLong;
     private AsyncTask<HomeLocalityRequest, Void, HomeLocalityResponse> mUpdateLocatlityAsyncTask;
     private AsyncTask<Void, Void, GetCandidateBasicProfileStaticResponse> mAsyncTask;
     private AsyncTask<UpdateCandidateBasicProfileRequest, Void, UpdateCandidateBasicProfileResponse> mSaveBasicProfileAsyncTask;
@@ -78,7 +79,7 @@ public class CandidateProfileBasic extends Fragment {
     protected boolean GET_LOCALITY_FROM_GPS = false;
     protected boolean GET_LOCALITY_FROM_AUTOCOMPLETE = false;
 
-    private AsyncTask<String, Void, LatLngAPIHelper> mLatLngAsyncTask;
+    private AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> mLatLngOrPlaceIdAsyncTask;
     private static HomeLocalityRequest.Builder mHomeLocalityRequest = HomeLocalityRequest.newBuilder();
 
     //UI References
@@ -200,8 +201,12 @@ public class CandidateProfileBasic extends Fragment {
                             Tlog.i("mAddressOutput ------ " + mAddressOutput
                                     + "\nplaceId:" + mPlaceId);
 
-                            mLatLngAsyncTask = new LatLngAsyncTask();
-                            mLatLngAsyncTask.execute(mPlaceId);
+                            LatLngOrPlaceIdRequest.Builder latLngOrPlaceIdRequest = LatLngOrPlaceIdRequest.newBuilder();
+                            if(!mPlaceId.trim().isEmpty()){
+                                latLngOrPlaceIdRequest.setPlaceId(mPlaceId);
+                            }
+                            mLatLngOrPlaceIdAsyncTask = new LatLngOrPlaceIdAsyncTask();
+                            mLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
                         }
                     });
                     maleBtn.setOnClickListener(new View.OnClickListener() {
@@ -485,10 +490,11 @@ public class CandidateProfileBasic extends Fragment {
     public void triggerFinalSubmission(){
         mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
         mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-        mHomeLocalityRequest.setAddress(mAddressOutput);
+        mHomeLocalityRequest.setLocalityName(mAddressOutput);
 
         mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
         mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+        if(mPlaceId!=null) mHomeLocalityRequest.setPlaceId( mPlaceId);
 
         mUpdateLocatlityAsyncTask = new HomeLocalityAsyncTask();
         mUpdateLocatlityAsyncTask.execute(mHomeLocalityRequest.build());
@@ -530,24 +536,58 @@ public class CandidateProfileBasic extends Fragment {
         }
     }
 
-    private class LatLngAsyncTask extends BasicLatLngAsyncTask {
+    private class LatLngOrPlaceIdAsyncTask extends BasicLatLngOrPlaceIdAsyncTask {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Tlog.i("Fetching LatLng ....");
+            Tlog.i("Fetching Locality Object from latlng....");
         }
 
         @Override
-        protected void onPostExecute(LatLngAPIHelper latLngAPIHelper) {
-            super.onPostExecute(latLngAPIHelper);
-            mLatLngAsyncTask = null;
-            if(latLngAPIHelper!=null){
-                mLastLocation = new Location("");
-                mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
-                mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
+        protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
+            super.onPostExecute(localityObjectResponse);
+            if(localityObjectResponse!=null){
+                if(localityObjectResponse.getStatus()== LocalityObjectResponse.Status.SUCCESS) {
+                    switch (localityObjectResponse.getType()) {
+                        case  FOR_PLACEID:
+                            if(mLastLocation == null) {
+                                mLastLocation = new Location("");
+                            }
+                            if(localityObjectResponse.getLocality().getLat()!=0){
+                                mLastLocation.setLatitude(localityObjectResponse.getLocality().getLat());
+                            }
+                            if(localityObjectResponse.getLocality().getLng()!=0){
+                                mLastLocation.setLongitude(localityObjectResponse.getLocality().getLng());
+                            }
+                            break;
+                        case FOR_LATLNG:
+                            /* since the req was made with latlng i.e the users latlng
+                             and not the locality latlng, use that to make the final req*/
+                            break;
+                        default:
+                            break;
+                    }
+                    /* common setters  */
+                    if(!localityObjectResponse.getLocality().getLocalityName().isEmpty()){
+                        mAddressOutput = localityObjectResponse.getLocality().getLocalityName();
+                    }
+                    if(!localityObjectResponse.getLocality().getPlaceId().trim().isEmpty()){
+                        mPlaceId = localityObjectResponse.getLocality().getPlaceId();
+                    }
+                    mLatLngOrPlaceIdAsyncTask = null;
+                    mHomeLocalityTxtView.setText(mAddressOutput);
+                    mHomeLocalityTxtView.dismissDropDown();
+                    mHomeLocalityTxtView.clearFocus();
+                } else {
+                    showToast("Error While Fetching Locality. Please manually type your locality above.");
+                    mHomeLocalityTxtView.setText("");
+                    mAddressOutput = "";
+                    mHomeLocalityTxtView.clearFocus();
+                }
             }
         }
     }
+
 
 
     private class UpdateBasicProfileAsyncTask extends AsyncTask<UpdateCandidateBasicProfileRequest,
@@ -667,6 +707,18 @@ public class CandidateProfileBasic extends Fragment {
         });
         final android.support.v7.app.AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
         searchByJobRoleDialog.show();
+    }
+
+    /**
+     * Shows a toast with the given text.
+     */
+    protected void showToast(String msg) {
+        try{ mBaseToastLong.getView().isShown();     // true if visible
+            mBaseToastLong.setText(msg);
+        } catch (Exception e) {         // invisible if exception
+            mBaseToastLong = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
+        }
+        mBaseToastLong.show();
     }
 
 }
