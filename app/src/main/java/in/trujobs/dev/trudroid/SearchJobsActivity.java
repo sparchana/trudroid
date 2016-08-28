@@ -485,8 +485,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         protected void onPreExecute() {
             super.onPreExecute();
             loaderStart();
-            Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
             Tlog.i("------[SearchJobs] Before Calling JobSearchAsyncTask -----");
+            Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
+            if(Prefs.candidateMobile.get() != null || !Prefs.candidateMobile.get().trim().isEmpty()){
+                jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get()).buildPartial();
+            }
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
@@ -644,6 +647,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.e("Candidate Mobile Null in Prefs");
         }
+        jobSearchRequest.buildPartial();
     }
 
     private void loaderStart() {
@@ -746,8 +750,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             jobSearch = JobSearchRequest.newBuilder();
             jobSearch.setLatitude(mSearchLat);
             jobSearch.setLongitude(mSearchLng);
+        }
+        if(Prefs.candidateMobile.get() != null || !Prefs.candidateMobile.get().trim().isEmpty()){
             jobSearch.setCandidateMobile(Prefs.candidateMobile.get());
         }
+
         if(jobFilterRequestBkp != null){
             Tlog.i("found jobFilterRequestBkp -- Misc JobFilter options set. attaching jobFilterRequestBkp to jobSearch");
             jobSearch.setJobFilterRequest(jobFilterRequestBkp);
@@ -768,7 +775,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.i("No selected jobroles");
             if(jobRolesFilter != null){
-                jobRolesFilter.clear();
+                jobRolesFilter.clear().build();
                 updateJobSearchObject();
             }
         }
