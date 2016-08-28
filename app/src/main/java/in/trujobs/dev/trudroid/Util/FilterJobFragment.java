@@ -2,8 +2,8 @@ package in.trujobs.dev.trudroid.Util;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,13 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.io.ByteArrayDataInput;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     /* misc */
     LinearLayout ftrDone;
     LinearLayout ftrClearAll;
-    /* sub-filter ui elements */
+    /* sub-filter_selected ui elements */
     ImageView imgSortBySalary;
     ImageView imgSortByDatePosted;
     ImageView imgFilterByMale;
@@ -83,10 +83,32 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     TextView txtSortBySalary;
     TextView txtFilterByMale;
     TextView txtFilterByFemale;
+
+    //filterBtn
+    ImageView filterImage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //super.onCreateView(inflater, container, savedInstanceState);
         View jobFilterRootView = inflater.inflate(R.layout.filter_container_layout, container, false);
+
+        //checking if device android version is above 5 or not
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+            Tlog.e("Device has android 5 or above");
+            int result = 0;
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = getResources().getDimensionPixelSize(resourceId);
+            }
+            LinearLayout filterContainer = (LinearLayout) jobFilterRootView.findViewById(R.id.filter_panel_main_container);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            Tlog.e("Device has android 5 or above + statusbar height = " + result);
+            layoutParams.setMargins(0, result, 0, 0);
+            filterContainer.setLayoutParams(layoutParams);
+        }
 
         /* Sort by */
         ftrSortBySalary = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_sort_by_salary);
@@ -115,7 +137,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         ftrClearAll = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_clear_all);
 
 
-        /* sub filter element for UI manipulation */
+        /* sub filter_selected element for UI manipulation */
         imgSortBySalary = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_salary);
         imgSortByDatePosted = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_sort_by_date_posted);
         imgFilterByMale = (ImageView) jobFilterRootView.findViewById(R.id.ftr_img_ftr_by_male);
@@ -124,6 +146,8 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         txtSortBySalary = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_sort_by_salary);
         txtFilterByMale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_male);
         txtFilterByFemale = (TextView) jobFilterRootView.findViewById(R.id.ftr_txt_ftr_by_female);
+
+        filterImage = (ImageView) getActivity().findViewById(R.id.btn_job_filter);
 
         resetFragmentUI();
         if(SearchJobsActivity.jobFilterRequestBkp != null && jobFilterRequest == null){
@@ -157,6 +181,9 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         ftrSalaryFifteenKPlus.setOnClickListener(this);
         ftrSalaryTwentyKPlus.setOnClickListener(this);
         ftrClearAll.setOnClickListener(this);
+
+        LinearLayout closeFilterFragment = (LinearLayout) jobFilterRootView.findViewById(R.id.close_filter);
+        closeFilterFragment.setOnClickListener(this);
 
         return jobFilterRootView;
     }
@@ -372,6 +399,10 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                 assignSearchedLatLng();
                 resetFragmentUI();
                 break;
+
+            case R.id.close_filter:
+                getActivity().getSupportFragmentManager().popBackStack();
+                break;
             default:
                 break;
         }
@@ -387,7 +418,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         DateSalaryBtnManipulation(null, false);
     }
 
-    /* filter ui component manipulation */
+    /* filter_selected ui component manipulation */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void SalaryBtnManipulation(Integer id, boolean shouldEnable){
         /* deactivate all then enable one */
@@ -404,19 +435,19 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
 
         if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_salary_eight_k_plus ){
-                ftrSalaryEightKPlus.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrSalaryEightKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryEightKPlus.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_salary_ten_k_plus ){
-                ftrSalaryTenKPlus.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrSalaryTenKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryTenKPlus.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_salary_twelve_k_plus ){
-                ftrSalaryTwelveKPlus.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrSalaryTwelveKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryTwelveKPlus.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_salary_fifteen_k_plus ){
-                ftrSalaryFifteenKPlus.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrSalaryFifteenKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryFifteenKPlus.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_salary_twenty_k_plus ){
-                ftrSalaryTwentyKPlus.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrSalaryTwentyKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#ffffff"));
             }
         }
@@ -437,19 +468,19 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
 
         if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_edu_lt_ten){
-                ftrEduLtTen.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrEduLtTen.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduLtTen.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_edu_ten_pass){
-                ftrEduTenPass.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrEduTenPass.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduTenPass.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_edu_twelve_pass){
-                ftrEduTwelvePass.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrEduTwelvePass.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduTwelvePass.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_edu_ug){
-                ftrEduUg.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrEduUg.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduUg.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable && id == R.id.ftr_edu_pg){
-                ftrEduPg.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrEduPg.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduPg.setTextColor(Color.parseColor("#ffffff"));
             }
         }
@@ -464,10 +495,10 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
 
         if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_experience_fresher){
-                ftrExperienceFresher.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrExperienceFresher.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrExperienceFresher.setTextColor(Color.parseColor("#ffffff"));
             } else if(shouldEnable &&  id == R.id.ftr_experience_experienced){
-                ftrExperienceExperienced.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ftrExperienceExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrExperienceExperienced.setTextColor(Color.parseColor("#ffffff"));
             }
         }

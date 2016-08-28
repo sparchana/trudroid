@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/heading_one"
                         android:textAlignment="center"
-                        android:textSize="15dp"/>
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -81,6 +81,27 @@
                 android:layout_height="0dp"
                 android:orientation="vertical"
                 android:layout_weight="0.1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="18dp"
+                    android:id="@+id/view_my_jobs"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/my_jobs_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:textColor="@color/white"
+                        android:text="View Applied Jobs"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,7 +157,7 @@
                     <ImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:src="@drawable/sent"/>
+                        android:src="@drawable/apply_now"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -200,6 +221,8 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+
 
         </LinearLayout>
     </ScrollView>

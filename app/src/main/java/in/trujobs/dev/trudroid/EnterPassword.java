@@ -105,25 +105,20 @@ public class EnterPassword extends TruJobsBaseActivity {
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
 
-                if(Prefs.loginCheckStatus.get() == 1){
-                    finish();
+                Intent intent;
+                if(Prefs.candidateJobPrefStatus.get() == 0){
+                    showToast(MessageConstants.SIGNUP_SUCCESS_PRE_JOB_PREF);
+                    intent = new Intent(EnterPassword.this, JobPreference.class);
+                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                    showToast(MessageConstants.SIGNUP_SUCCESS_PRE_HOME_LOCALITY);
+                    intent = new Intent(EnterPassword.this, HomeLocality.class);
                 } else{
-                    Intent intent;
-                    if(Prefs.candidateJobPrefStatus.get() == 0){
-                        showToast(MessageConstants.SIGNUP_SUCCESS_PRE_JOB_PREF);
-                        intent = new Intent(EnterPassword.this, JobPreference.class);
-                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
-                        showToast(MessageConstants.SIGNUP_SUCCESS_PRE_HOME_LOCALITY);
-                        intent = new Intent(EnterPassword.this, HomeLocality.class);
-                    } else{
-                        intent = new Intent(EnterPassword.this, SearchJobsActivity.class);
-                    }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                    finish();
+                    intent = new Intent(EnterPassword.this, SearchJobsActivity.class);
                 }
-
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                finish();
             }
             else {
                 showToast(MessageConstants.SOMETHING_WENT_WRONG);

@@ -1,6 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,11 +7,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,7 +66,12 @@ public class JobDetailActivity extends TruJobsBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
-        setTitle(EXTRA_JOB_TITLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(EXTRA_JOB_TITLE);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
@@ -278,6 +286,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 }
 
                 TextView otherJobTextView = (TextView) findViewById(R.id.other_job_header);
+
                 LinearLayout otherJobListView = (LinearLayout) findViewById(R.id.other_job_list_view);
                 //setting other jobs in Other job section
                 if(getJobPostDetailsResponse.getCompany().getCompanyOtherJobsCount() > 0){
@@ -348,7 +357,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     companyWebsite.setText("Company website: Info Not Specified");
                 }
 
-                if(getJobPostDetailsResponse.getCompany().getCompanyType() != null){
+                if(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName() != ""){
                     companyType.setText(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName());
                 } else{
                     companyType.setText("Company Type: Info Not Specified");
@@ -381,7 +390,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 jobTabApplyBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(Util.isLoggedIn() == true){
+                        if(Util.isLoggedIn()){
                             preScreenLocationIndex = 0;
                             final CharSequence[] localityList = new CharSequence[EXTRA_LOCALITY.size()];
                             final Long[] localityId = new Long[EXTRA_LOCALITY.size()];
@@ -390,43 +399,50 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                 localityId[i] = EXTRA_LOCALITY.get(i).getLocalityId();
                             }
 
-                            final AlertDialog alertDialog = new AlertDialog.Builder(
-                                    JobDetailActivity.this)
-                                    .setCancelable(true)
-                                    .setTitle("You are applying for " + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + " job at " + getJobPostDetailsResponse.getCompany().getCompanyName() + ". Please select a job Location" )
-                                    .setPositiveButton("Apply",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    List<JobPostObject> list = new ArrayList<JobPostObject>();
-                                                    list.add(getJobPostDetailsResponse.getJobPost());
-                                                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
-                                                    jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex]);
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                    .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            preScreenLocationIndex = which;
-                                        }
-                                    }).create();
-                            alertDialog.show();
+                            LinearLayout customTitleLayout = new LinearLayout(JobDetailActivity.this);
+                            customTitleLayout.setPadding(30,30,30,30);
+                            TextView customTitle = new TextView(JobDetailActivity.this);
+                            String title = "You are applying for <b>" + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + "</b>  job at <b>" + getJobPostDetailsResponse.getJobPost().getJobPostCompanyName()
+                                    + "</b>. Please select a job Location";
+                            customTitle.setText(Html.fromHtml(title));
+                            customTitle.setTextSize(16);
+                            customTitleLayout.addView(customTitle);
+
+                            final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(JobDetailActivity.this);
+                            applyDialogBuilder.setCancelable(true);
+                            applyDialogBuilder.setCustomTitle(customTitleLayout);
+                            applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    List<JobPostObject> list = new ArrayList<JobPostObject>();
+                                    list.add(getJobPostDetailsResponse.getJobPost());
+                                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
+                                    jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], jobTabApplyBtn);
+                                    dialog.dismiss();
+                                }
+                            });
+                            applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    preScreenLocationIndex = which;
+                                }
+                            });
+                            final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+                            applyDialog.show();
                         } else{
-                            Prefs.loginCheckStatus.put(1);
+                            Toast.makeText(JobDetailActivity.this, "Please login/sign up to apply.",
+                                    Toast.LENGTH_LONG).show();
+                            Prefs.jobToApplyStatus.put(1);
+                            Prefs.getJobToApplyJobId.put(getJobPostDetailsResponse.getJobPost().getJobPostId());
                             Intent intent = new Intent(JobDetailActivity.this, WelcomeScreen.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                            Prefs.loginCheckStatus.put(0);
+                            finish();
                         }
                     }
                 });
@@ -450,4 +466,5 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

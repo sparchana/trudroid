@@ -1,6 +1,5 @@
 package in.trujobs.dev.trudroid;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,12 +8,14 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -57,7 +58,7 @@ public class CandidateProfileExperience extends Fragment {
 
     public CandidateProfileActivity candidateProfileActivity;
 
-    LinearLayout qualificationLayout, experiencedSection, languageListView;
+    LinearLayout qualificationLayout, experiencedSection, languageListView, fresherExperienceLayout, isEmployedLayout;
     Integer isCandidateExperienced = -1;
 
     // values
@@ -85,12 +86,27 @@ public class CandidateProfileExperience extends Fragment {
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        fresherExperienceLayout = (LinearLayout) view.findViewById(R.id.fresher_experienced_layout);
+        isEmployedLayout = (LinearLayout) view.findViewById(R.id.is_employed_layout);
+
         pd = CustomProgressDialog.get(getActivity());
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle("Experience Profile");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        TextView areYouFresherExperienceLabel = (TextView) view.findViewById(R.id.are_you_fresher_experience_label);
+        TextView totalExpLabel = (TextView) view.findViewById(R.id.total_exp_label);
+        TextView currentlyWorkingLabel = (TextView) view.findViewById(R.id.currently_working_label);
+
+        String astrix = "<font color='#EE0000'> *</font>";
+
+        areYouFresherExperienceLabel.setText(Html.fromHtml(areYouFresherExperienceLabel.getText() + astrix));
+        totalExpLabel.setText(Html.fromHtml(totalExpLabel.getText() + astrix));
+        currentlyWorkingLabel.setText(Html.fromHtml(currentlyWorkingLabel.getText() + astrix));
+
+        selectExp = (TextView) view.findViewById(R.id.select_experience);
 
         candidateProfileActivity = (CandidateProfileActivity) getActivity();
         mAsyncTask = new GetExperienceStaticAsyncTask();
@@ -100,7 +116,7 @@ public class CandidateProfileExperience extends Fragment {
 
     public void showExperiencePicker(){
         final Dialog expDialog = new Dialog(getActivity());
-        expDialog.setTitle("Select Experience");
+        expDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         expDialog.setContentView(R.layout.experience_picker);
         Button setBtn = (Button) expDialog.findViewById(R.id.setBtn);
 
@@ -165,6 +181,7 @@ public class CandidateProfileExperience extends Fragment {
                     candidateProfileEducation.setArguments(getActivity().getIntent().getExtras());
                     getFragmentManager().beginTransaction()
                             .addToBackStack(null)
+                            .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                             .add(R.id.main_profile, candidateProfileEducation).commit();
                 } else{
                     Toast.makeText(getContext(), "Looks like something went wrong while saving experience profile. Please try again.",
@@ -214,15 +231,9 @@ public class CandidateProfileExperience extends Fragment {
                     isFresher = (Button) view.findViewById(R.id.is_fresher);
                     isEmployedYes = (Button) view.findViewById(R.id.is_employed_yes);
                     isEmployedNo = (Button) view.findViewById(R.id.is_employed_no);
-                    selectExp = (TextView) view.findViewById(R.id.select_experience);
 
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() > 0){
                         lastWithdrawnSalary.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateLastWithdrawnSalary() + "");
-                    }
-                    currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
-                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
-                        currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
-                        currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
                     }
 
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() > 0){
@@ -242,6 +253,31 @@ public class CandidateProfileExperience extends Fragment {
                         } else if(year != 0 && month != 0){
                             selectExp.setText(year + " years " + month + " months");
                         }
+
+                        if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
+                            isEmployed = 1;
+                            //setting current company details
+                            currentCompany.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentCompany() + "");
+                            if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole() != null){
+                                currentJobRole.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole().getJobRoleName());
+                                currentJobRoleValue = candidateProfileActivity.candidateInfo.getCandidate().getCandidateCurrentJobRole();
+                            }
+                            experiencedSection.setVisibility(View.VISIBLE);
+                            qualificationLayout.setVisibility(View.VISIBLE);
+                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.white));
+                        } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
+                            isEmployed = 0;
+                            experiencedSection.setVisibility(View.VISIBLE);
+                            qualificationLayout.setVisibility(View.GONE);
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.white));
+                        }
+
                     } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateTotalExperience() == 0){
                         isCandidateExperienced = 0;
                         experiencedSection.setVisibility(View.GONE);
@@ -274,27 +310,11 @@ public class CandidateProfileExperience extends Fragment {
                         }
                     });
 
-                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 1){
-                        isEmployed = 1;
-                        experiencedSection.setVisibility(View.VISIBLE);
-                        qualificationLayout.setVisibility(View.VISIBLE);
-                        isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
-                        isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedYes.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.white));
-                    } else if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateIsEmployed() == 0){
-                        isEmployed = 0;
-                        experiencedSection.setVisibility(View.VISIBLE);
-                        qualificationLayout.setVisibility(View.GONE);
-                        isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
-                        isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
-                        isEmployedNo.setTextColor(getResources().getColor(R.color.white));
-                    }
                     isEmployedYes.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             isEmployed = 1;
+                            isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             qualificationLayout.setVisibility(View.VISIBLE);
                             isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -307,6 +327,7 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onClick(View view) {
                             isEmployed = 0;
+                            isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             qualificationLayout.setVisibility(View.GONE);
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -320,6 +341,10 @@ public class CandidateProfileExperience extends Fragment {
                         public void onClick(View view) {
                             isCandidateExperienced = 0;
                             isEmployed = 0;
+                            expInYears = 0;
+                            selectExp.setText("Select Totla Experience");
+                            isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+                            fresherExperienceLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
                             isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
                             isEmployedNo.setBackgroundResource(R.drawable.rounded_corner_button);
@@ -337,6 +362,12 @@ public class CandidateProfileExperience extends Fragment {
                         @Override
                         public void onClick(View view) {
                             isCandidateExperienced = 1;
+                            isEmployed = -1;
+                            isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedYes.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            isEmployedNo.setBackgroundResource(R.drawable.round_white_button);
+                            isEmployedNo.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            fresherExperienceLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             experiencedSection.setVisibility(View.VISIBLE);
                             isExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                             isExperienced.setTextColor(getResources().getColor(R.color.white));
@@ -372,34 +403,26 @@ public class CandidateProfileExperience extends Fragment {
                     currentJobRolePicker.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            final AlertDialog alertDialog = new AlertDialog.Builder(
-                                    getContext())
-                                    .setCancelable(true)
-                                    .setPositiveButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                    .setTitle("Select current Job Role")
-                                    .setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
-                                            currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
-                                            currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
-                                            currentJobRoleValue = currentJobRoleBuilder.build();
-                                            currentJobRole.setText(jobRoleList[which]);
-                                            dialog.dismiss();
-                                        }
-                                    }).create();
-                            alertDialog.show();
-                            WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
-                            params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-                            params.height = 900;
-                            alertDialog.getWindow().setAttributes(params);
+                            final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+                            applyDialogBuilder.setCancelable(true);
+                            applyDialogBuilder.setTitle("Select current Job Role");
+                            applyDialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            applyDialogBuilder.setSingleChoiceItems(jobRoleList, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    JobRoleObject.Builder currentJobRoleBuilder = JobRoleObject.newBuilder();
+                                    currentJobRoleBuilder.setJobRoleName(String.valueOf(jobRoleList[which]));
+                                    currentJobRoleBuilder.setJobRoleId(jobRoleIdList.get(which));
+                                    currentJobRoleValue = currentJobRoleBuilder.build();
+                                    currentJobRole.setText(jobRoleList[which]);
+                                }
+                            });
+                            final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+                            applyDialog.show();
                         }
                     });
 
@@ -413,16 +436,21 @@ public class CandidateProfileExperience extends Fragment {
                             if(isCandidateExperienced < 0){
                                 check = false;
                                 showDialog("Please select Fresher or Experience");
-                            }
-                            if(expInYears > 1 && isEmployed < 0){
-                                check = false;
-                                showDialog("Please answer the question: Are you currently working?");
-                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
-                                check = false;
-                                showDialog("Please provide your current Salary");
+                                fresherExperienceLayout.setBackgroundResource(R.drawable.border);
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
+                                selectExp.setError("Please answer the question: Total Work Experience");
+                                selectExp.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                                 showDialog("Please answer the question: Total Work Experience");
+                            } else if(expInYears > 1 && isEmployed < 0){
+                                check = false;
+                                showDialog("Please answer the question: Are you currently working?");
+                                isEmployedLayout.setBackgroundResource(R.drawable.border);
+                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
+                                check = false;
+                                lastWithdrawnSalary.setError("Please provide your current Salary");
+                                lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
+                                showDialog("Please provide your current Salary");
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
                                 showDialog("Please select at least one language that you know");
@@ -443,9 +471,11 @@ public class CandidateProfileExperience extends Fragment {
                                     isEmployed = 0;
                                 }
                                 if(isEmployed == 1){
-                                    experienceBuilder.setCurrentJobRole(currentJobRoleValue);
-                                    experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
                                     experienceBuilder.setCandidateCurrentSalary(Long.parseLong(lastWithdrawnSalary.getText().toString()));
+                                    if(currentJobRoleValue != null) {
+                                        experienceBuilder.setCurrentJobRole(currentJobRoleValue);
+                                    }
+                                    experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
                                 }
 
                                 mUpdateExperienceAsyncTask = new UpdateExperienceProfileAsyncTask();
@@ -515,6 +545,28 @@ public class CandidateProfileExperience extends Fragment {
             }
         }
     }
+
+    private class GenericTextWatcher implements TextWatcher {
+        private View view;
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable) {
+            switch(view.getId()){
+                case R.id.last_withdrawn_salary:
+                    lastWithdrawnSalary.setError(null);
+                    break;
+                case R.id.select_experience:
+                    selectExp.setError(null);
+                    break;
+            }
+        }
+    }
+
 
     public boolean findExistingLanguageKnownObject(LanguageObject languageObject){
         boolean flag = false;

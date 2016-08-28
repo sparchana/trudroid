@@ -147,7 +147,6 @@ public class JobPreference extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_logout:
-                Prefs.onLogout();
                 Toast.makeText(JobPreference.this, "Logout Successful",
                         Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(JobPreference.this, WelcomeScreen.class);

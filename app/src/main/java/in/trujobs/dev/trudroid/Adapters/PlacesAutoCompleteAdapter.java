@@ -58,7 +58,7 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<Object> implements F
                     filterResults.values = suggestions;
                     filterResults.count = suggestions.size();
                 } else {
-                    Toast.makeText(getContext(), "Please Select Locaity within Bengaluru.", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Please Select Locality within Bengaluru.", Toast.LENGTH_SHORT);
                 }
                 return filterResults;
             }

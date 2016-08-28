@@ -1,12 +1,91 @@
-<RelativeLayout android:id="@+id/main_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JobDetailActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:fitsSystemWindows="true"
+    tools:context=".SearchJobsActivity">
 
-    <android.support.design.widget.TabLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:elevation="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"
+                    android:id="@+id/toolbar_title" />
+            </android.support.v7.widget.Toolbar>
+
+
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar_parent"
+            android:background="@color/themeGrey"
+            app:tabBackground="@color/themeGrey"
+            app:tabTextColor="@color/back_grey_medium_light"
+            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorColor="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/tab_layout"/>
+
+        <Button
+            android:layout_height="wrap_content" android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:text="Apply"
+            android:id="@+id/job_detail_apply_btn"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:backgroundTint="@color/colorCaution"
+        app:pressedTranslationZ="12dp"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/referral" />
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+
+
+
+    <!--<android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,19 +110,4 @@
         android:id="@+id/job_detail_apply_btn"
         android:textColor="@color/white"
         android:background="@color/colorPrimary"
-        android:layout_centerHorizontal="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/fab"
-        android:background="#008080"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        app:fabSize="normal"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorCaution"
-        app:pressedTranslationZ="12dp"
-        android:src="@drawable/referral" />
-
-</RelativeLayout>
+        android:layout_centerHorizontal="true"/>  -->

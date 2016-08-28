@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.trujobs.dev.trudroid.CandidateProfileActivity;
+import in.trujobs.dev.trudroid.MyAppliedJobs;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
 
@@ -51,6 +52,7 @@ public class ViewDialog {
         LinearLayout newJobsLayout = (LinearLayout) dialog.findViewById(R.id.newjob_dialog);
         LinearLayout assessmentLayout = (LinearLayout) dialog.findViewById(R.id.completeassessment_dialog);
         LinearLayout referLayout = (LinearLayout) dialog.findViewById(R.id.refer_dialog);
+        LinearLayout viewJobsLayout = (LinearLayout) dialog.findViewById(R.id.view_my_jobs);
 
         LinearLayout referSms = (LinearLayout) dialog.findViewById(R.id.sms_share);
         LinearLayout referWhatsapp = (LinearLayout) dialog.findViewById(R.id.whatsapp_share);
@@ -60,35 +62,58 @@ public class ViewDialog {
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
             assessmentLayout.setVisibility(View.GONE);
+            viewJobsLayout.setVisibility(View.GONE);
         }
         else if (category == 2 ) { // new jobs, apply now
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.VISIBLE);
             referLayout.setVisibility(View.GONE);
             assessmentLayout.setVisibility(View.GONE);
+            viewJobsLayout.setVisibility(View.GONE);
         }
         else if(category == 3) { //refer now
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.VISIBLE);
             assessmentLayout.setVisibility(View.GONE);
+            viewJobsLayout.setVisibility(View.GONE);
         }
         else if(category == 4) { // complete assessment now
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
             assessmentLayout.setVisibility(View.VISIBLE);
+            viewJobsLayout.setVisibility(View.GONE);
+        }
+
+        else if(category == 5) { // View my jobs
+            completeProfileLayout.setVisibility(View.GONE);
+            newJobsLayout.setVisibility(View.GONE);
+            referLayout.setVisibility(View.GONE);
+            assessmentLayout.setVisibility(View.GONE);
+            viewJobsLayout.setVisibility(View.VISIBLE);
         }
         else {
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
             assessmentLayout.setVisibility(View.GONE);
+            viewJobsLayout.setVisibility(View.GONE);
         }
 
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+
+        viewJobsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Navigate user to my jobs section
+                Intent completeProfileIntent = new Intent(view.getContext(), MyAppliedJobs.class);
+                view.getContext().startActivity(completeProfileIntent);
                 dialog.cancel();
             }
         });
@@ -99,6 +124,7 @@ public class ViewDialog {
                 // Navigate user to edit profile screen
                 Intent completeProfileIntent = new Intent(view.getContext(), CandidateProfileActivity.class);
                 view.getContext().startActivity(completeProfileIntent);
+                dialog.cancel();
             }
         });
 
@@ -108,6 +134,7 @@ public class ViewDialog {
                 // Navigate user to search jobs screen
                 Intent applyJobsIntent = new Intent(view.getContext(), SearchJobsActivity.class);
                 view.getContext().startActivity(applyJobsIntent);
+                dialog.cancel();
             }
         });
 
@@ -127,6 +154,7 @@ public class ViewDialog {
                     return;
                 }
                 ctx.startActivity(callIntent);
+                dialog.cancel();
             }
         });
 
@@ -140,6 +168,7 @@ public class ViewDialog {
                 intent.setPackage("com.whatsapp");
                 intent.putExtra(Intent.EXTRA_TEXT, "Hey. Register yourself at www.trujobs.in and get jobs");
                 ctx.startActivity(intent);
+                dialog.cancel();
             }
         });
 
@@ -150,6 +179,7 @@ public class ViewDialog {
                 smsIntent.setType("vnd.android-dir/mms-sms");
                 smsIntent.putExtra("sms_body","Hey. Register yourself at www.trujobs.in and get jobs");
                 ctx.startActivity(smsIntent);
+                dialog.cancel();
             }
         });
 

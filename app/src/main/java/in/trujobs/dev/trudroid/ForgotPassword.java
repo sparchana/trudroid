@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -30,6 +31,15 @@ public class ForgotPassword extends TruJobsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        // Fetch the mobile number entered by user in the login activity and set it in the text view
+        mUserMobile = (EditText) findViewById(R.id.forgot_password_mobile_edit_text);
+        String forgotPwdMobile = getIntent().getStringExtra(Constants.FORGOT_PWD_MOBILE_EXTRA);
+
+        if (forgotPwdMobile != null && !forgotPwdMobile.isEmpty()) {
+            mUserMobile.setText(forgotPwdMobile);
+        }
 
         pd = CustomProgressDialog.get(ForgotPassword.this);
 

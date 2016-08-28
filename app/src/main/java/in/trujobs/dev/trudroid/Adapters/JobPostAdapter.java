@@ -1,15 +1,16 @@
 package in.trujobs.dev.trudroid.Adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,13 +26,10 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
-import in.trujobs.dev.trudroid.WelcomeScreen;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
-import in.trujobs.proto.CandidateAppliedJobsResponse;
-import in.trujobs.proto.JobApplicationObject;
 import in.trujobs.proto.JobPostObject;
 
 /**
@@ -47,35 +45,66 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
     public class Holder
     {
-        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView;
+        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, mApplyingJobBtnTextView;
         LinearLayout mApplyBtnBackground, applyBtn;
+        ImageView mJobColor;
     }
+    public LinearLayout applyingJobButton;
+    public TextView applyingJobBtnTextView;
+    public Button applyingJobButtonDetail;
+    public ImageView applyingJobColor;
     ProgressDialog pd;
 
     @Override
     public View getView(int position, View rowView, ViewGroup parent) {
-        Holder holder = new Holder();
+        final Holder holder = new Holder();
         final JobPostObject jobPost = getItem(position);
         if(rowView == null) {
             rowView = LayoutInflater.from(getContext()).inflate(
                     R.layout.job_list_view_item, parent, false);
         }
-        holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
-        holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
 
-        holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_btn);
+        holder.mJobColor = (ImageView) rowView.findViewById(R.id.job_color);
+        holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
+
+        holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
+        holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
 
         pd = CustomProgressDialog.get(parent.getContext());
 
         holder.applyBtn.setEnabled(true);
         holder.mJobPostApplyBtn.setText("Apply");
-        holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
+        holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
+
+        holder.mApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
 
         if(jobPost.getIsApplied() == 1){
             holder.applyBtn.setEnabled(false);
+            holder.mJobColor.setImageResource(R.drawable.orange_dot);
             holder.mJobPostApplyBtn.setText("Already Applied");
             holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
         }
+
+        //when user is not logged in, show all jobs as not applied
+        if(!Util.isLoggedIn()){
+            holder.applyBtn.setEnabled(true);
+            holder.mJobColor.setImageResource(R.drawable.green_dot);
+            holder.mJobPostApplyBtn.setText("Apply");
+            holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
+        }
+
+        holder.mJobColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(jobPost.getIsApplied() == 1){
+                    Toast.makeText(getContext(), "You have already applied to this job",
+                            Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(getContext(), "You have not applied to this job",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         //set job post title
         holder.mJobPostTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
@@ -154,14 +183,18 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         holder.applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                applyingJobButton = holder.mApplyBtnBackground;
+                applyingJobBtnTextView = holder.mApplyingJobBtnTextView;
+                applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
             }
         });
+
         return rowView;
     }
 
     public void showJobLocality(final JobPostObject jobPost){
-        if(Util.isLoggedIn() == true){
+        if(Util.isLoggedIn()){
             preScreenLocationIndex = 0;
             final CharSequence[] localityList = new CharSequence[jobPost.getJobPostLocalityCount()];
             final Long[] localityId = new Long[jobPost.getJobPostLocalityCount()];
@@ -170,43 +203,50 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 localityId[i] = jobPost.getJobPostLocality(i).getLocalityId();
             }
 
-            final AlertDialog alertDialog = new AlertDialog.Builder(
-                    getContext())
-                    .setCancelable(true)
-                    .setTitle("You are applying for " + jobPost.getJobPostTitle() + " job at " + jobPost.getJobPostCompanyName() + ". Please select a job Location" )
-                    .setPositiveButton("Apply",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex]);
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            preScreenLocationIndex = which;
-                        }
-                    }).create();
-            alertDialog.show();
+            LinearLayout customTitleLayout = new LinearLayout(getContext());
+            customTitleLayout.setPadding(30,30,30,30);
+            TextView customTitle = new TextView(getContext());
+            String title = "You are applying for <b>" + jobPost.getJobPostTitle() + "</b>  job at <b>" + jobPost.getJobPostCompanyName()
+                    + "</b>. Please select a job Location";
+            customTitle.setText(Html.fromHtml(title));
+            customTitle.setTextSize(16);
+            customTitleLayout.addView(customTitle);
+
+            final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
+            applyDialogBuilder.setCancelable(true);
+            applyDialogBuilder.setCustomTitle(customTitleLayout);
+            applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex], null);
+                    dialog.dismiss();
+                }
+            });
+            applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    preScreenLocationIndex = which;
+                }
+            });
+            final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+            applyDialog.show();
         } else{
-            Prefs.loginCheckStatus.put(1);
-            Intent intent = new Intent(getContext(), WelcomeScreen.class);
-            getContext().startActivity(intent);
-            Prefs.loginCheckStatus.put(0);
+            Toast.makeText(getContext(), "Please login/sign up to apply.",
+                    Toast.LENGTH_LONG).show();
+            Prefs.jobToApplyStatus.put(1);
+            Prefs.getJobToApplyJobId.put(jobPost.getJobPostId());
+            ((Activity)getContext()).finish();
         }
     }
 
-    public void applyJob(Long jobPostId, Long localityId){
+    public void applyJob(Long jobPostId, Long localityId, Button detailPageApplyBtn){
+        if(detailPageApplyBtn != null){
+            applyingJobButtonDetail = detailPageApplyBtn;
+        }
         ApplyJobRequest.Builder requestBuilder = ApplyJobRequest.newBuilder();
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setLocalityId(localityId);
@@ -246,9 +286,28 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
             ViewDialog alert = new ViewDialog();
             if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
-                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
+                //setting "already applied" to apply button of the jobs list
+                try {
+                    applyingJobColor.setImageResource(R.drawable.orange_dot);
+                    applyingJobButton.setEnabled(false);
+                    applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                    applyingJobBtnTextView.setText("Already Applied");
+                } catch (Exception ignored){}
+
+                //setting "already applied" to job detail activity button
+                try{
+                    applyingJobButtonDetail.setText("Already Applied");
+                    applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                    applyingJobButtonDetail.setEnabled(false);
+                } catch (Exception ignored){}
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
-                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
+                try {
+                    applyingJobButton.setEnabled(false);
+                    applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                    applyingJobBtnTextView.setText("Already Applied");
+                } catch (Exception ignored){}
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
                 alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
@@ -258,4 +317,5 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
         }
     }
+
 }

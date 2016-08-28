@@ -3,15 +3,19 @@ package in.trujobs.dev.trudroid;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.facebook.device.yearclass.YearClass;
 
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 
 public class WelcomeScreen extends TruJobsBaseActivity {
+
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,5 +62,26 @@ public class WelcomeScreen extends TruJobsBaseActivity {
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            Prefs.jobToApplyStatus.put(0);
+            Prefs.getJobToApplyJobId.put(0L);
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        showToast("Please press back again to exit");
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2500);
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class ViewProfileFragment extends Fragment {
     Boolean bodyOpen, preferenceOpen, experienceOpen, educationOpen;
     ImageView profileCompletePercent;
     TextView profileStatusText, profileMsg, jobsApplied;
+    TextView myJobsHeading,  myJobsSubHeading;
 
     public CandidateProfileActivity candidateProfileActivity;
 
@@ -65,12 +67,18 @@ public class ViewProfileFragment extends Fragment {
         pd = CustomProgressDialog.get(getActivity());
 
         profileStatusText = (TextView) view.findViewById(R.id.profile_status_text);
+
         profileMsg = (TextView) view.findViewById(R.id.profile_msg);
+
         jobsApplied = (TextView) view.findViewById(R.id.candidate_applied_job_no);
+
         bodyOpen = true;
         preferenceOpen = false;
         educationOpen = false;
         experienceOpen = false;
+
+        myJobsHeading = (TextView) view.findViewById(R.id.my_jobs_header);
+        myJobsSubHeading = (TextView) view.findViewById(R.id.assessment_msg);
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +87,7 @@ public class ViewProfileFragment extends Fragment {
                 candidateProfileBasic.setArguments(getActivity().getIntent().getExtras());
                 getFragmentManager().beginTransaction()
                         .addToBackStack(null)
+                        .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .add(R.id.main_profile, candidateProfileBasic).commit();
             }
         });
@@ -193,21 +202,34 @@ public class ViewProfileFragment extends Fragment {
                     candidateProfileActivity.candidateInfo = getCandidateInformationResponse;
 
                     TextView candidateName = (TextView) view.findViewById(R.id.user_name);
+
                     TextView candidateGender = (TextView) view.findViewById(R.id.candidate_gender);
+
                     TextView candidateMobile = (TextView) view.findViewById(R.id.candidate_phone_number);
+
                     TextView candidateAge = (TextView) view.findViewById(R.id.candidate_age);
+
                     TextView candidateLocation = (TextView) view.findViewById(R.id.candidate_location);
 
+                    //pref
                     TextView candidateJobPref = (TextView) view.findViewById(R.id.candidate_job_pref);
+
                     TextView candidateLocalityPref = (TextView) view.findViewById(R.id.candidate_locality_pref);
+
                     TextView candidateShiftPref = (TextView) view.findViewById(R.id.candidate_job_time_shift);
 
+                    //education
                     TextView candidateDegree = (TextView) view.findViewById(R.id.candidate_degree);
+
                     TextView candidateCollege = (TextView) view.findViewById(R.id.candidate_college);
+
                     TextView candidateCourse = (TextView) view.findViewById(R.id.candidate_course);
 
+                    //experience
                     TextView candidateTotalExp = (TextView) view.findViewById(R.id.candidate_experience);
+
                     TextView candidateCurrentCompany = (TextView) view.findViewById(R.id.candidate_current_company);
+
                     TextView candidateLastWithdrawnSalary = (TextView) view.findViewById(R.id.candidate_current_salary);
 
                     candidateName.setText("Hi " + getCandidateInformationResponse.getCandidate().getCandidateFirstName());
@@ -233,7 +255,9 @@ public class ViewProfileFragment extends Fragment {
                                 CandidateProfileBasic candidateProfileBasic = new CandidateProfileBasic();
                                 candidateProfileBasic.setArguments(getActivity().getIntent().getExtras());
                                 getFragmentManager().beginTransaction()
-                                        .replace(R.id.main_profile, candidateProfileBasic).commit();
+                                        .addToBackStack(null)
+                                        .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                                        .add(R.id.main_profile, candidateProfileBasic).commit();
                             }
                         });
                     }
@@ -257,15 +281,27 @@ public class ViewProfileFragment extends Fragment {
                     }
 
                     jobsApplied.setText(getCandidateInformationResponse.getCandidate().getAppliedJobs() + "");
+
+                    //setting my jobs header message if candidate has applied in any one of the jobs
+                    if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
+                        myJobsHeading.setText("Jobs you have applied");
+                        myJobsSubHeading.setText("Go to my Jobs");
+                    } else{
+                        myJobsHeading.setText("No Jobs Applied");
+                        myJobsSubHeading.setText("Apply Now");
+                    }
                     LinearLayout myJobStatusLayout = (LinearLayout) view.findViewById(R.id.my_jobs_status_layout);
                     myJobStatusLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Intent intent;
                             if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
-                                Intent intent = new Intent(getContext(), MyAppliedJobs.class);
-                                startActivity(intent);
+                                intent = new Intent(getContext(), MyAppliedJobs.class);
+                            } else{
+                                intent = new Intent(getContext(), SearchJobsActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                             }
-
+                            startActivity(intent);
                         }
                     });
 

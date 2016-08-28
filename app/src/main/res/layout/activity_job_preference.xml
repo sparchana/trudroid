@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/colorPrimary"
+            card_view:cardBackgroundColor="@color/themeGrey"
             card_view:cardCornerRadius="2dp"
             card_view:contentPadding="10dp">
 
@@ -194,14 +194,14 @@
                 android:layout_gravity="center"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="@color/colorPrimary"
+                card_view:cardBackgroundColor="@color/themeGrey"
                 card_view:cardCornerRadius="2dp"
                 card_view:contentPadding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tap on preferred job roles'"
+                    android:text="Tap on preferred job roles"
                     android:textAlignment="center"
                     android:textSize="16dp"
                     android:textColor="@color/white"/>

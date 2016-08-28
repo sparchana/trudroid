@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import in.trujobs.dev.trudroid.Adapters.MyAppliedJobsAdapter;
@@ -65,15 +66,19 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
                 Log.w("","Null my jobs Response");
                 return;
             } else {
+                LinearLayout myAppliedJobsMessage = (LinearLayout) findViewById(R.id.my_jobs_message);
                 if(candidateAppliedJobsResponse.getStatusValue() == ServerConstants.SUCCESS){
                     if(candidateAppliedJobsResponse.getJobApplicationCount() > 0){
                         MyAppliedJobsAdapter myAppliedJobsAdapter = new MyAppliedJobsAdapter(MyAppliedJobs.this, candidateAppliedJobsResponse.getJobApplicationList());
                         myJobListView.setAdapter(myAppliedJobsAdapter);
+                        myAppliedJobsMessage.setVisibility(View.VISIBLE);
                     } else {
+                        myAppliedJobsMessage.setVisibility(View.GONE);
                         ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
                         noJobsImageView.setVisibility(View.VISIBLE);
                     }
                 } else{
+                    myAppliedJobsMessage.setVisibility(View.GONE);
                     ImageView errorImageView = (ImageView) findViewById(R.id.something_went_wrong_image);
                     errorImageView.setVisibility(View.VISIBLE);
                     myJobListView.setVisibility(View.GONE);

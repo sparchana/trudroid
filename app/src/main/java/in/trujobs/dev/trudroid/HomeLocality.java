@@ -19,9 +19,11 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -124,6 +126,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
     private AsyncTask<HomeLocalityRequest, Void, HomeLocalityResponse> mAsyncTask;
     private AsyncTask<String, Void, LatLngAPIHelper> mLatLngAsyncTask;
 
+    public ImageView clearAutoCompleteBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +165,17 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 showProgressBar = false;
                 activateOrDeactivateSubmitButton(true);
                 updateUIWidgets();
+            }
+        });
+
+        clearAutoCompleteBtn= (ImageView) findViewById(R.id.home_locality_auto_complete_clear);
+        clearAutoCompleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchHomeLocalityTxtView.getText().clear();
+                mSearchHomeLocalityTxtView.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mSearchHomeLocalityTxtView, InputMethodManager.SHOW_IMPLICIT);
             }
         });
 

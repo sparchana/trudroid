@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -30,6 +31,7 @@ public class Login extends TruJobsBaseActivity {
     EditText mMobile;
     EditText mPassword;
     ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +44,14 @@ public class Login extends TruJobsBaseActivity {
         TextView alreadyAUserTextView = (TextView) findViewById(R.id.already_user);
         ImageView loginBackArrow = (ImageView) findViewById(R.id.login_back_arrow);
 
+        mMobile = (EditText) findViewById(R.id.user_mobile_edit_text);
+
         forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this, ForgotPassword.class);
+                // Pass the mobile number entered by user to the forgot password activity
+                intent.putExtra(Constants.FORGOT_PWD_MOBILE_EXTRA, mMobile.getText().toString());
                 finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
@@ -102,7 +108,6 @@ public class Login extends TruJobsBaseActivity {
             mAsyncTask = new LogInRequestAsyncTask();
             mAsyncTask.execute(requestBuilder.build());
         }
-
     }
 
     private class LogInRequestAsyncTask extends AsyncTask<LogInRequest,
@@ -160,22 +165,19 @@ public class Login extends TruJobsBaseActivity {
                 SearchJobsActivity.jobFilterRequestBkp = null;
                 Tlog.i("Login.java : "+logInResponse.getCandidatePrefJobRoleIdOne());
 
-                if(Prefs.loginCheckStatus.get() == 1){
-                    finish();
-                } else {
-                    Intent intent;
-                    if(Prefs.candidateJobPrefStatus.get() == 0){
-                        intent = new Intent(Login.this, JobPreference.class);
-                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
-                        intent = new Intent(Login.this, HomeLocality.class);
-                    } else{
-                        intent = new Intent(Login.this, SearchJobsActivity.class);
-                    }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                    finish();
+                Intent intent;
+                Tlog.e(Prefs.candidateHomeLocalityStatus.get() + " ---====");
+                if(Prefs.candidateJobPrefStatus.get() == 0){
+                    intent = new Intent(Login.this, JobPreference.class);
+                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                    intent = new Intent(Login.this, HomeLocality.class);
+                } else{
+                    intent = new Intent(Login.this, SearchJobsActivity.class);
                 }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                finish();
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 showToast(MessageConstants.INCORRECT_PASSWORD);

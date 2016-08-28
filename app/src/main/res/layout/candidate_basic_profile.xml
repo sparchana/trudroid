@@ -168,6 +168,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/gender_button_layout"
                         android:layout_marginTop="15dp"
                         android:padding="1dp"
                         android:layout_marginBottom="10dp">
@@ -236,6 +237,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="10dp"
                                 android:layout_marginLeft="4dp"
+                                android:id="@+id/job_role_pref_title"
                                 android:text="Preferred Job Roles(s)"/>
 
                             <android.support.design.widget.TextInputLayout
@@ -252,7 +254,7 @@
                                         android:textSize="@dimen/Edit_Text_Size"
                                         android:singleLine="true"
                                         android:layout_width="0dp"
-                                        android:layout_weight="0.88"
+                                        android:layout_weight="0.85"
                                         android:inputType="number"
                                         android:textColor="@drawable/edit_text_selector"
                                         android:layout_height="wrap_content"
@@ -261,9 +263,9 @@
                                     <ImageView
                                         android:id="@+id/job_role_pref_picker"
                                         android:layout_width="0dp"
-                                        android:paddingTop="4dp"
+                                        android:paddingTop="14dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="0.12"
+                                        android:layout_weight="0.15"
                                         android:src="@drawable/down_arrow"/>
                                 </LinearLayout>
                             </android.support.design.widget.TextInputLayout>
@@ -286,7 +288,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:id="@+id/home_locality_auto_complete_edit_text"
-                                    android:textSize="12dp"
+                                    android:textSize="14dp"
                                     android:focusableInTouchMode="true"
                                     android:maxLength="50"
                                     android:layout_gravity="center"
@@ -312,11 +314,13 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="10dp"
                                 android:layout_marginLeft="4dp"
+                                android:id="@+id/shift_pref_title"
                                 android:text="Preferred Shift Timing"/>
 
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:id="@+id/shift_layout" >
                                 <Spinner
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

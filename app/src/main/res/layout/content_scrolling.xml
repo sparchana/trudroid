@@ -139,6 +139,7 @@
                                     android:layout_height="match_parent"
                                     android:textColor="#484848"
                                     android:layout_margin="4dp"
+                                    android:id="@+id/my_jobs_header"
                                     android:text="Jobs you have Applied"
                                     android:gravity="center"/>
 
@@ -213,13 +214,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_marginLeft="10dp"
-                        android:layout_gravity="center_horizontal"
-                        >
+                        android:layout_gravity="center_horizontal">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textSize="@dimen/tab_head"
                             android:textColor="#fff"
+                            android:id="@+id/personal_header_title"
                             android:text="Personal"/>
                     </LinearLayout>
                     <LinearLayout
@@ -455,8 +456,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        >
+                        android:layout_marginLeft="20dp">
 
                         <ImageView
                             android:layout_width="25dp"
@@ -466,21 +466,20 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        >
+                        android:layout_marginLeft="10dp">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textSize="@dimen/tab_head"
                             android:textColor="#fff"
+                            android:id="@+id/preference_header_title"
                             android:text="Job Preferences"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:layout_marginRight="30dp"
-                        android:gravity="center|right"
-                        >
+                        android:gravity="center|right">
                         <ImageView
                             android:id="@+id/job_preference_drop_icon"
                             android:layout_width="15dp"
@@ -614,7 +613,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/label_size"
-                                android:text="Preferred Job Shift" />                                  />
+                                android:text="Preferred Job Shift" />
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
@@ -678,6 +677,7 @@
                             android:layout_height="match_parent"
                             android:textSize="@dimen/tab_head"
                             android:textColor="#fff"
+                            android:id="@+id/education_header_title"
                             android:text="Education"/>
                     </LinearLayout>
                     <LinearLayout
@@ -888,6 +888,7 @@
                             android:layout_height="match_parent"
                             android:textSize="@dimen/tab_head"
                             android:textColor="#fff"
+                            android:id="@+id/experience_header_title"
                             android:text="Experience"/>
                     </LinearLayout>
                     <LinearLayout
