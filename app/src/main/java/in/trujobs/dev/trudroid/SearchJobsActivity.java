@@ -457,14 +457,21 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
             case R.id.clear_location_filter:
                 mSearchJobAcTxtView.getText().clear();
-                mSearchJobAcTxtView.requestFocus();
+                mSearchJobAcTxtView.setHint("All Bangalore");
+                mSearchLat = 0D;
+                mSearchLng = 0D;
+                jobSearchRequest.setLatitude(mSearchLat);
+                jobSearchRequest.setLongitude(mSearchLng);
+                searchJobsByJobRole();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+                break;
 
             case R.id.search_jobs_by_place:
                 mSearchJobAcTxtView.requestFocus();
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+                break;
 
             default:
                 break;
@@ -478,8 +485,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         protected void onPreExecute() {
             super.onPreExecute();
             loaderStart();
-            Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
             Tlog.i("------[SearchJobs] Before Calling JobSearchAsyncTask -----");
+            Tlog.i("before AsyncTask mobile:"+ Prefs.candidateMobile.get());
+            if(Prefs.candidateMobile.get() != null || !Prefs.candidateMobile.get().trim().isEmpty()){
+                jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get()).buildPartial();
+            }
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
@@ -637,6 +647,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.e("Candidate Mobile Null in Prefs");
         }
+        jobSearchRequest.buildPartial();
     }
 
     private void loaderStart() {
@@ -670,6 +681,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }
+        //hiding keyboard
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void initJobRoleVars() {
@@ -736,8 +750,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             jobSearch = JobSearchRequest.newBuilder();
             jobSearch.setLatitude(mSearchLat);
             jobSearch.setLongitude(mSearchLng);
+        }
+        if(Prefs.candidateMobile.get() != null || !Prefs.candidateMobile.get().trim().isEmpty()){
             jobSearch.setCandidateMobile(Prefs.candidateMobile.get());
         }
+
         if(jobFilterRequestBkp != null){
             Tlog.i("found jobFilterRequestBkp -- Misc JobFilter options set. attaching jobFilterRequestBkp to jobSearch");
             jobSearch.setJobFilterRequest(jobFilterRequestBkp);
@@ -758,7 +775,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.i("No selected jobroles");
             if(jobRolesFilter != null){
-                jobRolesFilter.clear();
+                jobRolesFilter.clear().build();
                 updateJobSearchObject();
             }
         }

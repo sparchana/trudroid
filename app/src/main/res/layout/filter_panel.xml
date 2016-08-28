@@ -49,10 +49,9 @@
                    android:layout_weight="1"/>
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_margin="8dp"
-                    android:padding="2dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="10dp"
                     android:id="@+id/clear_location_filter"
                     android:layout_gravity="center"
                     android:src="@drawable/cross"/>

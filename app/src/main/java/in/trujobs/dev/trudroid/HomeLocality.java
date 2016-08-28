@@ -2,6 +2,7 @@ package in.trujobs.dev.trudroid;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +46,7 @@ import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -128,6 +130,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
 
     public ImageView clearAutoCompleteBtn;
 
+    ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +139,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
         setContentView(R.layout.activity_home_locality);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hi " + Prefs.firstName.get() + "!");
+
+        pd = CustomProgressDialog.get(HomeLocality.this);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
@@ -155,15 +161,15 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 //mAddressOutput = (String) parent.getItemAtPosition(position);
                 GET_LOCALITY_FROM_GPS = false;
                 GET_LOCALITY_FROM_AUTOCOMPLETE = true;
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
                 PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
-                Toast.makeText(HomeLocality.this, mAddressOutput, Toast.LENGTH_SHORT).show();
                 mPlaceId = placeAPIHelper.getPlaceId();
                 mAddressOutput = placeAPIHelper.getDescription();
                 Tlog.i("mAddressOutput ------ " + mAddressOutput
                         + "\nplaceId:" + mPlaceId);
                 triggerPlaceIdToLocalityResolver(mPlaceId);
                 showProgressBar = false;
-                activateOrDeactivateSubmitButton(true);
                 updateUIWidgets();
             }
         });
@@ -611,6 +617,8 @@ public class HomeLocality extends TruJobsBaseActivity implements
         protected void onPreExecute() {
             super.onPreExecute();
             showProgressBar = true;
+            pd.show();
+            activateOrDeactivateSubmitButton(false);
             updateUIWidgets();
             Tlog.i("Fetching Locality Object from latlng....");
         }
@@ -619,6 +627,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
         protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
             super.onPostExecute(localityObjectResponse);
             if(localityObjectResponse!=null){
+                pd.cancel();
                 if(localityObjectResponse.getStatus()== LocalityObjectResponse.Status.SUCCESS) {
                     switch (localityObjectResponse.getType()) {
                         case  FOR_PLACEID:
@@ -648,6 +657,7 @@ public class HomeLocality extends TruJobsBaseActivity implements
                     mSearchHomeLocalityTxtView.setText(mAddressOutput);
                     mSearchHomeLocalityTxtView.dismissDropDown();
                     mSearchHomeLocalityTxtView.clearFocus();
+                    activateOrDeactivateSubmitButton(true);
                 } else {
                     showToast("Error While Fetching Locality. Please manually type your locality above.");
                     mSearchHomeLocalityTxtView.setText("");

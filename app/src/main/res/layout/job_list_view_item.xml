@@ -196,6 +196,7 @@
                     <ImageView
                         android:layout_width="12dp"
                         android:layout_height="12dp"
+                        android:layout_marginTop="2dp"
                         android:src="@drawable/clock"/>
                     <TextView
                         android:layout_width="match_parent"
@@ -215,6 +216,7 @@
                     <ImageView
                         android:layout_width="12dp"
                         android:layout_height="12dp"
+                        android:layout_marginTop="2dp"
                         android:src="@drawable/job_role_small"/>
 
                     <TextView
@@ -237,6 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:layout_marginLeft="36dp"
+                    android:padding="8dp"
                     android:id="@+id/apply_button_layout"
                     android:background="@drawable/rounded_corner_button"
                     android:gravity="center|center_horizontal|center_vertical">
@@ -245,6 +248,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textAlignment="center"
+                        android:textSize="14sp"
                         android:id="@+id/apply_button"
                         android:text="APPLY"
                         android:textStyle="bold"

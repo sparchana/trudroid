@@ -1,6 +1,8 @@
 package in.trujobs.dev.trudroid;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.IntentCompat;
 import android.view.MenuItem;
 
 import in.trujobs.proto.GetCandidateInformationResponse;
@@ -36,6 +38,10 @@ public class CandidateProfileActivity extends TruJobsBaseActivity {
     @Override
     public void onBackPressed(){
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            Intent intent = new Intent(CandidateProfileActivity.this, SearchJobsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             this.finish();
         } else {
            getFragmentManager().popBackStack();

@@ -43,12 +43,12 @@ public class CustomProgressDialog extends ProgressDialog {
     @Override
     public void show() {
         super.show();
-        mAnimationDrawable.start();
+        if(mAnimationDrawable!=null) mAnimationDrawable.start();
    }
 
     @Override
     public void dismiss() {
         super.dismiss();
-        mAnimationDrawable.stop();
+        if(mAnimationDrawable!=null) mAnimationDrawable.stop();
     }
 }
