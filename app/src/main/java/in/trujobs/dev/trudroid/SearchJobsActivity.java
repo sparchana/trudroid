@@ -464,6 +464,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchLng = 0D;
                 jobSearchRequest.setLatitude(mSearchLat);
                 jobSearchRequest.setLongitude(mSearchLng);
+                if(jobFilterRequestBkp!=null){
+                    jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
+                    jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
+                    jobFilterRequestBkp.buildPartial();
+                }
                 searchJobsByJobRole();
                 mSearchJobAcTxtView.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -653,6 +658,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.e("Candidate Mobile Null in Prefs");
         }
+        if(jobRolesFilter == null){
+            jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
+            if (Prefs.candidatePrefJobRoleIdOne.get()!=null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
+                jobRolesFilter.setJobRoleIdOne(Prefs.candidatePrefJobRoleIdOne.get());
+            if (Prefs.candidatePrefJobRoleIdTwo.get()!=null || Prefs.candidatePrefJobRoleIdTwo.get() != 0)
+                jobRolesFilter.setJobRoleIdTwo(Prefs.candidatePrefJobRoleIdTwo.get());
+            if (Prefs.candidatePrefJobRoleIdThree.get()!=null || Prefs.candidatePrefJobRoleIdThree.get() != 0)
+                jobRolesFilter.setJobRoleIdThree(Prefs.candidatePrefJobRoleIdThree.get());
+        }
+        jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter.buildPartial());
         jobSearchRequest.buildPartial();
     }
 
