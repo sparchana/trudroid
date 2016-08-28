@@ -74,7 +74,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         holder.applyBtn.setEnabled(true);
         holder.mJobPostApplyBtn.setText("Apply");
-        holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.colorPrimary));
+        holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
 
         holder.mApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
 
@@ -83,6 +83,14 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             holder.mJobColor.setImageResource(R.drawable.orange_dot);
             holder.mJobPostApplyBtn.setText("Already Applied");
             holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+        }
+
+        //when user is not logged in, show all jobs as not applied
+        if(!Util.isLoggedIn()){
+            holder.applyBtn.setEnabled(true);
+            holder.mJobColor.setImageResource(R.drawable.green_dot);
+            holder.mJobPostApplyBtn.setText("Apply");
+            holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
         }
 
         holder.mJobColor.setOnClickListener(new View.OnClickListener() {
