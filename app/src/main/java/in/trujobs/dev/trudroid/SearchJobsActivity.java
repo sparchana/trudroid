@@ -457,14 +457,21 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
             case R.id.clear_location_filter:
                 mSearchJobAcTxtView.getText().clear();
-                mSearchJobAcTxtView.requestFocus();
+                mSearchJobAcTxtView.setHint("All Bangalore");
+                mSearchLat = 0D;
+                mSearchLng = 0D;
+                jobSearchRequest.setLatitude(mSearchLat);
+                jobSearchRequest.setLongitude(mSearchLng);
+                searchJobsByJobRole();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+                break;
 
             case R.id.search_jobs_by_place:
                 mSearchJobAcTxtView.requestFocus();
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT); break;
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+                break;
 
             default:
                 break;
@@ -670,6 +677,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }
+        //hiding keyboard
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void initJobRoleVars() {

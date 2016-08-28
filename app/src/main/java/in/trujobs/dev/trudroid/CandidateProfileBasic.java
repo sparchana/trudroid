@@ -3,6 +3,7 @@ package in.trujobs.dev.trudroid;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -196,7 +198,6 @@ public class CandidateProfileBasic extends Fragment {
                             GET_LOCALITY_FROM_AUTOCOMPLETE = true;
                             PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
                             mAddressOutput = placeAPIHelper.getDescription();
-                            Toast.makeText(getContext(), mAddressOutput, Toast.LENGTH_SHORT).show();
                             mPlaceId = placeAPIHelper.getPlaceId();
                             Tlog.i("mAddressOutput ------ " + mAddressOutput
                                     + "\nplaceId:" + mPlaceId);
@@ -540,12 +541,16 @@ public class CandidateProfileBasic extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pd.show();
             Tlog.i("Fetching Locality Object from latlng....");
         }
 
         @Override
         protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
             super.onPostExecute(localityObjectResponse);
+            pd.cancel();
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             if(localityObjectResponse!=null){
                 if(localityObjectResponse.getStatus()== LocalityObjectResponse.Status.SUCCESS) {
                     switch (localityObjectResponse.getType()) {
