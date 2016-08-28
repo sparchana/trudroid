@@ -31,7 +31,7 @@ public class SplashScreenActivity extends TruJobsBaseActivity {
         return new Runnable() {
             @Override
             public void run() {
-                if(Util.isLoggedIn() == true){
+                if(Util.isLoggedIn()){
                     Intent intent;
                     if(Prefs.candidateJobPrefStatus.get() == 0){
                         intent = new Intent(SplashScreenActivity.this, JobPreference.class);
@@ -39,16 +39,20 @@ public class SplashScreenActivity extends TruJobsBaseActivity {
                         intent = new Intent(SplashScreenActivity.this, HomeLocality.class);
                     } else{
                         intent = new Intent(SplashScreenActivity.this, SearchJobsActivity.class);
-/*                        intent = new Intent(SplashScreenActivity.this, CandidateProfileActivity.class);*/
-
                     }
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                     finish();
                 } else{
-                    Intent intent = new Intent(SplashScreenActivity.this, WelcomeScreen.class);
+                    Intent intent = new Intent();
+                    if(Prefs.firstTime.get() == 0){ //launch welcome slides
+                        intent = new Intent(SplashScreenActivity.this, WelcomeActivity.class);
+                        Prefs.firstTime.put(1);
+                    } else {
+                        intent = new Intent(SplashScreenActivity.this, WelcomeScreen.class);
+                    }
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    overridePendingTransition(R.anim.slide_up,  R.anim.no_change);
                     finish();
                 }
             }
