@@ -101,8 +101,16 @@ public class EnterPassword extends TruJobsBaseActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
+                Prefs.sessionId.put(logInResponse.getSessionId());
+                Prefs.sessionExpiry.put(logInResponse.getSessionExpiryMillis());
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
+                Prefs.candidateHomeLat.put(String.valueOf(logInResponse.getCandidateHomeLatitude()));
+                Prefs.candidateHomeLng.put(String.valueOf(logInResponse.getCandidateHomeLongitude()));
+                Prefs.candidatePrefJobRoleIdOne.put(logInResponse.getCandidatePrefJobRoleIdOne());
+                Prefs.candidatePrefJobRoleIdTwo.put(logInResponse.getCandidatePrefJobRoleIdTwo());
+                Prefs.candidatePrefJobRoleIdThree.put(logInResponse.getCandidatePrefJobRoleIdThree());
+                Prefs.candidateHomeLocalityName.put(logInResponse.getCandidateHomeLocalityName());
 
                 Intent intent;
                 if(Prefs.candidateJobPrefStatus.get() == 0){
