@@ -37,4 +37,5 @@ dependencies {
     compile 'com.android.support:support-v4:+'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile 'com.facebook.device.yearclass:yearclass:1.0.1'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }

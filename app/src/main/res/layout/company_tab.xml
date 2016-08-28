@@ -23,7 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="Company Details"/>
+                android:text="Company Details"
+                android:id="@+id/company_details_title" />
 
             <android.support.v7.widget.CardView
                 android:layout_gravity="center"
@@ -81,7 +82,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="13dp"
+                                    android:textSize="12dp"
                                     android:id="@+id/company_name"
                                     android:paddingTop="12dp"
                                     android:paddingBottom="12dp"
@@ -112,7 +113,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Bangalore"
-                                    android:textSize="14dp"
+                                    android:textSize="12dp"
                                     android:id="@+id/company_location"
                                     android:paddingTop="12dp"
                                     android:paddingBottom="12dp"
@@ -156,7 +157,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Startup"
-                                    android:textSize="14dp"
+                                    android:textSize="12dp"
                                     android:id="@+id/company_type"
                                     android:paddingTop="9dp"
                                     android:paddingBottom="12dp"
@@ -183,7 +184,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="10-100 employees"
                                     android:id="@+id/company_employees"
-                                    android:textSize="14dp"
+                                    android:textSize="12dp"
                                     android:paddingTop="9dp"
                                     android:paddingBottom="12dp"
                                     android:paddingLeft="4dp"
@@ -218,7 +219,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="14dp"
+                                    android:textSize="12dp"
                                     android:id="@+id/company_website"
                                     android:paddingTop="9dp"
                                     android:paddingBottom="12dp"
@@ -235,6 +236,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+                android:id="@+id/company_description_title"
                 android:text="Description"/>
 
             <android.support.v7.widget.CardView

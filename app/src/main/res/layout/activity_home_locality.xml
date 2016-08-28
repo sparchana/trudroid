@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/colorPrimary"
+            card_view:cardBackgroundColor="@color/themeGrey"
             card_view:cardCornerRadius="2dp"
             card_view:contentPadding="10dp">
 
@@ -54,8 +54,10 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="0.1"
+                    android:id="@+id/home_locality_auto_complete_clear"
+                    android:padding="9dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/edit"/>
+                    android:src="@drawable/cross"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -131,14 +133,13 @@
         android:layout_centerInParent="true" />
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="12dp"
-        android:layout_marginTop="36dp"
-        android:padding="48dp"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="48dp"
+        android:paddingRight="48dp"
         android:layout_gravity="center"
         android:id="@+id/job_pref_image_view"
-        android:background="@drawable/big_image"/>
+        android:src="@drawable/big_image"/>
 
     <LinearLayout
         android:layout_width="match_parent"

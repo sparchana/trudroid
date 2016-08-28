@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="in.trujobs.dev.trudroid">
 
+    <receiver android:name=".listener.SmsListener">
+        <intent-filter android:priority="2147483647">
+            <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+        </intent-filter>
+    </receiver>
+
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -87,12 +93,21 @@
             android:name=".CandidateProfileActivity"
             android:label="Profile"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemeNoAction" />
         <activity
             android:name=".JobDetailActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction" />
+        <activity
+            android:name=".MyAppliedJobs"
             android:screenOrientation="portrait" />
-        <activity android:name=".MyAppliedJobs" />
-        <activity android:name=".ReferFriends"></activity>
+        <activity
+            android:name=".ReferFriends"
+            android:screenOrientation="portrait" />
+        <activity android:name=".WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

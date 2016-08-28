@@ -12,7 +12,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_job">Search Jobs</string>
+    <string name="title_activity_job"></string>
     <string name="title_activity_home">Locality</string>
 
     <string name="question_fresher_experienced">Are you a fresher or experienced candidate?</string>
@@ -31,4 +31,25 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    //slider
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Welcome to TruJobs!</string>
+    <string name="slide_1_desc">Your job searching partner</string>
+
+    <string name="slide_2_title">Location based Jobs</string>
+    <string name="slide_2_desc">Easily search jobs around you or at a particular location!</string>
+
+    <string name="slide_3_title">Your Preference</string>
+    <string name="slide_3_desc">Find and apply on the jobs matching your requirements!</string>
+
+    <string name="slide_4_title">Attend interviews and get placed</string>
+    <string name="slide_4_desc">Get a job and earn upto 30,000!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
 </resources>

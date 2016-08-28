@@ -85,13 +85,6 @@ public class Login extends TruJobsBaseActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Prefs.jobToApplyStatus.put(0);
-        Prefs.getJobToApplyJobId.put(0L);
-    }
-
     private void performLogIn() {
         mMobile = (EditText) findViewById(R.id.user_mobile_edit_text);
         mPassword = (EditText) findViewById(R.id.user_password_edit_text);
@@ -172,22 +165,19 @@ public class Login extends TruJobsBaseActivity {
                 SearchJobsActivity.jobFilterRequestBkp = null;
                 Tlog.i("Login.java : "+logInResponse.getCandidatePrefJobRoleIdOne());
 
-                if(Prefs.loginCheckStatus.get() == 1){
-                    finish();
-                } else {
-                    Intent intent;
-                    if(Prefs.candidateJobPrefStatus.get() == 0){
-                        intent = new Intent(Login.this, JobPreference.class);
-                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
-                        intent = new Intent(Login.this, HomeLocality.class);
-                    } else{
-                        intent = new Intent(Login.this, SearchJobsActivity.class);
-                    }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                    finish();
+                Intent intent;
+                Tlog.e(Prefs.candidateHomeLocalityStatus.get() + " ---====");
+                if(Prefs.candidateJobPrefStatus.get() == 0){
+                    intent = new Intent(Login.this, JobPreference.class);
+                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                    intent = new Intent(Login.this, HomeLocality.class);
+                } else{
+                    intent = new Intent(Login.this, SearchJobsActivity.class);
                 }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                finish();
             }
             else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 showToast(MessageConstants.INCORRECT_PASSWORD);

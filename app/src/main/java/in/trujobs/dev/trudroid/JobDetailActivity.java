@@ -9,11 +9,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,7 +66,12 @@ public class JobDetailActivity extends TruJobsBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_detail);
-        setTitle(EXTRA_JOB_TITLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(EXTRA_JOB_TITLE);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
@@ -279,6 +286,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 }
 
                 TextView otherJobTextView = (TextView) findViewById(R.id.other_job_header);
+
                 LinearLayout otherJobListView = (LinearLayout) findViewById(R.id.other_job_list_view);
                 //setting other jobs in Other job section
                 if(getJobPostDetailsResponse.getCompany().getCompanyOtherJobsCount() > 0){
@@ -349,7 +357,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     companyWebsite.setText("Company website: Info Not Specified");
                 }
 
-                if(getJobPostDetailsResponse.getCompany().getCompanyType() != null){
+                if(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName() != ""){
                     companyType.setText(getJobPostDetailsResponse.getCompany().getCompanyType().getCompanyTypeName());
                 } else{
                     companyType.setText("Company Type: Info Not Specified");
@@ -426,6 +434,8 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
                             applyDialog.show();
                         } else{
+                            Toast.makeText(JobDetailActivity.this, "Please login/sign up to apply.",
+                                    Toast.LENGTH_LONG).show();
                             Prefs.jobToApplyStatus.put(1);
                             Prefs.getJobToApplyJobId.put(getJobPostDetailsResponse.getJobPost().getJobPostId());
                             Intent intent = new Intent(JobDetailActivity.this, WelcomeScreen.class);
@@ -456,4 +466,5 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

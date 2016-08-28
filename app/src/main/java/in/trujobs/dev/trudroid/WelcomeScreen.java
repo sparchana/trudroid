@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.facebook.device.yearclass.YearClass;
 
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 
 public class WelcomeScreen extends TruJobsBaseActivity {
@@ -67,6 +68,8 @@ public class WelcomeScreen extends TruJobsBaseActivity {
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            Prefs.jobToApplyStatus.put(0);
+            Prefs.getJobToApplyJobId.put(0L);
             return;
         }
 
