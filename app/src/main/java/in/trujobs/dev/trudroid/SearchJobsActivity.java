@@ -177,6 +177,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 } else if(mSearchJobAcTxtView.getHint().toString().trim().equalsIgnoreCase("Start typing a location in Bangalore")){
                     mSearchJobAcTxtView.setHint("All Bangalore");
                 }
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
             }
         });
 
@@ -463,8 +465,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 jobSearchRequest.setLatitude(mSearchLat);
                 jobSearchRequest.setLongitude(mSearchLng);
                 searchJobsByJobRole();
+                mSearchJobAcTxtView.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
                 break;
 
             case R.id.search_jobs_by_place:
@@ -523,6 +526,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         @Override
         protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
             super.onPostExecute(localityObjectResponse);
+            mSearchJobAcTxtView.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
             if(localityObjectResponse!=null){
                 if (localityObjectResponse.getStatus() == LocalityObjectResponse.Status.SUCCESS
                         && localityObjectResponse.getType() == LocalityObjectResponse.Type.FOR_PLACEID) {
@@ -682,8 +688,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             showToast("No jobs found !!");
         }
         //hiding keyboard
+        mSearchJobAcTxtView.clearFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
     }
 
     private void initJobRoleVars() {
