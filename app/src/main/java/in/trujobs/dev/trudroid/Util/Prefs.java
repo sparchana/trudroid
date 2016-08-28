@@ -39,6 +39,8 @@ public class Prefs {
     public static final File.SharedPreference<Integer> jobToApplyStatus = sFile.intValue("jobToApplyFlag", 0);
     public static final File.SharedPreference<Long> getJobToApplyJobId = sFile.longValue("getJobToApplyJobId", 0L);
 
+    public static final File.SharedPreference<Integer> firstTime = sFile.intValue("firstTime", 0);
+
     public static void clearPrefValues() {
         Prefs.firstName.remove();
         Prefs.lastName.remove();
