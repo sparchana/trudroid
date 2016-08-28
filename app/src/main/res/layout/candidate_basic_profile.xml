@@ -290,7 +290,7 @@
                                     android:id="@+id/home_locality_auto_complete_edit_text"
                                     android:textSize="14dp"
                                     android:focusableInTouchMode="true"
-                                    android:maxLength="50"
+                                    android:maxLength="100"
                                     android:layout_gravity="center"
                                     android:hint="Home Locality"
                                     android:layout_weight="1"/>
