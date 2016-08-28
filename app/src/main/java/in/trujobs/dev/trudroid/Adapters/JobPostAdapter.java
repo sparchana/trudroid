@@ -72,8 +72,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         pd = CustomProgressDialog.get(parent.getContext());
 
+        //presetting job card element as not applied
         holder.applyBtn.setEnabled(true);
         holder.mJobPostApplyBtn.setText("Apply");
+        holder.mJobColor.setImageResource(R.drawable.green_dot);
         holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
 
         holder.mApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
