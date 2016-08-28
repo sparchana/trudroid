@@ -12,11 +12,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 
 /**
  * Created by zero on 1/8/16.
@@ -29,7 +28,7 @@ public class PlaceAPI {
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
 
-    private static final String SERVER_API_KEY = "AIzaSyBNM0b5j-qfS-foVPNviZjjSO5EXHxNdrA";
+    private static final String SERVER_API_KEY = ServerConstants.GOOGLE_SERVER_API_KEY;
 
     public ArrayList<PlaceAPIHelper> autocomplete (String input) {
         ArrayList<PlaceAPIHelper> resultList = null;
