@@ -25,6 +25,7 @@ public class Prefs {
     public static final File.SharedPreference<String> candidateHomeLocalityName = sFile.stringValue("candidateHomeLocalityName", "");
     public static final File.SharedPreference<String> candidateHomeLat = sFile.stringValue("candidateHomeLat", "0.0");
     public static final File.SharedPreference<String> candidateHomeLng = sFile.stringValue("candidateHomeLng", "0.0");
+    public static final File.SharedPreference<String> candidateHomeLocalityPlaceId = sFile.stringValue("candidateHomeLocalityPlaceId", "");
     public static final File.SharedPreference<Long> candidatePrefJobRoleIdOne = sFile.longValue("candidatePrefJobRoleIdOne", 0L);
     public static final File.SharedPreference<Long> candidatePrefJobRoleIdTwo = sFile.longValue("candidatePrefJobRoleIdTwo", 0L);
     public static final File.SharedPreference<Long> candidatePrefJobRoleIdThree = sFile.longValue("candidatePrefJobRoleIdThree", 0L);
@@ -60,6 +61,7 @@ public class Prefs {
         Prefs.candidateJobPrefStatus.remove();
         Prefs.candidateHomeLocalityStatus.remove();
         Prefs.jobPrefString.remove();
+        Prefs.candidateHomeLocalityPlaceId.remove();
     }
 
     /* TODO maintain session and authToken across server and app */
