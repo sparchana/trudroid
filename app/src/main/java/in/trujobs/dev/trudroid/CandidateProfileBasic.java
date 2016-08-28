@@ -501,10 +501,11 @@ public class CandidateProfileBasic extends Fragment {
     public void triggerFinalSubmission(){
         mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
         mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-        mHomeLocalityRequest.setAddress(mAddressOutput);
+        mHomeLocalityRequest.setLocalityName(mAddressOutput);
 
         mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
         mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+        mHomeLocalityRequest.setPlaceId( mPlaceId);
 
         mUpdateLocatlityAsyncTask = new HomeLocalityAsyncTask();
         mUpdateLocatlityAsyncTask.execute(mHomeLocalityRequest.build());

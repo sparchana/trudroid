@@ -41,6 +41,8 @@ import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchRequest;
+import in.trujobs.proto.LatLngOrPlaceIdRequest;
+import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
 import in.trujobs.proto.ResetPasswordRequest;
@@ -383,7 +385,7 @@ public class HttpRequest {
 
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setReadTimeout(12000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
@@ -429,7 +431,7 @@ public class HttpRequest {
 
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setReadTimeout(12000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
@@ -540,5 +542,22 @@ public class HttpRequest {
             Log.w(String.valueOf(e), "Cannot parse response");
         }
         return resetPasswordResponse;
+    }
+
+    public static LocalityObjectResponse getLocalityForLatLngOrPlaceId(LatLngOrPlaceIdRequest latLngOrPlaceIdRequest) {
+        String responseString = postToServer(Config.URL_GET_LOCALITY_FOR_LATLNG,
+                Base64.encodeToString(latLngOrPlaceIdRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        LocalityObjectResponse localityObjectResponse = null;
+        try {
+            localityObjectResponse = LocalityObjectResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Log.w(String.valueOf(e), "Cannot parse response");
+        }
+        return localityObjectResponse;
     }
 }

@@ -1,7 +1,6 @@
 package in.trujobs.dev.trudroid;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,11 +12,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.IntentCompat;
-import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
@@ -40,21 +37,20 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
-import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngAsyncTask;
+import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLocalityFromLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
-import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
+import in.trujobs.proto.LatLngOrPlaceIdRequest;
+import in.trujobs.proto.LocalityObjectResponse;
 
 public class HomeLocality extends TruJobsBaseActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -105,12 +101,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
      * The formatted address.
      */
     public String mAddressOutput;
-
-    /**
-     * Receiver registered with this activity to get the response from FetchAddressIntentService.
-     */
-    private AddressResultReceiver mResultReceiver;
-
     /**
      * Visible while the address is being fetched.
      */
@@ -126,8 +116,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
      */
     protected AutoCompleteTextView mSearchHomeLocalityTxtView;
 
-
-    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
 
     private static HomeLocalityRequest.Builder mHomeLocalityRequest = HomeLocalityRequest.newBuilder();
@@ -143,8 +131,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
         setContentView(R.layout.activity_home_locality);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hi " + Prefs.firstName.get() + "!");
-
-        mResultReceiver = new AddressResultReceiver(new Handler());
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
@@ -166,11 +152,11 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 GET_LOCALITY_FROM_GPS = false;
                 GET_LOCALITY_FROM_AUTOCOMPLETE = true;
                 PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
-                mAddressOutput = placeAPIHelper.getDescription();
                 Toast.makeText(HomeLocality.this, mAddressOutput, Toast.LENGTH_SHORT).show();
                 mPlaceId = placeAPIHelper.getPlaceId();
                 Tlog.i("mAddressOutput ------ " + mAddressOutput
                         + "\nplaceId:" + mPlaceId);
+                triggerPlaceIdToLocalityResolver(mPlaceId);
                 showProgressBar = false;
                 activateOrDeactivateSubmitButton(true);
                 updateUIWidgets();
@@ -369,20 +355,22 @@ public class HomeLocality extends TruJobsBaseActivity implements
      * Creates an intent, adds location data to it as an extra, and starts the intent service for
      * fetching an address.
      */
-    protected void startIntentService() {
-        // Create an intent for passing to the intent service responsible for fetching the address.
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-
-        // Pass the result receiver as an extra to the service.
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-
-        // Pass the location data as an extra to the service.
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
-
-        // Start the service. If the service isn't already running, it is instantiated and started
-        // (creating a process for it if needed); if it is running then it remains running. The
-        // service kills itself automatically once all intents are processed.
-        startService(intent);
+    protected void triggerLatLngToLocalityResolver() {
+        LatLngOrPlaceIdRequest.Builder latLngOrPlaceIdRequest = LatLngOrPlaceIdRequest.newBuilder();
+        if(mLastLocation!=null){
+            latLngOrPlaceIdRequest.setLatitude(mLastLocation.getLatitude());
+            latLngOrPlaceIdRequest.setLongitude(mLastLocation.getLongitude());
+        }
+        LocalityFromLatLngAsyncTask localityFromLatLngAsyncTask = new LocalityFromLatLngAsyncTask();
+        localityFromLatLngAsyncTask.execute(latLngOrPlaceIdRequest.build());
+    }
+    protected void triggerPlaceIdToLocalityResolver(String placeId) {
+        LatLngOrPlaceIdRequest.Builder latLngOrPlaceIdRequest = LatLngOrPlaceIdRequest.newBuilder();
+        if(!placeId.trim().isEmpty()){
+            latLngOrPlaceIdRequest.setPlaceId(placeId);
+        }
+        LocalityFromLatLngAsyncTask localityFromLatLngAsyncTask = new LocalityFromLatLngAsyncTask();
+        localityFromLatLngAsyncTask.execute(latLngOrPlaceIdRequest.build());
     }
 
     private void fetchCurrentAddress() {
@@ -402,16 +390,15 @@ public class HomeLocality extends TruJobsBaseActivity implements
             if (mAddressRequested) {
                 showProgressBar = true;
                 updateUIWidgets();
-                startIntentService();
+                triggerLatLngToLocalityResolver();
                 if (mAddressOutput.equalsIgnoreCase(getString(R.string.service_not_available))) {
                     mAddressOutput = "";
                     showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
                 } else if(mAddressOutput.trim().isEmpty()){
                     /* this case deals with lat/lat that are resolved to only city level address */
+                    mSearchHomeLocalityTxtView.setText("");
                     showToast("Unable to detect location. Please manually type the location");
                 }
-                showProgressBar = false;
-                updateUIWidgets();
             }
         }
     }
@@ -508,40 +495,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
         mLastLocation = location;
     }
 
-    @SuppressLint("ParcelCreator")
-    public class AddressResultReceiver extends ResultReceiver {
-
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        /**
-         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
-         */
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string or an error message sent from the intent service.
-            if(resultData.getString(Constants.RESULT_DATA_KEY).equalsIgnoreCase(getString(R.string.service_not_available))){
-                Tlog.e("service_not_available string received onReceiveResult");
-                showToast("Unable to detect location. Please turn on GPS in order to use this feature or manually type the location");
-            } else {
-                mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            }
-            displayAddressOutput();
-
-            // Show a toast message if an address was found.
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                showToast(getString(R.string.address_found));
-            }
-
-            // Reset. Enable the Fetch Address button and stop showing the progress bar.
-            showProgressBar = false;
-            mAddressRequested = false;
-            updateUIWidgets();
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -571,44 +524,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
                         break;
                 }
                 break;
-            case REQUEST_CODE_AUTOCOMPLETE:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        // Get the user's selected place from the Intent.
-                        Place place = PlaceAutocomplete.getPlace(this, data);
-                        Tlog.i( "Place Selected: " + place.getName() + " Lat: "
-                                + place.getLatLng().latitude + " lng: " + place.getLatLng().longitude
-                                + "local" + place.getLocale() + " other: " + place.getAttributions());
-                        // set final submission data
-                        mAddressOutput = place.getName().toString();
-                        Tlog.i( "gps LastLocation not available. setting to place lat/lng");
-                        try{
-                            mLastLocation.setLatitude(place.getLatLng().latitude);
-                            mLastLocation.setLongitude(place.getLatLng().longitude);
-
-                            mSearchHomeLocalityTxtView.setText(place.getName());
-                        } catch (NullPointerException np){
-                            mLastLocation = new Location("");
-                            mLastLocation.setLatitude(place.getLatLng().latitude);
-                            mLastLocation.setLongitude(place.getLatLng().longitude);
-                        }
-                        // Reset. Enable the Fetch Address button and stop showing the progress bar.
-                        mAddressRequested = false;
-                        displayAddressOutput();
-                        updateUIWidgets();
-                        break;
-                    case PlaceAutocomplete.RESULT_ERROR:
-                        Status status = PlaceAutocomplete.getStatus(this, data);
-                        Log.e(TAG, "Error: Status = " + status.toString());
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        // Indicates that the activity closed before a selection was made. For example if
-                        // the user pressed the back button.
-                        break;
-                    default:
-                        break;
-                }
-                break;
         }
     }
 
@@ -625,14 +540,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
             mSearchHomeLocalityTxtView.setText("");
             mSearchHomeLocalityTxtView.didTouchFocusSelect();
             showToast("No locality entered. Please select locality within Bengaluru.");
-        }
-        if(mPlaceId != null && GET_LOCALITY_FROM_AUTOCOMPLETE){
-            showProgressBar = true;
-            updateUIWidgets();
-            Tlog.i("Triggering lat/lng fetch process with "+ mPlaceId);
-            mLatLngAsyncTask = new LatLngAsyncTask();
-            mLatLngAsyncTask.execute(mPlaceId);
-            Tlog.i("lat/lng fetch completed");
         } else {
             triggerFinalSubmission();
         }
@@ -649,10 +556,11 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 mSearchHomeLocalityTxtView.dismissDropDown();
                 mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
                 mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-                mHomeLocalityRequest.setAddress(mAddressOutput);
 
+                mHomeLocalityRequest.setLocalityName(mAddressOutput);
                 mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
                 mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
+                mHomeLocalityRequest.setPlaceId(mPlaceId);
 
                 mAsyncTask = new HomeLocalityAsyncTask();
                 mAsyncTask.execute(mHomeLocalityRequest.build());
@@ -683,26 +591,55 @@ public class HomeLocality extends TruJobsBaseActivity implements
         }
     }
 
-    private class LatLngAsyncTask extends BasicLatLngAsyncTask {
+    private class LocalityFromLatLngAsyncTask extends BasicLocalityFromLatLngOrPlaceIdAsyncTask {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Tlog.i("Fetching LatLng ....");
-            mAddressRequested = true;
-            updateUIWidgets();
+            mSearchHomeLocalityTxtView.setText("");
+            Tlog.i("Fetching Locality Object from latlng....");
         }
 
         @Override
-        protected void onPostExecute(LatLngAPIHelper latLngAPIHelper) {
-            super.onPostExecute(latLngAPIHelper);
-            mLatLngAsyncTask = null;
-            if(latLngAPIHelper!=null){
-                if(mLastLocation == null){
-                    mLastLocation = new Location("");
+        protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
+            super.onPostExecute(localityObjectResponse);
+            if(localityObjectResponse!=null){
+                if(localityObjectResponse.getStatus()== LocalityObjectResponse.Status.SUCCESS) {
+                    switch (localityObjectResponse.getType()) {
+                        case  FOR_PLACEID:
+                            if(mLastLocation == null) {
+                                mLastLocation = new Location("");
+                            }
+                            if(localityObjectResponse.getLocality().getLat()!=0){
+                                mLastLocation.setLatitude(localityObjectResponse.getLocality().getLat());
+                            }
+                            if(localityObjectResponse.getLocality().getLng()!=0){
+                                mLastLocation.setLongitude(localityObjectResponse.getLocality().getLng());
+                            }
+                            break;
+                        case FOR_LATLNG:
+                            /* since the req was made with latlng i.e the users latlng use that to make the final req*/
+                            break;
+                        default:
+                            break;
+                    }
+                    /* common setters  */
+                    if(!localityObjectResponse.getLocality().getLocalityName().isEmpty()){
+                        mAddressOutput = localityObjectResponse.getLocality().getLocalityName();
+                    }
+                    if(!localityObjectResponse.getLocality().getPlaceId().trim().isEmpty()){
+                        mPlaceId = localityObjectResponse.getLocality().getPlaceId();
+                    }
+                    mSearchHomeLocalityTxtView.setText(mAddressOutput);
+                    mSearchHomeLocalityTxtView.dismissDropDown();
+                    mSearchHomeLocalityTxtView.clearFocus();
+                } else {
+                    showToast("Error While Fetching Locality. Please manually type your locality above.");
+                    mSearchHomeLocalityTxtView.setText("");
+                    mAddressOutput = "";
+                    mSearchHomeLocalityTxtView.clearFocus();
                 }
-                if(latLngAPIHelper.getLatitude()!=0)mLastLocation.setLatitude(latLngAPIHelper.getLatitude());
-                if(latLngAPIHelper.getLongitude()!=0)mLastLocation.setLongitude(latLngAPIHelper.getLongitude());
-                triggerFinalSubmission();
+                showProgressBar = false;
+                updateUIWidgets();
             }
         }
     }

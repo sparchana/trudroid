@@ -21,7 +21,6 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<Object> implements F
 
     PlaceAPI mPlaceAPI = new PlaceAPI();
 
-
     public PlacesAutoCompleteAdapter(Context context, int resource) {
         super(context, resource);
 

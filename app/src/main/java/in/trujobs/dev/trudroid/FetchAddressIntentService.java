@@ -7,10 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
-import android.text.TextUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -91,65 +88,13 @@ public class FetchAddressIntentService extends IntentService {
             // Using getFromLocation() returns an array of Addresses for the area immediately
             // surrounding the given latitude and longitude. The results are a best guess and are
             // not guaranteed to be accurate.
-            addresses = geocoder.getFromLocation(
-                    location.getLatitude(),
-                    location.getLongitude(),
-                    // In this sample, we get just a single address.
-                    1);
-        } catch (IOException ioException) {
-            // Catch network or other I/O problems.
-            errorMessage = getString(R.string.service_not_available);
-            Tlog.e(errorMessage, ioException);
+
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
-            errorMessage = getString(R.string.invalid_lat_long_used);
-            Tlog.e(errorMessage + ". " +
-                    "Latitude = " + location.getLatitude() +
-                    ", Longitude = " + location.getLongitude(), illegalArgumentException);
         }
 
-        // Handle case where no address was found.
-        if (addresses == null || addresses.size()  == 0) {
-            if (errorMessage.isEmpty()) {
-                errorMessage = getString(R.string.no_address_found);
-                Tlog.e(errorMessage);
-            }
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
-        } else {
-            Address address = addresses.get(0);
-            ArrayList<String> addressFragments = new ArrayList<String>();
-
-            // Fetch the address lines using {@code getAddressLine},
-            // join them, and send them to the thread. The {@link android.location.address}
-            // class provides other options for fetching address details that you may prefer
-            // to use. Here are some examples:
-            // getCountryName() ("India", for example)
-            // getLocality() ("Bengaluru", for example)
-            // getSubLocality() ("Green Glen Layout/Bellandur", for example)
-            // getFeatureName() ("Cherry Lane", for example)
-            // getThoroughfare() ("Margosa Avenue", for example)
-            // getSubThroughfare() ("101", for example)
-            if(address!= null && address.getAddressLine(1)!=null) {
-                if(performSanityCheck(address.getAddressLine(1))){
-                    Tlog.i("GPS Detected Location"+address);
-                    String localityName = address.getAddressLine(1);
-                    String[] localityStack = localityName.split(", ");
-                    localityName = localityStack.length > 1 ? localityStack[localityStack.length - 1] : localityName;
-                    Tlog.i("finalized localityName from gps: " + localityName);
-                    deliverResultToReceiver(Constants.SUCCESS_RESULT, localityName);
-                }
-            } else {
-                deliverResultToReceiver(Constants.FAILURE_RESULT, "");
-            }
-        }
     }
 
-    private boolean performSanityCheck(String addressLine) {
-        if(!addressLine.contains("India") && !addressLine.contains("india")){
-                return true;
-        }
-        return false;
-    }
 
     /**
      * Sends a resultCode and message to the receiver.
