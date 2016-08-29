@@ -152,8 +152,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 localities += ", ";
             }
         }
+        String more = "<font color='#2196f3'> + more</font>";
+
         if(jobPost.getJobPostLocalityCount() > 3){
-            localities += " more";
             holder.mJobPostLocationTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -169,7 +170,11 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 }
             });
         }
-        holder.mJobPostLocationTextView.setText(localities);
+        if(jobPost.getJobPostLocalityCount() > 3){
+            holder.mJobPostLocationTextView.setText(Html.fromHtml(localities + more));
+        } else{
+            holder.mJobPostLocationTextView.setText(localities);
+        }
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override

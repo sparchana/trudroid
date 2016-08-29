@@ -181,9 +181,7 @@ public class OtpScreen extends TruJobsBaseActivity {
 
         mUserOtpFour.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if (s.length() == 1) {
-                    checkOtp();
-                }
+                if (s.length() == 1) {}
                 else if (s.length() == 0) {
                     mUserOtpThree.requestFocus();
                 }

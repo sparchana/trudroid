@@ -168,6 +168,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:visibility="gone"
                         android:id="@+id/gender_button_layout"
                         android:layout_marginTop="15dp"
                         android:padding="1dp"
@@ -254,7 +255,7 @@
                                         android:textSize="@dimen/Edit_Text_Size"
                                         android:singleLine="true"
                                         android:layout_width="0dp"
-                                        android:layout_weight="0.85"
+                                        android:layout_weight="0.9"
                                         android:inputType="number"
                                         android:textColor="@drawable/edit_text_selector"
                                         android:layout_height="wrap_content"
@@ -263,10 +264,12 @@
                                     <ImageView
                                         android:id="@+id/job_role_pref_picker"
                                         android:layout_width="0dp"
-                                        android:paddingTop="14dp"
+                                        android:paddingBottom="16dp"
+                                        android:paddingLeft="8dp"
+                                        android:paddingRight="8dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="0.15"
-                                        android:src="@drawable/down_arrow"/>
+                                        android:layout_weight="0.1"
+                                        android:src="@drawable/edit_grey"/>
                                 </LinearLayout>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
@@ -281,8 +284,9 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
                             <android.support.design.widget.TextInputLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_width="0dp"
+                                android:layout_weight="0.9"
+                                android:layout_height="wrap_content">
 
                                 <AutoCompleteTextView
                                     android:layout_width="match_parent"
@@ -291,10 +295,24 @@
                                     android:textSize="14dp"
                                     android:focusableInTouchMode="true"
                                     android:maxLength="100"
+                                    android:paddingTop="8dp"
+                                    android:text="adasdsa"
                                     android:layout_gravity="center"
                                     android:hint="Home Locality"
-                                    android:layout_weight="1"/>
+                                    android:layout_weight="12"/>
                             </android.support.design.widget.TextInputLayout>
+
+                            <ImageView
+                                android:id="@+id/home_locality_picker"
+                                android:layout_width="0dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="16dp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.1"
+                                android:src="@drawable/edit_grey"/>
+
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout

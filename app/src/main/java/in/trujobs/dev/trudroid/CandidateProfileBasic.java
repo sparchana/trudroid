@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -292,11 +293,22 @@ public class CandidateProfileBasic extends Fragment {
                     }
                     jobPrefEditText.setEnabled(false);
                     ImageView jobRolePrefPicker = (ImageView) view.findViewById(R.id.job_role_pref_picker);
+                    ImageView homeLocalityPicker = (ImageView) view.findViewById(R.id.home_locality_picker);
 
                     jobRolePrefPicker.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             showJobRolePrefPopup(jobRoleList, jobRoleIdList, checkedItems);
+                        }
+                    });
+
+                    homeLocalityPicker.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mHomeLocalityTxtView.requestFocus();
+                            mHomeLocalityTxtView.setSelection(mHomeLocalityTxtView.getText().length());
+                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(mHomeLocalityTxtView, InputMethodManager.SHOW_IMPLICIT);
                         }
                     });
 
@@ -685,6 +697,7 @@ public class CandidateProfileBasic extends Fragment {
                 dialog.cancel();
             }
         });
+        searchByJobRoleBuilder.setNeutralButton("Clear All", null);
         searchByJobRoleBuilder.setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
@@ -711,6 +724,28 @@ public class CandidateProfileBasic extends Fragment {
             }
         });
         final android.support.v7.app.AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
+        searchByJobRoleDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = searchByJobRoleDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEUTRAL);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectedJobRoles.clear();
+                        Arrays.fill(checkedItems, false);
+                        jobPrefEditText.setText("");
+                        showToast("Selection Cleared.");
+                        for(int which=0; which<checkedItems.length; which++){
+                            ((android.support.v7.app.AlertDialog) dialog).getListView().setItemChecked(which, false);
+                        }
+                        //Dismiss once everything is OK.
+                    }
+                });
+            }
+        });
+
         searchByJobRoleDialog.show();
     }
 
