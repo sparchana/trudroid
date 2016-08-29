@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -45,12 +47,11 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
     public class Holder
     {
-        TextView mJobPostApplyBtn, mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView, mApplyingJobBtnTextView;
-        LinearLayout mApplyBtnBackground, applyBtn;
+        TextView mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView;
+        Button mApplyBtnBackground;
         ImageView mJobColor;
     }
-    public LinearLayout applyingJobButton;
-    public TextView applyingJobBtnTextView;
+    public Button applyingJobButton;
     public Button applyingJobButtonDetail;
     public ImageView applyingJobColor;
     ProgressDialog pd;
@@ -65,33 +66,29 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         }
 
         holder.mJobColor = (ImageView) rowView.findViewById(R.id.job_color);
-        holder.mJobPostApplyBtn = (TextView) rowView.findViewById(R.id.apply_button);
 
-        holder.mApplyBtnBackground = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
-        holder.applyBtn = (LinearLayout) rowView.findViewById(R.id.apply_button_layout);
+        holder.mApplyBtnBackground = (Button) rowView.findViewById(R.id.apply_button_layout);
 
         pd = CustomProgressDialog.get(parent.getContext());
 
         //presetting job card element as not applied
-        holder.applyBtn.setEnabled(true);
-        holder.mJobPostApplyBtn.setText("Apply");
         holder.mJobColor.setImageResource(R.drawable.green_dot);
+        holder.mApplyBtnBackground.setEnabled(true);
+        holder.mApplyBtnBackground.setText("Apply");
         holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
 
-        holder.mApplyingJobBtnTextView = (TextView) rowView.findViewById(R.id.apply_button);
-
         if(jobPost.getIsApplied() == 1){
-            holder.applyBtn.setEnabled(false);
             holder.mJobColor.setImageResource(R.drawable.orange_dot);
-            holder.mJobPostApplyBtn.setText("Already Applied");
+            holder.mApplyBtnBackground.setEnabled(false);
+            holder.mApplyBtnBackground.setText("Applied");
             holder.mApplyBtnBackground.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
         }
 
         //when user is not logged in, show all jobs as not applied
         if(!Util.isLoggedIn()){
-            holder.applyBtn.setEnabled(true);
             holder.mJobColor.setImageResource(R.drawable.green_dot);
-            holder.mJobPostApplyBtn.setText("Apply");
+            holder.mApplyBtnBackground.setEnabled(true);
+            holder.mApplyBtnBackground.setText("Apply");
             holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
         }
 
@@ -182,11 +179,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             }
         });
 
-        holder.applyBtn.setOnClickListener(new View.OnClickListener() {
+        holder.mApplyBtnBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 applyingJobButton = holder.mApplyBtnBackground;
-                applyingJobBtnTextView = holder.mApplyingJobBtnTextView;
                 applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
             }
@@ -294,12 +290,12 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     applyingJobColor.setImageResource(R.drawable.orange_dot);
                     applyingJobButton.setEnabled(false);
                     applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                    applyingJobBtnTextView.setText("Already Applied");
+                    applyingJobButton.setText("Applied");
                 } catch (Exception ignored){}
 
                 //setting "already applied" to job detail activity button
                 try{
-                    applyingJobButtonDetail.setText("Already Applied");
+                    applyingJobButtonDetail.setText("Applied");
                     applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
                     applyingJobButtonDetail.setEnabled(false);
                 } catch (Exception ignored){}
@@ -308,7 +304,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 try {
                     applyingJobButton.setEnabled(false);
                     applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                    applyingJobBtnTextView.setText("Already Applied");
+                    applyingJobButton.setText("Applied");
                 } catch (Exception ignored){}
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
                 alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);

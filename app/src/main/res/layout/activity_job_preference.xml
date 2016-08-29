@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="What kind of jobs you want?"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="16dp"
                 android:textColor="@color/white"/>
         </android.support.v7.widget.CardView>
@@ -49,6 +49,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <FrameLayout
@@ -82,7 +84,6 @@
                         android:layout_height="match_parent"
                         android:textSize="9dp"
                         android:id="@+id/job_pref_one_text_view"
-                        android:textAlignment="center"
                         android:text="1st Preference"
                         android:gravity="center" />
                 </LinearLayout>
@@ -124,7 +125,7 @@
                         android:layout_height="match_parent"
                         android:textSize="9dp"
                         android:id="@+id/job_pref_two_text_view"
-                        android:textAlignment="center"
+                        android:gravity="center"
                         android:text="2nd Preference" />
 
                 </LinearLayout>
@@ -166,7 +167,7 @@
                         android:layout_height="match_parent"
                         android:textSize="9dp"
                         android:id="@+id/job_pref_three_text_view"
-                        android:textAlignment="center"
+                        android:gravity="center"
                         android:text="3rd Preference" />
                 </LinearLayout>
 
@@ -202,7 +203,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Tap on preferred job roles"
-                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textSize="16dp"
                     android:textColor="@color/white"/>
             </android.support.v7.widget.CardView>

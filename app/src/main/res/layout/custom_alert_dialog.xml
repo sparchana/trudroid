@@ -62,13 +62,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/heading_one"
-                        android:textAlignment="center"
+                        android:gravity="center"
                         android:textSize="14dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
+                        android:gravity="center"
                         android:textSize="9dp"
                         android:layout_marginTop="4dp"
                         android:textColor="@color/colorPrimary"

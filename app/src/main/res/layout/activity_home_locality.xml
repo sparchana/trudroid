@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Which is your home location?"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="16dp"
                 android:textColor="@color/white"/>
         </android.support.v7.widget.CardView>
@@ -79,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:text="OR"/>
 
             <LinearLayout

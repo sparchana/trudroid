@@ -204,7 +204,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
                 //calculating and setting working days
                 String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
-                if(workingDays.length() > 6) {
+                if(!workingDays.equals("")) {
                     String daysOff = "";
                     if (workingDays.length() > 7) {
                         workingDays = workingDays.substring(2, 8);
@@ -214,17 +214,21 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
                         if(c == '0'){ //checking an off day
                             switch (i){
-                                case 0: daysOff += "Mon,"; break;
-                                case 1: daysOff += "Tue,"; break;
-                                case 2: daysOff += "Wed,"; break;
-                                case 3: daysOff += "Thu,"; break;
-                                case 4: daysOff += "Fri,"; break;
-                                case 5: daysOff += "Sat,"; break;
-                                case 6: daysOff += "Sun,"; break;
+                                case 0: daysOff += "Mon, "; break;
+                                case 1: daysOff += "Tue, "; break;
+                                case 2: daysOff += "Wed, "; break;
+                                case 3: daysOff += "Thu, "; break;
+                                case 4: daysOff += "Fri, "; break;
+                                case 5: daysOff += "Sat, "; break;
+                                case 6: daysOff += "Sun, "; break;
                             }
                         }
                     }
-                    jobPostWorkingDays.setText(daysOff.substring(0, (daysOff.length() - 1)) + " holiday");
+                    if(daysOff.equals("")){
+                        jobPostWorkingDays.setText("No holiday");
+                    } else{
+                        jobPostWorkingDays.setText(daysOff + " holiday");
+                    }
                 } else{
                     jobPostWorkingDays.setText("Off days: Info not specified");
                 }
@@ -383,7 +387,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
                 jobTabApplyBtn = (Button) findViewById(R.id.job_detail_apply_btn);
                 if(getJobPostDetailsResponse.getAlreadyApplied()){
-                    jobTabApplyBtn.setText("Already Applied");
+                    jobTabApplyBtn.setText("Applied");
                     jobTabApplyBtn.setBackgroundColor(getResources().getColor(R.color.back_grey_dark));
                     jobTabApplyBtn.setEnabled(false);
                 }

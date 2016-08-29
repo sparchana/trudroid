@@ -682,6 +682,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
         jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
+        ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
 
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
@@ -696,9 +697,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 jobPostListView.setVisibility(View.VISIBLE);
             }
             jobPostListView.setAdapter(jobPostAdapter);
+            noJobsImageView.setVisibility(View.GONE);
         } else {
             jobPostListView.setVisibility(View.GONE);
-            ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+            noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }

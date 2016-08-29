@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:text="I have read and accepted the Terms of Use and the Privacy Policy"/>
         </LinearLayout>
