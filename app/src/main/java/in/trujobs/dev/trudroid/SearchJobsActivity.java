@@ -516,8 +516,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 jobPostListView.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
                 return;
+            } else{
+                updateJobPostUI(jobPostResponse.getJobPostList());
             }
-            updateJobPostUI(jobPostResponse.getJobPostList());
         }
     }
 

@@ -80,7 +80,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 ViewDialog alert = new ViewDialog();
-                alert.showDialog(JobDetailActivity.this, "Refer Job to your friends", MessageConstants.REFER_MESSAGE, "", R.drawable.refer, 3);
+                alert.showDialog(JobDetailActivity.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_MESSAGE_TEXT, "", R.drawable.refer, 3);
             }
         });
 
@@ -204,33 +204,31 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
                 //calculating and setting working days
                 String workingDays = getJobPostDetailsResponse.getJobPost().getJobPostWorkingDays();
+                jobPostWorkingDays.setText("Off days: Info not specified");
                 if(!workingDays.equals("")) {
                     String daysOff = "";
-                    if (workingDays.length() > 7) {
-                        workingDays = workingDays.substring(2, 8);
-                    }
-                    for (int i = 0; i < 7; i++) {
-                        char c = workingDays.charAt(i);
+                    if(workingDays.length() > 1){
+                        for (int i = 0; i < workingDays.length(); i++) {
+                            char c = workingDays.charAt(i);
 
-                        if(c == '0'){ //checking an off day
-                            switch (i){
-                                case 0: daysOff += "Mon, "; break;
-                                case 1: daysOff += "Tue, "; break;
-                                case 2: daysOff += "Wed, "; break;
-                                case 3: daysOff += "Thu, "; break;
-                                case 4: daysOff += "Fri, "; break;
-                                case 5: daysOff += "Sat, "; break;
-                                case 6: daysOff += "Sun, "; break;
+                            if(c == '0'){ //checking an off day
+                                switch (i){
+                                    case 0: daysOff += "Mon, "; break;
+                                    case 1: daysOff += "Tue, "; break;
+                                    case 2: daysOff += "Wed, "; break;
+                                    case 3: daysOff += "Thu, "; break;
+                                    case 4: daysOff += "Fri, "; break;
+                                    case 5: daysOff += "Sat, "; break;
+                                    case 6: daysOff += "Sun, "; break;
+                                }
                             }
                         }
+                        if(daysOff.equals("")){
+                            jobPostWorkingDays.setText("No holiday");
+                        } else{
+                            jobPostWorkingDays.setText(daysOff + " holiday");
+                        }
                     }
-                    if(daysOff.equals("")){
-                        jobPostWorkingDays.setText("No holiday");
-                    } else{
-                        jobPostWorkingDays.setText(daysOff + " holiday");
-                    }
-                } else{
-                    jobPostWorkingDays.setText("Off days: Info not specified");
                 }
 
                 //setting min requirements

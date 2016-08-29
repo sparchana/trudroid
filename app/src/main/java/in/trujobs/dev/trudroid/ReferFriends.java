@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 
 public class ReferFriends extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class ReferFriends extends AppCompatActivity {
         setTitle("Refer to Friends");
 
         ViewDialog alert = new ViewDialog();
-        alert.showDialog(ReferFriends.this, "Refer Job to your friends", "If one of your friends gets hired, you get Rs. 50 recharge coupon!", "", R.drawable.refer, 3);
+        alert.showDialog(ReferFriends.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_MESSAGE_TEXT, "", R.drawable.refer, 3);
 
         Button referSms = (Button) findViewById(R.id.refer_msg);
         Button referWhatsapp = (Button) findViewById(R.id.refer_whatsapp);

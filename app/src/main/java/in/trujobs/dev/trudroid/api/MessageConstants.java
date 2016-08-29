@@ -16,6 +16,45 @@ public class MessageConstants {
     public static final String SIGNUP_SUCCESS_PRE_JOB_PREF = "Excellent! Your account is now created. Next, let us know your job preferences";
     public static final String SIGNUP_SUCCESS_PRE_HOME_LOCALITY = "Excellent! Your account is now created. Next, please provide your home location";
     public static final String PROFILE_UPDATED = "Your profile has been successfully saved!";
-    public static final String REFER_MESSAGE = "Your profile has been successfully saved!";
-    public static final String REFER_MESSAGE_TEXT = "Hi ! Use TruJobs to find the right job for you now! I have registered on TruJobs and started my Job Search. Download app at . www.trujobs.in";
+    public static final String REFER_MESSAGE = "Refer Job to your friends!";
+    public static final String REFER_MESSAGE_TEXT = "Hi ! Use TruJobs to find the right job for you now! I have registered on TruJobs and started my Job Search. Download app at www.trujobs.in";
+    public static final String TERMS_AND_CONDITIONS = "By visiting TruJobs mobile app you agree to be bound by the terms and conditions of this privacy policy. If you do not agree, please do not use or access our mobile app. By mere use of the mobile app, you expressly consent to, our use and disclosure, of your personal information in accordance with this Privacy Policy. This Privacy Policy is subject to the Terms of Services. If you have any questions or concerns regarding this Privacy Policy, you can contact our Support Team at info[at]trujobs.in\n" +
+            "\n" +
+            "Our privacy policy is subject to change at any time without notice. To make sure you are aware of any changes, please review this policy periodically.\n" +
+            "\nScope Of Policy\n" +
+            "\n" +
+            "This policy applies to www.trujobs.in (hereinafter known as the mobile app). It regulates the processing of information relating to You and grants You various rights in respect of your personal data. Definitions\n" +
+            "\n" +
+            "“We”, “Our”, and “Us” shall mean and refer to the creators of this Privacy Policy.\n" +
+            "“You”, “Your”, “Yourself” and “User” shall mean and refer to natural and legal entities that enter and/or use the mobile app, either to put up content or to view such content that has been put up.\n" +
+            "“Personal Information” shall mean and refer to any personally identifiable information that We may collect from You.\n" +
+            "“Third Parties” refer to any application, mobile app, company or individual apart from the User and the owner of the mobile app.\n" +
+            "\nInformation Collected\n" +
+            "\n" +
+            "You have to provide us with Your personal and work experience related information to use the services we offer. We collect the following: personal information, skills information, work experience details demographic information, behavioral information when you log-in to our mobile app. Personal Information means any information that may be used to identify an individual. This includes but not is limited to Name, Gender, Marital Status, Contact number, Email Address; Work Experience; Educational Details; POI and POA information such as Passport/PAN card/Aadhar card/ Driver's Licence/Ration Card/Voter card; Behavioural information is information regarding how You use Our mobile app. This includes the areas of Our mobile app that You visit, what services You access, and information about Your computer hardware and software including Your IP address, browser and operating system type, domain names, access times and referring mobile app addresses. This information is necessary for analysing the use of resources, troubleshooting problems, preventing fraud, and improving Our services. We also use Google Analytics to monitor web traffic and analysis; and Google adwords tracking pixels to track conversions for online marketing campaigns.\n" +
+            "\n" +
+            "Consent To Use The Information By using this mobile app, You consent to the terms of our Privacy Policy, to Our processing of Information for the purposes given in this policy as well as the Information on the web and from other third parties. Use Of Information We use the information We gather on the Site for the following purposes:\n" +
+            "\nIndividual user information\n" +
+            "\n" +
+            "To provide Our services. This includes communications (sms, email, app notifications), and information on opportunities which may be of interest to You.\n" +
+            "To send updates on the Information you have requested like job vacancies, matching candidates, alerts, reminders etc.\n" +
+            "To respond to any queries you may have and to communicate information to you. These include sending you e-mail or other communications regarding updates at the mobile app to contact you about your opinion of current products and/or services or potential new products and/or services that may be offered.\n" +
+            "To operate and improve the mobile app in order to foster a positive user experience.\n" +
+            "To comply with the applicable laws\n" +
+            "To investigate, prevent, or take action regarding illegal activities, suspected fraud, situations involving potential threats to the physical safety of any person, violations of Our Terms of Service, or as otherwise required by law.\n" +
+            "At the time of registration, You have to fill in your Personal Information in order to create an account, which can be used then to log into the mobile app. Information about all visitors collectively We gather information about all of our users collectively, such as what areas users visit most frequently and what services users access the most. Such data is used anonymously and in the aggregate. This information helps us determine what is most beneficial for our users, and how we can continually create a better overall experience for them. Disclosure Of The Information\n" +
+            "\n" +
+            "We disclose the information to the third parties in the method specified below, including, but not limited to:\n" +
+            "\n" +
+            "\nDisclosing the content posted by You on the mobile app\n" +
+            "Sharing Your information with third parties who help us in the delivery of our services to you. Information is disclosed to companies and individuals who are authorised by us to perform functions on our behalf\n" +
+            "We may disclose and transfer such information to a third party who acquires Our business units, whether such acquisition is by way of merger, consolidation or purchase of all or a substantial portion of Our assets. You will be notified of the sale of all or a substantial portion of Our business to a third party by email or through a prominent notice posted on the mobile apps.\n" +
+            "We disclose information if legally required to do so, pursuant to an order from a governmental entity or in good faith. We will disclose the information bases to: (a) conform to legal requirements or comply with legal process; (b) protect our rights or property or our affiliated companies; (c) prevent a crime or protect national security; or (d) protect the personal safety of users or the public.\n" +
+            "\nSecurity Precautions\n" +
+            "\n" +
+            "Our mobile app has stringent security measures in place to protect the loss, misuse, and alteration of the information under our control. Whenever you change or access your account information, we offer the use of a secure server. Once your information is in our possession we adhere to strict security guidelines, protecting it against unauthorized access. A \\\"Force Majeure Event\\\" shall mean any event that is beyond the reasonable control of Trujobs and shall include, without limitation, sabotage, fire, flood, explosion, acts of God, civil commotion, strikes or industrial action of any kind, riots, insurrection, war, acts of government, computer hacking, unauthorised access to computer data and storage device, computer crashes, breach of security and encryption, etc.\n" +
+            "\n" +
+            "\nConfidentiality\n" +
+            "\n" +
+            "We do not collect sensitive personal data or information of users like password of Your email account, password of Your account on the mobile app, physical and mental or other health conditions or medical records and history, Biometric information such as finger prints, voice & facial patterns and DNA any other sensitive information which is confidential or sensitive by its nature, without your explicit consent or unless necessary by law. Financial information such as Bank Account details or Credit Card or Debit Card or other payment related details are collected at the payment gateway by the payment facilitator. You can choose who can access your Personal Information by way of changing the settings on your account on the mobile app. You can privatise your settings and adjust the settings in such a way that you can limit those who can access your Personal Information and other information You put up. Update And Remove Information/Account You may have access to update or delete your information at any time by logging into your account. Access to or correction, updating or deletion of your personal information may be denied or limited by Us if it would violate another person’s rights and/or as otherwise permitted by applicable law.";
 }
