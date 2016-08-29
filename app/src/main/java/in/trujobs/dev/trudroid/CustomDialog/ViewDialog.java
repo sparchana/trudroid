@@ -1,8 +1,10 @@
 package in.trujobs.dev.trudroid.CustomDialog;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.view.Gravity;
 import android.content.pm.PackageManager;
@@ -19,11 +21,14 @@ import in.trujobs.dev.trudroid.CandidateProfileActivity;
 import in.trujobs.dev.trudroid.MyAppliedJobs;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 
 /**
  * Created by batcoder1 on 28/7/16.
  */
 public class ViewDialog {
+    private Integer PERMISSIONS_REQUEST_CALL_PHONE = 1;
+
     public void showDialog(final Context ctx, String msg, String heading, String subHeading, int image_res, int category) {
 
         final Dialog dialog = new Dialog(ctx);
@@ -144,13 +149,9 @@ public class ViewDialog {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:8880007799"));
                 if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    // public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    // int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
+                    ActivityCompat.requestPermissions((Activity) ctx,
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            PERMISSIONS_REQUEST_CALL_PHONE);
                     return;
                 }
                 ctx.startActivity(callIntent);
@@ -166,7 +167,7 @@ public class ViewDialog {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.setPackage("com.whatsapp");
-                intent.putExtra(Intent.EXTRA_TEXT, "Hey. Register yourself at www.trujobs.in and get jobs");
+                intent.putExtra(Intent.EXTRA_TEXT, MessageConstants.REFER_MESSAGE_TEXT);
                 ctx.startActivity(intent);
                 dialog.cancel();
             }
@@ -177,7 +178,7 @@ public class ViewDialog {
             public void onClick(View view) {
                 Intent smsIntent = new Intent(Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
-                smsIntent.putExtra("sms_body","Hey. Register yourself at www.trujobs.in and get jobs");
+                smsIntent.putExtra("sms_body", MessageConstants.REFER_MESSAGE_TEXT);
                 ctx.startActivity(smsIntent);
                 dialog.cancel();
             }

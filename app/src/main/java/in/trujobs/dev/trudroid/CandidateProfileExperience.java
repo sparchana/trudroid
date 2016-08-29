@@ -435,7 +435,7 @@ public class CandidateProfileExperience extends Fragment {
 
                             if(isCandidateExperienced < 0){
                                 check = false;
-                                showDialog("Please select Fresher or Experience");
+                                showDialog("Please answer the question: Are you a fresher or an experienced candidate?");
                                 fresherExperienceLayout.setBackgroundResource(R.drawable.border);
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
@@ -448,7 +448,7 @@ public class CandidateProfileExperience extends Fragment {
                                 isEmployedLayout.setBackgroundResource(R.drawable.border);
                             } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
-                                lastWithdrawnSalary.setError("Please provide your current Salary");
+                                lastWithdrawnSalary.setError("Please provide your last drawn Salary");
                                 lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                                 showDialog("Please provide your current Salary");
                             } else if(candidateLanguageKnown.size() < 1){

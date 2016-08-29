@@ -16,4 +16,6 @@ public class MessageConstants {
     public static final String SIGNUP_SUCCESS_PRE_JOB_PREF = "Excellent! Your account is now created. Next, let us know your job preferences";
     public static final String SIGNUP_SUCCESS_PRE_HOME_LOCALITY = "Excellent! Your account is now created. Next, please provide your home location";
     public static final String PROFILE_UPDATED = "Your profile has been successfully saved!";
+    public static final String REFER_MESSAGE = "Your profile has been successfully saved!";
+    public static final String REFER_MESSAGE_TEXT = "Hi ! Use TruJobs to find the right job for you now! I have registered on TruJobs and started my Job Search. Download app at . www.trujobs.in";
 }

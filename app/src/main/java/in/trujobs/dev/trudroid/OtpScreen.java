@@ -1,5 +1,6 @@
 package in.trujobs.dev.trudroid;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -7,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +42,7 @@ public class OtpScreen extends TruJobsBaseActivity {
     private IntentFilter mIntentFilter;
     private IncomingSms mIncomingSms;
 
+    private Integer PERMISSIONS_REQUEST_RECEIVE_SMS = 1;
     public static void resetPassword(Context context, String title) {
         Intent intent = new Intent(context, OtpScreen.class);
         EXTRA_TITLE = title;
@@ -104,17 +108,25 @@ public class OtpScreen extends TruJobsBaseActivity {
         setContentView(R.layout.activity_otp_screen);
         setTitle(EXTRA_TITLE);
 
-        mIntentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        mIncomingSms = new IncomingSms();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mUserOtpOne = (EditText) findViewById(R.id.user_otp_first_edit_text);
         mUserOtpTwo = (EditText) findViewById(R.id.user_otp_second_edit_text);
         mUserOtpThree = (EditText) findViewById(R.id.user_otp_third_edit_text);
         mUserOtpFour = (EditText) findViewById(R.id.user_otp_fourth_edit_text);
         Button addPasswordBtn = (Button) findViewById(R.id.add_password_btn);
         Button resendOtpBtn = (Button) findViewById(R.id.resend_otp_btn);
+
+        mIntentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        mIncomingSms = new IncomingSms();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(OtpScreen.this,
+                    new String[]{Manifest.permission.RECEIVE_SMS},
+                    PERMISSIONS_REQUEST_RECEIVE_SMS);
+            return;
+        }
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         pd = CustomProgressDialog.get(OtpScreen.this);
 
