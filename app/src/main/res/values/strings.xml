@@ -39,7 +39,7 @@
     <string name="start">GOT IT</string>
 
     <string name="slide_1_title">Welcome to TruJobs!</string>
-    <string name="slide_1_desc">Your job searching partner</string>
+    <string name="slide_1_desc">Your job search partner</string>
 
     <string name="slide_2_title">Location based Jobs</string>
     <string name="slide_2_desc">Easily search jobs around you or at a particular location!</string>
@@ -48,7 +48,7 @@
     <string name="slide_3_desc">Find and apply to the jobs matching your requirements!</string>
 
     <string name="slide_4_title">Attend interviews and get placed</string>
-    <string name="slide_4_desc">Get a job and earn upto 30,000!</string>
+    <string name="slide_4_desc">Find a job and earn upto 30,000!</string>
 
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>

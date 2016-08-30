@@ -14,4 +14,18 @@ public class Constants {
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
             ".LOCATION_DATA_EXTRA";
     public static final String FORGOT_PWD_MOBILE_EXTRA = "FORGOT_PWD_MOBILE_EXTRA";
+
+    // Screen names for GA
+    public static final String GA_SCREEN_NAME_HOW_TO_USE = "HOW_TO_USE";
+    public static final String GA_SCREEN_NAME_WELCOME = "WELCOME";
+    public static final String GA_SCREEN_NAME_SIGNUP = "SIGNUP";
+    public static final String GA_SCREEN_NAME_LOGIN = "LOGIN";
+
+
+    public static final String GA_ACTION_SKIP_TO_SEARCH = "SKIP_TO_SEARCH";
+    public static final String GA_ACTION_LOGIN_FROM_WELCOME = "LOGIN_FROM_WELCOME";
+    public static final String GA_ACTION_SIGNUP_FROM_WELCOME = "SIGNUP_FROM_WELCOME";
+    public static final String GA_ACTION_SIGNUP = "SIGNUP";
+    public static final String GA_ACTION_LOGIN = "LOGIN";
+
 }

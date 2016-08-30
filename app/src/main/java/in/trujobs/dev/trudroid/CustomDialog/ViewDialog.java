@@ -149,7 +149,6 @@ public class ViewDialog {
                     ActivityCompat.requestPermissions((Activity) ctx,
                             new String[]{Manifest.permission.CALL_PHONE},
                             PERMISSIONS_REQUEST_CALL_PHONE);
-                    return;
                 }
                 ctx.startActivity(callIntent);
                 dialog.cancel();

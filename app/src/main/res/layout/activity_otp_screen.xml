@@ -122,7 +122,7 @@
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
             android:layout_height="66dp"
-            android:text="Enter OTP"
+            android:text="Submit OTP"
             android:id="@+id/add_password_btn"
             style="@style/Widget.AppCompat.Button.Colored" />
 

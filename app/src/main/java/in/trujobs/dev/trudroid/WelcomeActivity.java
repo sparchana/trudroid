@@ -17,6 +17,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import in.trujobs.dev.trudroid.Util.Constants;
+
 public class WelcomeActivity extends TruJobsBaseActivity{
 
     private ViewPager viewPager;
@@ -25,6 +30,7 @@ public class WelcomeActivity extends TruJobsBaseActivity{
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +115,9 @@ public class WelcomeActivity extends TruJobsBaseActivity{
 
         @Override
         public void onPageSelected(int position) {
+
+            addScreenViewGA(Constants.GA_SCREEN_NAME_HOW_TO_USE);
+
             addBottomDots(position);
 
             if (position == layouts.length - 1) {

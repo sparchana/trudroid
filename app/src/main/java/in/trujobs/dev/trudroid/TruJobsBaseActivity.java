@@ -1,13 +1,16 @@
 package in.trujobs.dev.trudroid;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import in.trujobs.dev.trudroid.Util.CheckNetworkStatus;
-import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -18,6 +21,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetworkStatus {
     private Toast mBaseToastLong;
+    private Tracker mTracker;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,30 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
         }
         return true;
     }
+
+    public void addScreenViewGA(String screenName) {
+
+        Trudroid application = (Trudroid) getApplication();
+        mTracker = application.getDefaultTracker();
+
+        mTracker.setScreenName(screenName);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    public void addActionGA(String screenName, String actionName) {
+
+        // Obtain the shared Tracker instance.
+        Trudroid application = (Trudroid) getApplication();
+        mTracker = application.getDefaultTracker();
+
+        // Track this action
+        mTracker.setScreenName(screenName);
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction(actionName)
+                .build());
+    }
+
     /**
      * Shows a toast with the given text.
      */
@@ -55,4 +85,5 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
         }
         mBaseToastLong.show();
     }
+
 }

@@ -328,7 +328,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         if (Util.isLoggedIn()) {
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
-            mNavItems.add(new NavItem("My Home Location", R.drawable.location_icon));
             mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 

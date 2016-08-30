@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="in.trujobs.dev.trudroid">
+    package="in.trujobs.dev.trudroid"
+    android:versionCode="1"
+    android:versionName="v1.0.0">
 
     <receiver android:name=".listener.SmsListener">
         <intent-filter android:priority="2147483647">
             <action android:name="android.provider.Telephony.SMS_RECEIVED" />
         </intent-filter>
     </receiver>
+
+    <service android:name="com.google.android.gms.analytics.AnalyticsService"
+        android:enabled="true"
+        android:exported="false"/>
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />

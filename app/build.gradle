@@ -30,6 +30,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.2.1'
     compile 'com.google.android.gms:play-services-places:9.2.1'
     compile 'com.google.android.gms:play-services-location:9.2.1'
+    compile 'com.google.android.gms:play-services-analytics:9.2.1'
     compile 'in.trujobs.proto:tru-proto:1.0.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -39,3 +40,4 @@ dependencies {
     compile 'com.facebook.device.yearclass:yearclass:1.0.1'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
+apply plugin: 'com.google.gms.google-services'

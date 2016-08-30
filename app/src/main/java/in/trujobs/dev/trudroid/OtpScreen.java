@@ -122,9 +122,7 @@ public class OtpScreen extends TruJobsBaseActivity {
             ActivityCompat.requestPermissions(OtpScreen.this,
                     new String[]{Manifest.permission.RECEIVE_SMS},
                     PERMISSIONS_REQUEST_RECEIVE_SMS);
-            return;
         }
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -100,7 +100,6 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
                             ActivityCompat.requestPermissions(MyAppliedJobs.this,
                                     new String[]{Manifest.permission.CALL_PHONE},
                                     PERMISSIONS_REQUEST_CALL_PHONE);
-                            return;
                         }
                         startActivity(callIntent);
                     }

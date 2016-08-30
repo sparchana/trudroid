@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.facebook.device.yearclass.YearClass;
 
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -23,6 +24,9 @@ public class WelcomeScreen extends TruJobsBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
+
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_WELCOME);
 
         /**
          * Implementation for https://github.com/facebook/device-year-class
@@ -47,6 +51,9 @@ public class WelcomeScreen extends TruJobsBaseActivity {
                 Intent intent = new Intent(WelcomeScreen.this, SearchJobsActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_WELCOME, Constants.GA_ACTION_SKIP_TO_SEARCH);
             }
         });
 
@@ -55,6 +62,9 @@ public class WelcomeScreen extends TruJobsBaseActivity {
                 Intent intent = new Intent(WelcomeScreen.this, Login.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_WELCOME, Constants.GA_ACTION_LOGIN_FROM_WELCOME);
             }
         });
 
@@ -63,6 +73,9 @@ public class WelcomeScreen extends TruJobsBaseActivity {
                 Intent intent = new Intent(WelcomeScreen.this, SignUp.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_WELCOME, Constants.GA_ACTION_SIGNUP_FROM_WELCOME);
             }
         });
 
@@ -71,7 +84,8 @@ public class WelcomeScreen extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 ViewDialog alert = new ViewDialog();
-                alert.showDialog(WelcomeScreen.this, "Terms and Condition" , MessageConstants.TERMS_AND_CONDITIONS, "", R.drawable.company_icon, -1);
+                alert.showDialog(WelcomeScreen.this, "Terms and Conditions",
+                        MessageConstants.TERMS_AND_CONDITIONS, "", R.drawable.company_icon, -1);
             }
         });
     }

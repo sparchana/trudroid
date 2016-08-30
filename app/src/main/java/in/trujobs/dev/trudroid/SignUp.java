@@ -11,7 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -32,6 +36,9 @@ public class SignUp extends TruJobsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         getSupportActionBar().hide();
+
+        // track in GA
+        addScreenViewGA(Constants.GA_SCREEN_NAME_SIGNUP);
 
         Button buttonSignupSubmit = (Button) findViewById(R.id.sign_up_submit_btn);
         TextView loginTextView = (TextView) findViewById(R.id.login_text_view);
@@ -64,6 +71,10 @@ public class SignUp extends TruJobsBaseActivity {
     }
 
     private void performSignUp() {
+
+        // Track this action
+        addActionGA(Constants.GA_SCREEN_NAME_SIGNUP, Constants.GA_ACTION_SIGNUP);
+
         mName = (EditText) findViewById(R.id.sign_up_name_edit_text);
         mMobile = (EditText) findViewById(R.id.sign_up_mobile_edit_text);
 

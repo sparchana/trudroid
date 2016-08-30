@@ -36,8 +36,10 @@ public class Login extends TruJobsBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         getSupportActionBar().hide();
+
+        // Track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_LOGIN);
 
         Button loginSubmitBtn = (Button) findViewById(R.id.login_submit_btn);
         TextView forgotPasswordTextView = (TextView) findViewById(R.id.forgot_password_text);
@@ -86,6 +88,10 @@ public class Login extends TruJobsBaseActivity {
     }
 
     private void performLogIn() {
+
+        // Track action
+        addActionGA(Constants.GA_SCREEN_NAME_LOGIN, Constants.GA_ACTION_LOGIN);
+
         mMobile = (EditText) findViewById(R.id.user_mobile_edit_text);
         mPassword = (EditText) findViewById(R.id.user_password_edit_text);
 
