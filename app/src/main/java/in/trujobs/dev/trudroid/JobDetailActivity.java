@@ -80,7 +80,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 ViewDialog alert = new ViewDialog();
-                alert.showDialog(JobDetailActivity.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_MESSAGE_TEXT, "", R.drawable.refer, 3);
+                alert.showDialog(JobDetailActivity.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_SUB_MESSAGE, "", R.drawable.refer, 3);
             }
         });
 

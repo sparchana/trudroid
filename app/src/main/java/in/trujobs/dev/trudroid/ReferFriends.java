@@ -21,7 +21,7 @@ public class ReferFriends extends AppCompatActivity {
         setTitle("Refer to Friends");
 
         ViewDialog alert = new ViewDialog();
-        alert.showDialog(ReferFriends.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_MESSAGE_TEXT, "", R.drawable.refer, 3);
+        alert.showDialog(ReferFriends.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_SUB_MESSAGE, "", R.drawable.refer, 3);
 
         Button referSms = (Button) findViewById(R.id.refer_msg);
         Button referWhatsapp = (Button) findViewById(R.id.refer_whatsapp);
