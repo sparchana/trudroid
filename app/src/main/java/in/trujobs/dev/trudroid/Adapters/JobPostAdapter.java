@@ -148,7 +148,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             cMonth = "0" + mMonth;
         }
 
-
         holder.mJobPostPostedOnTextView.setText("Posted on: " + cDay + "-" + cMonth + "-" + mYear);
 
         //set job post localities

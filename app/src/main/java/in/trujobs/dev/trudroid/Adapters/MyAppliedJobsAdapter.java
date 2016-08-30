@@ -71,9 +71,20 @@ public class MyAppliedJobsAdapter extends ArrayAdapter<JobApplicationObject> {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(jobApplicationObject.getJobApplicationAppliedMillis());
         int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH);
+        int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        holder.mJobApplicationApplyTextView.setText("Applied on: " + mDay + "-" + (mMonth + 1) + "-" + mYear);
+
+        String cDay = mDay + "";
+        String cMonth = (mMonth) + "";
+
+        if(mDay < 10){
+            cDay = "0" + mDay;
+        }
+        if(mMonth < 10){
+            cMonth = "0" + mMonth;
+        }
+
+        holder.mJobApplicationApplyTextView.setText("Applied on: " + cDay + "-" + cMonth + "-" + mYear);
 
         return rowView;
     }
