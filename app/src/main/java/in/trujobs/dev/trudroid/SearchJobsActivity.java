@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -102,6 +103,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     boolean doubleBackToExitPressedOnce = false;
 
     TextView selectedJobRolesNameTxtView;
+    public static ImageView btnFilterJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +151,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         pd = CustomProgressDialog.get(SearchJobsActivity.this);
 
         //filter_selected button
-        ImageView btnFilterJob = (ImageView) findViewById(R.id.btn_job_filter);
+        btnFilterJob = (ImageView) findViewById(R.id.btn_job_filter);
         btnFilterJob.setOnClickListener(this);
 
         //job role edit icon
@@ -177,6 +179,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 } else if(mSearchJobAcTxtView.getHint().toString().trim().equalsIgnoreCase("Start typing a location in Bangalore")){
                     mSearchJobAcTxtView.setHint("All Bangalore");
                 }
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
             }
         });
 
@@ -462,9 +466,15 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchLng = 0D;
                 jobSearchRequest.setLatitude(mSearchLat);
                 jobSearchRequest.setLongitude(mSearchLng);
+                if(jobFilterRequestBkp!=null){
+                    jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
+                    jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
+                    jobFilterRequestBkp.buildPartial();
+                }
                 searchJobsByJobRole();
+                mSearchJobAcTxtView.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
                 break;
 
             case R.id.search_jobs_by_place:
@@ -508,8 +518,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 jobPostListView.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
                 return;
+            } else{
+                updateJobPostUI(jobPostResponse.getJobPostList());
             }
-            updateJobPostUI(jobPostResponse.getJobPostList());
         }
     }
 
@@ -523,6 +534,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         @Override
         protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
             super.onPostExecute(localityObjectResponse);
+            mSearchJobAcTxtView.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
             if(localityObjectResponse!=null){
                 if (localityObjectResponse.getStatus() == LocalityObjectResponse.Status.SUCCESS
                         && localityObjectResponse.getType() == LocalityObjectResponse.Type.FOR_PLACEID) {
@@ -647,6 +661,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.e("Candidate Mobile Null in Prefs");
         }
+        if(jobRolesFilter == null){
+            jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
+            if (Prefs.candidatePrefJobRoleIdOne.get()!=null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
+                jobRolesFilter.setJobRoleIdOne(Prefs.candidatePrefJobRoleIdOne.get());
+            if (Prefs.candidatePrefJobRoleIdTwo.get()!=null || Prefs.candidatePrefJobRoleIdTwo.get() != 0)
+                jobRolesFilter.setJobRoleIdTwo(Prefs.candidatePrefJobRoleIdTwo.get());
+            if (Prefs.candidatePrefJobRoleIdThree.get()!=null || Prefs.candidatePrefJobRoleIdThree.get() != 0)
+                jobRolesFilter.setJobRoleIdThree(Prefs.candidatePrefJobRoleIdThree.get());
+        }
+        jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter.buildPartial());
         jobSearchRequest.buildPartial();
     }
 
@@ -661,6 +685,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
         jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
+        ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
 
         Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
@@ -675,15 +700,17 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 jobPostListView.setVisibility(View.VISIBLE);
             }
             jobPostListView.setAdapter(jobPostAdapter);
+            noJobsImageView.setVisibility(View.GONE);
         } else {
             jobPostListView.setVisibility(View.GONE);
-            ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
+            noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }
         //hiding keyboard
+        mSearchJobAcTxtView.clearFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
     }
 
     private void initJobRoleVars() {
@@ -799,6 +826,23 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         final AlertDialog.Builder searchByJobRoleBuilder = new AlertDialog.Builder(this);
         searchByJobRoleBuilder.setCancelable(false);
         searchByJobRoleBuilder.setTitle("Select Job Role preference (Max 3)");
+        searchByJobRoleBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK &&
+                        event.getAction() == KeyEvent.ACTION_UP &&
+                        !event.isCanceled()) {
+                    if(mSelectedJobsName.size()>0){
+                        mSelectedJobsName.clear();
+                    }
+                    mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
+                    searchJobsByJobRole();
+                    dialog.cancel();
+                    return true;
+                }
+                return false;
+            }
+        });
         searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 /* if not selected any job roles then don't do anything*/

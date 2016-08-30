@@ -7,11 +7,14 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.device.yearclass.YearClass;
 
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 
 public class WelcomeScreen extends TruJobsBaseActivity {
 
@@ -60,6 +63,15 @@ public class WelcomeScreen extends TruJobsBaseActivity {
                 Intent intent = new Intent(WelcomeScreen.this, SignUp.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+            }
+        });
+
+        TextView termsAndConditions = (TextView) findViewById(R.id.tnc);
+        termsAndConditions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewDialog alert = new ViewDialog();
+                alert.showDialog(WelcomeScreen.this, "Terms and Condition" , MessageConstants.TERMS_AND_CONDITIONS, "", R.drawable.company_icon, -1);
             }
         });
     }

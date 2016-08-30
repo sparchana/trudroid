@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -40,6 +41,7 @@ public class EnterPassword extends TruJobsBaseActivity {
         setTitle(EXTRA_TITLE);
         Button mAddPasswordBtn = (Button) findViewById(R.id.add_new_password_btn);
 
+        pd = CustomProgressDialog.get(EnterPassword.this);
         mAddPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,9 +74,6 @@ public class EnterPassword extends TruJobsBaseActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(EnterPassword.this,R.style.SpinnerTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             pd.show();
         }
 
@@ -102,8 +101,16 @@ public class EnterPassword extends TruJobsBaseActivity {
                 Prefs.candidateId.put(logInResponse.getCandidateId());
                 Prefs.leadId.put(logInResponse.getLeadId());
                 Prefs.candidateMinProfile.put(logInResponse.getMinProfile());
+                Prefs.sessionId.put(logInResponse.getSessionId());
+                Prefs.sessionExpiry.put(logInResponse.getSessionExpiryMillis());
                 Prefs.candidateJobPrefStatus.put(logInResponse.getCandidateJobPrefStatus());
                 Prefs.candidateHomeLocalityStatus.put(logInResponse.getCandidateHomeLocalityStatus());
+                Prefs.candidateHomeLat.put(String.valueOf(logInResponse.getCandidateHomeLatitude()));
+                Prefs.candidateHomeLng.put(String.valueOf(logInResponse.getCandidateHomeLongitude()));
+                Prefs.candidatePrefJobRoleIdOne.put(logInResponse.getCandidatePrefJobRoleIdOne());
+                Prefs.candidatePrefJobRoleIdTwo.put(logInResponse.getCandidatePrefJobRoleIdTwo());
+                Prefs.candidatePrefJobRoleIdThree.put(logInResponse.getCandidatePrefJobRoleIdThree());
+                Prefs.candidateHomeLocalityName.put(logInResponse.getCandidateHomeLocalityName());
 
                 Intent intent;
                 if(Prefs.candidateJobPrefStatus.get() == 0){

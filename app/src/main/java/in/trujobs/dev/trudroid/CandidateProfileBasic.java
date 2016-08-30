@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,9 +29,15 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
@@ -127,7 +134,7 @@ public class CandidateProfileBasic extends Fragment {
         return view;
     }
 
-    private void setDateTimeField() {
+    private void setDateTimeField(){
         candidateDob.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -136,15 +143,28 @@ public class CandidateProfileBasic extends Fragment {
             }
         });
 
-        final Calendar newCalendar = Calendar.getInstance();
-
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        //default date
+        String dateStr = "01-01-1990";
+        Date dateObj = new Date();
+        try {
+            dateObj = dateFormatter.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //setting 1-1-1990
+        Calendar newCalendar = Calendar.getInstance();
+        newCalendar.setTime(dateObj);
         dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
+
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                candidateDob.setText(dayOfMonth + "-" + (monthOfYear+1) + "-" + year);
+                candidateDob.setText(dateFormatter.format(newDate.getTime()));
             }
-        },newCalendar.get(Calendar.DAY_OF_MONTH), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.YEAR));
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
         Calendar c = Calendar.getInstance();
         c.add(Calendar.YEAR, -18);
         dobDatePicker.getDatePicker().setMaxDate(c.getTime().getTime());
@@ -292,11 +312,22 @@ public class CandidateProfileBasic extends Fragment {
                     }
                     jobPrefEditText.setEnabled(false);
                     ImageView jobRolePrefPicker = (ImageView) view.findViewById(R.id.job_role_pref_picker);
+                    ImageView homeLocalityPicker = (ImageView) view.findViewById(R.id.home_locality_picker);
 
                     jobRolePrefPicker.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             showJobRolePrefPopup(jobRoleList, jobRoleIdList, checkedItems);
+                        }
+                    });
+
+                    homeLocalityPicker.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mHomeLocalityTxtView.requestFocus();
+                            mHomeLocalityTxtView.setSelection(mHomeLocalityTxtView.getText().length());
+                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(mHomeLocalityTxtView, InputMethodManager.SHOW_IMPLICIT);
                         }
                     });
 
@@ -314,19 +345,31 @@ public class CandidateProfileBasic extends Fragment {
                     }
                     mobileNumber.setText(Prefs.candidateMobile.get());
                     mobileNumber.setEnabled(false);
+                    final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateDobMillis() != 0){
-
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(candidateProfileActivity.candidateInfo.getCandidate().getCandidateDobMillis());
                         int mYear = calendar.get(Calendar.YEAR);
-                        int mMonth = calendar.get(Calendar.MONTH);
+                        int mMonth = calendar.get(Calendar.MONTH) ;
                         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                        candidateDob.setText(mDay + "-" + (mMonth+1) + "-" + mYear);
+
+                        String cDay = mDay + "";
+                        String cMonth = (mMonth + 1) + "";
+
+                        if(mDay < 10){
+                            cDay = "0" + mDay;
+                        }
+                        if((mMonth + 1) < 10){
+                            cMonth = "0" + (mMonth + 1);
+                        }
+
+                        candidateDob.setText(cDay + "-" + cMonth + "-" + mYear);
                         dobDatePicker = new DatePickerDialog(getContext(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 Calendar newDate = Calendar.getInstance();
                                 newDate.set(year, monthOfYear, dayOfMonth);
-                                candidateDob.setText(dayOfMonth + "-" + (monthOfYear+1) + "-" + year);
+
+                                candidateDob.setText(formatter.format(newDate.getTime()));
                             }
                         },mYear, mMonth, mDay);
                         Calendar c = Calendar.getInstance();
@@ -653,7 +696,7 @@ public class CandidateProfileBasic extends Fragment {
     public void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
-        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -668,6 +711,18 @@ public class CandidateProfileBasic extends Fragment {
         final android.support.v7.app.AlertDialog.Builder searchByJobRoleBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
         searchByJobRoleBuilder.setCancelable(false);
         searchByJobRoleBuilder.setTitle("Select Job Role preference (Max 3)");
+        searchByJobRoleBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK &&
+                        event.getAction() == KeyEvent.ACTION_UP &&
+                        !event.isCanceled()) {
+                    dialog.cancel();
+                    return true;
+                }
+                return false;
+            }
+        });
         searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 jobRoleSelectedString = "";
@@ -685,6 +740,7 @@ public class CandidateProfileBasic extends Fragment {
                 dialog.cancel();
             }
         });
+        searchByJobRoleBuilder.setNeutralButton("Clear All", null);
         searchByJobRoleBuilder.setMultiChoiceItems(jobRoleNameList, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
@@ -711,6 +767,28 @@ public class CandidateProfileBasic extends Fragment {
             }
         });
         final android.support.v7.app.AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
+        searchByJobRoleDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = searchByJobRoleDialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEUTRAL);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectedJobRoles.clear();
+                        Arrays.fill(checkedItems, false);
+                        jobPrefEditText.setText("");
+                        showToast("Selection Cleared.");
+                        for(int which=0; which<checkedItems.length; which++){
+                            ((android.support.v7.app.AlertDialog) dialog).getListView().setItemChecked(which, false);
+                        }
+                        //Dismiss once everything is OK.
+                    }
+                });
+            }
+        });
+
         searchByJobRoleDialog.show();
     }
 

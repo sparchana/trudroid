@@ -23,7 +23,7 @@
             android:layout_marginBottom="12dp"
             android:textColor="@android:color/white"
             android:textSize="@dimen/slide_title"
-            android:textAlignment="center"
+            android:gravity="center"
             android:textStyle="bold" />
 
         <TextView
@@ -33,7 +33,7 @@
             android:paddingLeft="@dimen/desc_padding"
             android:paddingRight="@dimen/desc_padding"
             android:text="@string/slide_2_desc"
-            android:textAlignment="center"
+            android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="@dimen/slide_desc" />
 

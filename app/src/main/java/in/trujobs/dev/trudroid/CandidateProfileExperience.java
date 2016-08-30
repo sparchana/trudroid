@@ -435,7 +435,7 @@ public class CandidateProfileExperience extends Fragment {
 
                             if(isCandidateExperienced < 0){
                                 check = false;
-                                showDialog("Please select Fresher or Experience");
+                                showDialog("Please answer the question: Are you a fresher or an experienced candidate?");
                                 fresherExperienceLayout.setBackgroundResource(R.drawable.border);
                             } else if(isCandidateExperienced == 1 && (expInYears < 1)){
                                 check = false;
@@ -448,7 +448,7 @@ public class CandidateProfileExperience extends Fragment {
                                 isEmployedLayout.setBackgroundResource(R.drawable.border);
                             } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
-                                lastWithdrawnSalary.setError("Please provide your current Salary");
+                                lastWithdrawnSalary.setError("Please provide your last drawn Salary");
                                 lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                                 showDialog("Please provide your current Salary");
                             } else if(candidateLanguageKnown.size() < 1){
@@ -740,7 +740,7 @@ public class CandidateProfileExperience extends Fragment {
     public void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
-        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

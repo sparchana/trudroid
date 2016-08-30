@@ -235,26 +235,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
+                    android:id="@+id/apply_button_layout"
                     android:layout_marginLeft="36dp"
                     android:padding="8dp"
-                    android:id="@+id/apply_button_layout"
                     android:background="@drawable/rounded_corner_button"
-                    android:gravity="center|center_horizontal|center_vertical">
+                    android:text="Apply"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:textSize="14dp"
+                    android:textColor="@color/white" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textAlignment="center"
-                        android:textSize="14sp"
-                        android:id="@+id/apply_button"
-                        android:text="APPLY"
-                        android:textStyle="bold"
-                        android:textColor="#ffffff"
-                        android:gravity="center_vertical" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

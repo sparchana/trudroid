@@ -128,10 +128,11 @@
                                         android:layout_height="60dp"
                                         android:layout_width="60dp"
                                         android:id="@+id/candidate_applied_job_no"
-                                        android:paddingTop="24dp"
+                                        android:paddingTop="16dp"
                                         android:textSize="20dp"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textAlignment="center" />
+                                        android:text="0"
+                                        android:gravity="center"
+                                        android:textColor="@color/colorPrimary" />
 
                                 </RelativeLayout>
                                 <TextView
@@ -227,8 +228,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:layout_marginRight="30dp"
-                        android:gravity="center|right"
-                        >
+                        android:gravity="center|right">
                         <ImageView
                             android:id="@+id/personal_drop_icon"
                             android:layout_width="15dp"

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 
 public class ReferFriends extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class ReferFriends extends AppCompatActivity {
         setTitle("Refer to Friends");
 
         ViewDialog alert = new ViewDialog();
-        alert.showDialog(ReferFriends.this, "Refer Job to your friends", "If one of your friends gets hired, you get Rs. 50 recharge coupon!", "", R.drawable.refer, 3);
+        alert.showDialog(ReferFriends.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_SUB_MESSAGE, "", R.drawable.refer, 3);
 
         Button referSms = (Button) findViewById(R.id.refer_msg);
         Button referWhatsapp = (Button) findViewById(R.id.refer_whatsapp);
@@ -30,7 +31,7 @@ public class ReferFriends extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.setPackage("com.whatsapp");
-                intent.putExtra(Intent.EXTRA_TEXT, "Hey. Register yourself at www.trujobs.in and get jobs");
+                intent.putExtra(Intent.EXTRA_TEXT, MessageConstants.REFER_MESSAGE_TEXT);
                 startActivity(intent);
             }
         });
@@ -40,7 +41,7 @@ public class ReferFriends extends AppCompatActivity {
             public void onClick(View view) {
                 Intent smsIntent = new Intent(Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
-                smsIntent.putExtra("sms_body","Hey. Register yourself at www.trujobs.in and get jobs");
+                smsIntent.putExtra("sms_body",MessageConstants.REFER_MESSAGE_TEXT);
                 startActivity(smsIntent);
             }
         });

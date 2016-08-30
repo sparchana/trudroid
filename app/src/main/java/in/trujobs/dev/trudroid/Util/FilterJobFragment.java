@@ -84,6 +84,7 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     TextView txtFilterByMale;
     TextView txtFilterByFemale;
 
+    public boolean shouldClear = false;
     //filterBtn
     ImageView filterImage;
     @Override
@@ -219,7 +220,6 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View view) {
         // Perform action on click
@@ -383,6 +383,15 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             case R.id.ftr_done:
                 // send data for submission
                 //
+                if(shouldClear){
+                    jobFilterRequest.clear();
+                    if(SearchJobsActivity.jobFilterRequestBkp!= null)
+                        SearchJobsActivity.jobFilterRequestBkp.clear();
+                        assignSearchedLatLng();
+                        SearchJobsActivity.btnFilterJob.setImageDrawable(getContext().getResources().getDrawable(R.drawable.filter_not_selected));
+                } else {
+                        SearchJobsActivity.btnFilterJob.setImageDrawable(getContext().getResources().getDrawable(R.drawable.filter_selected));
+                }
                 if(jobFilterRequest.isInitialized()){
                     assignSearchedLatLng();
                     jobSearchRequest.setJobFilterRequest(jobFilterRequest.build());
@@ -393,14 +402,12 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                 }
                 break;
             case R.id.ftr_clear_all:
-                jobFilterRequest.clear();
-                if(SearchJobsActivity.jobFilterRequestBkp!= null)
-                    SearchJobsActivity.jobFilterRequestBkp.clear();
-                assignSearchedLatLng();
+                shouldClear = true;
                 resetFragmentUI();
                 break;
 
             case R.id.close_filter:
+                shouldClear = false;
                 getActivity().getSupportFragmentManager().popBackStack();
                 break;
             default:
@@ -408,7 +415,6 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void resetFragmentUI() {
          /* deactivate all */
         SalaryBtnManipulation(null, false);
@@ -419,18 +425,17 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
     }
 
     /* filter_selected ui component manipulation */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void SalaryBtnManipulation(Integer id, boolean shouldEnable){
         /* deactivate all then enable one */
-        ftrSalaryEightKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrSalaryEightKPlus.setBackgroundResource(R.drawable.cust_border);
         ftrSalaryEightKPlus.setTextColor(Color.parseColor("#000000"));
-        ftrSalaryTenKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrSalaryTenKPlus.setBackgroundResource(R.drawable.cust_border);
         ftrSalaryTenKPlus.setTextColor(Color.parseColor("#000000"));
-        ftrSalaryTwelveKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrSalaryTwelveKPlus.setBackgroundResource(R.drawable.cust_border);
         ftrSalaryTwelveKPlus.setTextColor(Color.parseColor("#000000"));
-        ftrSalaryFifteenKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrSalaryFifteenKPlus.setBackgroundResource(R.drawable.cust_border);
         ftrSalaryFifteenKPlus.setTextColor(Color.parseColor("#000000"));
-        ftrSalaryTwentyKPlus.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrSalaryTwentyKPlus.setBackgroundResource(R.drawable.cust_border);
         ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#000000"));
 
         if(id != null && shouldEnable){
@@ -452,18 +457,17 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             }
         }
     }
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void EduBtnManipulation(Integer id, boolean shouldEnable){
         /* deactivate all then enable one */
-        ftrEduLtTen.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrEduLtTen.setBackgroundResource(R.drawable.cust_border);
         ftrEduLtTen.setTextColor(Color.parseColor("#000000"));
-        ftrEduTenPass.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrEduTenPass.setBackgroundResource(R.drawable.cust_border);
         ftrEduTenPass.setTextColor(Color.parseColor("#000000"));
-        ftrEduTwelvePass.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrEduTwelvePass.setBackgroundResource(R.drawable.cust_border);
         ftrEduTwelvePass.setTextColor(Color.parseColor("#000000"));
-        ftrEduUg.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrEduUg.setBackgroundResource(R.drawable.cust_border);
         ftrEduUg.setTextColor(Color.parseColor("#000000"));
-        ftrEduPg.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrEduPg.setBackgroundResource(R.drawable.cust_border);
         ftrEduPg.setTextColor(Color.parseColor("#000000"));
 
         if(id != null && shouldEnable){
@@ -485,12 +489,11 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             }
         }
     }
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void ExpBtnManipulation(Integer id, boolean shouldEnable){
         /* deactivate all then enable one */
-        ftrExperienceFresher.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrExperienceFresher.setBackgroundResource(R.drawable.cust_border);
         ftrExperienceFresher.setTextColor(Color.parseColor("#000000"));
-        ftrExperienceExperienced.setBackground(getResources().getDrawable(R.drawable.cust_border));
+        ftrExperienceExperienced.setBackgroundResource(R.drawable.cust_border);
         ftrExperienceExperienced.setTextColor(Color.parseColor("#000000"));
 
         if(id != null && shouldEnable){
@@ -520,26 +523,25 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             }
         }
     }
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void DateSalaryBtnManipulation(Integer id, boolean shouldEnable){
         /* deactivate all then enable one */
           /* ui manipulation */
-        imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_disable));
+        imgSortByDatePosted.setBackgroundResource(R.drawable.sort_by_circle_disable);
         imgSortByDatePosted.setImageResource(R.drawable.latest_not_selected);
         txtSortByDatePosted.setTextColor(getResources().getColor(R.color.boxOption));
 
-        imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_disable));
+        imgSortBySalary.setBackgroundResource(R.drawable.sort_by_circle_disable);
         imgSortBySalary.setImageResource(R.drawable.rupee_not_selected);
         txtSortBySalary.setTextColor(getResources().getColor(R.color.boxOption));
 
 
         if(id != null && shouldEnable){
             if(shouldEnable && id == R.id.ftr_sort_by_date_posted){
-                imgSortByDatePosted.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
+                imgSortByDatePosted.setBackgroundResource(R.drawable.sort_by_circle_enable);
                 imgSortByDatePosted.setImageResource(R.drawable.latest);
                 txtSortByDatePosted.setTextColor(getResources().getColor(R.color.back_grey_light_item));
             } else if(shouldEnable && id == R.id.ftr_sort_by_salary){
-                imgSortBySalary.setBackground(getResources().getDrawable(R.drawable.sort_by_circle_enable));
+                imgSortBySalary.setBackgroundResource(R.drawable.sort_by_circle_enable);
                 imgSortBySalary.setImageResource(R.drawable.rupee);
                 txtSortBySalary.setTextColor(getResources().getColor(R.color.back_grey_light_item));
             }

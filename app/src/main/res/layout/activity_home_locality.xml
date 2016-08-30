@@ -8,6 +8,24 @@
     android:background="@color/back_grey"
     tools:context="in.trujobs.dev.trudroid.HomeLocality">
 
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_marginTop="36dp"
+        android:layout_marginBottom="12dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/globe"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Which is your home location?"
+        android:padding="4dp"
+        android:layout_marginBottom="12dp"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +33,7 @@
         android:layout_marginTop="-12dp"
         android:layout_margin="12dp">
 
-        <android.support.v7.widget.CardView
+<!--        <android.support.v7.widget.CardView
             android:layout_gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -27,12 +45,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Which is your home location?"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="16dp"
                 android:textColor="@color/white"/>
-        </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>-->
 
         <android.support.v7.widget.CardView
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="2dp"
@@ -41,23 +61,31 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:padding="8dp"
+                android:orientation="vertical">
 
-                <AutoCompleteTextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.9"
-                    android:id="@+id/search_home_locality_autocomplete"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Start typing a location in Bangalore"
-                    android:textSize="16dp"/>
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:id="@+id/home_locality_auto_complete_clear"
-                    android:padding="9dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/cross"/>
+                    <AutoCompleteTextView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.9"
+                        android:id="@+id/search_home_locality_autocomplete"
+                        android:layout_height="wrap_content"
+                        android:hint="Start typing a location in Bangalore"
+                        android:textSize="14dp"/>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.1"
+                        android:id="@+id/home_locality_auto_complete_clear"
+                        android:padding="10dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/cross"/>
+                </LinearLayout>
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -79,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:text="OR"/>
 
             <LinearLayout
@@ -105,14 +133,14 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/location_sharp"/>
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="8dp"
+                    android:src="@drawable/location"/>
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_weight="0.9"
+                    android:layout_weight="0.7"
                     android:background="@color/white"
                     android:id="@+id/current_loc"
                     android:layout_height="wrap_content"
@@ -125,22 +153,6 @@
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true" />
-
-    <ImageView
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:paddingLeft="48dp"
-        android:paddingRight="48dp"
-        android:layout_gravity="center"
-        android:id="@+id/job_pref_image_view"
-        android:src="@drawable/big_image"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
@@ -150,7 +162,7 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:id="@+id/saveHomeLocality"
             android:textAllCaps="false"
             android:text="Search for Jobs >"

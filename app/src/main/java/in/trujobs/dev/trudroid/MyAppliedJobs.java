@@ -1,7 +1,13 @@
 package in.trujobs.dev.trudroid;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +28,8 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
 
     private AsyncTask<CandidateAppliedJobsRequest, Void, CandidateAppliedJobsResponse> mAsyncTask;
     ProgressDialog pd;
+
+    private Integer PERMISSIONS_REQUEST_CALL_PHONE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +91,20 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
                     errorImageView.setVisibility(View.VISIBLE);
                     myJobListView.setVisibility(View.GONE);
                 }
+                myAppliedJobsMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:08048039089"));
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(MyAppliedJobs.this,
+                                    new String[]{Manifest.permission.CALL_PHONE},
+                                    PERMISSIONS_REQUEST_CALL_PHONE);
+                            return;
+                        }
+                        startActivity(callIntent);
+                    }
+                });
             }
         }
     }
