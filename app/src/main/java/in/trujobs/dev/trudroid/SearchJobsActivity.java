@@ -103,6 +103,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     boolean doubleBackToExitPressedOnce = false;
 
     TextView selectedJobRolesNameTxtView;
+    public static ImageView btnFilterJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         pd = CustomProgressDialog.get(SearchJobsActivity.this);
 
         //filter_selected button
-        ImageView btnFilterJob = (ImageView) findViewById(R.id.btn_job_filter);
+        btnFilterJob = (ImageView) findViewById(R.id.btn_job_filter);
         btnFilterJob.setOnClickListener(this);
 
         //job role edit icon
