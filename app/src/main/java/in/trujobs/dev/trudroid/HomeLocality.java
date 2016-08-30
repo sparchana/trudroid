@@ -108,7 +108,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
     /**
      * Visible while the address is being fetched.
      */
-    protected ProgressBar mProgressBar;
     /**
      * Kicks off the request to fetch an address when pressed.
      */
@@ -142,7 +141,6 @@ public class HomeLocality extends TruJobsBaseActivity implements
 
         pd = CustomProgressDialog.get(HomeLocality.this);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
         mSaveHomeLocality = (Button) findViewById(R.id.saveHomeLocality);
         activateOrDeactivateSubmitButton(false);
@@ -484,14 +482,11 @@ public class HomeLocality extends TruJobsBaseActivity implements
      */
     private void updateUIWidgets() {
         if (showProgressBar) {
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
             activateOrDeactivateSubmitButton(false);
         } else if (mAddressRequested) {
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mFetchAddressButton.setEnabled(false);
         } else {
-            mProgressBar.setVisibility(ProgressBar.GONE);
             mFetchAddressButton.setEnabled(true);
             activateOrDeactivateSubmitButton(true);
         }

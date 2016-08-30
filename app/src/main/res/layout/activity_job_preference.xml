@@ -16,22 +16,34 @@
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp">
 
-        <android.support.v7.widget.CardView
-            android:layout_gravity="center"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/themeGrey"
-            card_view:cardCornerRadius="2dp"
-            card_view:contentPadding="10dp">
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/suitcase"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
                 android:text="What kind of jobs you want?"
-                android:gravity="center"
-                android:textSize="16dp"
-                android:textColor="@color/white"/>
-        </android.support.v7.widget.CardView>
+                android:textSize="18dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="26dp"
+                android:background="@color/back_grey_medium_light"/>
+        </LinearLayout>
+
 
         <android.support.v7.widget.CardView
             android:layout_gravity="center"
@@ -65,7 +77,7 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:id="@+id/job_pref_one_image_view"
-                            android:src="@drawable/edit"
+                            android:src="@drawable/plus"
                             android:layout_gravity="center" />
 
                         <ImageView
@@ -106,7 +118,7 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:id="@+id/job_pref_two_image_view"
-                            android:src="@drawable/edit"
+                            android:src="@drawable/plus"
                             android:layout_gravity="center" />
 
                         <ImageView
@@ -148,7 +160,7 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:id="@+id/job_pref_three_image_view"
-                            android:src="@drawable/edit"
+                            android:src="@drawable/plus"
                             android:layout_gravity="center" />
 
                         <ImageView
@@ -191,22 +203,15 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp">
 
-            <android.support.v7.widget.CardView
-                android:layout_gravity="center"
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="@color/themeGrey"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="10dp">
+                android:layout_marginTop="12dp"
+                android:text="Tap on preferred job roles"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"
+                android:textSize="18dp"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tap on preferred job roles"
-                    android:gravity="center"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"/>
-            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_gravity="center"

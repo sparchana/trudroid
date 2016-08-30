@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -824,6 +825,23 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         final AlertDialog.Builder searchByJobRoleBuilder = new AlertDialog.Builder(this);
         searchByJobRoleBuilder.setCancelable(false);
         searchByJobRoleBuilder.setTitle("Select Job Role preference (Max 3)");
+        searchByJobRoleBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK &&
+                        event.getAction() == KeyEvent.ACTION_UP &&
+                        !event.isCanceled()) {
+                    if(mSelectedJobsName.size()>0){
+                        mSelectedJobsName.clear();
+                    }
+                    mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
+                    searchJobsByJobRole();
+                    dialog.cancel();
+                    return true;
+                }
+                return false;
+            }
+        });
         searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 /* if not selected any job roles then don't do anything*/

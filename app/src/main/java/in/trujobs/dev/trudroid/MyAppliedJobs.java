@@ -95,7 +95,7 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
                     @Override
                     public void onClick(View view) {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:8048039089"));
+                        callIntent.setData(Uri.parse("tel:08048039089"));
                         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(MyAppliedJobs.this,
                                     new String[]{Manifest.permission.CALL_PHONE},

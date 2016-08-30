@@ -17,7 +17,7 @@ public class MessageConstants {
     public static final String SIGNUP_SUCCESS_PRE_HOME_LOCALITY = "Excellent! Your account is now created. Next, please provide your home location";
     public static final String PROFILE_UPDATED = "Your profile has been successfully saved!";
     public static final String REFER_MESSAGE = "Refer Job to your friends!";
-    public static final String REFER_MESSAGE_TEXT = "Hi ! Use TruJobs to find the right job for you now! I have registered on TruJobs and started my Job Search. Download app at www.trujobs.in";
+    public static final String REFER_MESSAGE_TEXT = "Hi! Register for FREE at Trujobs and apply to 1000+ jobs in Bangalore! I have registered on TruJobs and started applying to jobs. Download app at www.trujobs.in";
     public static final String TERMS_AND_CONDITIONS = "By visiting TruJobs mobile app you agree to be bound by the terms and conditions of this privacy policy. If you do not agree, please do not use or access our mobile app. By mere use of the mobile app, you expressly consent to, our use and disclosure, of your personal information in accordance with this Privacy Policy. This Privacy Policy is subject to the Terms of Services. If you have any questions or concerns regarding this Privacy Policy, you can contact our Support Team at info[at]trujobs.in\n" +
             "\n" +
             "Our privacy policy is subject to change at any time without notice. To make sure you are aware of any changes, please review this policy periodically.\n" +

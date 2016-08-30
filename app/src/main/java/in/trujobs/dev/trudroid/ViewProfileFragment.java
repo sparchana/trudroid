@@ -42,7 +42,7 @@ public class ViewProfileFragment extends Fragment {
     LinearLayout headerPersonal, headerEducation, headerPreference, headerExperience, bodyPersonal, bodyEducation, bodyPreference, bodyExperience;
     ProgressDialog pd;
     Boolean bodyOpen, preferenceOpen, experienceOpen, educationOpen;
-    ImageView profileCompletePercent;
+    ImageView profileCompletePercent, personalArrow, preferenceArrow, educationArrow, experienceArrow;
     TextView profileStatusText, profileMsg, jobsApplied;
     TextView myJobsHeading,  myJobsSubHeading;
 
@@ -63,6 +63,11 @@ public class ViewProfileFragment extends Fragment {
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle(Prefs.firstName.get() + " " + Prefs.lastName.get());
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        personalArrow = (ImageView) view.findViewById(R.id.personal_drop_icon);
+        preferenceArrow = (ImageView) view.findViewById(R.id.job_preference_drop_icon);
+        experienceArrow = (ImageView) view.findViewById(R.id.experience_drop_icon);
+        educationArrow = (ImageView) view.findViewById(R.id.educ_drop_icon);
 
         pd = CustomProgressDialog.get(getActivity());
 
@@ -106,6 +111,11 @@ public class ViewProfileFragment extends Fragment {
         bodyEducation.setVisibility(View.GONE);
         bodyExperience.setVisibility(View.GONE);
 
+        personalArrow.setImageResource(R.drawable.down_button);
+        preferenceArrow.setImageResource(R.drawable.arrow_right);
+        experienceArrow.setImageResource(R.drawable.arrow_right);
+        educationArrow.setImageResource(R.drawable.arrow_right);
+
         profileCompletePercent = (ImageView) view.findViewById(R.id.profile_status);
 
         headerPersonal.setOnClickListener(new View.OnClickListener() {
@@ -114,9 +124,11 @@ public class ViewProfileFragment extends Fragment {
                 if(bodyOpen){
                     bodyPersonal.setVisibility(View.GONE);
                     bodyOpen = false;
+                    personalArrow.setImageResource(R.drawable.arrow_right);
                 } else{
                     bodyOpen = true;
                     bodyPersonal.setVisibility(View.VISIBLE);
+                    personalArrow.setImageResource(R.drawable.down_button);
                 }
             }
         });
@@ -127,9 +139,11 @@ public class ViewProfileFragment extends Fragment {
                 if(preferenceOpen){
                     preferenceOpen = false;
                     bodyPreference.setVisibility(View.GONE);
+                    preferenceArrow.setImageResource(R.drawable.arrow_right);
                 } else{
                     preferenceOpen = true;
                     bodyPreference.setVisibility(View.VISIBLE);
+                    preferenceArrow.setImageResource(R.drawable.down_button);
                 }
             }
         });
@@ -140,9 +154,11 @@ public class ViewProfileFragment extends Fragment {
                 if(experienceOpen){
                     experienceOpen = false;
                     bodyExperience.setVisibility(View.GONE);
+                    experienceArrow.setImageResource(R.drawable.arrow_right);
                 } else{
                     experienceOpen = true;
                     bodyExperience.setVisibility(View.VISIBLE);
+                    experienceArrow.setImageResource(R.drawable.down_button);
                 }
             }
         });
@@ -153,9 +169,11 @@ public class ViewProfileFragment extends Fragment {
                 if(educationOpen){
                     educationOpen = false;
                     bodyEducation.setVisibility(View.GONE);
+                    educationArrow.setImageResource(R.drawable.arrow_right);
                 } else{
                     educationOpen = true;
                     bodyEducation.setVisibility(View.VISIBLE);
+                    educationArrow.setImageResource(R.drawable.down_button);
                 }
             }
         });

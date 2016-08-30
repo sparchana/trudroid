@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clickable="true"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -52,6 +53,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:elevation="6dp"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
@@ -61,6 +63,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:orientation="vertical">
 
             <LinearLayout
@@ -187,7 +190,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="6dp"
+                                    android:paddingTop="6dp"
                                     android:id="@+id/total_exp_label"
                                     android:text="Total Work Experience"/>
                             </LinearLayout>
@@ -251,7 +254,8 @@
                                 android:layout_weight="0.48"
                                 android:layout_gravity="center">
                                 <TextView
-                                    android:padding="6dp"
+                                    android:paddingTop="6dp"
+                                    android:paddingRight="4dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/currently_working_label"
@@ -361,12 +365,13 @@
                                     android:layout_width="match_parent"
                                     android:id="@+id/last_withdrawn_salary"
                                     android:textSize="@dimen/Edit_Text_Size"
+                                    android:maxLength="6"
                                     android:singleLine="true"
                                     android:inputType="number"
                                     android:paddingLeft="4dp"
                                     android:drawablePadding="6dp"
                                     android:drawableLeft="@drawable/indian_rupee_icon"
-                                    android:hint="Last Drawn Salary"/>
+                                    android:hint="Last Drawn Salary (per month)"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
 
@@ -410,9 +415,13 @@
                                         android:id="@+id/current_job_role_picker"
                                         android:layout_width="0dp"
                                         android:paddingTop="8dp"
+                                        android:paddingBottom="16dp"
+                                        android:paddingLeft="8dp"
+                                        android:paddingRight="8dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="0.08"
-                                        android:src="@drawable/down_arrow"/>
+                                        android:layout_weight="0.1"
+                                        android:src="@drawable/edit_grey"/>
+
                                 </LinearLayout>
 
                             </android.support.design.widget.TextInputLayout>

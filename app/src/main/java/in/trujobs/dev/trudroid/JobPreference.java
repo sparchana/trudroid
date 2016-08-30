@@ -326,7 +326,7 @@ public class JobPreference extends AppCompatActivity {
 
             if(!jobPrefOptionOne){
                 if(jobRoleResponse.getJobRole(pos).getJobRoleIcon() == ""){
-                    Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefOneImage);
+                    Picasso.with(getApplicationContext()).load(R.drawable.plus).into(jobPrefOneImage);
                 } else{
                     Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefOneImage);
                 }
@@ -338,7 +338,7 @@ public class JobPreference extends AppCompatActivity {
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionTwo){
                 if(jobRoleResponse.getJobRole(pos).getJobRoleIcon() == ""){
-                    Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefTwoImage);
+                    Picasso.with(getApplicationContext()).load(R.drawable.plus).into(jobPrefTwoImage);
                 } else{
                     Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefTwoImage);
                 }
@@ -349,7 +349,7 @@ public class JobPreference extends AppCompatActivity {
                 jobPrefStack.push(jobRoleResponse.getJobRole(pos).getJobRoleId());
             } else if(!jobPrefOptionThree){
                 if(jobRoleResponse.getJobRole(pos).getJobRoleIcon() == ""){
-                    Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefThreeImage);
+                    Picasso.with(getApplicationContext()).load(R.drawable.plus).into(jobPrefThreeImage);
                 } else{
                     Picasso.with(getApplicationContext()).load(jobRoleResponse.getJobRole(pos).getJobRoleIcon()).into(jobPrefThreeImage);
                 }
@@ -369,7 +369,7 @@ public class JobPreference extends AppCompatActivity {
     public void removeJobPref(int pos){
         saveJobPrefBtn = (Button) findViewById(R.id.add_job_role_pref_btn);
         switch (pos){
-            case 1: Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefOneImage);
+            case 1: Picasso.with(getApplicationContext()).load(R.drawable.plus).into(jobPrefOneImage);
                 mJobPrefOneText.setText("1st Preference");
                 jobPrefOptionOne = false;
                 jobPrefRemoveOne.setVisibility(View.GONE);
@@ -377,14 +377,14 @@ public class JobPreference extends AppCompatActivity {
                 removeJobPrefValueFromStack(jobPrefOne);
                 jobPrefOne = 0L; break;
 
-            case 2: Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefTwoImage);
+            case 2: Picasso.with(getApplicationContext()).load(R.drawable.plus).into(jobPrefTwoImage);
                 mJobPrefTwoText.setText("2nd Preference");
                 jobPrefOptionTwo = false;
                 jobPrefRemoveTwo.setVisibility(View.GONE);
                 removeJobPrefValueFromStack(jobPrefTwo);
                 jobPrefTwo = 0L; break;
 
-            case 3: Picasso.with(getApplicationContext()).load(R.drawable.edit).into(jobPrefThreeImage);
+            case 3: Picasso.with(getApplicationContext()).load(R.drawable.plus).into(jobPrefThreeImage);
                 mJobPrefThreeText.setText("3rd Preference");
                 jobPrefOptionThree = false;
                 jobPrefRemoveThree.setVisibility(View.GONE);

@@ -31,7 +31,7 @@ public class ReferFriends extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.setPackage("com.whatsapp");
-                intent.putExtra(Intent.EXTRA_TEXT, "Hey. Register yourself at www.trujobs.in and get jobs");
+                intent.putExtra(Intent.EXTRA_TEXT, MessageConstants.REFER_MESSAGE_TEXT);
                 startActivity(intent);
             }
         });
@@ -41,7 +41,7 @@ public class ReferFriends extends AppCompatActivity {
             public void onClick(View view) {
                 Intent smsIntent = new Intent(Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
-                smsIntent.putExtra("sms_body","Hey. Register yourself at www.trujobs.in and get jobs");
+                smsIntent.putExtra("sms_body",MessageConstants.REFER_MESSAGE_TEXT);
                 startActivity(smsIntent);
             }
         });

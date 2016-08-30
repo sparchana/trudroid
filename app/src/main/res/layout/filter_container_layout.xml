@@ -175,7 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#2196F3"
-                        android:text="Salary"
+                        android:text="Min Salary"
                         />
                     <TextView
                         android:layout_marginLeft="2dp"
@@ -183,7 +183,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#2196F3"
-                        android:text="(Min)"
+                        android:text="(per month)"
                         />
                 </LinearLayout>
                 <LinearLayout
@@ -282,7 +282,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Education"
+                        android:text="Education Required"
                         android:textColor="#2196F3"/>
                 </LinearLayout>
                 <LinearLayout

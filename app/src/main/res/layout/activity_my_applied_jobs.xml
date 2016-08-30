@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="To know more about the status of your applications please call +918048039089"/>
+            android:text="To know more about the status of your applications please call 08048039089"/>
     </LinearLayout>
     <ListView
         android:layout_width="match_parent"

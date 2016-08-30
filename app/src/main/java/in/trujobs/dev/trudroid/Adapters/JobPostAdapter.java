@@ -137,7 +137,19 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        holder.mJobPostPostedOnTextView.setText("Posted on: " + mDay + "-" + mMonth + "-" + mYear);
+
+        String cDay = mDay + "";
+        String cMonth = (mMonth) + "";
+
+        if(mDay < 10){
+            cDay = "0" + mDay;
+        }
+        if(mMonth < 10){
+            cMonth = "0" + mMonth;
+        }
+
+
+        holder.mJobPostPostedOnTextView.setText("Posted on: " + cDay + "-" + cMonth + "-" + mYear);
 
         //set job post localities
         holder.mJobPostLocationTextView = (TextView) rowView.findViewById(R.id.job_post_location_text_view);

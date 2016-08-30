@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clickable="true"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -54,6 +55,7 @@
         android:elevation="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:clipToPadding="false"
         app:layout_collapseMode="parallax"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -61,6 +63,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:orientation="vertical">
 
             <LinearLayout
@@ -122,7 +125,7 @@
                                     android:textSize="@dimen/Edit_Text_Size"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="First Name"/>
+                                    android:hint="First Name*"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
                         <LinearLayout
@@ -140,7 +143,7 @@
                                     android:singleLine="true"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Last Name"/>
+                                    android:hint="Last Name*"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -161,14 +164,13 @@
                                     android:singleLine="true"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Date of Birth"/>
+                                    android:hint="Date of Birth*"/>
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="gone"
                         android:id="@+id/gender_button_layout"
                         android:layout_marginTop="15dp"
                         android:padding="1dp"
@@ -239,7 +241,7 @@
                                 android:textSize="10dp"
                                 android:layout_marginLeft="4dp"
                                 android:id="@+id/job_role_pref_title"
-                                android:text="Preferred Job Roles(s)"/>
+                                android:text="Preferred Job Roles(s)*"/>
 
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
@@ -298,7 +300,7 @@
                                     android:paddingTop="8dp"
                                     android:text="adasdsa"
                                     android:layout_gravity="center"
-                                    android:hint="Home Locality"
+                                    android:hint="Home Locality*"
                                     android:layout_weight="12"/>
                             </android.support.design.widget.TextInputLayout>
 
@@ -333,7 +335,7 @@
                                 android:textSize="10dp"
                                 android:layout_marginLeft="4dp"
                                 android:id="@+id/shift_pref_title"
-                                android:text="Preferred Shift Timing"/>
+                                android:text="Preferred Shift Timing*"/>
 
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
