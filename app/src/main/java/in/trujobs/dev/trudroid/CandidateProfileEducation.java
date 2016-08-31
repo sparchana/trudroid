@@ -25,6 +25,7 @@ import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -42,12 +43,11 @@ public class CandidateProfileEducation extends Fragment {
     ProgressDialog pd;
 
     LinearLayout degreeSection;
-    LinearLayout qualificationBackground;
     LinearLayout qualificationLayout;
     LinearLayout degreeLayout;
+    LinearLayout educationStatus;
     EditText candidateCollege;
-    Button updateEducationProfile;
-    TextView qualificationStatusText;
+    Button updateEducationProfile, educationStatusYes, educationStatusNo;
     int qualificationPos = 0, degreePos = 0, firstTimeSetting = 0;
     SpinnerAdapter adapter;
     public CandidateProfileActivity candidateProfileActivity;
@@ -72,6 +72,7 @@ public class CandidateProfileEducation extends Fragment {
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        educationStatus = (LinearLayout) view.findViewById(R.id.education_status_layout);
         qualificationLayout = (LinearLayout) view.findViewById(R.id.qualification_layout);
         degreeLayout = (LinearLayout) view.findViewById(R.id.degree_layout);
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
@@ -152,6 +153,9 @@ public class CandidateProfileEducation extends Fragment {
                     final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
                     final Spinner candidateDegree = (Spinner) view.findViewById(R.id.candidate_degree);
 
+                    educationStatusYes = (Button) view.findViewById(R.id.education_status_yes);
+                    educationStatusNo = (Button) view.findViewById(R.id.education_status_no);
+
                     qualificationLevel = new String[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
                     qualificationId = new Long[getCandidateEducationProfileStaticResponse.getEducationObjectCount() + 1];
 
@@ -180,6 +184,30 @@ public class CandidateProfileEducation extends Fragment {
                             degreePos = i;
                         }
                     }
+
+                    educationStatusYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            qualificationStatus = 1;
+                            educationStatus.setBackgroundResource(0);
+                            educationStatusYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                            educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.white));
+                            educationStatusNo.setBackgroundResource(R.drawable.round_white_button);
+                            educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                        }
+                    });
+
+                    educationStatusNo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            qualificationStatus = 0;
+                            educationStatus.setBackgroundResource(0);
+                            educationStatusNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                            educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.white));
+                            educationStatusYes.setBackgroundResource(R.drawable.round_white_button);
+                            educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                        }
+                    });
 
                     adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, qualificationLevel);
                     candidateQualification.setAdapter(adapter);
@@ -215,62 +243,19 @@ public class CandidateProfileEducation extends Fragment {
                         candidateCollege.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
                     }
 
-                    qualificationStatus = candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
                     candidateQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
                     {
                         @Override
                         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
                         {
-                            if(position != 0){
-                                if(firstTimeSetting == 0){
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                                    alertDialog.setMessage("Have you successfully completed this course?");
-                                    alertDialog.setCanceledOnTouchOutside(false);
-                                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    qualificationStatus = 1;
-                                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
-
-                                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                                    qualificationStatusText.setText("Pass");
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    qualificationStatus = 0;
-                                                    qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                                    qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
-
-                                                    qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                                    qualificationStatusText.setText("Fail");
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    alertDialog.show();
-                                } else {
-                                    if(qualificationStatus == 1){
-                                        qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                        qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
-
-                                        qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                        qualificationStatusText.setText("Pass");
-                                    } else if(qualificationStatus == 0){
-                                        qualificationBackground = (LinearLayout) view.findViewById(R.id.educationQualificationBackground);
-                                        qualificationStatusText = (TextView) view.findViewById(R.id.spinnerQualificationStatus);
-
-                                        qualificationBackground.setBackgroundColor(getResources().getColor(R.color.colorOrange));
-                                        qualificationStatusText.setText("Fail");
-
-                                    }
-                                    firstTimeSetting = 0;
-                                }
+                            if(firstTimeSetting != 1){
+                                qualificationStatus = -1;
+                                educationStatusYes.setBackgroundResource(R.drawable.round_white_button);
+                                educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                                educationStatusNo.setBackgroundResource(R.drawable.round_white_button);
+                                educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
                             } else{
-                                qualificationStatus = 0;
-                                qualificationSelected = Long.valueOf(0);
+                                firstTimeSetting = 0;
                             }
 
                             if(position > 3){
@@ -297,10 +282,27 @@ public class CandidateProfileEducation extends Fragment {
                         public void onNothingSelected(AdapterView<?> parentView) {}
                     });
 
+                    qualificationStatus = candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
+                    if(qualificationStatus == 1){
+                        qualificationStatus = 1;
+                        educationStatusYes.setBackgroundResource(R.drawable.rounded_corner_button);
+                        educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.white));
+                        educationStatusNo.setBackgroundResource(R.drawable.round_white_button);
+                        educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+                    } else if(qualificationStatus == 0){
+                        qualificationStatus = 0;
+                        educationStatusYes.setBackgroundResource(R.drawable.round_white_button);
+                        educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                        educationStatusNo.setBackgroundResource(R.drawable.rounded_corner_button);
+                        educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.white));
+                    }
+
                     updateEducationProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             boolean check = true;
+                            Tlog.e("Qualification status: = " + qualificationStatus);
                             if(qualificationSelected < 1){
                                 showDialog("Please select your education level");
                                 qualificationLayout.setBackgroundResource(R.drawable.border);
@@ -311,7 +313,8 @@ public class CandidateProfileEducation extends Fragment {
                                 degreeLayout.setBackgroundResource(R.drawable.border);
                             } else if(qualificationStatus == -1){
                                 check = false;
-                                showDialog("Please select \"have you completed this course?\"");
+                                showDialog("Please answer: \"Have you successfully completed this course?\"");
+                                educationStatus.setBackgroundResource(R.drawable.border);
                             }
 
                             if(check){
