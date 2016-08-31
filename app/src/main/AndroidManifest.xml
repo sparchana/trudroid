@@ -4,15 +4,9 @@
     android:versionCode="1"
     android:versionName="v1.0.0">
 
-    <receiver android:name=".listener.SmsListener">
-        <intent-filter android:priority="2147483647">
-            <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-        </intent-filter>
-    </receiver>
-
-    <service android:name="com.google.android.gms.analytics.AnalyticsService"
-        android:enabled="true"
-        android:exported="false"/>
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="24" />
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -114,6 +109,16 @@
         <activity android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <receiver android:name=".OtpScreen$IncomingSms">
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

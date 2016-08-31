@@ -36,7 +36,10 @@ import in.trujobs.proto.ResetPasswordResponse;
 
 public class OtpScreen extends TruJobsBaseActivity {
     private static String EXTRA_TITLE = "Candidate Registration";
-    EditText mUserOtpOne, mUserOtpTwo, mUserOtpThree, mUserOtpFour;
+    static EditText mUserOtpOne;
+    static EditText mUserOtpTwo;
+    static EditText mUserOtpThree;
+    static EditText mUserOtpFour;
     private AsyncTask<ResetPasswordRequest, Void, ResetPasswordResponse> mAsyncTask;
     ProgressDialog pd;
     private IntentFilter mIntentFilter;
@@ -61,7 +64,7 @@ public class OtpScreen extends TruJobsBaseActivity {
         unregisterReceiver(mIncomingSms);
     }
 
-    public class IncomingSms extends BroadcastReceiver {
+    public static class IncomingSms extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             Tlog.e("received Sms");
             final Bundle bundle = intent.getExtras();
