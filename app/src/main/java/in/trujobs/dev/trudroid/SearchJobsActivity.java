@@ -49,6 +49,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
@@ -249,7 +250,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
             pd.cancel();
 
-            if (getJobPostDetailsResponse == null) {
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (getJobPostDetailsResponse == null) {
                 Toast.makeText(SearchJobsActivity.this, "Failed to Fetch details. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Tlog.w("","Null signIn Response");
@@ -563,6 +567,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
                         mJobSearchAsyncTask = new JobSearchAsyncTask();
                         mJobSearchAsyncTask.execute(jobSearchRequest.build());
+                    } else if(!Util.isConnectedToInternet(getApplicationContext())) {
+                        Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
                     } else {
                         showToast("Opps Something went wrong during search. Please try again");
                     }
@@ -700,7 +706,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
             jobPostListView.setAdapter(jobPostAdapter);
             noJobsImageView.setVisibility(View.GONE);
-        } else {
+        } else if(!Util.isConnectedToInternet(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+        }  else {
             jobPostListView.setVisibility(View.GONE);
             noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
             noJobsImageView.setVisibility(View.VISIBLE);
@@ -785,7 +793,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             Tlog.i("found jobFilterRequestBkp -- Misc JobFilter options set. attaching jobFilterRequestBkp to jobSearch");
             jobSearch.setJobFilterRequest(jobFilterRequestBkp);
         }
-        if(selectedJobRoleList.size()>0) {
+        if(selectedJobRoleList!= null && selectedJobRoleList.size()>0) {
             Tlog.i("found selected jobroles, selectedJobRoleList size:"+selectedJobRoleList.size());
             jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
             if(selectedJobRoleList.size() > 0) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(0));

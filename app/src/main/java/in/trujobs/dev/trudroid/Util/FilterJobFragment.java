@@ -26,6 +26,7 @@ import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.proto.JobFilterRequest;
 import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.JobPostResponse;
@@ -664,7 +665,9 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                     Tlog.i("DataSize: " + jobPostObjectList.size());
                     JobPostAdapter jobPostAdapter = new JobPostAdapter(getActivity(), jobPostObjectList);
                     jobPostListView.setAdapter(jobPostAdapter);
-                } else {
+                }else if(!Util.isConnectedToInternet(getContext())) {
+                    Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                }  else {
                     ImageView noJobsImageView = (ImageView) getActivity().findViewById(R.id.no_jobs_image);
                     noJobsImageView.setVisibility(View.VISIBLE);
                     jobPostListView.setVisibility(View.GONE);

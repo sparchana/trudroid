@@ -25,6 +25,7 @@ import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -103,7 +104,9 @@ public class CandidateProfileEducation extends Fragment {
         protected void onPostExecute(UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse) {
             super.onPostExecute(updateCandidateBasicProfileResponse);
             pd.cancel();
-            if(updateCandidateBasicProfileResponse == null){
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if(updateCandidateBasicProfileResponse == null){
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
             } else{
@@ -138,8 +141,9 @@ public class CandidateProfileEducation extends Fragment {
         protected void onPostExecute(GetCandidateEducationProfileStaticResponse getCandidateEducationProfileStaticResponse) {
             super.onPostExecute(getCandidateEducationProfileStaticResponse);
             pd.cancel();
-
-            if (getCandidateEducationProfileStaticResponse == null) {
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if (getCandidateEducationProfileStaticResponse == null) {
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("", "Null Response");

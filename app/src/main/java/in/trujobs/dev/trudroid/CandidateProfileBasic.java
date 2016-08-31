@@ -49,6 +49,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.HomeLocalityRequest;
@@ -186,11 +187,12 @@ public class CandidateProfileBasic extends Fragment {
         protected void onPostExecute(GetCandidateBasicProfileStaticResponse getCandidateBasicProfileStaticResponse) {
             super.onPostExecute(getCandidateBasicProfileStaticResponse);
             pd.cancel();
-
-            if (getCandidateBasicProfileStaticResponse == null) {
-                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
-                        Toast.LENGTH_LONG).show();
-                Log.w("", "Null candidate Response");
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if (getCandidateBasicProfileStaticResponse == null) {
+                    Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                    Log.w("", "Null candidate Response");
                 return;
             } else {
                 if(getCandidateBasicProfileStaticResponse.getStatusValue() == ServerConstants.SUCCESS){
@@ -654,7 +656,9 @@ public class CandidateProfileBasic extends Fragment {
             super.onPostExecute(updateCandidateBasicProfileResponse);
             pd.cancel();
 
-            if (updateCandidateBasicProfileResponse == null) {
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if (updateCandidateBasicProfileResponse == null) {
                 Toast.makeText(getContext(), "Something went Wrong. Please try again!",
                         Toast.LENGTH_LONG).show();
                 Log.w("", "Null update Response");

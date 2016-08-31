@@ -29,6 +29,7 @@ import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
@@ -292,7 +293,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             super.onPostExecute(applyJobResponse);
             mAsyncTask = null;
             pd.cancel();
-            if (applyJobResponse == null) {
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (applyJobResponse == null) {
                 Toast.makeText(getContext(), "Something went wrong. Please try again later.",
                         Toast.LENGTH_LONG).show();
                 Tlog.w("Null Response");
@@ -326,8 +330,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
             } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
                 alert.showDialog(getContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 0);
+            } else if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
             } else{
-                alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact out servers", "",  R.drawable.sent, 0);
+                alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact our servers", "",  R.drawable.sent, 0);
             }
         }
     }
