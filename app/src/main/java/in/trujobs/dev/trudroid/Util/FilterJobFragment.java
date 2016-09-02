@@ -397,6 +397,10 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                     assignSearchedLatLng();
                     jobSearchRequest.setJobFilterRequest(jobFilterRequest.build());
                     if(SearchJobsActivity.jobRolesFilter != null)jobSearchRequest.setJobSearchByJobRoleRequest(SearchJobsActivity.jobRolesFilter);
+                    if(SearchJobsActivity.mSearchAddressOutput != null && !SearchJobsActivity.mSearchAddressOutput.trim().isEmpty()){
+                        Tlog.i("Attach Locality: "+SearchJobsActivity.mSearchAddressOutput);
+                        jobSearchRequest.setLocalityName(SearchJobsActivity.mSearchAddressOutput);
+                    }
                     mJobSearchAsyncTask = new JobSearchAsyncTask();
                     mJobSearchAsyncTask.execute(jobSearchRequest.build());
                     SearchJobsActivity.jobFilterRequestBkp = jobFilterRequest;
