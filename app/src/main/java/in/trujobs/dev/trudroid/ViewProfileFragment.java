@@ -334,20 +334,10 @@ public class ViewProfileFragment extends Fragment {
                     } else{
                         candidateCourse.setText("Not Specified");
                     }
-                    if(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany() != ""){
-                        candidateCurrentCompany.setText(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany());
-                    } else{
-                        candidateCurrentCompany.setText("Not Specified");
-                    }
                     if(getCandidateInformationResponse.getCandidate().getCandidateEducation().getEducation().getEducationName() != ""){
                         candidateDegree.setText(getCandidateInformationResponse.getCandidate().getCandidateEducation().getEducation().getEducationName());
                     } else{
                         candidateDegree.setText("Not Specified");
-                    }
-                    if(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() != 0){
-                        candidateLastWithdrawnSalary.setText(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() + "");
-                    } else{
-                        candidateLastWithdrawnSalary.setText("Not Specified");
                     }
                     if(getCandidateInformationResponse.getCandidate().getCandidateGender() == 0){
                         candidateGender.setText("Male");
@@ -400,15 +390,40 @@ public class ViewProfileFragment extends Fragment {
                         candidateShiftPref.setText("Not Specified");
                     }
 
+
+
                     if(getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() != -1){
                         Integer expYears = getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() / 12;
                         Integer expMonth = getCandidateInformationResponse.getCandidate().getCandidateTotalExperience() % 12;
-                        if(expYears != 0){
-                            candidateTotalExp.setText(expYears + " years " + expMonth + " months");
-                        } else if(expYears == 0 && expMonth == 0) {
+                        if(expYears == 0 && expMonth == 0){
+                            //is a fresher
                             candidateTotalExp.setText("Fresher");
+                            candidateLastWithdrawnSalary.setText("Not Applicable");
+                            candidateCurrentCompany.setText("Not Applicable");
                         } else{
-                            candidateTotalExp.setText(expMonth + " months");
+                            //is not a fresher
+                            if(expYears != 0){
+                                candidateTotalExp.setText(expYears + " years " + expMonth + " months");
+                            } else{
+                                candidateTotalExp.setText(expMonth + " months");
+                            }
+
+                            //last withdrawn salary
+                            if(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() != 0){
+                                candidateLastWithdrawnSalary.setText(getCandidateInformationResponse.getCandidate().getCandidateLastWithdrawnSalary() + "");
+                            } else{
+                                candidateLastWithdrawnSalary.setText("Not Specified");
+                            }
+
+                            //current company
+                            candidateCurrentCompany.setText("Not Specified");
+                            if(getCandidateInformationResponse.getCandidate().getCandidateIsEmployed() == 1){
+                                if(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany() != ""){
+                                    candidateCurrentCompany.setText(getCandidateInformationResponse.getCandidate().getCandidateCurrentCompany());
+                                } else{
+                                    candidateCurrentCompany.setText("Not Specified");
+                                }
+                            }
                         }
                     } else{
                         candidateTotalExp.setText("Not Specified");

@@ -354,28 +354,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
                 }
-                Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+                openItem(WelcomeScreen.class); break;
             case 1: break;
 
-            case 2: intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+            case 2: openItem(CandidateProfileActivity.class); break;
 
-            case 3: intent = new Intent(SearchJobsActivity.this, MyAppliedJobs.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+            case 3: openItem(MyAppliedJobs.class); break;
 
-            case 4: intent = new Intent(SearchJobsActivity.this, HomeLocality.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+            case 4: openItem(HomeLocality.class); break;
 
-            case 5: intent = new Intent(SearchJobsActivity.this, ReferFriends.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+            case 5: openItem(ReferFriends.class); break;
 
             default:
                 break;
@@ -420,6 +408,21 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             getFragmentManager().popBackStack();
             super.onBackPressed();
         }
+    }
+
+    public void openItem(final Class <?> cls){
+        mDrawerLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SearchJobsActivity.this, cls);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                if(cls == WelcomeScreen.class){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    finish();
+                }
+            }
+        }, 200);
     }
 
     @Override

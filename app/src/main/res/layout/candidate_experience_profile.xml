@@ -219,7 +219,7 @@
                                             android:layout_width="0dp"
                                             android:layout_weight="0.8"
                                             android:layout_height="wrap_content"
-                                            android:hint="Total Work Experience"/>
+                                            android:hint="Select work experience"/>
 
                                         <ImageView
                                             android:id="@+id/experience_picker"
@@ -239,6 +239,34 @@
 
                         </LinearLayout>
                         <!--Total work experience -->
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:orientation="vertical"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12dp"
+                                android:text="Current Job Role"/>
+
+                            <EditText
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:id="@+id/last_withdrawn_salary"
+                                android:textSize="@dimen/Edit_Text_Size"
+                                android:maxLength="6"
+                                android:singleLine="true"
+                                android:inputType="number"
+                                android:paddingLeft="4dp"
+                                android:drawablePadding="6dp"
+                                android:drawableLeft="@drawable/indian_rupee_icon"
+                                android:hint="Last Drawn Salary (per month)"/>
+
+                        </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="fill_parent"
@@ -353,27 +381,6 @@
                             </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content">
-                            <android.support.design.widget.TextInputLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp">
-                                <EditText
-                                    android:layout_height="wrap_content"
-                                    android:layout_width="match_parent"
-                                    android:id="@+id/last_withdrawn_salary"
-                                    android:textSize="@dimen/Edit_Text_Size"
-                                    android:maxLength="6"
-                                    android:singleLine="true"
-                                    android:inputType="number"
-                                    android:paddingLeft="4dp"
-                                    android:drawablePadding="6dp"
-                                    android:drawableLeft="@drawable/indian_rupee_icon"
-                                    android:hint="Last Drawn Salary (per month)"/>
-                            </android.support.design.widget.TextInputLayout>
-                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="fill_parent"
