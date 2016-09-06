@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
@@ -134,7 +135,10 @@ public class Login extends TruJobsBaseActivity {
             super.onPostExecute(logInResponse);
             mAsyncTask = null;
             pd.cancel();
-            if (logInResponse == null) {
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (logInResponse == null) {
                 showToast(MessageConstants.FAILED_REQUEST);
                 Log.w("","Null signIn Response");
                 return;

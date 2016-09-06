@@ -6,6 +6,7 @@ package in.trujobs.dev.trudroid.api;
 public class MessageConstants {
     public static final String NO_USER = "Looks like this mobile number is not registered. Please Sign Up to Continue";
     public static final String SOMETHING_WENT_WRONG = "Something went wrong. Please try again later!";
+    public static final String NOT_CONNECTED = "Looks like you are not connected to the internet. Please connect and try again.";
     public static final String FAILED_REQUEST = "Failed to Request. Please try again.";
     public static final String INCORRECT_PASSWORD = "Incorrect password. Click \"Forgot Password\" to reset";
     public static final String EXISTING_USER = "Mobile number is already registered. Please Login in to continue";

@@ -49,6 +49,7 @@ import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
@@ -77,7 +78,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     public ListView jobPostListView;
     public AutoCompleteTextView mSearchJobAcTxtView;
     public TextView mSearchJobsByJobRoleTxtView, userNameTextView, userMobileTextView;
-    public String mSearchAddressOutput;
+    public static String mSearchAddressOutput;
     public String mSearchedPlaceId;
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton fab;
@@ -212,6 +213,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         if(!candidateLocalityName.trim().isEmpty()){
             /* TODO: Find a way to make this independent of states */
             mSearchJobAcTxtView.setText(candidateLocalityName);
+            mSearchAddressOutput = candidateLocalityName;
         }
         //getting all the job posts
         showJobPosts();
@@ -249,7 +251,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
             pd.cancel();
 
-            if (getJobPostDetailsResponse == null) {
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (getJobPostDetailsResponse == null) {
                 Toast.makeText(SearchJobsActivity.this, "Failed to Fetch details. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Tlog.w("","Null signIn Response");
@@ -461,10 +466,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             case R.id.clear_location_filter:
                 mSearchJobAcTxtView.getText().clear();
                 mSearchJobAcTxtView.setHint("All Bangalore");
+                mSearchAddressOutput = "";
                 mSearchLat = 0D;
                 mSearchLng = 0D;
                 jobSearchRequest.setLatitude(mSearchLat);
                 jobSearchRequest.setLongitude(mSearchLng);
+                jobSearchRequest.setLocalityName(mSearchAddressOutput);
                 if(jobFilterRequestBkp!=null){
                     jobFilterRequestBkp.setJobSearchLatitude(mSearchLat);
                     jobFilterRequestBkp.setJobSearchLongitude(mSearchLng);
@@ -560,9 +567,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         /* search by location input ui update */
                         mSearchJobAcTxtView.setText(mSearchAddressOutput);
                         mSearchJobAcTxtView.dismissDropDown();
+                        jobSearchRequest.setLocalityName(mSearchJobAcTxtView.getText().toString());
 
                         mJobSearchAsyncTask = new JobSearchAsyncTask();
                         mJobSearchAsyncTask.execute(jobSearchRequest.build());
+                    } else if(!Util.isConnectedToInternet(getApplicationContext())) {
+                        Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
                     } else {
                         showToast("Opps Something went wrong during search. Please try again");
                     }
@@ -660,6 +670,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         } else {
             Tlog.e("Candidate Mobile Null in Prefs");
         }
+
+        jobSearchRequest.setLocalityName(mSearchJobAcTxtView.getText().toString());
+
         if(jobRolesFilter == null){
             jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
             if (Prefs.candidatePrefJobRoleIdOne.get()!=null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
@@ -700,7 +713,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
             jobPostListView.setAdapter(jobPostAdapter);
             noJobsImageView.setVisibility(View.GONE);
-        } else {
+        } else if(!Util.isConnectedToInternet(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+        }  else {
             jobPostListView.setVisibility(View.GONE);
             noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
             noJobsImageView.setVisibility(View.VISIBLE);
@@ -785,7 +800,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             Tlog.i("found jobFilterRequestBkp -- Misc JobFilter options set. attaching jobFilterRequestBkp to jobSearch");
             jobSearch.setJobFilterRequest(jobFilterRequestBkp);
         }
-        if(selectedJobRoleList.size()>0) {
+        if(selectedJobRoleList!= null && selectedJobRoleList.size()>0) {
             Tlog.i("found selected jobroles, selectedJobRoleList size:"+selectedJobRoleList.size());
             jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
             if(selectedJobRoleList.size() > 0) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(0));
@@ -805,6 +820,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 updateJobSearchObject();
             }
         }
+        if(mSearchJobAcTxtView!=null) jobSearchRequest.setLocalityName(mSearchJobAcTxtView.getText().toString());
+
         JobSearchAsyncTask jobSearchAsyncTask = new JobSearchAsyncTask();
         jobSearchAsyncTask.execute(jobSearch.build());
     }

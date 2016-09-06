@@ -26,13 +26,15 @@ import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.AddJobRoleRequest;
 import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.JobRoleResponse;
 
-public class JobPreference extends AppCompatActivity {
+public class JobPreference extends TruJobsBaseActivity {
 
     private AsyncTask<Void, Void, JobRoleResponse> mAsyncTask;
     private AsyncTask<AddJobRoleRequest, Void, AddJobRoleResponse> mSaveJobPrefAsyncTask;
@@ -290,14 +292,14 @@ public class JobPreference extends AppCompatActivity {
             super.onPostExecute(addJobRoleResponse);
             mAsyncTask = null;
             pd.cancel();
-            if (addJobRoleResponse == null) {
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                showToast(MessageConstants.NOT_CONNECTED);
+            } else if (addJobRoleResponse == null) {
                 Toast.makeText(JobPreference.this, "Request Failed. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("","Null signIn Response");
                 return;
-            }
-
-            else {
+            } else {
                 if(addJobRoleResponse.getStatusValue() == 1){
                     Intent intent;
                     Prefs.candidateJobPrefStatus.put(ServerConstants.JOBPREFERENCE_YES);
