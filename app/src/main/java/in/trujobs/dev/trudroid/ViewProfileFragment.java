@@ -25,7 +25,9 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateInformationRequest;
 import in.trujobs.proto.GetCandidateInformationResponse;
@@ -208,7 +210,10 @@ public class ViewProfileFragment extends Fragment {
             super.onPostExecute(getCandidateInformationResponse);
             pd.cancel();
 
-            if (getCandidateInformationResponse == null) {
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            } else if (getCandidateInformationResponse == null) {
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("","Null candidate Response");
