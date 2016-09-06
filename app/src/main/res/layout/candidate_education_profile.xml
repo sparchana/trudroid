@@ -60,11 +60,11 @@
         app:layout_collapseMode="parallax"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            xmlns:android="http://schemas.android.com/apk/res/android">
 
             <LinearLayout
                 android:padding="8dp"
@@ -133,6 +133,58 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/margin_top_text"
+                        android:orientation="horizontal"
+                        android:id="@+id/education_status_layout"
+                        android:layout_marginBottom="@dimen/margin_bottom_text">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:padding="@dimen/margin_bottom_text"
+                            android:text="Have you successfully completed this course?"/>
+
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fresher_experienced_layout">
+
+                            <Button
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorPrimary"
+                                android:layout_margin="2dp"
+                                android:background="@drawable/round_white_button"
+                                android:id="@+id/education_status_yes"
+                                android:textSize="9dp"
+                                android:text="Yes"/>
+
+                            <Button
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorPrimary"
+                                android:layout_margin="2dp"
+                                android:background="@drawable/round_white_button"
+                                android:id="@+id/education_status_no"
+                                android:textSize="9dp"
+                                android:text="No"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
                     <!-- Qualification -->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -211,4 +263,5 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
 </android.support.design.widget.CoordinatorLayout>

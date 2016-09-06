@@ -348,7 +348,7 @@ public class CandidateProfileExperience extends Fragment {
                             isCandidateExperienced = 0;
                             isEmployed = 0;
                             expInYears = 0;
-                            selectExp.setText("Select Totla Experience");
+                            selectExp.setText("Select work experience");
                             isEmployedLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             fresherExperienceLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                             isEmployedYes.setBackgroundResource(R.drawable.round_white_button);
@@ -452,7 +452,7 @@ public class CandidateProfileExperience extends Fragment {
                                 check = false;
                                 showDialog("Please answer the question: Are you currently working?");
                                 isEmployedLayout.setBackgroundResource(R.drawable.border);
-                            } else if(isEmployed == 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
+                            } else if(expInYears > 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                                 check = false;
                                 lastWithdrawnSalary.setError("Please provide your last drawn Salary");
                                 lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
@@ -472,12 +472,12 @@ public class CandidateProfileExperience extends Fragment {
                                 experienceBuilder.setCandidateIsEmployed(isEmployed);
                                 if(isCandidateExperienced == 1){
                                     experienceBuilder.setCandidateTotalExperience(expInYears);
+                                    experienceBuilder.setCandidateCurrentSalary(Long.parseLong(lastWithdrawnSalary.getText().toString()));
                                 } else{
                                     experienceBuilder.setCandidateTotalExperience(0);
                                     isEmployed = 0;
                                 }
                                 if(isEmployed == 1){
-                                    experienceBuilder.setCandidateCurrentSalary(Long.parseLong(lastWithdrawnSalary.getText().toString()));
                                     if(currentJobRoleValue != null) {
                                         experienceBuilder.setCurrentJobRole(currentJobRoleValue);
                                     }
