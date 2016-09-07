@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
@@ -70,7 +71,7 @@ public class HttpRequest {
         try {
             logInResponse = LogInResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return logInResponse;
     }
@@ -87,7 +88,7 @@ public class HttpRequest {
         try {
             signUpResponse = SignUpResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return signUpResponse;
     }
@@ -104,7 +105,7 @@ public class HttpRequest {
         try {
             logInResponse = LogInResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return logInResponse;
     }
@@ -121,7 +122,7 @@ public class HttpRequest {
         try {
             resetPasswordResponse = ResetPasswordResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return resetPasswordResponse;
     }
@@ -183,7 +184,7 @@ public class HttpRequest {
         try {
             applyJobResponse = ApplyJobResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return applyJobResponse;
     }
@@ -200,7 +201,7 @@ public class HttpRequest {
         try {
             addJobRoleResponse = AddJobRoleResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return addJobRoleResponse;
     }
@@ -238,7 +239,7 @@ public class HttpRequest {
         try {
             getJobPostDetailsResponse = GetJobPostDetailsResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return getJobPostDetailsResponse;
     }
@@ -255,7 +256,7 @@ public class HttpRequest {
         try {
             candidateAppliedJobsResponse = CandidateAppliedJobsResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return candidateAppliedJobsResponse;
     }
@@ -332,7 +333,7 @@ public class HttpRequest {
         try {
             updateCandidateBasicProfileResponse = UpdateCandidateBasicProfileResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return updateCandidateBasicProfileResponse;
     }
@@ -349,7 +350,7 @@ public class HttpRequest {
         try {
             updateCandidateBasicProfileResponse = UpdateCandidateBasicProfileResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
 
         return updateCandidateBasicProfileResponse;
@@ -367,7 +368,7 @@ public class HttpRequest {
         try {
             updateCandidateBasicProfileResponse = UpdateCandidateBasicProfileResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return updateCandidateBasicProfileResponse;
     }
@@ -377,7 +378,7 @@ public class HttpRequest {
         try {
             url = new URL(requestUrl);
         } catch (MalformedURLException e) {
-            Log.e(String.valueOf(e), "URL is malformed " + requestUrl);
+            Tlog.e(String.valueOf(e), "URL is malformed " + requestUrl);
             return "";
         }
 
@@ -403,16 +404,16 @@ public class HttpRequest {
             String contentAsString = readIt(is);
             return contentAsString;
         } catch (ProtocolException e) {
-            Log.e(String.valueOf(e), "Exception");
+            Tlog.e(String.valueOf(e), "Exception");
         } catch (IOException e) {
-            Log.e(String.valueOf(e), "Exception");
+            Tlog.e(String.valueOf(e), "Exception");
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                Log.e(String.valueOf(e), "Exception");
+                Tlog.e(String.valueOf(e), "Exception");
             }
         }
         return "";
@@ -423,7 +424,7 @@ public class HttpRequest {
         try {
             url = new URL(requestUrl);
         } catch (MalformedURLException e) {
-            Log.e(String.valueOf(e), "URL is malformed " + requestUrl);
+            Tlog.e(String.valueOf(e), "URL is malformed " + requestUrl);
             return "";
         }
 
@@ -447,16 +448,16 @@ public class HttpRequest {
             return contentAsString;
 
         } catch (ProtocolException e) {
-            Log.e(String.valueOf(e), "Exception");
+            Tlog.e(String.valueOf(e), "Exception");
         } catch (IOException e) {
-            Log.e(String.valueOf(e), "Exception");
+            Tlog.e(String.valueOf(e), "Exception");
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                Log.e(String.valueOf(e), "Exception");
+                Tlog.e(String.valueOf(e), "Exception");
             }
         }
         return "";
@@ -487,7 +488,7 @@ public class HttpRequest {
         try {
             homeLocalityResponse = HomeLocalityResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return homeLocalityResponse;
     }
@@ -504,7 +505,7 @@ public class HttpRequest {
         try {
             candidateAlertResponse = FetchCandidateAlertResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return candidateAlertResponse;
 
@@ -522,7 +523,7 @@ public class HttpRequest {
         try {
             jobPostResponse = JobPostResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return jobPostResponse;
     }
@@ -539,7 +540,7 @@ public class HttpRequest {
         try {
             resetPasswordResponse = ResetPasswordResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return resetPasswordResponse;
     }
@@ -556,7 +557,7 @@ public class HttpRequest {
         try {
             localityObjectResponse = LocalityObjectResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
-            Log.w(String.valueOf(e), "Cannot parse response");
+            Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return localityObjectResponse;
     }
