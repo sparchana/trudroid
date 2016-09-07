@@ -233,6 +233,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
                 requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
 
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_POST_LOGIN_APPLY_TO_JOBS);
+
                 mJobPostAsyncTask = new JobPostDetailAsyncTask();
                 mJobPostAsyncTask.execute(requestBuilder.build());
             }
@@ -299,17 +302,26 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         dialog.dismiss();
                         Prefs.jobToApplyStatus.put(0);
                         Prefs.getJobToApplyJobId.put(0L);
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
                     }
                 });
                 applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
                     }
                 });
                 applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         preScreenLocationIndex = which;
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
                     }
                 });
                 final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
@@ -365,31 +377,36 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     Prefs.clearPrefValues();
                     Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_LOGGED_OUT);
                 }
-                Intent intent = new Intent(SearchJobsActivity.this, WelcomeScreen.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                openItem(WelcomeScreen.class);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_PROCEED_TO_WELCOME);
 
                 break;
             case 1: break;
 
-            case 2: intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+            case 2: openItem(CandidateProfileActivity.class);
 
-            case 3: intent = new Intent(SearchJobsActivity.this, MyAppliedJobs.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_CANDIDATE_PROFILE);
+                break;
 
-            case 4: intent = new Intent(SearchJobsActivity.this, HomeLocality.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+            case 3: openItem(MyAppliedJobs.class);
 
-            case 5: intent = new Intent(SearchJobsActivity.this, ReferFriends.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_APPLIED_JOBS);
+                break;
+
+            case 4: openItem(HomeLocality.class); break;
+
+            case 5: openItem(ReferFriends.class);
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_REFER_FRIEND);
+                break;
 
             default:
                 break;
@@ -440,6 +457,21 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             getFragmentManager().popBackStack();
             super.onBackPressed();
         }
+    }
+
+    public void openItem(final Class <?> cls){
+        mDrawerLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SearchJobsActivity.this, cls);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                if(cls == WelcomeScreen.class){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    finish();
+                }
+            }
+        }, 200);
     }
 
     @Override

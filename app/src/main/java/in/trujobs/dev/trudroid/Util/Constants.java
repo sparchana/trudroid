@@ -81,5 +81,28 @@ public class Constants {
     public static final String GA_ACTION_SELECTION_IN_SEARCH_BY_JOB_ROLE = "SELECTION_IN_SEARCH_BY_JOB_ROLE";
     public static final String GA_ACTION_CLEAR_JOB_ROLES = "CLEAR_JOB_ROLES";
     public static final String GA_SCREEN_NAME_SPLASHSCREEN = "SPLASHSCREEN";
+    public static final String GA_ACTION_PROCEED_TO_WELCOME = "PROCEED_TO_WELCOME";
+    public static final String GA_ACTION_LOGGED_OUT = "LOGGED_OUT";
+    public static final String GA_ACTION_OPEN_CANDIDATE_PROFILE = "CANDIDATE_PROFILE";
+    public static final String GA_ACTION_OPEN_APPLIED_JOBS = "OPEN_APPLIED_JOBS";
+    public static final String GA_ACTION_OPEN_REFER_FRIEND = "OPEN_REFER_FRIEND";
+    public static final String GA_ACTION_POST_LOGIN_APPLY_TO_JOBS = "POST_LOGIN_APPLY_TO_JOBS";
+    public static final String GA_SCREEN_NAME_VIEW_FILTER = "VIEW_FILTER";
+    public static final String GA_ACTION_SORT_BY_SALARY = "SORT_BY_SALARY";
+    public static final String GA_ACTION_SORT_BY_DATE_POSTED = "SORT_BY_DATE_POSTED";
+    public static final String GA_ACTION_SORT_BY_GENDER_MALE = "SORT_BY_GENDER_MALE";
+    public static final String GA_ACTION_SORT_BY_GENDER_FEMALE = "SORT_BY_GENDER_FEMALE";
+    public static final String GA_ACTION_SORT_BY_EXP_FRESHER = "SORT_BY_EXP_FRESHER";
+    public static final String GA_ACTION_SORT_BY_EXP_EXPERIENCED = "SORT_BY_EXP_EXPERIENCED";
+    public static final String GA_ACTION_EDU_LT_TEN = "EDU_LT_TEN";
+    public static final String GA_ACTION_EDU_TEN_PASS = "EDU_TEN_PASS";
+    public static final String GA_ACTION_EDU_TWELVE_PASS = "EDU_TWELVE_PASS";
+    public static final String GA_ACTION_EDU_UG = "EDU_UG";
+    public static final String GA_ACTION_EDU_PG = "EDU_PG";
+    public static final String GA_ACTION_SALARY_8K_PLUS= "SALARY_8K_PLUS";
+    public static final String GA_ACTION_SALARY_10K_PLUS= "SALARY_10K_PLUS";
+    public static final String GA_ACTION_SALARY_12K_PLUS= "SALARY_12K_PLUS";
+    public static final String GA_ACTION_SALARY_15K_PLUS= "SALARY_15K_PLUS";
+    public static final String GA_ACTION_SALARY_20K_PLUS= "SALARY_20K_PLUS";
 }
 
