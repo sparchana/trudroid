@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -87,6 +88,10 @@ public class CandidateProfileExperience extends Fragment {
         ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // track screen view
+        ((CandidateProfileActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_EXPERIENCE_PROFILE);
+
 
         fresherExperienceLayout = (LinearLayout) view.findViewById(R.id.fresher_experienced_layout);
         isEmployedLayout = (LinearLayout) view.findViewById(R.id.is_employed_layout);
@@ -466,6 +471,10 @@ public class CandidateProfileExperience extends Fragment {
                             }
 
                             if(check){
+
+                                //Track this action
+                                ((CandidateProfileActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EXPERIENCE_PROFILE, Constants.GA_ACTION_SAVE_EXPERIENCE_PROFILE);
+
                                 experienceBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                                 experienceBuilder.addAllCandidateLanguage(candidateLanguageKnown);
                                 experienceBuilder.addAllCandidateSkill(candidateSkill);

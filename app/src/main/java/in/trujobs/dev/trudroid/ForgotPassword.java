@@ -33,6 +33,9 @@ public class ForgotPassword extends TruJobsBaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_FORGOT_PASSWORD);
+
         // Fetch the mobile number entered by user in the login activity and set it in the text view
         mUserMobile = (EditText) findViewById(R.id.forgot_password_mobile_edit_text);
         String forgotPwdMobile = getIntent().getStringExtra(Constants.FORGOT_PWD_MOBILE_EXTRA);
@@ -47,6 +50,9 @@ public class ForgotPassword extends TruJobsBaseActivity {
         buttonGetMobile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 performPasswordReset();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_FORGOT_PASSWORD, Constants.GA_ACTION_SAVE_PASSWORD);
             }
         });
     }

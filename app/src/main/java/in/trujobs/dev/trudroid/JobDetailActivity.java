@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +32,7 @@ import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
 import in.trujobs.dev.trudroid.Adapters.PagerAdapter;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -75,12 +75,19 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_JOB_DETAIL);
+
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ViewDialog alert = new ViewDialog();
                 alert.showDialog(JobDetailActivity.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_SUB_MESSAGE, "", R.drawable.refer, 3);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_JOB_DETAIL, Constants.GA_ACTION_FAB_REFER);
+
             }
         });
 
@@ -271,6 +278,9 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                         }
                         ViewDialog alert = new ViewDialog();
                         alert.showDialog(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyName() + "'s " + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, -1);
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_JOB_DETAIL, Constants.GA_ACTION_SHOW_ALL_JOB_POST_LOCATION);
                     }
                 });
 
@@ -322,6 +332,8 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                 Log.e("Other job post", "data: " + jobPostObject);
                                 Prefs.jobPostId.put(jobPostObject.getJobPostId());
                                 JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole(), jobPostObject.getJobPostLocalityList());
+                                //Track this action
+                                addActionGA(Constants.GA_SCREEN_FRAGMENT_COMPANY, Constants.GA_ACTION_OTHER_JOBS);
                             }
                         });
                     }
@@ -377,6 +389,8 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                         public void onClick(View view) {
                             ViewDialog alert = new ViewDialog();
                             alert.showDialog(JobDetailActivity.this, getJobPostDetailsResponse.getCompany().getCompanyName() , getJobPostDetailsResponse.getCompany().getCompanyDescription() , "", R.drawable.company_icon, -1);
+                            //Track this action
+                            addActionGA(Constants.GA_SCREEN_FRAGMENT_COMPANY, Constants.GA_ACTION_COMPANY_DESCRIPTION);
                         }
                     });
                 } else{
@@ -394,6 +408,9 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     @Override
                     public void onClick(View view) {
                         if(Util.isLoggedIn()){
+                            //Track this action
+                            addActionGA(Constants.GA_SCREEN_JOB_DETAIL, Constants.GA_ACTION_TRIED_TO_APPLY_FOR_JOB);
+
                             preScreenLocationIndex = 0;
                             final CharSequence[] localityList = new CharSequence[EXTRA_LOCALITY.size()];
                             final Long[] localityId = new Long[EXTRA_LOCALITY.size()];
@@ -421,17 +438,26 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                     JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
                                     jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], jobTabApplyBtn);
                                     dialog.dismiss();
+
+                                    //Track this action
+                                    addActionGA(Constants.GA_SCREEN_JOB_DETAIL, Constants.GA_ACTION_APPLY_TO_JOB);
                                 }
                             });
                             applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
+
+                                    //Track this action
+                                    addActionGA(Constants.GA_SCREEN_JOB_DETAIL, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
                                 }
                             });
                             applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     preScreenLocationIndex = which;
+
+                                    //Track this action
+                                    addActionGA(Constants.GA_SCREEN_JOB_DETAIL, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
                                 }
                             });
                             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();

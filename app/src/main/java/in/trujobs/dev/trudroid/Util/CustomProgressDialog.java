@@ -49,7 +49,7 @@ public class CustomProgressDialog extends ProgressDialog {
         if(mAnimationDrawable!=null){
             mAnimationDrawable.start();
             mAnimationDrawable.setVisible(true, false);
-            new Handler().postDelayed(getWaitRunnable(), 15000);
+            new Handler().postDelayed(getWaitRunnable(), 18000);
         }
     }
 

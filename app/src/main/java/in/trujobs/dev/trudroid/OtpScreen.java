@@ -1,13 +1,11 @@
 package in.trujobs.dev.trudroid;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,12 +23,12 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
-import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 
@@ -111,6 +109,9 @@ public class OtpScreen extends TruJobsBaseActivity {
         setContentView(R.layout.activity_otp_screen);
         setTitle(EXTRA_TITLE);
 
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_OTP);
+
         mUserOtpOne = (EditText) findViewById(R.id.user_otp_first_edit_text);
         mUserOtpTwo = (EditText) findViewById(R.id.user_otp_second_edit_text);
         mUserOtpThree = (EditText) findViewById(R.id.user_otp_third_edit_text);
@@ -135,6 +136,9 @@ public class OtpScreen extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 resendOtp();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_OTP, Constants.GA_ACTION_RESEND_OTP);
             }
         });
 
@@ -196,6 +200,9 @@ public class OtpScreen extends TruJobsBaseActivity {
         addPasswordBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 checkOtp();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_OTP, Constants.GA_ACTION_CHECK_OTP_AND_PROCEED);
             }
         });
     }

@@ -46,6 +46,7 @@ import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.Helper.LatLngAPIHelper;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -141,6 +142,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
 
         pd = CustomProgressDialog.get(HomeLocality.this);
 
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_HOME_LOCALITY);
+
         mFetchAddressButton = (Button) findViewById(R.id.current_loc);
         mSaveHomeLocality = (Button) findViewById(R.id.saveHomeLocality);
         activateOrDeactivateSubmitButton(false);
@@ -169,6 +173,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 triggerPlaceIdToLocalityResolver(mPlaceId);
                 showProgressBar = false;
                 updateUIWidgets();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_HOME_LOCALITY, Constants.GA_ACTION_HOME_LOCALITY_SELECTED);
             }
         });
 
@@ -180,6 +187,9 @@ public class HomeLocality extends TruJobsBaseActivity implements
                 mSearchHomeLocalityTxtView.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(mSearchHomeLocalityTxtView, InputMethodManager.SHOW_IMPLICIT);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_HOME_LOCALITY, Constants.GA_ACTION_CLEAR_HOME_LOCALITY);
             }
         });
 
@@ -187,12 +197,18 @@ public class HomeLocality extends TruJobsBaseActivity implements
             @Override
             public void onClick(View view) {
                 saveHomeLocality(view);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_HOME_LOCALITY, Constants.GA_ACTION_SAVE_HOME_LOCALITY);
             }
         });
         mFetchAddressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fetchAddressButtonHandler(view);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_HOME_LOCALITY, Constants.GA_ACTION_DETECT_HOME_LOCALITY);
             }
         });
         updateUIWidgets();

@@ -23,6 +23,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.JobPostAdapter;
+import in.trujobs.dev.trudroid.CandidateProfileActivity;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -111,6 +112,9 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             layoutParams.setMargins(0, result, 0, 0);
             filterContainer.setLayoutParams(layoutParams);
         }
+
+        // track screen view
+        ((SearchJobsActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_VIEW_FILTER);
 
         /* Sort by */
         ftrSortBySalary = (LinearLayout) jobFilterRootView.findViewById(R.id.ftr_sort_by_salary);
@@ -405,15 +409,24 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                     mJobSearchAsyncTask.execute(jobSearchRequest.build());
                     SearchJobsActivity.jobFilterRequestBkp = jobFilterRequest;
                 }
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_APPLY_FILTER);
                 break;
             case R.id.ftr_clear_all:
                 shouldClear = true;
                 resetFragmentUI();
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_CLEAR_FILTER);
                 break;
 
             case R.id.close_filter:
                 shouldClear = false;
                 getActivity().getSupportFragmentManager().popBackStack();
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_CLOSE_FILTER);
                 break;
             default:
                 break;
@@ -447,18 +460,33 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             if(shouldEnable && id == R.id.ftr_salary_eight_k_plus ){
                 ftrSalaryEightKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryEightKPlus.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SALARY_8K_PLUS);
             } else if(shouldEnable && id == R.id.ftr_salary_ten_k_plus ){
                 ftrSalaryTenKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryTenKPlus.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SALARY_10K_PLUS);
             } else if(shouldEnable && id == R.id.ftr_salary_twelve_k_plus ){
                 ftrSalaryTwelveKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryTwelveKPlus.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SALARY_12K_PLUS);
             } else if(shouldEnable && id == R.id.ftr_salary_fifteen_k_plus ){
                 ftrSalaryFifteenKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryFifteenKPlus.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SALARY_15K_PLUS);
             } else if(shouldEnable && id == R.id.ftr_salary_twenty_k_plus ){
                 ftrSalaryTwentyKPlus.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrSalaryTwentyKPlus.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SALARY_20K_PLUS);
             }
         }
     }
@@ -479,18 +507,33 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             if(shouldEnable && id == R.id.ftr_edu_lt_ten){
                 ftrEduLtTen.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduLtTen.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_EDU_LT_TEN);
             } else if(shouldEnable && id == R.id.ftr_edu_ten_pass){
                 ftrEduTenPass.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduTenPass.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_EDU_TEN_PASS);
             } else if(shouldEnable && id == R.id.ftr_edu_twelve_pass){
                 ftrEduTwelvePass.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduTwelvePass.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_EDU_TWELVE_PASS);
             } else if(shouldEnable && id == R.id.ftr_edu_ug){
                 ftrEduUg.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduUg.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_EDU_UG);
             } else if(shouldEnable && id == R.id.ftr_edu_pg){
                 ftrEduPg.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrEduPg.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_EDU_PG);
             }
         }
     }
@@ -505,9 +548,15 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             if(shouldEnable && id == R.id.ftr_experience_fresher){
                 ftrExperienceFresher.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrExperienceFresher.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SORT_BY_EXP_FRESHER);
             } else if(shouldEnable &&  id == R.id.ftr_experience_experienced){
                 ftrExperienceExperienced.setBackgroundResource(R.drawable.rounded_corner_button);
                 ftrExperienceExperienced.setTextColor(Color.parseColor("#ffffff"));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SORT_BY_EXP_EXPERIENCED);
             }
         }
     }
@@ -522,9 +571,15 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
             if(shouldEnable && id == R.id.ftr_gender_male){
                 imgFilterByMale.setImageResource(R.drawable.male);
                 txtFilterByMale.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SORT_BY_GENDER_MALE);
             } else if(shouldEnable && id == R.id.ftr_gender_female){
                 imgFilterFemale.setImageResource(R.drawable.female);
                 txtFilterByFemale.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SORT_BY_GENDER_FEMALE);
             }
         }
     }
@@ -545,10 +600,16 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                 imgSortByDatePosted.setBackgroundResource(R.drawable.sort_by_circle_enable);
                 imgSortByDatePosted.setImageResource(R.drawable.latest);
                 txtSortByDatePosted.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SORT_BY_DATE_POSTED);
             } else if(shouldEnable && id == R.id.ftr_sort_by_salary){
                 imgSortBySalary.setBackgroundResource(R.drawable.sort_by_circle_enable);
                 imgSortBySalary.setImageResource(R.drawable.rupee);
                 txtSortBySalary.setTextColor(getResources().getColor(R.color.back_grey_light_item));
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_SORT_BY_SALARY);
             }
         }
     }

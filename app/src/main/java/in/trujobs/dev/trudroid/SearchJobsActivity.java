@@ -43,6 +43,7 @@ import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.FilterJobFragment;
 import in.trujobs.dev.trudroid.Util.Prefs;
@@ -114,6 +115,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         setSupportActionBar(toolbar);
         TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Search jobs");
+
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -206,6 +210,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     latLngOrPlaceIdRequest.setPlaceId(mSearchedPlaceId);
                 }
                 mLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_SEARCH_LOCATION);
             }
         });
 
@@ -225,6 +232,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
                 requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
                 requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_POST_LOGIN_APPLY_TO_JOBS);
 
                 mJobPostAsyncTask = new JobPostDetailAsyncTask();
                 mJobPostAsyncTask.execute(requestBuilder.build());
@@ -292,17 +302,26 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         dialog.dismiss();
                         Prefs.jobToApplyStatus.put(0);
                         Prefs.getJobToApplyJobId.put(0L);
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
                     }
                 });
                 applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
                     }
                 });
                 applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         preScreenLocationIndex = which;
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
                     }
                 });
                 final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
@@ -358,17 +377,36 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     Prefs.clearPrefValues();
                     Toast.makeText(SearchJobsActivity.this, "Logout Successful",
                             Toast.LENGTH_LONG).show();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_LOGGED_OUT);
                 }
-                openItem(WelcomeScreen.class); break;
+                openItem(WelcomeScreen.class);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_PROCEED_TO_WELCOME);
+
+                break;
             case 1: break;
 
-            case 2: openItem(CandidateProfileActivity.class); break;
+            case 2: openItem(CandidateProfileActivity.class);
 
-            case 3: openItem(MyAppliedJobs.class); break;
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_CANDIDATE_PROFILE);
+                break;
+
+            case 3: openItem(MyAppliedJobs.class);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_APPLIED_JOBS);
+                break;
 
             case 4: openItem(HomeLocality.class); break;
 
-            case 5: openItem(ReferFriends.class); break;
+            case 5: openItem(ReferFriends.class);
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_REFER_FRIEND);
+                break;
 
             default:
                 break;
@@ -392,11 +430,17 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             if(Util.isLoggedIn()){
                 if (doubleBackToExitPressedOnce) {
                     super.onBackPressed();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EXIT);
                     return;
                 }
 
                 this.doubleBackToExitPressedOnce = true;
                 showToast("Please press back again to exit");
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_EXIT);
 
                 new Handler().postDelayed(new Runnable() {
 
@@ -447,6 +491,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                             .addToBackStack(null)
                             .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                             .add(R.id.overlay_job_filter_fragment_container, filterJobFragment).commit();
+
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_FILTER);
                 }
                 break;
             case R.id.fab:
@@ -457,13 +505,22 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mAlertAsyncTask = new FetchAlertAsyncTask();
 
                 mAlertAsyncTask.execute(requestBuilder.build());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_ALERT);
                 break;
             case R.id.search_jobs_by_job_role:
                 showJobRolesAlertUI(jobRoleObjectList);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SEARCH_BY_JOB_ROLE);
                 break;
 
             case R.id.edit_job_roles_filter:
                 showJobRolesAlertUI(jobRoleObjectList);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_FILTER);
                 break;
 
             case R.id.clear_location_filter:
@@ -484,12 +541,18 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchJobAcTxtView.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CLEAR_LOCATION);
                 break;
 
             case R.id.search_jobs_by_place:
                 mSearchJobAcTxtView.requestFocus();
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EDIT_LOCATION);
                 break;
 
             default:
@@ -862,6 +925,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 return false;
             }
         });
+
         searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 /* if not selected any job roles then don't do anything*/
@@ -870,6 +934,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 }
                 mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
                 searchJobsByJobRole();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SEARCH_BY_JOB_ROLE);
             }
         });
         searchByJobRoleBuilder.setNeutralButton("Clear All", null);
@@ -892,6 +959,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     selectedJobRoleList.remove(jobRoleIdList.get(which));
                 }
                 Tlog.i("Total SelectedJobRoleSize:" + selectedJobRoleList.size());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTION_IN_SEARCH_BY_JOB_ROLE);
             }
         });
         final AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
@@ -913,7 +983,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         for(int which=0; which<checkedItems.length; which++){
                             ((AlertDialog) dialog).getListView().setItemChecked(which, false);
                         }
+
                         //Dismiss once everything is OK.
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CLEAR_JOB_ROLES);
                     }
                 });
             }

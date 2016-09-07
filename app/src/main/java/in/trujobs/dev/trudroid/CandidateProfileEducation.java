@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -70,6 +71,9 @@ public class CandidateProfileEducation extends Fragment {
         ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
         ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // track screen view
+        ((CandidateProfileActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PROFILE);
 
         educationStatus = (LinearLayout) view.findViewById(R.id.education_status_layout);
         qualificationLayout = (LinearLayout) view.findViewById(R.id.qualification_layout);
@@ -320,6 +324,10 @@ public class CandidateProfileEducation extends Fragment {
                             }
 
                             if(check){
+
+                                //Track this action
+                                ((CandidateProfileActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PROFILE, Constants.GA_ACTION_SAVE_EDUCATION_PROFILE);
+
                                 UpdateCandidateEducationProfileRequest.Builder educationBuilder = UpdateCandidateEducationProfileRequest.newBuilder();
                                 educationBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                                 educationBuilder.setCandidateEducationLevel(qualificationSelected);

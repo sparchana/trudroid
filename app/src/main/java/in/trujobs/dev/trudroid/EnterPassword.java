@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -41,11 +42,17 @@ public class EnterPassword extends TruJobsBaseActivity {
         setTitle(EXTRA_TITLE);
         Button mAddPasswordBtn = (Button) findViewById(R.id.add_new_password_btn);
 
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_ENTER_PASSWORD);
+
         pd = CustomProgressDialog.get(EnterPassword.this);
         mAddPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 performSavePassword();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_ENTER_PASSWORD, Constants.GA_ACTION_SAVE_PASSWORD);
             }
         });
 

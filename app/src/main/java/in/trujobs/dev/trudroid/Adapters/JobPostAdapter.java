@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.dev.trudroid.SearchJobsActivity;
+import in.trujobs.dev.trudroid.Trudroid;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -179,6 +182,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     }
                     ViewDialog alert = new ViewDialog();
                     alert.showDialog(getContext(), jobPost.getJobPostCompanyName() + "'s " + jobPost.getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, -1);
+
+
                 }
             });
         }
@@ -193,6 +198,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
                 JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
+
             }
         });
 
@@ -202,6 +208,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 applyingJobButton = holder.mApplyBtnBackground;
                 applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
+
+
             }
         });
 
@@ -234,17 +242,22 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 public void onClick(DialogInterface dialog, int which) {
                     applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex], null);
                     dialog.dismiss();
+
+
                 }
             });
             applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+
                 }
             });
             applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     preScreenLocationIndex = which;
+
+
                 }
             });
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
