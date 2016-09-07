@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.Trudroid;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -109,7 +107,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                             Toast.LENGTH_LONG).show();
                 }
                 //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_JOB_APPLIED_STATUS);
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_APPLIED_STATUS);
             }
         });
 
@@ -189,7 +187,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
 
                     //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_SHOW_ALL_JOB_POST_LOCATION);
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SHOW_ALL_JOB_POST_LOCATION);
                 }
             });
         }
@@ -206,7 +204,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
 
                 //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_SHOW_JOB_POST_DETAIL);
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SHOW_JOB_POST_DETAIL);
             }
         });
 
@@ -218,7 +216,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 showJobLocality(jobPost);
 
                 //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_TRIED_TO_APPLY_FOR_JOB);
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_TO_APPLY_FOR_JOB);
 
             }
         });
@@ -254,7 +252,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     dialog.dismiss();
 
                     //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_APPLY_TO_JOB);
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
 
                 }
             });
@@ -263,7 +261,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     dialog.dismiss();
 
                     //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
                 }
             });
             applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
@@ -273,7 +271,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
 
                     //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
                 }
             });
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();

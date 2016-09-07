@@ -54,7 +54,7 @@ public class Constants {
     public static final String GA_ACTION_TRIED_TO_APPLY_FOR_JOB = "TRIED_TO_APPLY_FOR_JOB";
     public static final String GA_ACTION_CANCEL_APPLY_TO_JOB = "CANCEL_APPLY_TO_JOB";
     public static final String GA_ACTION_SELECTED_JOB_LOCATION = "SELECTED_JOB_LOCATION";
-    public static final String GA_SCREEN_NAME_SEARCH = "SEARCH";
+    public static final String GA_SCREEN_NAME_SEARCH_JOBS = "SEARCH";
     public static final String GA_ACTION_JOB_APPLIED_STATUS = "JOB_APPLIED_STATUS";
     public static final String GA_ACTION_SHOW_JOB_POST_DETAIL = "SHOW_JOB_POST_DETAIL";
     public static final String GA_SCREEN_NAME_JOB_PREFERENCE = "JOB_PREFERENCE";
@@ -69,5 +69,17 @@ public class Constants {
     public static final String GA_SCREEN_NAME_OTP = "OTP_SCREEN";
     public static final String GA_ACTION_CHECK_OTP_AND_PROCEED = "CHECK_OTP_AND_PROCEED";
     public static final String GA_ACTION_RESEND_OTP = "RESEND_OTP";
+    public static final String GA_SCREEN_NAME_REFER_FRIEND = "REFER_FRIEND";
+    public static final String GA_ACTION_REFER_VIA_WHATSAPP = "REFER_VIA_WHATSAPP";
+    public static final String GA_ACTION_REFER_VIA_SMS = "REFER_VIA_SMS";
+    public static final String GA_ACTION_SELECTED_SEARCH_LOCATION = "SELECTED_SEARCH_LOCATION";
+    public static final String GA_SCREEN_NAME_DRAWER = "DRAWER";
+    public static final String GA_ACTION_EXIT = "EXIT";
+    public static final String GA_ACTION_TRIED_EXIT = "TRIED_EXIT";
+    public static final String GA_ACTION_JOB_FILTER = "JOB_FILTER";
+    public static final String GA_ACTION_SEARCH_BY_JOB_ROLE = "SEARCH_BY_JOB_ROLE";
+    public static final String GA_ACTION_SELECTION_IN_SEARCH_BY_JOB_ROLE = "SELECTION_IN_SEARCH_BY_JOB_ROLE";
+    public static final String GA_ACTION_CLEAR_JOB_ROLES = "CLEAR_JOB_ROLES";
+    public static final String GA_SCREEN_NAME_SPLASHSCREEN = "SPLASHSCREEN";
 }
 

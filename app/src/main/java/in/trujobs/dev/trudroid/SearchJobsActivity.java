@@ -43,6 +43,7 @@ import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.FilterJobFragment;
 import in.trujobs.dev.trudroid.Util.Prefs;
@@ -114,6 +115,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         setSupportActionBar(toolbar);
         TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Search jobs");
+
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -206,6 +210,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     latLngOrPlaceIdRequest.setPlaceId(mSearchedPlaceId);
                 }
                 mLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_SEARCH_LOCATION);
             }
         });
 
@@ -363,7 +370,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change); break;
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+
+                break;
             case 1: break;
 
             case 2: intent = new Intent(SearchJobsActivity.this, CandidateProfileActivity.class);
@@ -404,11 +413,17 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             if(Util.isLoggedIn()){
                 if (doubleBackToExitPressedOnce) {
                     super.onBackPressed();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EXIT);
                     return;
                 }
 
                 this.doubleBackToExitPressedOnce = true;
                 showToast("Please press back again to exit");
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_EXIT);
 
                 new Handler().postDelayed(new Runnable() {
 
@@ -444,6 +459,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                             .addToBackStack(null)
                             .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                             .add(R.id.overlay_job_filter_fragment_container, filterJobFragment).commit();
+
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_FILTER);
                 }
                 break;
             case R.id.fab:
@@ -859,6 +878,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 return false;
             }
         });
+
         searchByJobRoleBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 /* if not selected any job roles then don't do anything*/
@@ -867,6 +887,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 }
                 mSelectedJobsName.addAll(setSelectedJobRolesNameTxtView());
                 searchJobsByJobRole();
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SEARCH_BY_JOB_ROLE);
             }
         });
         searchByJobRoleBuilder.setNeutralButton("Clear All", null);
@@ -889,6 +912,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     selectedJobRoleList.remove(jobRoleIdList.get(which));
                 }
                 Tlog.i("Total SelectedJobRoleSize:" + selectedJobRoleList.size());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTION_IN_SEARCH_BY_JOB_ROLE);
             }
         });
         final AlertDialog searchByJobRoleDialog = searchByJobRoleBuilder.create();
@@ -910,7 +936,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         for(int which=0; which<checkedItems.length; which++){
                             ((AlertDialog) dialog).getListView().setItemChecked(which, false);
                         }
+
                         //Dismiss once everything is OK.
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CLEAR_JOB_ROLES);
                     }
                 });
             }

@@ -8,9 +8,10 @@ import android.view.View;
 import android.widget.Button;
 
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 
-public class ReferFriends extends AppCompatActivity {
+public class ReferFriends extends TruJobsBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,9 @@ public class ReferFriends extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Refer to Friends");
+
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_REFER_FRIEND);
 
         ViewDialog alert = new ViewDialog();
         alert.showDialog(ReferFriends.this, MessageConstants.REFER_MESSAGE, MessageConstants.REFER_SUB_MESSAGE, "", R.drawable.refer, 3);
@@ -33,6 +37,9 @@ public class ReferFriends extends AppCompatActivity {
                 intent.setPackage("com.whatsapp");
                 intent.putExtra(Intent.EXTRA_TEXT, MessageConstants.REFER_MESSAGE_TEXT);
                 startActivity(intent);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_REFER_FRIEND, Constants.GA_ACTION_REFER_VIA_WHATSAPP);
             }
         });
 
@@ -43,6 +50,9 @@ public class ReferFriends extends AppCompatActivity {
                 smsIntent.setType("vnd.android-dir/mms-sms");
                 smsIntent.putExtra("sms_body",MessageConstants.REFER_MESSAGE_TEXT);
                 startActivity(smsIntent);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_REFER_FRIEND, Constants.GA_ACTION_REFER_VIA_SMS);
             }
         });
 
