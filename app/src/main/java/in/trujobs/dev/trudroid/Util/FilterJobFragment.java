@@ -409,15 +409,24 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
                     mJobSearchAsyncTask.execute(jobSearchRequest.build());
                     SearchJobsActivity.jobFilterRequestBkp = jobFilterRequest;
                 }
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_APPLY_FILTER);
                 break;
             case R.id.ftr_clear_all:
                 shouldClear = true;
                 resetFragmentUI();
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_CLEAR_FILTER);
                 break;
 
             case R.id.close_filter:
                 shouldClear = false;
                 getActivity().getSupportFragmentManager().popBackStack();
+
+                //Track this action
+                ((SearchJobsActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_FILTER, Constants.GA_ACTION_CLOSE_FILTER);
                 break;
             default:
                 break;

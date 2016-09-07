@@ -505,13 +505,22 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mAlertAsyncTask = new FetchAlertAsyncTask();
 
                 mAlertAsyncTask.execute(requestBuilder.build());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_ALERT);
                 break;
             case R.id.search_jobs_by_job_role:
                 showJobRolesAlertUI(jobRoleObjectList);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SEARCH_BY_JOB_ROLE);
                 break;
 
             case R.id.edit_job_roles_filter:
                 showJobRolesAlertUI(jobRoleObjectList);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_FILTER);
                 break;
 
             case R.id.clear_location_filter:
@@ -532,12 +541,18 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 mSearchJobAcTxtView.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CLEAR_LOCATION);
                 break;
 
             case R.id.search_jobs_by_place:
                 mSearchJobAcTxtView.requestFocus();
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(mSearchJobAcTxtView, InputMethodManager.SHOW_IMPLICIT);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EDIT_LOCATION);
                 break;
 
             default:

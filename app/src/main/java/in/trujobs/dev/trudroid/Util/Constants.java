@@ -104,5 +104,11 @@ public class Constants {
     public static final String GA_ACTION_SALARY_12K_PLUS= "SALARY_12K_PLUS";
     public static final String GA_ACTION_SALARY_15K_PLUS= "SALARY_15K_PLUS";
     public static final String GA_ACTION_SALARY_20K_PLUS= "SALARY_20K_PLUS";
+    public static final String GA_ACTION_EDIT_LOCATION = "EDIT_LOCATION";
+    public static final String GA_ACTION_CLEAR_LOCATION = "CLEAR_LOCATION";
+    public static final String GA_ACTION_ALERT = "ALERT";
+    public static final String GA_ACTION_APPLY_FILTER = "APPLY_FILTER";
+    public static final String GA_ACTION_CLEAR_FILTER = "CLEAR_FILTER";
+    public static final String GA_ACTION_CLOSE_FILTER = "CLOSE_FILTER";
 }
 

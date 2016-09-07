@@ -106,8 +106,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     Toast.makeText(getContext(), "You have not applied to this job",
                             Toast.LENGTH_LONG).show();
                 }
-                //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_APPLIED_STATUS);
             }
         });
 
@@ -186,8 +184,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     alert.showDialog(getContext(), jobPost.getJobPostCompanyName() + "'s " + jobPost.getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, -1);
 
 
-                    //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SHOW_ALL_JOB_POST_LOCATION);
                 }
             });
         }
@@ -203,8 +199,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
                 JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
 
-                //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SHOW_JOB_POST_DETAIL);
             }
         });
 
@@ -215,8 +209,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
 
-                //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_TO_APPLY_FOR_JOB);
 
             }
         });
@@ -251,8 +243,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex], null);
                     dialog.dismiss();
 
-                    //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
 
                 }
             });
@@ -260,8 +250,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
 
-                    //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
                 }
             });
             applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
@@ -270,8 +258,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     preScreenLocationIndex = which;
 
 
-                    //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
                 }
             });
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
@@ -363,32 +349,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact our servers", "",  R.drawable.sent, 0);
             }
         }
-    }
-
-    /* Analytics params and methods */
-    private Tracker mTracker;
-
-    public void addScreenViewGA(String screenName) {
-
-        Trudroid application = (Trudroid) getContext();
-        mTracker = application.getDefaultTracker();
-
-        mTracker.setScreenName(screenName);
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    public void addActionGA(String screenName, String actionName) {
-
-        // Obtain the shared Tracker instance.
-        Trudroid application = (Trudroid) getContext();
-        mTracker = application.getDefaultTracker();
-
-        // Track this action
-        mTracker.setScreenName(screenName);
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction(actionName)
-                .build());
     }
 
 }
