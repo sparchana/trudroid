@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -23,6 +26,8 @@ import java.util.List;
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
+import in.trujobs.dev.trudroid.Trudroid;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -103,6 +108,8 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     Toast.makeText(getContext(), "You have not applied to this job",
                             Toast.LENGTH_LONG).show();
                 }
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_JOB_APPLIED_STATUS);
             }
         });
 
@@ -179,6 +186,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     }
                     ViewDialog alert = new ViewDialog();
                     alert.showDialog(getContext(), jobPost.getJobPostCompanyName() + "'s " + jobPost.getJobPostTitle() + " job locations:", allLocalities , "", R.drawable.location_round, -1);
+
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_SHOW_ALL_JOB_POST_LOCATION);
                 }
             });
         }
@@ -193,6 +204,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
                 JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_SHOW_JOB_POST_DETAIL);
             }
         });
 
@@ -202,6 +216,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 applyingJobButton = holder.mApplyBtnBackground;
                 applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_TRIED_TO_APPLY_FOR_JOB);
+
             }
         });
 
@@ -234,17 +252,28 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 public void onClick(DialogInterface dialog, int which) {
                     applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex], null);
                     dialog.dismiss();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_APPLY_TO_JOB);
+
                 }
             });
             applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
                 }
             });
             applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     preScreenLocationIndex = which;
+
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
                 }
             });
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
@@ -336,6 +365,32 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact our servers", "",  R.drawable.sent, 0);
             }
         }
+    }
+
+    /* Analytics params and methods */
+    private Tracker mTracker;
+
+    public void addScreenViewGA(String screenName) {
+
+        Trudroid application = (Trudroid) getContext();
+        mTracker = application.getDefaultTracker();
+
+        mTracker.setScreenName(screenName);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    public void addActionGA(String screenName, String actionName) {
+
+        // Obtain the shared Tracker instance.
+        Trudroid application = (Trudroid) getContext();
+        mTracker = application.getDefaultTracker();
+
+        // Track this action
+        mTracker.setScreenName(screenName);
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction(actionName)
+                .build());
     }
 
 }

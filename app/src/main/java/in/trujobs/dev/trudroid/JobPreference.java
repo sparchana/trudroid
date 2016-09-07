@@ -24,6 +24,7 @@ import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.JobRoleAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -63,6 +64,9 @@ public class JobPreference extends TruJobsBaseActivity {
         jobPrefOptionTwo = false;
         jobPrefOptionThree = false;
 
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE);
+
         jobPrefRemoveOne = (ImageView) findViewById(R.id.job_pref_one_remove);
         jobPrefRemoveTwo = (ImageView) findViewById(R.id.job_pref_two_remove);
         jobPrefRemoveThree = (ImageView) findViewById(R.id.job_pref_three_remove);
@@ -74,6 +78,9 @@ public class JobPreference extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 removeJobPref(1);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE, Constants.GA_ACTION_REMOVE_1ST_JOB_PREFERENCE);
             }
         });
 
@@ -81,6 +88,9 @@ public class JobPreference extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 removeJobPref(2);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE, Constants.GA_ACTION_REMOVE_2ND_JOB_PREFERENCE);
             }
         });
 
@@ -88,6 +98,9 @@ public class JobPreference extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 removeJobPref(3);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE, Constants.GA_ACTION_REMOVE_3RD_JOB_PREFERENCE);
             }
         });
 
@@ -128,6 +141,9 @@ public class JobPreference extends TruJobsBaseActivity {
             public void onClick(View view) {
                 if(jobPrefOptionOne){
                     saveJobPreferences();
+
+                    //Track this action
+                    addActionGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE, Constants.GA_ACTION_SAVE_JOB_PREFERENCE);
                 } else{
                     Toast.makeText(JobPreference.this, "Please select 1st Job Preference to continue",
                             Toast.LENGTH_LONG).show();
@@ -182,6 +198,10 @@ public class JobPreference extends TruJobsBaseActivity {
             }
         }
         if(check == 1){
+
+            //Track this action
+            addActionGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE, Constants.GA_ACTION_FETCH_ALL_JOB_ROLES);
+
             jobPrefImageView.setVisibility(View.GONE);
             mAsyncTask = new JobRoleAsyncTask();
             mAsyncTask.execute();

@@ -44,6 +44,7 @@ import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -112,6 +113,9 @@ public class CandidateProfileBasic extends Fragment {
     View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // track screen view
+        ((CandidateProfileActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_BASIC_PROFILE);
 
         candidateProfileActivity = (CandidateProfileActivity) getActivity();
         view = inflater.inflate(R.layout.candidate_basic_profile, container, false);
@@ -472,6 +476,9 @@ public class CandidateProfileBasic extends Fragment {
                             }
 
                             if(check){
+                                //Track this action
+                                ((CandidateProfileActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_BASIC_PROFILE, Constants.GA_ACTION_SAVE_BASIC_PROFILE);
+
                                 //adding candidate's home locality
                                 triggerFinalSubmission();
 

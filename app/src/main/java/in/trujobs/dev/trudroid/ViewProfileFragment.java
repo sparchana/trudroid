@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -55,6 +56,9 @@ public class ViewProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.view_profile_fragment, container, false);
 
         FloatingActionButton editBtn = (FloatingActionButton) view.findViewById(R.id.edit_btn);
+
+        // track screen view
+        ((CandidateProfileActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_VIEW_PROFILE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
@@ -96,6 +100,9 @@ public class ViewProfileFragment extends Fragment {
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .add(R.id.main_profile, candidateProfileBasic).commit();
+
+                //Track this action
+                ((CandidateProfileActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_VIEW_PROFILE, Constants.GA_ACTION_EDIT_PROFILE);
             }
         });
 

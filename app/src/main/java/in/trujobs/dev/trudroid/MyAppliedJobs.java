@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import in.trujobs.dev.trudroid.Adapters.MyAppliedJobsAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -36,6 +37,9 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
         setContentView(R.layout.activity_my_applied_jobs);
 
         pd = CustomProgressDialog.get(MyAppliedJobs.this);
+
+        // Track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_APPLIED_JOBS);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("My Applied Jobs");
@@ -101,6 +105,9 @@ public class MyAppliedJobs extends TruJobsBaseActivity {
                                     new String[]{Manifest.permission.CALL_PHONE},
                                     PERMISSIONS_REQUEST_CALL_PHONE);
                         }
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_APPLIED_JOBS, Constants.GA_ACTION_CALL_TRUJOBS);
                         startActivity(callIntent);
                     }
                 });

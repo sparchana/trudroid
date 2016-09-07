@@ -77,6 +77,9 @@ public class Login extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+
+                // Track action
+                addActionGA(Constants.GA_SCREEN_NAME_LOGIN, Constants.GA_ACTION_BACKED_FROM_LOGIN);
             }
         });
 
@@ -84,14 +87,14 @@ public class Login extends TruJobsBaseActivity {
             @Override
             public void onClick(View view) {
                 performLogIn();
+
+                // Track action
+                addActionGA(Constants.GA_SCREEN_NAME_LOGIN, Constants.GA_ACTION_LOGIN);
             }
         });
     }
 
     private void performLogIn() {
-
-        // Track action
-        addActionGA(Constants.GA_SCREEN_NAME_LOGIN, Constants.GA_ACTION_LOGIN);
 
         mMobile = (EditText) findViewById(R.id.user_mobile_edit_text);
         mPassword = (EditText) findViewById(R.id.user_password_edit_text);
