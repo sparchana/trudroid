@@ -170,6 +170,10 @@ public class JobPreference extends TruJobsBaseActivity {
                 Intent intent = new Intent(JobPreference.this, WelcomeScreen.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_JOB_PREFERENCE, Constants.GA_ACTION_LOGGED_OUT);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
