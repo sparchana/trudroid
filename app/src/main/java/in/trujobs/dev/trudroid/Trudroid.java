@@ -3,6 +3,8 @@ package in.trujobs.dev.trudroid;
 import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
@@ -19,6 +21,8 @@ public class Trudroid extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         Prefs.File.init(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
     }
 
     /**

@@ -53,6 +53,11 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
 
     public void addScreenViewGA(String screenName) {
 
+        if (BuildConfig.DEBUG) {
+            // do nothing
+            return;
+        }
+
         Trudroid application = (Trudroid) getApplication();
         mTracker = application.getDefaultTracker();
 
@@ -62,6 +67,11 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
 
     public void addActionGA(String screenName, String actionName) {
 
+        if (BuildConfig.DEBUG) {
+            // do nothing
+            return;
+        }
+
         // Obtain the shared Tracker instance.
         Trudroid application = (Trudroid) getApplication();
         mTracker = application.getDefaultTracker();
@@ -69,7 +79,7 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
         // Track this action
         mTracker.setScreenName(screenName);
         mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
+                .setCategory("Android_App_Action")
                 .setAction(actionName)
                 .build());
     }
