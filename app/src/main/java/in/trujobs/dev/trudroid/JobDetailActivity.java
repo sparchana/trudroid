@@ -435,7 +435,9 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     List<JobPostObject> list = new ArrayList<JobPostObject>();
                                     list.add(getJobPostDetailsResponse.getJobPost());
-                                    JobPostAdapter jobPostAdapter = new JobPostAdapter(JobDetailActivity.this, list);
+                                    JobPostAdapter jobPostAdapter =
+                                            new JobPostAdapter(JobDetailActivity.this, list, -1);
+
                                     jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], jobTabApplyBtn);
                                     dialog.dismiss();
 

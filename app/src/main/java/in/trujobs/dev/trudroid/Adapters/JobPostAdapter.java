@@ -45,16 +45,22 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
     private AsyncTask<ApplyJobRequest, Void, ApplyJobResponse> mAsyncTask;
     int preScreenLocationIndex = 0;
+    int otherJobsSectionIndex = -1;
 
-    public JobPostAdapter(Activity context, List<JobPostObject> jobPostList) {
+    public JobPostAdapter(Activity context, List<JobPostObject> jobPostList, int externalJobSectionIndex) {
         super(context, 0, jobPostList);
+        otherJobsSectionIndex = externalJobSectionIndex;
     }
+
     public class Holder
     {
         TextView mJobPostTitleTextView, mJobPostCompanyTextView, mJobPostSalaryTextView, mJobPostExperienceTextView, mJobPostVacancyTextView, mJobPostLocationTextView, mJobPostPostedOnTextView;
         Button mApplyBtnBackground;
         ImageView mJobColor;
+        LinearLayout otherJobsHeader;
     }
+
+
     public Button applyingJobButton;
     public Button applyingJobButtonDetail;
     public ImageView applyingJobColor;
@@ -70,18 +76,26 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         }
 
         holder.mJobColor = (ImageView) rowView.findViewById(R.id.job_color);
-
         holder.mApplyBtnBackground = (Button) rowView.findViewById(R.id.apply_button_layout);
+        holder.otherJobsHeader = (LinearLayout) rowView.findViewById(R.id.other_jobs_result_start);
 
         pd = CustomProgressDialog.get(parent.getContext());
 
-        //presetting job card element as not applied
+        // presetting job card element as not applied
         holder.mJobColor.setImageResource(R.drawable.green_dot);
         holder.mApplyBtnBackground.setEnabled(true);
         holder.mApplyBtnBackground.setText("Apply");
         holder.mApplyBtnBackground.setBackgroundResource(R.drawable.rounded_corner_button);
 
-        if(jobPost.getIsApplied() == 1){
+        // by default we dont need to enable the header 'other jobs'
+        holder.otherJobsHeader.setVisibility(View.GONE);
+        // enable other jobs header only if this list view element corresponds to the the first
+        // element in other jobs list
+        if (position == otherJobsSectionIndex && otherJobsSectionIndex != -1) {
+            holder.otherJobsHeader.setVisibility(View.VISIBLE);
+        }
+
+        if(jobPost.getIsApplied() == 1) {
             holder.mJobColor.setImageResource(R.drawable.orange_dot);
             holder.mApplyBtnBackground.setEnabled(false);
             holder.mApplyBtnBackground.setText("Applied");
@@ -132,7 +146,13 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
         //set job post vacancy
         holder.mJobPostVacancyTextView = (TextView) rowView.findViewById(R.id.job_post_vacancy_text_view);
-        holder.mJobPostVacancyTextView.setText(jobPost.getVacancies() + " vacancies");
+
+        if (jobPost.getVacancies() != 0) {
+            holder.mJobPostVacancyTextView.setText(jobPost.getVacancies() + " vacancies");
+        }
+        else {
+            holder.mJobPostVacancyTextView.setText(" Vacancies not specified");
+        }
 
         //set Posted on
         holder.mJobPostPostedOnTextView = (TextView) rowView.findViewById(R.id.job_post_date);
@@ -208,8 +228,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 applyingJobButton = holder.mApplyBtnBackground;
                 applyingJobColor = holder.mJobColor;
                 showJobLocality(jobPost);
-
-
             }
         });
 

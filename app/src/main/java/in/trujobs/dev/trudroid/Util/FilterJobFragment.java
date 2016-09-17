@@ -720,28 +720,8 @@ public class FilterJobFragment extends Fragment implements OnClickListener {
         }
 
         private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
-            try{
-                jobPostListView = (ListView) getActivity().findViewById(R.id.jobs_list_view);
-                if (jobPostObjectList.size() > 0) {
-                    if(jobPostListView.getVisibility() == View.GONE){
-                        jobPostListView.setVisibility(View.VISIBLE);
-                    }
-                    Tlog.i(jobPostObjectList.size()+" jobs received");
-                    Tlog.i("DataSize: " + jobPostObjectList.size());
-                    JobPostAdapter jobPostAdapter = new JobPostAdapter(getActivity(), jobPostObjectList);
-                    jobPostListView.setAdapter(jobPostAdapter);
-                }else if(!Util.isConnectedToInternet(getContext())) {
-                    Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-                }  else {
-                    ImageView noJobsImageView = (ImageView) getActivity().findViewById(R.id.no_jobs_image);
-                    noJobsImageView.setVisibility(View.VISIBLE);
-                    jobPostListView.setVisibility(View.GONE);
 
-                    showToast("No jobs found !!");
-                }
-            } catch (NullPointerException np){
-                Tlog.e(""+np.getStackTrace());
-            }
+            ((SearchJobsActivity) getActivity()).updateJobPostUI(jobPostObjectList);
             getActivity().onBackPressed();
         }
 

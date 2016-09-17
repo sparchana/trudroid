@@ -101,6 +101,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     public BiMap<Integer, Long> biMap = null;
     public BiMap<Long, Integer> invBiMap = null;
     public CharSequence[] jobRoleNameList = null;
+    public int externalJobPostStartIndex = -1;
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -173,7 +174,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         mSearchJobsByJobRoleTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
         mSearchJobsByJobRoleTxtView.setOnClickListener(this);
 
-        /* Filter Actions */
+        // Filter Actions
         mSearchJobAcTxtView = (AutoCompleteTextView) findViewById(R.id.search_jobs_by_place);
         mSearchJobAcTxtView.setOnClickListener(this);
         mSearchJobAcTxtView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -190,14 +191,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         });
 
         //changing font from assets folder
-
         mSearchJobAcTxtView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.place_autocomplete_list_item));
         mSearchJobAcTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 // Get data associated with the specified position
                 // in the list (AdapterView)
-                //mAddressOutput = (String) parent.getItemAtPosition(position);
                 PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
                 mSearchAddressOutput = placeAPIHelper.getDescription();
                 mSearchedPlaceId = placeAPIHelper.getPlaceId();
@@ -222,6 +222,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             mSearchJobAcTxtView.setText(candidateLocalityName);
             mSearchAddressOutput = candidateLocalityName;
         }
+
         //getting all the job posts
         showJobPosts();
 
@@ -297,7 +298,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     public void onClick(DialogInterface dialog, int which) {
                         List<JobPostObject> list = new ArrayList<JobPostObject>();
                         list.add(getJobPostDetailsResponse.getJobPost());
-                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list);
+                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
                         jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
                         dialog.dismiss();
                         Prefs.jobToApplyStatus.put(0);
@@ -334,7 +335,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
         }
     }
-
 
     @Override
     protected void onDestroy() {
@@ -591,7 +591,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 Tlog.w("Null JobPosts Response");
                 return;
             } else{
-                updateJobPostUI(jobPostResponse.getJobPostList());
+                updateJobPostUISearch(jobPostResponse.getJobPostList());
             }
         }
     }
@@ -761,24 +761,66 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    private void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
+    public void updateJobPostUISearch(List<JobPostObject> jobPostObjectList) {
+        updateJobPostUI(jobPostObjectList);
+
+        //hiding keyboard
+        mSearchJobAcTxtView.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+    }
+
+    public void updateJobPostUI(List<JobPostObject> jobPostObjectList) {
         jobPostListView = (ListView) findViewById(R.id.jobs_list_view);
         ImageView noJobsImageView = (ImageView) findViewById(R.id.no_jobs_image);
 
-        Tlog.w("Job Search Response received...");
         if (jobPostObjectList.size() > 0) {
-            Tlog.i("DataSize: " + jobPostObjectList.size());
+
+            boolean isPopularJobAvailable = false;
+            externalJobPostStartIndex = -1;
+
+            // find out start index of external job posts and whether we have atleast one popular job
+            // IMP: This client assumes that the job posts are sorted from the server in the following manner:
+            // All internal jobs in given sort/filter order followed by all external jobs in given sort/filter order
+            for (int i = 0; i < jobPostObjectList.size(); i++) {
+                Tlog.i("source " + jobPostObjectList.get(i).getJobPostSource());
+                if (jobPostObjectList.get(i).getJobPostSource() != 0) {
+                    externalJobPostStartIndex = i;
+                    break;
+                }
+                else {
+                    isPopularJobAvailable = true;
+                }
+            }
+
+            // if atleast one popular jobs is found, add 'Popular Jobs' header
+            if(isPopularJobAvailable == true) {
+                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.no_popular_jobs));
+                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.start_of_result));
+                jobPostListView.addHeaderView(getLayoutInflater().inflate(R.layout.start_popular_jobs, null));
+            }
+            else {
+                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.no_popular_jobs));
+                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.start_of_result));
+                jobPostListView.addHeaderView(getLayoutInflater().inflate(R.layout.no_popular_jobs, null));
+            }
+
             //adding end of search result footer view
             if(jobPostListView.getFooterViewsCount() == 0){
                 jobPostListView.addFooterView(getLayoutInflater().inflate(R.layout.end_of_jobs, null));
             }
-            JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, jobPostObjectList);
+
+            JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this,
+                    jobPostObjectList, externalJobPostStartIndex);
+
             if(jobPostListView.getVisibility() == View.GONE
                     || jobPostListView.getVisibility() == View.INVISIBLE){
                 jobPostListView.setVisibility(View.VISIBLE);
             }
+
             jobPostListView.setAdapter(jobPostAdapter);
             noJobsImageView.setVisibility(View.GONE);
+
         } else if(!Util.isConnectedToInternet(getApplicationContext())) {
             Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
         }  else {
@@ -787,16 +829,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             noJobsImageView.setVisibility(View.VISIBLE);
             showToast("No jobs found !!");
         }
-        //hiding keyboard
-        mSearchJobAcTxtView.clearFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
     }
 
     private void initJobRoleVars() {
         if(biMap == null) {
             biMap = HashBiMap.create();
         }
+
         jobRoleIdList = new ArrayList<>();
         selectedJobRoleList = new ArrayList<>();
         jobRoleNameList = new CharSequence[jobRoleObjectList.size()];
