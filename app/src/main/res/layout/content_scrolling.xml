@@ -525,7 +525,7 @@
                                 android:layout_marginLeft="34dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Location Preference(s)"
+                                android:text="Preferred Job Shift"
                                 android:textSize="@dimen/label_size" />
                         </LinearLayout>
                     </LinearLayout>
@@ -573,13 +573,13 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:padding="2dp"
-                                    android:src="@drawable/location_sharp"/>
+                                    android:src="@drawable/clock"/>
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
                                 <TextView
-                                    android:id="@+id/candidate_locality_pref"
+                                    android:id="@+id/candidate_job_time_shift"
                                     android:layout_marginLeft="2dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -598,56 +598,6 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginRight="8dp"
                             android:background="@color/back_grey" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.5">
-                            <TextView
-                                android:layout_marginTop="10dp"
-                                android:layout_marginLeft="34dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="@dimen/label_size"
-                                android:text="Preferred Job Shift" />
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingBottom="10dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.5"
-                            android:orientation="horizontal">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="13dp">
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:padding="2dp"
-                                    android:src="@drawable/clock"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-                                <TextView
-                                    android:id="@+id/candidate_job_time_shift"
-                                    android:layout_marginLeft="2dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="#515151"
-                                    android:textSize="@dimen/main_size" />
-                            </LinearLayout>
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
                 <!--Job Education Container-->

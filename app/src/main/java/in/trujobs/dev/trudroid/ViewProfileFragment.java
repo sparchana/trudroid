@@ -244,8 +244,6 @@ public class ViewProfileFragment extends Fragment {
                     //pref
                     TextView candidateJobPref = (TextView) view.findViewById(R.id.candidate_job_pref);
 
-                    TextView candidateLocalityPref = (TextView) view.findViewById(R.id.candidate_locality_pref);
-
                     TextView candidateShiftPref = (TextView) view.findViewById(R.id.candidate_job_time_shift);
 
                     //education
@@ -379,21 +377,6 @@ public class ViewProfileFragment extends Fragment {
                         candidateJobPref.setText(jobRolePref);
                     } else{
                         candidateJobPref.setText("Not Specified");
-                    }
-
-                    String localityPref = "";
-                    List<LocalityObject> localityObjectsList = getCandidateInformationResponse.getCandidate().getCandidateLocationPrefList();
-                    if(localityObjectsList.size() > 0){
-                        for(int i=0; i<localityObjectsList.size(); i++){
-                            localityPref += localityObjectsList.get(i).getLocalityName();
-
-                            if(i != (localityObjectsList.size() - 1)){
-                                localityPref += ", ";
-                            }
-                        }
-                        candidateLocalityPref.setText(localityPref);
-                    } else{
-                        candidateLocalityPref.setText("Not Specified");
                     }
 
                     if(getCandidateInformationResponse.getCandidate().getCandidateTimeShiftPref().getTimeShiftName() != ""){
