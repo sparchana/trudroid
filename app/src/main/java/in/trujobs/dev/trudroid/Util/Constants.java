@@ -27,6 +27,8 @@ public class Constants {
     public static final String GA_ACTION_SIGNUP_FROM_WELCOME = "SIGNUP_FROM_WELCOME";
     public static final String GA_ACTION_SIGNUP = "SIGNUP";
     public static final String GA_ACTION_LOGIN = "LOGIN";
+    public static final String GA_ACTION_DEEPLINK = "DEEPLINK";
+
 
     public static final String GA_SCREEN_NAME_VIEW_PROFILE = "VIEW_PROFILE";
     public static final String GA_ACTION_EDIT_PROFILE = "EDIT_PROFILE";

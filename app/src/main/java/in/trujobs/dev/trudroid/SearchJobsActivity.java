@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -104,6 +105,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     public int externalJobPostStartIndex = -1;
 
     boolean doubleBackToExitPressedOnce = false;
+    Long jobRoleIdFromHttpIntent;
 
     TextView selectedJobRolesNameTxtView;
     public static ImageView btnFilterJob;
@@ -112,13 +114,58 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job);
+        // track screen view
+        addScreenViewGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS);
+
+        if (getIntent() != null) {
+            onNewIntent(getIntent());
+        }
+        else {
+            initializeAndStartSearch();
+        }
+    }
+
+    private void initializeAndStartSearch() {
+
+        // Set views and elements
+        setViewElements();
+
+        selectedJobRolesNameTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
+
+        // set listeners
+        setListeners();
+
+        // fetch data for jobroles filter
+        fetchAllJobRoles();
+
+        // initialize locality text view listeners
+        initializeLocalityTextView();
+
+        //getting all matching job posts
+        showJobPosts();
+
+        //post login/signup apply
+        if(Util.isLoggedIn()){
+            if(Prefs.jobToApplyStatus.get() == 1L){
+                //apply to the job
+                GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
+                requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
+                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_POST_LOGIN_APPLY_TO_JOBS);
+
+                mJobPostAsyncTask = new JobPostDetailAsyncTask();
+                mJobPostAsyncTask.execute(requestBuilder.build());
+            }
+        }
+    }
+
+    private void setViewElements() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Search jobs");
-
-        // track screen view
-        addScreenViewGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -152,10 +199,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
         });
 
-        selectedJobRolesNameTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
-
         pd = CustomProgressDialog.get(SearchJobsActivity.this);
+    }
 
+    private void setListeners() {
         //filter_selected button
         btnFilterJob = (ImageView) findViewById(R.id.btn_job_filter);
         btnFilterJob.setOnClickListener(this);
@@ -168,13 +215,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         ImageView clearLocationFilter = (ImageView) findViewById(R.id.clear_location_filter);
         clearLocationFilter.setOnClickListener(this);
 
-        JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
-        fetchAllJobs.execute();
-
         mSearchJobsByJobRoleTxtView = (TextView) findViewById(R.id.search_jobs_by_job_role);
         mSearchJobsByJobRoleTxtView.setOnClickListener(this);
+    }
 
-        // Filter Actions
+    private void fetchAllJobRoles() {
+        JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
+        fetchAllJobs.execute();
+    }
+
+    private void initializeLocalityTextView() {
         mSearchJobAcTxtView = (AutoCompleteTextView) findViewById(R.id.search_jobs_by_place);
         mSearchJobAcTxtView.setOnClickListener(this);
         mSearchJobAcTxtView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -190,7 +240,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
         });
 
-        //changing font from assets folder
         mSearchJobAcTxtView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.place_autocomplete_list_item));
         mSearchJobAcTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -221,25 +270,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             /* TODO: Find a way to make this independent of states */
             mSearchJobAcTxtView.setText(candidateLocalityName);
             mSearchAddressOutput = candidateLocalityName;
-        }
-
-        //getting all the job posts
-        showJobPosts();
-
-        //post login/signup apply
-        if(Util.isLoggedIn()){
-            if(Prefs.jobToApplyStatus.get() == 1L){
-                //apply to the job
-                GetJobPostDetailsRequest.Builder requestBuilder = GetJobPostDetailsRequest.newBuilder();
-                requestBuilder.setJobPostId(Prefs.getJobToApplyJobId.get());
-                requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-
-                //Track this action
-                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_POST_LOGIN_APPLY_TO_JOBS);
-
-                mJobPostAsyncTask = new JobPostDetailAsyncTask();
-                mJobPostAsyncTask.execute(requestBuilder.build());
-            }
         }
     }
 
@@ -575,6 +605,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
+
             if(jobPostListView != null) {
                 jobPostListView.clearChoices();
             }
@@ -607,15 +638,19 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
             super.onPostExecute(localityObjectResponse);
             mSearchJobAcTxtView.clearFocus();
+
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
             if(localityObjectResponse!=null){
                 if (localityObjectResponse.getStatus() == LocalityObjectResponse.Status.SUCCESS
-                        && localityObjectResponse.getType() == LocalityObjectResponse.Type.FOR_PLACEID) {
+                        && localityObjectResponse.getType() == LocalityObjectResponse.Type.FOR_PLACEID)
+                {
                     mSearchLat = localityObjectResponse.getLocality().getLat();
                     mSearchLng = localityObjectResponse.getLocality().getLng();
                     mSearchAddressOutput = localityObjectResponse.getLocality().getLocalityName();
+
                     Tlog.i("mSearchLatLng Fetched.." + mSearchLat + "/" + mSearchLng);
+
                     if (mSearchLat != null && mSearchLng != null) {
                         Tlog.i("trigger job search on lat/lng");
                         JobSearchReqInit();
@@ -630,6 +665,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                                         + " | actual jobRoleFitlerObj: " + jobRolesFilter.getJobRoleIdOne());
                             } else Tlog.i("no jobRolesFilter found");
                         }
+
                         /* search by location input ui update */
                         mSearchJobAcTxtView.setText(mSearchAddressOutput);
                         mSearchJobAcTxtView.dismissDropDown();
@@ -637,9 +673,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
                         mJobSearchAsyncTask = new JobSearchAsyncTask();
                         mJobSearchAsyncTask.execute(jobSearchRequest.build());
-                    } else if(!Util.isConnectedToInternet(getApplicationContext())) {
+                    }
+                    else if(!Util.isConnectedToInternet(getApplicationContext())) {
                         Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-                    } else {
+                    }
+                    else {
                         showToast("Opps Something went wrong during search. Please try again");
                     }
                 }
@@ -673,7 +711,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     alert.showDialog(SearchJobsActivity.this,
                             "Complete Your Profile", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.profile_icon, 1);
-                } else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
+                }
+                else if (candidateAlertResponse.getAlertType() == FetchCandidateAlertResponse.Type.NEW_JOBS_IN_LOCALITY) {
                     alert.showDialog(SearchJobsActivity.this,
                             "New Jobs Posted", candidateAlertResponse.getAlertMessage(), "",
                             R.drawable.job_apply, 2);
@@ -718,18 +757,23 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void JobSearchReqInit() {
         jobSearchRequest = JobSearchRequest.newBuilder();
-        if(mSearchLat!= null)jobSearchRequest.setLatitude(mSearchLat);
+        if(mSearchLat != null) {
+            jobSearchRequest.setLatitude(mSearchLat);
+        }
         else if(Prefs.candidateHomeLat.get() != null){
             Tlog.i("pref lat : "+Prefs.candidateHomeLat.get());
             jobSearchRequest.setLatitude(Double.parseDouble(Prefs.candidateHomeLat.get()));
             mSearchLat = Double.parseDouble(Prefs.candidateHomeLat.get());
         }
-        if(mSearchLng!= null)jobSearchRequest.setLongitude(mSearchLng);
+        if(mSearchLng!= null) {
+            jobSearchRequest.setLongitude(mSearchLng);
+        }
         else if(Prefs.candidateHomeLng.get() != null){
             Tlog.i("pref lng : "+Prefs.candidateHomeLng.get());
             jobSearchRequest.setLongitude(Double.parseDouble(Prefs.candidateHomeLng.get()));
             mSearchLng = Double.parseDouble(Prefs.candidateHomeLng.get());
         }
+
         if(Prefs.candidateMobile.get() != null && !Prefs.candidateMobile.get().trim().isEmpty()){
             Tlog.i("mobile set:"+Prefs.candidateMobile.get());
             jobSearchRequest.setCandidateMobile(Prefs.candidateMobile.get());
@@ -739,15 +783,22 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         jobSearchRequest.setLocalityName(mSearchJobAcTxtView.getText().toString());
 
-        if(jobRolesFilter == null){
+        if(jobRolesFilter == null) {
             jobRolesFilter = JobSearchByJobRoleRequest.newBuilder();
-            if (Prefs.candidatePrefJobRoleIdOne.get()!=null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
+        }
+
+        if (jobRoleIdFromHttpIntent != null) {
+            jobRolesFilter.setJobRoleIdOne(jobRoleIdFromHttpIntent);
+        }
+        else {
+            if (Prefs.candidatePrefJobRoleIdOne.get() != null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
                 jobRolesFilter.setJobRoleIdOne(Prefs.candidatePrefJobRoleIdOne.get());
-            if (Prefs.candidatePrefJobRoleIdTwo.get()!=null || Prefs.candidatePrefJobRoleIdTwo.get() != 0)
+            if (Prefs.candidatePrefJobRoleIdTwo.get() != null || Prefs.candidatePrefJobRoleIdTwo.get() != 0)
                 jobRolesFilter.setJobRoleIdTwo(Prefs.candidatePrefJobRoleIdTwo.get());
-            if (Prefs.candidatePrefJobRoleIdThree.get()!=null || Prefs.candidatePrefJobRoleIdThree.get() != 0)
+            if (Prefs.candidatePrefJobRoleIdThree.get() != null || Prefs.candidatePrefJobRoleIdThree.get() != 0)
                 jobRolesFilter.setJobRoleIdThree(Prefs.candidatePrefJobRoleIdThree.get());
         }
+
         jobSearchRequest.setJobSearchByJobRoleRequest(jobRolesFilter.buildPartial());
         jobSearchRequest.buildPartial();
     }
@@ -783,7 +834,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             // IMP: This client assumes that the job posts are sorted from the server in the following manner:
             // All internal jobs in given sort/filter order followed by all external jobs in given sort/filter order
             for (int i = 0; i < jobPostObjectList.size(); i++) {
-                Tlog.i("source " + jobPostObjectList.get(i).getJobPostSource());
                 if (jobPostObjectList.get(i).getJobPostSource() != 0) {
                     externalJobPostStartIndex = i;
                     break;
@@ -842,12 +892,14 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         if(checkedItems == null){
             checkedItems = new boolean[jobRoleNameList.length];
         }
-        if (selectedJobRoleList.size() > 0) {
+
+        /*if (selectedJobRoleList.size() > 0) {
             for (Long jobRoleId : selectedJobRoleList) {
                 checkedItems[invBiMap.get(jobRoleId)] = true;
                 Tlog.i("checkbox["+invBiMap.get(jobRoleId)+"] marked true for jobroleid:"+jobRoleId);
             }
-        }
+        }*/
+
         for (int i = 0; i < jobRoleObjectList.size(); i++) {
             // create nameList and idList
             jobRoleNameList[i] = jobRoleObjectList.get(i).getJobRoleName();
@@ -855,6 +907,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             biMap.put(i, jobRoleObjectList.get(i).getJobRoleId());
         }
         invBiMap = biMap.inverse();
+
+        if (jobRoleIdFromHttpIntent != null) {
+            selectedJobRoleList.add(jobRoleIdFromHttpIntent);
+            checkedItems[invBiMap.get(jobRoleIdFromHttpIntent)] = true;
+        }
     }
 
     private void setJobRoleIdFromPrefs() {
@@ -1046,7 +1103,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         List<String> mSelectedJobsName = new ArrayList<>();
         if (selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
             for(int j=0; j<selectedJobRoleList.size();j++){
-                Tlog.i("search job for jobRolesFilter: "+selectedJobRoleList.get(j));
+                Tlog.i("search job for jobRolesFilter: " + selectedJobRoleList.get(j));
                 String jobRoleName = jobRoleNameList[invBiMap
                         .get(selectedJobRoleList.get(j))].toString();
                 mSelectedJobsName.add(jobRoleName);
@@ -1067,6 +1124,35 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         return mSelectedJobsName;
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // reset this variable everytime a new intent starts
+        // A new intent can be initited by the user from within the app or
+        // a new intent could be initiated due to deep-linking
+        // Only in the deeplinking intent case we will have the intent.getAction()
+        // and intent.getDataString() as not null
+        jobRoleIdFromHttpIntent = null;
+
+        String action = intent.getAction();
+        String data = intent.getDataString();
+
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            String[] uriParts = data.split("/");
+            addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_DEEPLINK);
+
+            if (uriParts.length > 4) {
+                try {
+                    jobRoleIdFromHttpIntent = Long.valueOf(data.substring(data.lastIndexOf("/") + 1));
+                } catch (java.lang.NumberFormatException nEx) {
+                    nEx.printStackTrace();
+                }
+            }
+        }
+
+        initializeAndStartSearch();
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
