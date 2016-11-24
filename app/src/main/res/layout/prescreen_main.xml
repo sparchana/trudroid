@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    tools:context="in.trujobs.dev.trudroid.PreScreenMain">
+
+
+        <fragment
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            class="in.trujobs.dev.trudroid.PreScreenLanguage"
+            android:id="@+id/fragmentLanguage"/>
+        <fragment
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            class="in.trujobs.dev.trudroid.PreScreenExperience"
+            android:id="@+id/fragmentExperience"/>
+        <fragment
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            class="in.trujobs.dev.trudroid.PreScreenEducation"
+            android:id="@+id/fragmentEducation"/>
+        <fragment
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            class="in.trujobs.dev.trudroid.PreScreenDocument"
+            android:id="@+id/fragmentDocument"/>
+
+</LinearLayout>
