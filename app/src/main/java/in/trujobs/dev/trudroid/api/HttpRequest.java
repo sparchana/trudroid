@@ -18,6 +18,7 @@ import java.net.URL;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
+import in.trujobs.proto.CandidateAppliedJobPostWorkFlowResponse;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
@@ -46,6 +47,7 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.NotGoingReasonResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 import in.trujobs.proto.SignUpRequest;
@@ -54,6 +56,10 @@ import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
 import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
+import in.trujobs.proto.UpdateCandidateStatusRequest;
+import in.trujobs.proto.UpdateCandidateStatusResponse;
+import in.trujobs.proto.UpdateInterviewRequest;
+import in.trujobs.proto.UpdateInterviewResponse;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -146,6 +152,30 @@ public class HttpRequest {
 
         if (jobRoleResponse != null && jobRoleResponse.getJobRoleCount() != 0) {
             return jobRoleResponse;
+        } else {
+            return null;
+        }
+    }
+
+    public static NotGoingReasonResponse getAllNotGoingReason() {
+        NotGoingReasonResponse.Builder requestBuilder =
+                NotGoingReasonResponse.newBuilder();
+
+        String responseString = postToServer(Config.URL_ALL_NOT_GOING_REASON,
+                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        NotGoingReasonResponse notGoingReasonResponse = null;
+        try {
+            notGoingReasonResponse =
+                    notGoingReasonResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException ignored) {}
+
+        if (notGoingReasonResponse != null && notGoingReasonResponse.getReasonObjectCount() != 0) {
+            return notGoingReasonResponse;
         } else {
             return null;
         }
@@ -244,7 +274,7 @@ public class HttpRequest {
         return getJobPostDetailsResponse;
     }
 
-    public static CandidateAppliedJobsResponse getMyJobs(CandidateAppliedJobsRequest candidateAppliedJobsRequest) {
+    public static CandidateAppliedJobPostWorkFlowResponse getMyJobs(CandidateAppliedJobsRequest candidateAppliedJobsRequest) {
         String responseString = postToServer(Config.URL_CANDIDATE_APPLIED_JOBS,
                 Base64.encodeToString(candidateAppliedJobsRequest.toByteArray(), Base64.DEFAULT));
 
@@ -252,13 +282,47 @@ public class HttpRequest {
         if (responseByteArray == null) {
             return null;
         }
-        CandidateAppliedJobsResponse candidateAppliedJobsResponse = null;
+        CandidateAppliedJobPostWorkFlowResponse candidateAppliedJobPostWorkFlowResponse = null;
         try {
-            candidateAppliedJobsResponse = CandidateAppliedJobsResponse.parseFrom(responseByteArray);
+            candidateAppliedJobPostWorkFlowResponse = CandidateAppliedJobPostWorkFlowResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
-        return candidateAppliedJobsResponse;
+        return candidateAppliedJobPostWorkFlowResponse;
+    }
+
+    public static UpdateInterviewResponse updateInterview(UpdateInterviewRequest updateInterviewRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_INTERVIEW,
+                Base64.encodeToString(updateInterviewRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateInterviewResponse updateInterviewResponse = null;
+        try {
+            updateInterviewResponse = UpdateInterviewResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateInterviewResponse;
+    }
+
+    public static UpdateCandidateStatusResponse updateCandidateStatus(UpdateCandidateStatusRequest updateCandidateStatusRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_STATUS,
+                Base64.encodeToString(updateCandidateStatusRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateCandidateStatusResponse updateCandidateStatusResponse = null;
+        try {
+            updateCandidateStatusResponse = UpdateCandidateStatusResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateCandidateStatusResponse;
     }
 
     public static GetCandidateBasicProfileStaticResponse getCandidateBasicProfileStatic() {

@@ -7,12 +7,12 @@ public class Config {
     /**
      * AWS prod-like-test-server for all trujobs-dev requirements is hosted @ 52.42.8.205:80
      */
-   public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
+//   public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
     /**
      * replace ip below with your local ip for development
      * and uncomment the line, also comment out aws prod-like-test-server ip above
      */
-    //public static final String BASE_HTTP_URL = "http://192.168.0.197:9000";
+    public static final String BASE_HTTP_URL = "http://192.168.0.123:9000";
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
@@ -21,11 +21,14 @@ public class Config {
     public static final String URL_FORGOT_PASSWORD_SEND_OTP = BASE_HTTP_URL + "/mFindUserAndSendOtp";
     public static final String URL_APPLY_JOB = BASE_HTTP_URL + "/mApplyJob";
     public static final String URL_ALL_JOB_ROLES = BASE_HTTP_URL + "/mGetAllJobRoles";
+    public static final String URL_ALL_NOT_GOING_REASON = BASE_HTTP_URL + "/mGetAllNotGoingReason";
     public static final String URL_ADD_HOMELOCALITY = BASE_HTTP_URL + "/mAddHomeLocality";
     public static final String URL_ADD_JOB_PREFS = BASE_HTTP_URL + "/mAddJobPref";
     public static final String URL_GET_CANDIDATE_INFO = BASE_HTTP_URL + "/mGetCandidateInformation";
     public static final String URL_JOB_POST_DETAILS = BASE_HTTP_URL + "/mGetJobPostInfo";
-    public static final String URL_CANDIDATE_APPLIED_JOBS = BASE_HTTP_URL + "/mGetCandidateJobApplication";
+    public static final String URL_CANDIDATE_APPLIED_JOBS = BASE_HTTP_URL + "/mGetCandidateJobApplicationViaWorkFlow";
+    public static final String URL_UPDATE_INTERVIEW = BASE_HTTP_URL + "/mConfirmInterview";
+    public static final String URL_UPDATE_CANDIDATE_STATUS = BASE_HTTP_URL + "/mUpdateCandidateStatus";
     public static final String URL_ALL_BASIC_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateBasicProfileStatics";
     public static final String URL_ALL_EXPERIENCE_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateExperienceProfileStatics";
     public static final String URL_ALL_EDUCATION_PROFILE_STATIC = BASE_HTTP_URL + "/mGetCandidateUpdateEducationProfileStatics";

@@ -425,7 +425,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_CANDIDATE_PROFILE);
                 break;
 
-            case 3: openItem(MyAppliedJobs.class);
+            case 3: openItem(JobApplicationActivity.class);
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_APPLIED_JOBS);
