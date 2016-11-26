@@ -2,6 +2,7 @@ package in.trujobs.dev.trudroid.Adapters;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.JobApplicationActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -42,8 +44,10 @@ import in.trujobs.proto.UpdateInterviewResponse;
  */
 public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
+    Activity ctx;
     public MyConfirmedJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
         super(context, 0, jobApplicationObjectList);
+        ctx = context;
     }
 
     public class Holder
@@ -92,6 +96,9 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getContext(), "Your interview has been confirmed!", Toast.LENGTH_LONG).show();
+                    ctx.finish();
+                    Intent intent = new Intent(ctx, JobApplicationActivity.class);
+                    ctx.startActivity(intent);
                 }
             });
 
@@ -349,6 +356,9 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
                     reasonAsyncTask.execute();
                 } else{
                     Toast.makeText(getContext(), "Status Updated!", Toast.LENGTH_LONG).show();
+                    ctx.finish();
+                    Intent intent = new Intent(ctx, JobApplicationActivity.class);
+                    ctx.startActivity(intent);
                 }
             } else{
                 Toast.makeText(getContext(), "Something went wrong. Please try again later!", Toast.LENGTH_LONG).show();
