@@ -1,0 +1,32 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/gender_button_layout"
+    android:layout_marginTop="15dp"
+    android:padding="1dp"
+    android:layout_marginBottom="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_margin="2dp"
+        android:background="@drawable/round_white_button"
+        android:padding="8dp"
+        android:id="@+id/gender_male"
+        android:textSize="9dp"
+        android:text="Male"/>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_margin="2dp"
+        android:background="@drawable/round_white_button"
+        android:padding="8dp"
+        android:id="@+id/gender_female"
+        android:textSize="9dp"
+        android:text="Female"/>
+
+</LinearLayout>

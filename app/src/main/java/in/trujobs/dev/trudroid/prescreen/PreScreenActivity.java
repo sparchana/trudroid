@@ -3,31 +3,21 @@ package in.trujobs.dev.trudroid.prescreen;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
-import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.TruJobsBaseActivity;
-import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
-import in.trujobs.proto.LocalityObject;
 import in.trujobs.proto.PreScreenPopulateProtoRequest;
 import in.trujobs.proto.PreScreenPopulateProtoResponse;
 
@@ -143,12 +133,23 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             globalPreScreenPopulateResponse = preScreenPopulateResponse;
             propertyIdQueue = new LinkedList();
 
+            Queue hpQueue = new LinkedList(); // all solo fragment prop ids, {0,1,4, 5}
+            Queue lpQueue = new LinkedList(); // all in one fragment prop id, {rest}
+
             Tlog.i("size: " + preScreenPopulateResponse.getPropertyIdList().size());
             if(preScreenPopulateResponse.getPropertyIdCount() > 0) {
                 for(Integer jobPostId : preScreenPopulateResponse.getPropertyIdList()){
-                    if(!propertyIdQueue.contains(jobPostId)){
-                        propertyIdQueue.add(jobPostId);
+                    if (jobPostId == 0 || jobPostId == 1 || jobPostId == 4 || jobPostId == 5) {
+                        hpQueue.add(jobPostId);
+                    } else {
+                        lpQueue.add(jobPostId);
                     }
+                }
+                while (!hpQueue.isEmpty()) {
+                    propertyIdQueue.add(hpQueue.remove());
+                }
+                while (!lpQueue.isEmpty()) {
+                    propertyIdQueue.add(lpQueue.remove());
                 }
             }
             showRequiredFragment(((FragmentActivity) mContext));
@@ -177,7 +178,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
 
                 document.setArguments(bundle);
-                // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
@@ -188,23 +188,16 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
 
                 language.setArguments(bundle);
-                // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .replace(R.id.pre_screen, language).commit();
-                break;
-            case 2 : // asset
-
-                break;
-            case 3 : // age
                 break;
             case 4 : // exp
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
 
                 experience.setArguments(bundle);
-                // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
@@ -215,13 +208,20 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle.putByteArray("education", preScreenPopulateResponse.getEducation().toByteArray());
 
                 education.setArguments(bundle);
-                // Add the fragment to the 'overlay_job_filter_fragment_container' FrameLayout
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .replace(R.id.pre_screen, education).commit();
                 break;
-            case 6 : break;
+           default:
+               PreScreenOthers others = new PreScreenOthers();
+               bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
+               others.setArguments(bundle);
+               activity.getSupportFragmentManager().beginTransaction()
+                       .addToBackStack(null)
+                       .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                       .replace(R.id.pre_screen, others).commit();
+               break;
         }
     }
 }

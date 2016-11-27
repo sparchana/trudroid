@@ -1,8 +1,11 @@
 package in.trujobs.dev.trudroid.prescreen;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.Util.Constants;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.proto.IdProofObject;
 import in.trujobs.proto.LanguageObject;
@@ -22,13 +27,28 @@ import in.trujobs.proto.PreScreenDocumentObject;
 import in.trujobs.proto.PreScreenLanguageObject;
 
 public class PreScreenLanguage extends Fragment{
-
+    ProgressDialog pd;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         View view = inflater.inflate(R.layout.pre_screen_language, container, false);
         PreScreenLanguageObject preScreenLanguageObject = null;
         Bundle bundle = getArguments();
         LinearLayout languageListView = (LinearLayout) view.findViewById(R.id.ps_language_list_view);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((PreScreenActivity)getActivity()).setSupportActionBar(toolbar);
+
+        ((PreScreenActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // track screen view
+        ((PreScreenActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_LANGUAGE_PRESCREEN);
+
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        collapsingToolbarLayout.setTitle("Language Details");
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        pd = CustomProgressDialog.get(getActivity());
 
         try {
             preScreenLanguageObject = PreScreenLanguageObject.parseFrom(bundle.getByteArray("language"));

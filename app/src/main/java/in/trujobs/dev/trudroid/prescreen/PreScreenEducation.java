@@ -87,7 +87,6 @@ public class PreScreenEducation extends Fragment {
         // track screen view
         ((PreScreenActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN);
 
-
         educationStatus = (LinearLayout) view.findViewById(R.id.education_status_layout);
         qualificationLayout = (LinearLayout) view.findViewById(R.id.qualification_layout);
         degreeLayout = (LinearLayout) view.findViewById(R.id.degree_layout);
