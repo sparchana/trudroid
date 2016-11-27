@@ -55,4 +55,5 @@
 
     // FB tracking
     <string name="facebook_app_id">980050698772979</string>
+    <string name="title_activity_pre_screen">PreScreenActivity</string>
 </resources>

@@ -78,19 +78,25 @@
         </activity>
         <activity
             android:name=".SearchJobsActivity"
-            android:label="@string/title_activity_job"
-            android:screenOrientation="portrait"
             android:exported="true"
-            android:launchMode = "singleTop"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <!-- ATTENTION: This intent was auto-generated. Follow instructions at
-             https://g.co/AppIndexing/AndroidStudio to publish your URLs. -->
+            android:label="@string/title_activity_job"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <!--
+             ATTENTION: This intent was auto-generated. Follow instructions at
+             https://g.co/AppIndexing/AndroidStudio to publish your URLs.
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme.
-                  TODO: Change the host or pathPrefix as necessary. -->
+                <!--
+                  ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme.
+                  TODO: Change the host or pathPrefix as necessary.
+                -->
                 <data
                     android:host="trujobs.in"
                     android:pathPrefix="/showJobs"
@@ -101,17 +107,21 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" /> -->
+                <category android:name="android.intent.category.BROWSABLE" />
+            -->
 
-                <!-- Accepts URIs that begin with "http://trujobs” -->
+
+            <!-- Accepts URIs that begin with "http://trujobs” -->
             <!--
             <data
                     android:host="trujobs.in"
                     android:scheme="http" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -121,7 +131,6 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".HomeLocality"
             android:label="@string/title_activity_home"
@@ -147,9 +156,10 @@
         <activity
             android:name=".ReferFriends"
             android:screenOrientation="portrait" />
-        <activity android:name=".WelcomeActivity"
+        <activity
+            android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".OtpScreen$IncomingSms">
             <intent-filter android:priority="2147483647">
@@ -157,12 +167,19 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
+        <activity
+            android:name=".prescreen.PreScreenActivity"
+            android:label="@string/title_activity_pre_screen"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

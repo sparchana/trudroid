@@ -112,5 +112,11 @@ public class Constants {
     public static final String GA_ACTION_APPLY_FILTER = "APPLY_FILTER";
     public static final String GA_ACTION_CLEAR_FILTER = "CLEAR_FILTER";
     public static final String GA_ACTION_CLOSE_FILTER = "CLOSE_FILTER";
+
+    public static final String GA_SCREEN_NAME_EDIT_EXPERIENCE_PRESCREEN = "EDIT_EXPERIENCE_PRESCREEN";
+    public static final String GA_ACTION_SAVE_EXPERIENCE_PRESCREEN = "SAVE_EXPERIENCE_PRESCREEN";
+    public static final String GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN = "EDIT_EDUCATION_PRESCREEN";
+    public static final String GA_ACTION_SAVE_EDUCATION_PRESCREEN = "SAVE_EDUCATION_PRESCREEN";
+
 }
 

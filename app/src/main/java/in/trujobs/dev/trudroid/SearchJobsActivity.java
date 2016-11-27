@@ -42,6 +42,7 @@ import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
+import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
@@ -53,6 +54,9 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
+import in.trujobs.dev.trudroid.prescreen.PreScreenActivity;
+import in.trujobs.dev.trudroid.prescreen.PreScreenActivityFragment;
+import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
@@ -66,6 +70,10 @@ import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
 import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
+import in.trujobs.proto.PreScreenPopulateProtoRequest;
+import in.trujobs.proto.PreScreenPopulateProtoResponse;
+
+import static java.security.AccessController.getContext;
 
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
@@ -273,98 +281,10 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    private class JobPostDetailAsyncTask extends AsyncTask<GetJobPostDetailsRequest,
-            Void, GetJobPostDetailsResponse> {
+    public Button applyingJobButton;
+    public Button applyingJobButtonDetail;
+    public ImageView applyingJobColor;
 
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd.show();
-        }
-
-        @Override
-        protected GetJobPostDetailsResponse doInBackground(GetJobPostDetailsRequest... params) {
-            return HttpRequest.getJobPostDetails(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(final GetJobPostDetailsResponse getJobPostDetailsResponse) {
-            super.onPostExecute(getJobPostDetailsResponse);
-
-            pd.cancel();
-
-            if(!Util.isConnectedToInternet(getApplicationContext())) {
-                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-                return;
-            } else if (getJobPostDetailsResponse == null) {
-                Toast.makeText(SearchJobsActivity.this, "Failed to Fetch details. Please try again.",
-                        Toast.LENGTH_LONG).show();
-                Tlog.w("","Null signIn Response");
-                finish();
-                return;
-            }
-
-            if(getJobPostDetailsResponse.getStatus() == GetJobPostDetailsResponse.Status.SUCCESS){
-                preScreenLocationIndex = 0;
-                final CharSequence[] localityList = new CharSequence[getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount()];
-                final Long[] localityId = new Long[getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount()];
-                for (int i = 0; i < getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount(); i++) {
-                    localityList[i] = getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityName();
-                    localityId[i] = getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityId();
-                }
-
-                LinearLayout customTitleLayout = new LinearLayout(SearchJobsActivity.this);
-                customTitleLayout.setPadding(30,30,30,30);
-                TextView customTitle = new TextView(SearchJobsActivity.this);
-                String title = "You are applying for <b>" + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + "</b>  job at <b>" + getJobPostDetailsResponse.getJobPost().getJobPostCompanyName()
-                        + "</b>. Please select a job Location";
-                customTitle.setText(Html.fromHtml(title));
-                customTitle.setTextSize(16);
-                customTitleLayout.addView(customTitle);
-
-                final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(SearchJobsActivity.this);
-                applyDialogBuilder.setCancelable(true);
-                applyDialogBuilder.setCustomTitle(customTitleLayout);
-                applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        List<JobPostObject> list = new ArrayList<JobPostObject>();
-                        list.add(getJobPostDetailsResponse.getJobPost());
-                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
-                        jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
-                        dialog.dismiss();
-                        Prefs.jobToApplyStatus.put(0);
-                        Prefs.getJobToApplyJobId.put(0L);
-
-                        //Track this action
-                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
-                    }
-                });
-                applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        //Track this action
-                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
-                    }
-                });
-                applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        preScreenLocationIndex = which;
-
-                        //Track this action
-                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
-                    }
-                });
-                final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
-                applyDialog.show();
-
-                Prefs.jobToApplyStatus.put(0);
-                Prefs.getJobToApplyJobId.put(0L);
-            } else {
-                showToast("Something went wrong. Unable to fetch job details!");
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -522,7 +442,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                             .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                             .add(R.id.overlay_job_filter_fragment_container, filterJobFragment).commit();
 
-
                     //Track this action
                     addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_JOB_FILTER);
                 }
@@ -591,6 +510,102 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     }
 
     /* ----------------- Activity Required AsyncTasK Below ------------------- */
+
+    private class JobPostDetailAsyncTask extends AsyncTask<GetJobPostDetailsRequest,
+            Void, GetJobPostDetailsResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected GetJobPostDetailsResponse doInBackground(GetJobPostDetailsRequest... params) {
+            return HttpRequest.getJobPostDetails(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(final GetJobPostDetailsResponse getJobPostDetailsResponse) {
+            super.onPostExecute(getJobPostDetailsResponse);
+
+            pd.cancel();
+
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (getJobPostDetailsResponse == null) {
+                Toast.makeText(SearchJobsActivity.this, "Failed to Fetch details. Please try again.",
+                        Toast.LENGTH_LONG).show();
+                Tlog.w("","Null signIn Response");
+                finish();
+                return;
+            }
+
+            if(getJobPostDetailsResponse.getStatus() == GetJobPostDetailsResponse.Status.SUCCESS){
+                preScreenLocationIndex = 0;
+                final CharSequence[] localityList = new CharSequence[getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount()];
+                final Long[] localityId = new Long[getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount()];
+                for (int i = 0; i < getJobPostDetailsResponse.getJobPost().getJobPostLocalityCount(); i++) {
+                    localityList[i] = getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityName();
+                    localityId[i] = getJobPostDetailsResponse.getJobPost().getJobPostLocality(i).getLocalityId();
+                }
+
+                LinearLayout customTitleLayout = new LinearLayout(SearchJobsActivity.this);
+                customTitleLayout.setPadding(30,30,30,30);
+                TextView customTitle = new TextView(SearchJobsActivity.this);
+                String title = "You are applying for <b>" + getJobPostDetailsResponse.getJobPost().getJobPostTitle() + "</b>  job at <b>" + getJobPostDetailsResponse.getJobPost().getJobPostCompanyName()
+                        + "</b>. Please select a job Location";
+                customTitle.setText(Html.fromHtml(title));
+                customTitle.setTextSize(16);
+                customTitleLayout.addView(customTitle);
+
+                final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(SearchJobsActivity.this);
+                applyDialogBuilder.setCancelable(true);
+                applyDialogBuilder.setCustomTitle(customTitleLayout);
+                applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<JobPostObject> list = new ArrayList<JobPostObject>();
+                        list.add(getJobPostDetailsResponse.getJobPost());
+                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
+                        ApplyJobResponseBundle applyJobResponseBundle = jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
+                        // TODO condition to check if response is already applied, or failed , accordingly allow to pass it to prescreen activity
+                        Tlog.i("prescreen triggered");
+
+                        dialog.dismiss();
+                        Prefs.jobToApplyStatus.put(0);
+                        Prefs.getJobToApplyJobId.put(0L);
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
+                    }
+                });
+                applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_CANCEL_APPLY_TO_JOB);
+                    }
+                });
+                applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        preScreenLocationIndex = which;
+
+                        //Track this action
+                        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_SELECTED_JOB_LOCATION);
+                    }
+                });
+                final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
+                applyDialog.show();
+
+                Prefs.jobToApplyStatus.put(0);
+                Prefs.getJobToApplyJobId.put(0L);
+            } else {
+                showToast("Something went wrong. Unable to fetch job details!");
+            }
+        }
+    }
 
     private class JobSearchAsyncTask extends BasicJobSearchAsyncTask {
         @Override

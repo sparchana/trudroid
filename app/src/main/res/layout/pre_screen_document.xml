@@ -36,7 +36,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:title="Experience Profile"
+                app:title="Documents"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -123,12 +123,17 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Do you have following document(s)?"
-                                android:id="@+id/are_you_fresher_experience_label" />
+                                android:id="@+id/do_you_have_document_label" />
                         </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/document_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
             </LinearLayout>
 
             <LinearLayout
@@ -139,7 +144,7 @@
                 android:layout_alignParentBottom="true"
                 android:gravity="bottom">
                 <Button
-                    android:id="@+id/save_experience_btn"
+                    android:id="@+id/save_document_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

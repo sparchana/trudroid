@@ -46,6 +46,8 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.PreScreenPopulateProtoRequest;
+import in.trujobs.proto.PreScreenPopulateProtoResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 import in.trujobs.proto.SignUpRequest;
@@ -560,5 +562,22 @@ public class HttpRequest {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return localityObjectResponse;
+    }
+
+    public static PreScreenPopulateProtoResponse getJobPostVsCandidate(PreScreenPopulateProtoRequest request) {
+        String responseString = postToServer(Config.URL_GET_JOB_POST_VS_CANDIDATE,
+                Base64.encodeToString(request.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        PreScreenPopulateProtoResponse preScreenPopulateResponse = null;
+        try {
+            preScreenPopulateResponse = PreScreenPopulateProtoResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return preScreenPopulateResponse;
     }
 }
