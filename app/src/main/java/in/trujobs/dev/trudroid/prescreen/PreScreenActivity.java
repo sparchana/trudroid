@@ -21,6 +21,8 @@ import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.proto.PreScreenPopulateProtoRequest;
 import in.trujobs.proto.PreScreenPopulateProtoResponse;
 
+import static in.trujobs.dev.trudroid.Util.Constants.*;
+
 public class PreScreenActivity extends TruJobsBaseActivity {
     public static Queue propertyIdQueue;
     public static PreScreenPopulateProtoResponse globalPreScreenPopulateResponse;
@@ -164,15 +166,15 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Tlog.e("Property Id Queue empty");
             return;
         }
-        Tlog.e("Property Queue size" + propertyIdQueue.size());
+        Tlog.e("Property Queue size: " + propertyIdQueue.size());
         Integer propId = (int) propertyIdQueue.remove();
 
-        Tlog.i("current Property id " + propId);
+        Tlog.i("current Property id: " + propId);
         for(Object item : propertyIdQueue){
             Tlog.i(item.toString());
         }
         switch (propId) {
-            case 0 : // documents
+            case PROPERTY_TYPE_DOCUMENT : // documents
                 bundle = new Bundle();
                 PreScreenDocument document = new PreScreenDocument();
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
@@ -183,7 +185,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .replace(R.id.pre_screen, document).commit();
                 break;
-            case 1 : // language
+            case PROPERTY_TYPE_LANGUAGE : // language
                 PreScreenLanguage language = new PreScreenLanguage();
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
 
@@ -193,7 +195,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .replace(R.id.pre_screen, language).commit();
                 break;
-            case 4 : // exp
+            case PROPERTY_TYPE_EXPERIENCE : // exp
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
 
@@ -203,7 +205,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
                         .replace(R.id.pre_screen, experience).commit();
                 break;
-            case 5 : // education
+            case PROPERTY_TYPE_EDUCATION : // education
                 PreScreenEducation education = new PreScreenEducation();
                 bundle.putByteArray("education", preScreenPopulateResponse.getEducation().toByteArray());
 
