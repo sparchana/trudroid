@@ -1,10 +1,7 @@
 package in.trujobs.dev.trudroid.prescreen;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -14,17 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -40,16 +31,10 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
-import in.trujobs.proto.CandidateSkillObject;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
-import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
-import in.trujobs.proto.JobRoleObject;
 import in.trujobs.proto.PreScreenEducationObject;
-import in.trujobs.proto.PreScreenExperienceObject;
-import in.trujobs.proto.SkillObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
-import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
 
 public class PreScreenEducation extends Fragment {
     ProgressDialog pd;
@@ -300,8 +285,6 @@ public class PreScreenEducation extends Fragment {
                                 UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
                                 UpdateEducationAsyncTask.execute(educationBuilder.build());
                             }
-                            // this method will go inside the above check block
-                            PreScreenActivity.showRequiredFragment(getActivity());
                         }
                     });
                 } else{
@@ -336,11 +319,7 @@ public class PreScreenEducation extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else{
                 if(updateCandidateBasicProfileResponse.getStatusValue() == ServerConstants.SUCCESS){
-                    Toast.makeText(getContext(), MessageConstants.PROFILE_UPDATED,
-                            Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getContext(), PreScreenActivity.class);
-                    getActivity().finish();
-                    getContext().startActivity(intent);
+                    PreScreenActivity.showRequiredFragment(getActivity());
                 } else{
                     Toast.makeText(getContext(), "Looks like something went wrong while saving education profile. Please try again.",
                             Toast.LENGTH_LONG).show();

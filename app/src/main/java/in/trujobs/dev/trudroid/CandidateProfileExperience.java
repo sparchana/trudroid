@@ -390,7 +390,7 @@ public class CandidateProfileExperience extends Fragment {
                     getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList());
 
                     allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
-                    languageIdList = new ArrayList<Integer>();
+                    languageIdList = new ArrayList<>();
 
                     for(int i=0 ; i<getCandidateExperienceProfileStaticResponse.getLanguageObjectCount() ; i++){
                         allLanguageList[i] = getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageName();

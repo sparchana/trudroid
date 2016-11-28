@@ -56,6 +56,7 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.AssetObject;
+import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.HomeLocalityRequest;
 import in.trujobs.proto.HomeLocalityResponse;
@@ -63,6 +64,7 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.PreScreenAssetObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
+import in.trujobs.proto.UpdateCandidateOtherRequest;
 
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_ASSET_OWNED;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_GENDER;
@@ -540,6 +542,40 @@ public class PreScreenOthers extends Fragment {
             }
         }
     }
+
+
+    private class UpdatePreScreenOtherAsyncTask extends AsyncTask<UpdateCandidateOtherRequest,
+            Void, GenericResponse> {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected GenericResponse doInBackground(UpdateCandidateOtherRequest ... params) {
+            return HttpRequest.updateCandidateOther(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(GenericResponse response) {
+            super.onPostExecute(response);
+            pd.cancel();
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if(response == null){
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                if(response.getStatus() == GenericResponse.Status.SUCCESS){
+                    // todo call to go to interview selection comes here
+                } else{
+                    Toast.makeText(getContext(), "Looks like something went wrong while saving education profile. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
 
     /**
      * Shows a toast with the given text.

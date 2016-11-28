@@ -38,5 +38,8 @@ public class Config {
 
     // prescreen urls
     public static final String URL_GET_JOB_POST_VS_CANDIDATE = BASE_HTTP_URL + "/mGetJobPostVsCandidate";
-
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_DOCUMENT = BASE_HTTP_URL + "/mUpdateCandidateDocument";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_LANGUAGE = BASE_HTTP_URL + "/mUpdateCandidateLanguage";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_EXPERIENCE = BASE_HTTP_URL + "/mUpdateCandidateExperience";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_OTHERS = BASE_HTTP_URL + "/mUpdateCandidateOther";
 }
