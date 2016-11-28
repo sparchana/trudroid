@@ -36,6 +36,25 @@ public class ServerConstants {
     public static final int CANDIDATE_STATUS_DELAYED_VAL = 2;
     public static final int CANDIDATE_STATUS_STARTED_VAL = 3;
     public static final int CANDIDATE_STATUS_REACHED_VAL = 4;
+
+    public static final int CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_ACCEPT = 1;
+    public static final int CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_REJECT = 0;
+
+    public static final int JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT = 6;
+    public static final int JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE = 7;
+    public static final int JWF_STATUS_INTERVIEW_RESCHEDULE = 8;
+    public static final int JWF_STATUS_INTERVIEW_CONFIRMED = 9;
+
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING = 10;
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED = 11;
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_STARTED = 12;
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED = 13;
+
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED = 14;
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_REJECTED = 15;
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_NO_SHOW = 16;
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_NOT_QUALIFIED = 17;
+
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
 

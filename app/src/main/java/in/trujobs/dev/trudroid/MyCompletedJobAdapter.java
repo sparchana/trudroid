@@ -12,8 +12,7 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import in.trujobs.dev.trudroid.Adapters.MyConfirmedJobsAdapter;
-import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 
 /**
@@ -64,7 +63,7 @@ public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         //set interview result
         holder.mInterviewResultTextView = (TextView) rowView.findViewById(R.id.interview_result_status);
         holder.mInterviewResultTextView.setText(jobApplicationObject.getCandidateInterviewStatus().getStatusTitle());
-        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 14){
+        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
             holder.mInterviewResultTextView.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
         } else{
             holder.mInterviewResultTextView.setTextColor(Color.RED);

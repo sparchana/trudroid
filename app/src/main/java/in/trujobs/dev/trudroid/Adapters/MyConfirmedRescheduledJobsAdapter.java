@@ -2,7 +2,6 @@ package in.trujobs.dev.trudroid.Adapters;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,10 +41,10 @@ import in.trujobs.proto.UpdateInterviewResponse;
 /**
  * Created by batcoder1 on 8/8/16.
  */
-public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
+public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
     Activity ctx;
-    public MyConfirmedJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
+    public MyConfirmedRescheduledJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
         super(context, 0, jobApplicationObjectList);
         ctx = context;
     }
@@ -60,7 +59,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
     private Integer selectedNotGoingReasonIndex = 0;
     private Long globalJpId = 0L;
     private AsyncTask<UpdateInterviewRequest, Void, UpdateInterviewResponse> mAsyncTask;
-    private AsyncTask<Void, Void, in.trujobs.proto.NotGoingReasonResponse> reasonAsyncTask;
     private AsyncTask<UpdateCandidateStatusRequest, Void, UpdateCandidateStatusResponse> mCandidateStatusAsyncTask;
 
     @Override
@@ -87,7 +85,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
         final Spinner statusOption = (Spinner) rowView.findViewById(R.id.interview_status_spinner);
 
-        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 6 || (jobApplicationObject.getCandidateInterviewStatus().getStatusId() > 9 && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < 14)){
+        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){ //confirmed and/or has current status
             acceptTextView.setVisibility(View.VISIBLE);
             rescheduleTextView.setVisibility(View.GONE);
             reschedulePanel.setVisibility(View.GONE);
@@ -137,14 +135,14 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
             acceptImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    updateInterview(1, jobApplicationObject.getJobPostObject().getJobPostId());
+                    updateRescheduledInterviewConfirmation(ServerConstants.CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_ACCEPT, jobApplicationObject.getJobPostObject().getJobPostId());
                 }
             });
 
             rejectImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    updateInterview(0, jobApplicationObject.getJobPostObject().getJobPostId());
+                    updateRescheduledInterviewConfirmation(ServerConstants.CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_REJECT, jobApplicationObject.getJobPostObject().getJobPostId());
                 }
             });
         }
@@ -159,17 +157,17 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         int interviewDay = interviewCalendar.get(Calendar.DAY_OF_MONTH);
 
         if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
-            if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 6 || (jobApplicationObject.getCandidateInterviewStatus().getStatusId() > 9 && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < 14)){
+            if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
                 candidateStatusPanel.setVisibility(View.VISIBLE);
                 holder.mCurrentStatus = (TextView) rowView.findViewById(R.id.current_status);
                 holder.mCurrentStatus.setText(jobApplicationObject.getCandidateInterviewStatus().getStatusTitle());
-                if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 10 || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 11){
+                if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
                     holder.mCurrentStatus.setTextColor(Color.RED);
                 } else{
                     holder.mCurrentStatus.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
                 }
 
-                if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 13){ //reached
+                if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){ //reached
                     statusOption.setVisibility(View.GONE);
                     updateStatusBtn.setVisibility(View.GONE);
                 } else{
@@ -180,17 +178,17 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
                     categories.add("Select a Status");
 
                     // Spinner Drop down elements
-                    if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 6 || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 10){
-                        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 6){
+                    if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
+                        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
                             categories.add(ServerConstants.CANDIDATE_STATUS_NOT_GOING);
                         }
                         categories.add(ServerConstants.CANDIDATE_STATUS_DELAYED);
                         categories.add(ServerConstants.CANDIDATE_STATUS_STARTED);
                         categories.add(ServerConstants.CANDIDATE_STATUS_REACHED);
-                    } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 11){
+                    } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
                         categories.add(ServerConstants.CANDIDATE_STATUS_STARTED);
                         categories.add(ServerConstants.CANDIDATE_STATUS_REACHED);
-                    } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == 12) {
+                    } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_STARTED) {
                         categories.add(ServerConstants.CANDIDATE_STATUS_DELAYED);
                         categories.add(ServerConstants.CANDIDATE_STATUS_REACHED);
                     }
@@ -289,7 +287,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
     }
 
-    private void updateInterview(Integer value, Long jpId){
+    private void updateRescheduledInterviewConfirmation(Integer value, Long jpId){
         UpdateInterviewRequest.Builder updateInterviewRequestBuilder = UpdateInterviewRequest.newBuilder();
         updateInterviewRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
         updateInterviewRequestBuilder.setVal(value);
@@ -352,7 +350,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
                 //showing not going reason dialog
                 if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL){
-                    reasonAsyncTask = new NotGoingReasonResponse();
+                    AsyncTask<Void, Void, in.trujobs.proto.NotGoingReasonResponse> reasonAsyncTask = new NotGoingReasonResponse();
                     reasonAsyncTask.execute();
                 } else{
                     Toast.makeText(getContext(), "Status Updated!", Toast.LENGTH_LONG).show();
@@ -399,8 +397,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
             applyDialogBuilder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if(selectedNotGoingReasonIndex > 0){
-
-
                         UpdateCandidateStatusRequest.Builder updateCandidateStatusRequestBuilder = UpdateCandidateStatusRequest.newBuilder();
                         updateCandidateStatusRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                         updateCandidateStatusRequestBuilder.setVal(globalCandidateStatus);

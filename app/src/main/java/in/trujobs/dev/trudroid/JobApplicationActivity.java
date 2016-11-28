@@ -7,34 +7,24 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Adapters.AppliedJobsAdapter;
-import in.trujobs.dev.trudroid.Adapters.MyConfirmedJobsAdapter;
-import in.trujobs.dev.trudroid.Adapters.MyRejectedJobAdapter;
-import in.trujobs.dev.trudroid.Adapters.MyUnderReviewJobAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.CandidateAppliedJobPostWorkFlowResponse;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
-import in.trujobs.proto.CandidateAppliedJobsResponse;
-import in.trujobs.proto.GetCandidateInformationResponse;
 import in.trujobs.proto.JobPostWorkFlowObject;
 
 public class JobApplicationActivity extends TruJobsBaseActivity {
 
-    private AsyncTask<CandidateAppliedJobsRequest, Void, CandidateAppliedJobPostWorkFlowResponse> mAsyncTask;
     ProgressDialog pd;
     public CandidateAppliedJobPostWorkFlowResponse jobApplications;
     public List<JobPostWorkFlowObject> confirmedInterviewList;
@@ -72,7 +62,7 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
     public void getMyJobs(){
         CandidateAppliedJobsRequest.Builder candidateAppliedJobPostBuilder = CandidateAppliedJobsRequest.newBuilder();
         candidateAppliedJobPostBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-        mAsyncTask = new MyAppliedJobPostAsyncTask();
+        AsyncTask<CandidateAppliedJobsRequest, Void, CandidateAppliedJobPostWorkFlowResponse> mAsyncTask = new MyAppliedJobPostAsyncTask();
         mAsyncTask.execute(candidateAppliedJobPostBuilder.build());
     }
 
@@ -102,13 +92,13 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
 
                 for(JobPostWorkFlowObject jwpf : candidateAppliedJobPostWorkFlowResponse.getJobPostWorkFlowObjectList()){
                     if(jwpf.getCandidateInterviewStatus() != null){
-                        if(jwpf.getCandidateInterviewStatus().getStatusId() == 6 || (jwpf.getCandidateInterviewStatus().getStatusId() > 8 && jwpf.getCandidateInterviewStatus().getStatusId() < 14)){
+                        if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE && jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
                             confirmedInterviewList.add(jwpf);
-                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() < 6){
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
                             underReviewInterviewList.add(jwpf);
-                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() == 7 || jwpf.getCandidateInterviewStatus().getStatusId() == 8){
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT || jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE){
                             rejectedInterviewList.add(jwpf);
-                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() > 13){
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){
                             completedInterviewList.add(jwpf);
                         } else{
                             underReviewInterviewList.add(jwpf);
