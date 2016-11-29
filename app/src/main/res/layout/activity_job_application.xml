@@ -43,6 +43,7 @@
             android:layout_below="@+id/toolbar_parent"
             android:background="@color/themeGrey"
             app:tabBackground="@color/themeGrey"
+            app:tabMode="scrollable"
             app:tabTextColor="@color/back_grey_medium_light"
             app:tabSelectedTextColor="@color/white"
             app:tabIndicatorColor="@color/colorPrimary"

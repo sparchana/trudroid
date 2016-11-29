@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,9 @@ public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                     R.layout.my_completed_job_listview, parent, false);
         }
 
+        ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
+        TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
+
         //set job Application title
         holder.mJobApplicationTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
         holder.mJobApplicationTitleTextView.setText(jobApplicationObject.getJobPostObject().getJobPostTitle());
@@ -64,18 +68,18 @@ public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         holder.mInterviewResultTextView = (TextView) rowView.findViewById(R.id.interview_result_status);
         holder.mInterviewResultTextView.setText(jobApplicationObject.getCandidateInterviewStatus().getStatusTitle());
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
+            applicationStatusIcon.setBackgroundResource(R.drawable.ic_correct);
+            applicationStatusText.setText("Selected");
+            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
+
             holder.mInterviewResultTextView.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
         } else{
+            applicationStatusIcon.setBackgroundResource(R.drawable.ic_error);
+            applicationStatusText.setText("Rejected");
+            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorRed));
+
             holder.mInterviewResultTextView.setTextColor(Color.RED);
         }
-
-        TextView completedTextView = (TextView) rowView.findViewById(R.id.completed_text_view);
-        completedTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Your interview is complete!", Toast.LENGTH_LONG).show();
-            }
-        });
 
         return rowView;
     }

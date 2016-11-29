@@ -72,36 +72,33 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
 
         pd = CustomProgressDialog.get(parent.getContext());
 
-        TextView acceptTextView = (TextView) rowView.findViewById(R.id.confirmed_interview);
-        TextView rescheduleTextView = (TextView) rowView.findViewById(R.id.rescheduled_interview);
         LinearLayout reschedulePanel = (LinearLayout) rowView.findViewById(R.id.reschedule_panel);
         LinearLayout candidateStatusPanel = (LinearLayout) rowView.findViewById(R.id.candidate_status_panel);
 
         ImageView acceptImageView = (ImageView) rowView.findViewById(R.id.accept_interview);
         ImageView rejectImageView = (ImageView) rowView.findViewById(R.id.reject_interview);
         ImageView navigateIcon = (ImageView) rowView.findViewById(R.id.navigate_icon);
+        TextView navigateText = (TextView) rowView.findViewById(R.id.navigate_text);
 
-        Button updateStatusBtn = (Button) rowView.findViewById(R.id.update_candidate_status_btn);
+        ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
+        TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
 
-        final Spinner statusOption = (Spinner) rowView.findViewById(R.id.interview_status_spinner);
+        LinearLayout statusOptionLayout = (LinearLayout) rowView.findViewById(R.id.status_options);
+        LinearLayout notGoingLayout = (LinearLayout) rowView.findViewById(R.id.not_going);
+        LinearLayout delayedLayout = (LinearLayout) rowView.findViewById(R.id.delayed);
+        LinearLayout startedLayout = (LinearLayout) rowView.findViewById(R.id.started);
+        LinearLayout reachedLayout = (LinearLayout) rowView.findViewById(R.id.reached);
 
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){ //confirmed and/or has current status
-            acceptTextView.setVisibility(View.VISIBLE);
-            rescheduleTextView.setVisibility(View.GONE);
-            reschedulePanel.setVisibility(View.GONE);
 
-            acceptTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "Your interview has been confirmed!", Toast.LENGTH_LONG).show();
-                    ctx.finish();
-                    Intent intent = new Intent(ctx, JobApplicationActivity.class);
-                    ctx.startActivity(intent);
-                }
-            });
+            applicationStatusIcon.setBackgroundResource(R.drawable.ic_correct);
+            applicationStatusText.setText("Confirmed");
+            reschedulePanel.setVisibility(View.GONE);
+            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
 
             if(jobApplicationObject.getInterviewLat() != 0.0){
                 navigateIcon.setVisibility(View.VISIBLE);
+                navigateText.setVisibility(View.VISIBLE);
                 navigateIcon.setOnClickListener(new View.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -117,20 +114,17 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
                 });
             } else{
                 navigateIcon.setVisibility(View.GONE);
+                navigateText.setVisibility(View.GONE);
             }
 
         } else{
-            navigateIcon.setVisibility(View.GONE);
-            acceptTextView.setVisibility(View.GONE);
-            rescheduleTextView.setVisibility(View.VISIBLE);
-            reschedulePanel.setVisibility(View.VISIBLE);
+            applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
+            applicationStatusText.setText("Rescheduled");
+            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
 
-            rescheduleTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "Your interview has been rescheduled! Please accept/reject your rescheduled interview!", Toast.LENGTH_LONG).show();
-                }
-            });
+            navigateIcon.setVisibility(View.GONE);
+            navigateText.setVisibility(View.GONE);
+            reschedulePanel.setVisibility(View.VISIBLE);
 
             acceptImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -168,54 +162,69 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
                 }
 
                 if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){ //reached
-                    statusOption.setVisibility(View.GONE);
-                    updateStatusBtn.setVisibility(View.GONE);
+                    statusOptionLayout.setVisibility(View.GONE);
                 } else{
-                    statusOption.setVisibility(View.VISIBLE);
-                    updateStatusBtn.setVisibility(View.VISIBLE);
+                    statusOptionLayout.setVisibility(View.VISIBLE);
 
                     List<String> categories = new ArrayList<String>();
                     categories.add("Select a Status");
 
-                    // Spinner Drop down elements
                     if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
                         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
-                            categories.add(ServerConstants.CANDIDATE_STATUS_NOT_GOING);
+                            notGoingLayout.setVisibility(View.VISIBLE);
+                        } else{
+                            notGoingLayout.setVisibility(View.GONE);
                         }
-                        categories.add(ServerConstants.CANDIDATE_STATUS_DELAYED);
-                        categories.add(ServerConstants.CANDIDATE_STATUS_STARTED);
-                        categories.add(ServerConstants.CANDIDATE_STATUS_REACHED);
+                        delayedLayout.setVisibility(View.VISIBLE);
+                        startedLayout.setVisibility(View.VISIBLE);
+                        reachedLayout.setVisibility(View.VISIBLE);
                     } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
-                        categories.add(ServerConstants.CANDIDATE_STATUS_STARTED);
-                        categories.add(ServerConstants.CANDIDATE_STATUS_REACHED);
+                        notGoingLayout.setVisibility(View.GONE);
+                        delayedLayout.setVisibility(View.GONE);
+                        startedLayout.setVisibility(View.VISIBLE);
+                        reachedLayout.setVisibility(View.VISIBLE);
+
                     } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_STARTED) {
-                        categories.add(ServerConstants.CANDIDATE_STATUS_DELAYED);
-                        categories.add(ServerConstants.CANDIDATE_STATUS_REACHED);
+                        notGoingLayout.setVisibility(View.GONE);
+                        startedLayout.setVisibility(View.GONE);
+                        delayedLayout.setVisibility(View.VISIBLE);
+                        reachedLayout.setVisibility(View.VISIBLE);
                     }
-
-                    // Creating adapter for spinner
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
-
-                    // Drop down layout style - list view with radio button
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    statusOption.setAdapter(dataAdapter);
-
-                    updateStatusBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if(statusOption.getSelectedItemPosition() > 0){
-                                globalJpId = jobApplicationObject.getJobPostObject().getJobPostId();
-                                updateCandidateStatus(jobApplicationObject.getJobPostObject().getJobPostId(), statusOption.getSelectedItem().toString());
-                            } else{
-                                Toast.makeText(getContext(), "Please select a status to update!", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
                 }
+            } else{
+                candidateStatusPanel.setVisibility(View.GONE);
             }
         } else{
             candidateStatusPanel.setVisibility(View.GONE);
         }
+
+        notGoingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateCandidateStatus(jobApplicationObject.getJobPostObject().getJobPostId(), ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL);
+            }
+        });
+
+        delayedLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateCandidateStatus(jobApplicationObject.getJobPostObject().getJobPostId(), ServerConstants.CANDIDATE_STATUS_DELAYED_VAL);
+            }
+        });
+
+        startedLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateCandidateStatus(jobApplicationObject.getJobPostObject().getJobPostId(), ServerConstants.CANDIDATE_STATUS_STARTED_VAL);
+            }
+        });
+
+        reachedLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateCandidateStatus(jobApplicationObject.getJobPostObject().getJobPostId(), ServerConstants.CANDIDATE_STATUS_REACHED_VAL);
+            }
+        });
 
         //set job Application title
         holder.mJobApplicationTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
@@ -259,24 +268,14 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         return rowView;
     }
 
-    private void updateCandidateStatus(Long jpId, String stringVal){
-        Integer val;
-        if(stringVal.equals(ServerConstants.CANDIDATE_STATUS_NOT_GOING)){
-            val = ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL;
-        } else if(stringVal.equals(ServerConstants.CANDIDATE_STATUS_DELAYED)){
-            val = ServerConstants.CANDIDATE_STATUS_DELAYED_VAL;
-        } else if(stringVal.equals(ServerConstants.CANDIDATE_STATUS_STARTED)){
-            val = ServerConstants.CANDIDATE_STATUS_STARTED_VAL;
-        } else{
-            val = ServerConstants.CANDIDATE_STATUS_REACHED_VAL;
-        }
-
+    private void updateCandidateStatus(Long jpId, Integer val){
         globalCandidateStatus = val;
         UpdateCandidateStatusRequest.Builder updateCandidateStatusRequestBuilder = UpdateCandidateStatusRequest.newBuilder();
         updateCandidateStatusRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
         updateCandidateStatusRequestBuilder.setVal(val);
         updateCandidateStatusRequestBuilder.setJpId(jpId);
         updateCandidateStatusRequestBuilder.setReasonval(0);
+        globalJpId = jpId;
 
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
@@ -284,7 +283,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
 
         mCandidateStatusAsyncTask = new UpdateCandidateStatusAsyncTask();
         mCandidateStatusAsyncTask.execute(updateCandidateStatusRequestBuilder.build());
-
     }
 
     private void updateRescheduledInterviewConfirmation(Integer value, Long jpId){
@@ -321,6 +319,9 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
             pd.cancel();
             if(updateInterviewResponse.getStatus().getNumber() == UpdateInterviewResponse.Status.SUCCESS_VALUE){
                 Toast.makeText(getContext(), "Updated!", Toast.LENGTH_LONG).show();
+                ctx.finish();
+                Intent intent = new Intent(ctx, JobApplicationActivity.class);
+                ctx.startActivity(intent);
             } else{
                 Toast.makeText(getContext(), "Something went wrong. Please try again later!", Toast.LENGTH_LONG).show();
             }
@@ -430,8 +431,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
             });
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
             applyDialog.show();
-
-
         }
     }
 }
