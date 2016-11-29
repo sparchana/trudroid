@@ -84,7 +84,8 @@ public class PreScreenOthers extends Fragment {
     public String preScreenCompanyName;
     public String preScreenJobTitle;
     public String preScreenJobRoleTitle;
-    public Long preScreenJobPostId;
+    public Long jobPostId;
+    public boolean isFinalFragment = false;
 
     final List<Integer> candidateAssetIdList = new ArrayList<>();
 
@@ -195,8 +196,8 @@ public class PreScreenOthers extends Fragment {
         preScreenCompanyName = bundle.getString("companyName");
         preScreenJobRoleTitle = bundle.getString("jobRoleTitle");
         preScreenJobTitle = bundle.getString("jobTitle");
-        preScreenJobPostId = bundle.getLong("jobPostId");
-
+        jobPostId = bundle.getLong("jobPostId");
+        isFinalFragment =  bundle.getBoolean("isFinalFragment");
 
 
         if(remainingPropIdList.contains(PROPERTY_TYPE_ASSET_OWNED)) {
@@ -260,6 +261,8 @@ public class PreScreenOthers extends Fragment {
                     updatePreScreenOther.setCandidateTimeshiftPref(shiftValue);
                     updatePreScreenOther.addAllAssetId(candidateAssetIdList);
                     updatePreScreenOther.addAllPropertyId(remainingPropIdList);
+                    updatePreScreenOther.setIsFinalFragment(isFinalFragment);
+                    updatePreScreenOther.setJobPostId(jobPostId);
 
                     // update pre screen other value Async Task will come here
                     mUpdateOtherAsyncTask = new UpdatePreScreenOtherAsyncTask();
@@ -480,7 +483,7 @@ public class PreScreenOthers extends Fragment {
                     bundle.putString("companyName", preScreenCompanyName);
                     bundle.putString("jobRoleTitle", preScreenJobRoleTitle);
                     bundle.putString("jobTitle", preScreenJobTitle);
-                    bundle.putLong("jobPostId", preScreenJobPostId);
+                    bundle.putLong("jobPostId", jobPostId);
                     interviewSlotSelectFragment.setArguments(bundle);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .addToBackStack(null)

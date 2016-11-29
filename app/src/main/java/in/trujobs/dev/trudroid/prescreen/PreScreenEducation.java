@@ -57,6 +57,8 @@ public class PreScreenEducation extends Fragment {
 
     String[] degreeName = new String[0];
     Long[] degreeId = new Long[0];
+    public boolean isFinalFragment = false;
+    public Long jobPostId;
 
     private Long qualificationSelected = Long.valueOf(0), degreeSelected = Long.valueOf(0);
     Integer qualificationStatus = -1;
@@ -82,6 +84,9 @@ public class PreScreenEducation extends Fragment {
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         pd = CustomProgressDialog.get(getActivity());
+
+        isFinalFragment = getArguments().getBoolean("isFinalFragment");
+        jobPostId = getArguments().getLong("jobPostId");
 
 
         mAsyncTask = new GetEducationStaticAsyncTask();
@@ -280,7 +285,8 @@ public class PreScreenEducation extends Fragment {
                                 }
                                 educationBuilder.setCandidateEducationCompletionStatus(qualificationStatus);
                                 educationBuilder.setCandidateEducationInstitute(candidateCollege.getText().toString());
-
+                                educationBuilder.setJobPostId(jobPostId);
+                                educationBuilder.setIsFinalFragment(isFinalFragment);
                                 // this same api will add/update candidate education
                                 UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
                                 UpdateEducationAsyncTask.execute(educationBuilder.build());

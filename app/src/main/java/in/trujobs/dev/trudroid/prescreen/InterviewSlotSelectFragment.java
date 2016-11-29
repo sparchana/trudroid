@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +18,9 @@ import java.util.Date;
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.InterviewUtil;
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
@@ -64,6 +67,8 @@ public class InterviewSlotSelectFragment extends Fragment {
         view = inflater.inflate(R.layout.interview_slot_select, container, false);
         Bundle bundle = getArguments();
 
+        pd = CustomProgressDialog.get(getActivity());
+
         preScreenCompanyName = bundle.getString("companyName");
         preScreenJobRoleTitle = bundle.getString("jobRoleTitle");
         preScreenJobTitle = bundle.getString("jobTitle");
@@ -80,6 +85,7 @@ public class InterviewSlotSelectFragment extends Fragment {
 
         mGetInterviewSlotAsyncTask = new GetInterviewSlotAsyncTask();
         mGetInterviewSlotAsyncTask.execute(req.build());
+
 
         return view;
     }
@@ -137,7 +143,7 @@ public class InterviewSlotSelectFragment extends Fragment {
 
                         if (InterviewUtil.checkSlotAvailability(today, interviewDays)) {
                             interviewSlotIdArray[i] = response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotId();
-                            interviewSlotDateArray[i] = today;
+                            interviewSlotDateArray[i] = x;
                             interviewSlotArray[i] = getDayVal(x.getDay())+ ", "
                                     + x.getDate() + " " + getMonthVal((x.getMonth() + 1))
                                     + " (" + response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotTitle() + ")" ;
@@ -148,6 +154,42 @@ public class InterviewSlotSelectFragment extends Fragment {
 
                 adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, interviewSlotArray);
                 interviewSlot.setAdapter(adapter);
+
+
+
+
+
+
+                Button saveInterviewSlot = (Button) view.findViewById(R.id.save_interview_btn);
+                saveInterviewSlot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean check = true;
+                        if(interviewSlot.getSelectedItemPosition() < 0){
+                            check = false;
+                        }
+                        if(check){
+                            int slotTimeId = interviewSlotIdArray[interviewSlot.getSelectedItemPosition()];
+                            Date slotDate = interviewSlotDateArray[interviewSlot.getSelectedItemPosition()];
+
+                            UpdateCandidateInterviewDetailRequest.Builder interviewDetails = UpdateCandidateInterviewDetailRequest.newBuilder();
+                            interviewDetails.setJobPostId(preScreenJobPostId);
+                            interviewDetails.setCandidateMobile(Prefs.candidateMobile.get());
+                            // sending current date fix this
+                            interviewDetails.setScheduledInterviewDate(slotDate.toString());
+                            interviewDetails.setScheduledInterviewDateInMills(slotDate.getTime());
+                            interviewDetails.setTimeSlotId(slotTimeId);
+
+                            Tlog.i("interview date" + slotDate.toString());
+                            Tlog.i("interview time" + slotTimeId);
+                            updateCandidateInterviewDetailAsyncTask = new UpdateCandidateInterviewAsyncTask();
+                            updateCandidateInterviewDetailAsyncTask.execute(interviewDetails.build());
+                        }
+                    }
+                });
+
+
+
             }
         }
     }
@@ -176,7 +218,7 @@ public class InterviewSlotSelectFragment extends Fragment {
             } else {
                 if (response.getStatus() == GenericResponse.Status.SUCCESS) {
                     // back to search
-
+                    Tlog.i("successful interview slot selection");
                 }
             }
         }

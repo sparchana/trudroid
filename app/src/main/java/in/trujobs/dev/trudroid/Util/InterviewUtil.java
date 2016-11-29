@@ -5,6 +5,9 @@ import java.util.Date;
 
 /**
  * Created by zero on 29/11/16.
+ *
+ * TODO bring this 'util' under 'gradle' and generate util.jar import and use this util.jar for further common until in server and android
+ *
  */
 public class InterviewUtil {
 

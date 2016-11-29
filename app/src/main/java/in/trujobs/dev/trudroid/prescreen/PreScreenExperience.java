@@ -58,6 +58,9 @@ public class PreScreenExperience extends Fragment{
     final List<Long> jobRoleIdList = new ArrayList<Long>();
     private AsyncTask<UpdateCandidateExperienceRequest, Void, GenericResponse> mUpdateExperienceAsyncTask;
 
+    public boolean isFinalFragment = false;
+    public Long jobPostId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         view = inflater.inflate(R.layout.pre_screen_experience, container, false);
@@ -75,6 +78,10 @@ public class PreScreenExperience extends Fragment{
         isEmployedLayout = (LinearLayout) view.findViewById(R.id.is_employed_layout);
 
         pd = CustomProgressDialog.get(getActivity());
+
+
+        isFinalFragment = getArguments().getBoolean("isFinalFragment");
+        jobPostId = getArguments().getLong("jobPostId");
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -411,6 +418,9 @@ public class PreScreenExperience extends Fragment{
                                 }
                                 experienceBuilder.setCandidateCurrentCompany(currentCompany.getText().toString());
                             }
+                            experienceBuilder.setIsFinalFragment(isFinalFragment);
+                            experienceBuilder.setJobPostId(jobPostId);
+
 
                             mUpdateExperienceAsyncTask = new UpdateExperienceAsyncTask();
                             mUpdateExperienceAsyncTask.execute(experienceBuilder.build());

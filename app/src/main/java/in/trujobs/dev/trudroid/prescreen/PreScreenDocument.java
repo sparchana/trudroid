@@ -46,6 +46,9 @@ public class PreScreenDocument extends Fragment {
     private AsyncTask<UpdateCandidateDocumentRequest, Void, GenericResponse> mUpdateDocumentAsyncTask;
     LinearLayout documentListView;
     View view;
+    public boolean isFinalFragment = false;
+    public Long jobPostId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         view = inflater.inflate(R.layout.pre_screen_document, container, false);
@@ -71,7 +74,8 @@ public class PreScreenDocument extends Fragment {
 
         try {
             preScreenDocumentObject = PreScreenDocumentObject.parseFrom(bundle.getByteArray("document"));
-
+            isFinalFragment = bundle.getBoolean("isFinalFragment");
+            jobPostId = bundle.getLong("jobPostId");
             if(preScreenDocumentObject.isInitialized() && !preScreenDocumentObject.getIsMatching() ) {
                 getAllDocument(preScreenDocumentObject.getJobPostIdProofList());
 
@@ -107,6 +111,8 @@ public class PreScreenDocument extends Fragment {
                             documentBuilder.setCandidateMobile(Prefs.candidateMobile.get());
 
                             documentBuilder.addAllIdProof(candidateDocument);
+                            documentBuilder.setJobPostId(jobPostId);
+                            documentBuilder.setIsFinalFragment(isFinalFragment);
 
                             // doc update async task
                             mUpdateDocumentAsyncTask = new UpdateDocumentAsyncTask();

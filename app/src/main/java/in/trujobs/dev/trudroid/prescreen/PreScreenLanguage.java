@@ -37,6 +37,10 @@ import in.trujobs.proto.UpdateCandidateLanguageRequest;
 public class PreScreenLanguage extends Fragment{
     ProgressDialog pd;
     LinearLayout languageListView;
+
+    public boolean isFinalFragment = false;
+    public Long jobPostId;
+
     private AsyncTask<UpdateCandidateLanguageRequest, Void, GenericResponse> mUpdateLanguageAsyncTask;
 
     final List<LanguageKnownObject> candidateLanguageKnown = new ArrayList<LanguageKnownObject>();
@@ -68,6 +72,9 @@ public class PreScreenLanguage extends Fragment{
         try {
             preScreenLanguageObject = PreScreenLanguageObject.parseFrom(bundle.getByteArray("language"));
 
+            isFinalFragment = bundle.getBoolean("isFinalFragment");
+            jobPostId = bundle.getLong("jobPostId");
+
             if(preScreenLanguageObject.isInitialized() && !preScreenLanguageObject.getIsMatching() ) {
                 getAllLanguages(preScreenLanguageObject.getJobPostLanguageList());
 
@@ -87,6 +94,8 @@ public class PreScreenLanguage extends Fragment{
 
                             languageBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                             languageBuilder.addAllLanguageKnownObject(candidateLanguageKnown);
+                            languageBuilder.setJobPostId(jobPostId);
+                            languageBuilder.setIsFinalFragment(isFinalFragment);
 
                             mUpdateLanguageAsyncTask = new UpdateLanguageAsyncTask();
                             mUpdateLanguageAsyncTask.execute(languageBuilder.build());

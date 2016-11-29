@@ -200,6 +200,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle = new Bundle();
                 PreScreenDocument document = new PreScreenDocument();
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
+                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
 
                 document.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -210,6 +211,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             case PROPERTY_TYPE_LANGUAGE : // language
                 PreScreenLanguage language = new PreScreenLanguage();
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
+                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
 
                 language.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -220,6 +222,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             case PROPERTY_TYPE_EXPERIENCE : // exp
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
+                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
 
                 experience.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -230,6 +233,9 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             case PROPERTY_TYPE_EDUCATION : // education
                 PreScreenEducation education = new PreScreenEducation();
                 bundle.putByteArray("education", preScreenPopulateResponse.getEducation().toByteArray());
+                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
+                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
+
 
                 education.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -246,6 +252,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobRoleTitle());
                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
+               bundle.putBoolean("isFinalFragment", true);
                others.setArguments(bundle);
                activity.getSupportFragmentManager().beginTransaction()
                        .addToBackStack(null)
