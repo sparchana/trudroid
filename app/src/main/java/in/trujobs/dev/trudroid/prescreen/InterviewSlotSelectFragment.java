@@ -132,8 +132,9 @@ public class InterviewSlotSelectFragment extends Fragment {
                         Date today = newCalendar.getTime();
 
                         Calendar c = Calendar.getInstance();
+                        Tlog.i("today:" + today);
                         c.setTime(today);
-                        c.add(Calendar.DATE, today.getDate() + k);
+                        c.add(Calendar.DATE, k);
                         Date x = c.getTime();
 
                     for(int j = 0; j< response.getInterviewSlotsList().size(); ++j) {
@@ -155,11 +156,6 @@ public class InterviewSlotSelectFragment extends Fragment {
                 adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, interviewSlotArray);
                 interviewSlot.setAdapter(adapter);
 
-
-
-
-
-
                 Button saveInterviewSlot = (Button) view.findViewById(R.id.save_interview_btn);
                 saveInterviewSlot.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -176,7 +172,6 @@ public class InterviewSlotSelectFragment extends Fragment {
                             interviewDetails.setJobPostId(preScreenJobPostId);
                             interviewDetails.setCandidateMobile(Prefs.candidateMobile.get());
                             // sending current date fix this
-                            interviewDetails.setScheduledInterviewDate(slotDate.toString());
                             interviewDetails.setScheduledInterviewDateInMills(slotDate.getTime());
                             interviewDetails.setTimeSlotId(slotTimeId);
 
