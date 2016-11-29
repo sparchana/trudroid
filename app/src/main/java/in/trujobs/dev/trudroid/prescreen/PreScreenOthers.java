@@ -259,6 +259,7 @@ public class PreScreenOthers extends Fragment {
                     updatePreScreenOther.setCandidateGender(genderValue);
                     updatePreScreenOther.setCandidateTimeshiftPref(shiftValue);
                     updatePreScreenOther.addAllAssetId(candidateAssetIdList);
+                    updatePreScreenOther.addAllPropertyId(remainingPropIdList);
 
                     // update pre screen other value Async Task will come here
                     mUpdateOtherAsyncTask = new UpdatePreScreenOtherAsyncTask();

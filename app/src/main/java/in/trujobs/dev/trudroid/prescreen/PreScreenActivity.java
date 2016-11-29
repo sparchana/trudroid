@@ -21,7 +21,10 @@ import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.proto.PreScreenPopulateProtoRequest;
 import in.trujobs.proto.PreScreenPopulateProtoResponse;
 
-import static in.trujobs.dev.trudroid.Util.Constants.*;
+import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_DOCUMENT;
+import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_EDUCATION;
+import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_EXPERIENCE;
+import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LANGUAGE;
 
 public class PreScreenActivity extends TruJobsBaseActivity {
     public static Queue propertyIdQueue;
@@ -173,6 +176,25 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         for(Object item : propertyIdQueue){
             Tlog.i(item.toString());
         }
+
+//        ////
+//        InterviewSlotSelectFragment interviewSlotSelectFragment = new InterviewSlotSelectFragment();
+//
+//        bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
+//        bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+//        bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+//        bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobRoleTitle());
+//        bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
+//
+//        interviewSlotSelectFragment.setArguments(bundle);
+//        activity.getSupportFragmentManager().beginTransaction()
+//                .addToBackStack(null)
+//                .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+//                .replace(R.id.pre_screen, interviewSlotSelectFragment).commit();
+//
+//
+//        ////
+
         switch (propId) {
             case PROPERTY_TYPE_DOCUMENT : // documents
                 bundle = new Bundle();

@@ -11,23 +11,35 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
-import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
+import in.trujobs.dev.trudroid.Util.InterviewUtil;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.GetInterviewSlotsRequest;
 import in.trujobs.proto.GetInterviewSlotsResponse;
-import in.trujobs.proto.InterviewSlot;
 import in.trujobs.proto.UpdateCandidateInterviewDetailRequest;
+
+import static in.trujobs.dev.trudroid.Util.InterviewUtil.getDayVal;
+import static in.trujobs.dev.trudroid.Util.InterviewUtil.getMonthVal;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class InterviewSlotSelectFragment extends Fragment {
+
+
+    private AsyncTask<UpdateCandidateInterviewDetailRequest,
+            Void, GenericResponse> updateCandidateInterviewDetailAsyncTask;
+    private AsyncTask<GetInterviewSlotsRequest,
+            Void, GetInterviewSlotsResponse> mGetInterviewSlotAsyncTask;
 
     public String preScreenCompanyName;
     public String preScreenJobTitle;
@@ -35,7 +47,8 @@ public class InterviewSlotSelectFragment extends Fragment {
     public Long preScreenJobPostId;
     SpinnerAdapter adapter;
     String[] interviewSlotArray = new String[0];
-    Long[] interviewSlotIdArray = new Long[0];
+    Integer[] interviewSlotIdArray = new Integer[0];
+    Date[] interviewSlotDateArray = new Date[0];
     View view;
 
     ProgressDialog pd;
@@ -54,17 +67,19 @@ public class InterviewSlotSelectFragment extends Fragment {
         preScreenCompanyName = bundle.getString("companyName");
         preScreenJobRoleTitle = bundle.getString("jobRoleTitle");
         preScreenJobTitle = bundle.getString("jobTitle");
+        preScreenJobPostId = bundle.getLong("jobPostId");
 
         TextView companyName = (TextView) view.findViewById(R.id.interview_company_title);
         TextView jobTitle = (TextView) view.findViewById(R.id.interview_job_title);
         companyName.setText(preScreenCompanyName);
         jobTitle.setText(preScreenJobTitle);
 
-        // setting the following values run in paralle
-        interviewSlotArray[0] = "Select Interview Slot";
-        interviewSlotIdArray[0] = Long.valueOf(-1);
+        GetInterviewSlotsRequest.Builder req = GetInterviewSlotsRequest.newBuilder();
+        req.setJobPostId(preScreenJobPostId);
+        Tlog.i("jobPostId: " + preScreenJobPostId);
 
-        pd = CustomProgressDialog.get(getActivity());
+        mGetInterviewSlotAsyncTask = new GetInterviewSlotAsyncTask();
+        mGetInterviewSlotAsyncTask.execute(req.build());
 
         return view;
     }
@@ -73,7 +88,6 @@ public class InterviewSlotSelectFragment extends Fragment {
             Void, GetInterviewSlotsResponse> {
         protected void onPreExecute() {
             super.onPreExecute();
-            pd.show();
         }
 
         @Override
@@ -84,7 +98,6 @@ public class InterviewSlotSelectFragment extends Fragment {
         @Override
         protected void onPostExecute(GetInterviewSlotsResponse response) {
             super.onPostExecute(response);
-            pd.cancel();
             if(!Util.isConnectedToInternet(getContext())) {
                 Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
             } else if(response == null){
@@ -95,19 +108,46 @@ public class InterviewSlotSelectFragment extends Fragment {
                 // construct value
                 final Spinner interviewSlot = (Spinner) view.findViewById(R.id.interview_slot_select);
 
-                for(int i = 0; i< response.getInterviewSlotsList().size(); ++i) {
-                    response.getInterviewSlotsList().get(i).getInterviewTimeSlotObject().getSlotId();
-                    response.getInterviewSlotsList().get(i).getInterviewTimeSlotObject().getSlotTitle();
-                    response.getInterviewSlotsList().get(i).getInterviewDateSlot();
-                    interviewSlotArray[i+1] = 
-                }
-                for(InterviewSlot slot: response.getInterviewSlotsList()) {
+                Tlog.i("slot size: " + response.getInterviewSlotsList().size());
+                interviewSlotArray = new String[response.getInterviewSlotsList().size() * 7 + 1];
+                interviewSlotIdArray = new Integer[response.getInterviewSlotsList().size() * 7 + 1];
+                interviewSlotDateArray = new Date[response.getInterviewSlotsList().size() * 7 + 1];
 
+                // setting the following values run in paralle
+                interviewSlotArray[0] = "Select Interview Slot";
+                interviewSlotIdArray[0] = Integer.valueOf(-1);
+                interviewSlotDateArray[0] = null;
+
+                for(int i = 1, k = 2; k < 9; ++k) {
+                        Calendar newCalendar = Calendar.getInstance();
+                        newCalendar.get(Calendar.YEAR);
+                        newCalendar.get(Calendar.MONTH);
+                        newCalendar.get(Calendar.DAY_OF_MONTH);
+                        Date today = newCalendar.getTime();
+
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(today);
+                        c.add(Calendar.DATE, today.getDate() + k);
+                        Date x = c.getTime();
+
+                    for(int j = 0; j< response.getInterviewSlotsList().size(); ++j) {
+
+                        // in a day , create entry for each different time slot
+                        String interviewDays = response.getInterviewSlotsList().get(j).getInterviewDays();
+
+                        if (InterviewUtil.checkSlotAvailability(today, interviewDays)) {
+                            interviewSlotIdArray[i] = response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotId();
+                            interviewSlotDateArray[i] = today;
+                            interviewSlotArray[i] = getDayVal(x.getDay())+ ", "
+                                    + x.getDate() + " " + getMonthVal((x.getMonth() + 1))
+                                    + " (" + response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotTitle() + ")" ;
+                            i++;
+                        }
+                    }
                 }
 
                 adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, interviewSlotArray);
                 interviewSlot.setAdapter(adapter);
-
             }
         }
     }
