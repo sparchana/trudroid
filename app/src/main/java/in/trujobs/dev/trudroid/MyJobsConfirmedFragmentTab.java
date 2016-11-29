@@ -8,12 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import in.trujobs.dev.trudroid.Adapters.MyConfirmedJobsAdapter;
-import in.trujobs.dev.trudroid.Util.Tlog;
-import in.trujobs.proto.JobPostWorkFlowObject;
+import in.trujobs.dev.trudroid.Adapters.MyConfirmedRescheduledJobsAdapter;
 
 /**
  * Created by dodo on 25/11/16.
@@ -31,9 +26,9 @@ public class MyJobsConfirmedFragmentTab extends Fragment {
 
         ListView myConfirmedJobListView = (ListView) rowView.findViewById(R.id.my_jobs_confirmed_list_view);
 
-        if(jobApplicationActivity.confirmedInterviewList.size() > 0){
-            MyConfirmedJobsAdapter myConfirmedJobsAdapter = new MyConfirmedJobsAdapter(getActivity(), jobApplicationActivity.confirmedInterviewList);
-            myConfirmedJobListView.setAdapter(myConfirmedJobsAdapter);
+        if(jobApplicationActivity.todaysInterviewList.size() > 0){
+            MyConfirmedRescheduledJobsAdapter myConfirmedRescheduledJobsAdapter = new MyConfirmedRescheduledJobsAdapter(getActivity(), jobApplicationActivity.todaysInterviewList);
+            myConfirmedJobListView.setAdapter(myConfirmedRescheduledJobsAdapter);
         } else{
             ImageView noConfirmedJobImage = (ImageView) rowView.findViewById(R.id.no_confirmed_jobs_image);
             noConfirmedJobImage.setVisibility(View.VISIBLE);

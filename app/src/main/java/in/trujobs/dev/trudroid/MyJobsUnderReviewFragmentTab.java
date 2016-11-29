@@ -8,12 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import in.trujobs.dev.trudroid.Adapters.MyConfirmedJobsAdapter;
 import in.trujobs.dev.trudroid.Adapters.MyUnderReviewJobAdapter;
-import in.trujobs.proto.JobPostWorkFlowObject;
 
 /**
  * Created by dodo on 25/11/16.

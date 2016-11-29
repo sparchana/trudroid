@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 
 /**
@@ -40,6 +42,23 @@ public class MyUnderReviewJobAdapter extends ArrayAdapter<JobPostWorkFlowObject>
                     R.layout.my_job_under_review_listview, parent, false);
         }
 
+        ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
+        TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
+
+        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE ||
+                jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
+
+            applicationStatusIcon.setBackgroundResource(R.drawable.ic_error);
+            applicationStatusText.setText("Not Shortlisted");
+            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorRed));
+
+        } else {
+            applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
+            applicationStatusText.setText("Under Review");
+            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
+
+        }
+
         //set job Application title
         holder.mJobApplicationTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
         holder.mJobApplicationTitleTextView.setText(jobApplicationObject.getJobPostObject().getJobPostTitle());
@@ -60,14 +79,6 @@ public class MyUnderReviewJobAdapter extends ArrayAdapter<JobPostWorkFlowObject>
         //set job Application experience
         holder.mJobApplicationExperienceTextView = (TextView) rowView.findViewById(R.id.job_post_exp_text_view);
         holder.mJobApplicationExperienceTextView.setText(jobApplicationObject.getJobPostObject().getJobPostExperience().getExperienceType());
-
-        TextView underReviewTextView = (TextView) rowView.findViewById(R.id.under_review_text_view);
-        underReviewTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Your application is under review. We will notify you once your application is shortlisted by the recruiter!", Toast.LENGTH_LONG).show();
-            }
-        });
 
         //last update
         holder.mLastUpdateTextView = (TextView) rowView.findViewById(R.id.last_update_date);
