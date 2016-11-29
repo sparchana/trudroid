@@ -18,14 +18,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,10 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
-import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
-import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
@@ -58,12 +53,7 @@ import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.AssetObject;
 import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
-import in.trujobs.proto.HomeLocalityRequest;
-import in.trujobs.proto.HomeLocalityResponse;
-import in.trujobs.proto.LatLngOrPlaceIdRequest;
-import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.PreScreenAssetObject;
-import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateOtherRequest;
 
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_ASSET_OWNED;
@@ -76,10 +66,8 @@ public class PreScreenOthers extends Fragment {
     View view;
     private Toast mBaseToastLong;
     Spinner shift_option = null;
-    private AsyncTask<HomeLocalityRequest, Void, HomeLocalityResponse> mUpdateLocatlityAsyncTask;
+    private AsyncTask<UpdateCandidateOtherRequest, Void, GenericResponse> mUpdateOtherAsyncTask;
     private AsyncTask<Void, Void, GetCandidateBasicProfileStaticResponse> mAsyncTask;
-    private AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> mLatLngOrPlaceIdAsyncTask;
-    private static HomeLocalityRequest.Builder mHomeLocalityRequest = HomeLocalityRequest.newBuilder();
 
     private List<Integer> remainingPropIdList;
     private Button maleBtn, femaleBtn;
@@ -93,6 +81,12 @@ public class PreScreenOthers extends Fragment {
     public LinearLayout assetListView;
     public LinearLayout workShiftView;
     List<Integer> shiftIds = new ArrayList<Integer>();
+    public String preScreenCompanyName;
+    public String preScreenJobTitle;
+    public String preScreenJobRoleTitle;
+    public Long preScreenJobPostId;
+
+    final List<Integer> candidateAssetIdList = new ArrayList<>();
 
     private AutoCompleteTextView mHomeLocalityTxtView;
 
@@ -131,7 +125,7 @@ public class PreScreenOthers extends Fragment {
         maleBtn = (Button) view.findViewById(R.id.gender_male);
         femaleBtn = (Button) view.findViewById(R.id.gender_female);
 
-        assetListView = (LinearLayout) view.findViewById(R.id.asset_list_view);
+        assetListView = (LinearLayout) view.findViewById(R.id.ps_asset_list_view);
         workShiftView = (LinearLayout) view.findViewById(R.id.pre_screen_time_shift_layout);
         PreScreenAssetObject preScreenAssetObject;
         Bundle bundle = getArguments();
@@ -198,21 +192,20 @@ public class PreScreenOthers extends Fragment {
         }
         shiftLayout = (android.support.design.widget.TextInputLayout) view.findViewById(R.id.shift_layout);
 
+        preScreenCompanyName = bundle.getString("companyName");
+        preScreenJobRoleTitle = bundle.getString("jobRoleTitle");
+        preScreenJobTitle = bundle.getString("jobTitle");
+        preScreenJobPostId = bundle.getLong("jobPostId");
+
+
 
         if(remainingPropIdList.contains(PROPERTY_TYPE_ASSET_OWNED)) {
             assetListView.setVisibility(view.VISIBLE);
             // render assets
             try {
                 preScreenAssetObject = PreScreenAssetObject.parseFrom(bundle.getByteArray("asset"));
-                for(AssetObject assetObject : preScreenAssetObject.getJobPostAssetList()){
-                    View mLinearView = inflater.inflate(R.layout.pre_screen_asset_item, null);
-                    TextView assetTitle = (TextView) mLinearView
-                            .findViewById(R.id.asset_title);
-                    assetTitle.setText(assetObject.getAssetTitle());
-                    assetListView.addView(mLinearView);
-                    final CheckBox assetCheckbox = (CheckBox) mLinearView.findViewById(R.id.asset_checkbox);
-                    assetCheckbox.setId(assetObject.getAssetId());
-                }
+                getAllAsset(preScreenAssetObject.getJobPostAssetList());
+
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
@@ -249,33 +242,27 @@ public class PreScreenOthers extends Fragment {
                     check = false;
                     genderBtnLayout.setBackgroundResource(R.drawable.border);
                     showDialog("Please provide your gender");
-                } else if(mHomeLocalityTxtView.getText().toString().length() == 0 ){
-                    check = false;
-                    mHomeLocalityTxtView.setError("Please provide your Home Locality");
-                    mHomeLocalityTxtView.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(mHomeLocalityTxtView));
-                    showDialog("Please provide your Home Locality");
                 } else if(shiftValue < 1 ){
                     check = false;
                     showDialog("Please provide your preferred Time Shift");
                     shiftLayout.setBackgroundResource(R.drawable.border);
                 }
 
-                if(check){
+                if(check) {
                     //Track this action
                     ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_OTHER_DETAIL_PRESCREEN, Constants.GA_ACTION_SAVE_OTHER_DETAIL_PRESCREEN);
 
-                    //adding candidate's home locality
-                    triggerFinalSubmission();
-
                     //update other basic information
-                    UpdateCandidateBasicProfileRequest.Builder updateCandidateBasicProfileRequestBuilder = UpdateCandidateBasicProfileRequest.newBuilder();
-                    updateCandidateBasicProfileRequestBuilder.setCandidateDOB(candidateDob.getText().toString());
-                    updateCandidateBasicProfileRequestBuilder.setCandidateTimeshiftPref(shiftValue);
-                    updateCandidateBasicProfileRequestBuilder.setCandidateGender(genderValue);
-                    updateCandidateBasicProfileRequestBuilder.setCandidateTimeshiftPref(shiftIds.get(shift_option.getSelectedItemPosition()));
-
+                    UpdateCandidateOtherRequest.Builder updatePreScreenOther = UpdateCandidateOtherRequest.newBuilder();
+                    updatePreScreenOther.setCandidateDOB(candidateDob.getText().toString());
+                    updatePreScreenOther.setCandidateMobile(Prefs.candidateMobile.get());
+                    updatePreScreenOther.setCandidateGender(genderValue);
+                    updatePreScreenOther.setCandidateTimeshiftPref(shiftValue);
+                    updatePreScreenOther.addAllAssetId(candidateAssetIdList);
 
                     // update pre screen other value Async Task will come here
+                    mUpdateOtherAsyncTask = new UpdatePreScreenOtherAsyncTask();
+                    mUpdateOtherAsyncTask.execute(updatePreScreenOther.build());
                 }
             }
         });
@@ -283,52 +270,32 @@ public class PreScreenOthers extends Fragment {
         Tlog.i("remaining ids, that needed to be shown in one fragment: ");
         return view;
     }
-    public void triggerFinalSubmission(){
-        mHomeLocalityRequest.setCandidateMobile(Prefs.candidateMobile.get());
-        mHomeLocalityRequest.setCandidateId(Prefs.candidateId.get());
-        mHomeLocalityRequest.setLocalityName(mAddressOutput);
 
-        mHomeLocalityRequest.setLat( mLastLocation.getLatitude());
-        mHomeLocalityRequest.setLng( mLastLocation.getLongitude());
-        if(mPlaceId!=null) mHomeLocalityRequest.setPlaceId( mPlaceId);
+    private void getAllAsset(List<AssetObject> jobPostAssetList) {
+        for(AssetObject assetObject : jobPostAssetList){
+            LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View mLinearView = inflater.inflate(R.layout.pre_screen_asset_item, null);
+            TextView assetTitle = (TextView) mLinearView
+                    .findViewById(R.id.asset_title);
+            assetTitle.setText(assetObject.getAssetTitle());
+            assetListView.addView(mLinearView);
+            final CheckBox assetCheckbox = (CheckBox) mLinearView.findViewById(R.id.asset_checkbox);
+            assetCheckbox.setId(assetObject.getAssetId());
 
-        mUpdateLocatlityAsyncTask = new PreScreenOthers.HomeLocalityAsyncTask();
-        mUpdateLocatlityAsyncTask.execute(mHomeLocalityRequest.build());
+            assetCheckbox.setOnCheckedChangeListener(new  CompoundButton.OnCheckedChangeListener(){
 
-            /* update prefs values */
-        Prefs.candidateHomeLat.put(String.valueOf(mLastLocation.getLatitude()));
-        Prefs.candidateHomeLng.put(String.valueOf(mLastLocation.getLongitude()));
-    }
-
-    private class HomeLocalityAsyncTask extends AsyncTask<HomeLocalityRequest,
-            Void, HomeLocalityResponse> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd.show();
-        }
-
-        @Override
-        protected HomeLocalityResponse doInBackground(HomeLocalityRequest... params) {
-            return HttpRequest.addHomeLocality(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(HomeLocalityResponse homeLocalityResponse) {
-            super.onPostExecute(homeLocalityResponse);
-            mAsyncTask = null;
-            if (homeLocalityResponse == null) {
-                Toast.makeText(getContext(), "Failed to set Home PlaceAPIHelper. Please try again.",
-                        Toast.LENGTH_LONG).show();
-                Log.w("","Null Response");
-                return;
-            } else if (homeLocalityResponse.getStatusValue() == ServerConstants.SUCCESS){
-                Prefs.candidateHomeLocalityStatus.put(ServerConstants.HOMELOCALITY_YES);
-                Tlog.e("SUCCESS!");
-            }
-            else {
-                Tlog.e("FAILED");
-            }
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(b){
+                       // add
+                        candidateAssetIdList.add(assetCheckbox.getId());
+                    } else {
+                        // remove
+                        candidateAssetIdList.remove(assetCheckbox.getId());
+                    }
+                }
+            } );
         }
     }
 
@@ -360,30 +327,6 @@ public class PreScreenOthers extends Fragment {
                     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
                     ((PreScreenActivity)getActivity()).setSupportActionBar(toolbar);
 
-                    mHomeLocalityTxtView.setAdapter(new PlacesAutoCompleteAdapter(getContext(), R.layout.place_autocomplete_list_item));
-                    mHomeLocalityTxtView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // Get data associated with the specified position
-                            // in the list (AdapterView)
-                            //mAddressOutput = (String) parent.getItemAtPosition(position);
-                            GET_LOCALITY_FROM_GPS = false;
-                            GET_LOCALITY_FROM_AUTOCOMPLETE = true;
-                            PlaceAPIHelper placeAPIHelper = (PlaceAPIHelper) parent.getItemAtPosition(position);
-                            mAddressOutput = placeAPIHelper.getDescription();
-                            mPlaceId = placeAPIHelper.getPlaceId();
-                            Tlog.i("mAddressOutput ------ " + mAddressOutput
-                                    + "\nplaceId:" + mPlaceId);
-
-                            LatLngOrPlaceIdRequest.Builder latLngOrPlaceIdRequest = LatLngOrPlaceIdRequest.newBuilder();
-                            if(!mPlaceId.trim().isEmpty()){
-                                latLngOrPlaceIdRequest.setPlaceId(mPlaceId);
-                            }
-                            mLatLngOrPlaceIdAsyncTask = new PreScreenOthers.LatLngOrPlaceIdAsyncTask();
-                            mLatLngOrPlaceIdAsyncTask.execute(latLngOrPlaceIdRequest.build());
-                        }
-                    });
-
 
                     setDateTimeField();
                     shift_option = (Spinner) view.findViewById(R.id.shift_option);
@@ -408,22 +351,6 @@ public class PreScreenOthers extends Fragment {
                             return false;
                         }
                     });
-
-
-                    ImageView homeLocalityPicker = (ImageView) view.findViewById(R.id.home_locality_picker);
-
-                    homeLocalityPicker.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mHomeLocalityTxtView.requestFocus();
-                            mHomeLocalityTxtView.setSelection(mHomeLocalityTxtView.getText().length());
-                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.showSoftInput(mHomeLocalityTxtView, InputMethodManager.SHOW_IMPLICIT);
-                        }
-                    });
-
-                    final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-
 
                     shift_option.setSelection(0);
 
@@ -487,96 +414,6 @@ public class PreScreenOthers extends Fragment {
         alertDialog.show();
     }
 
-    private class LatLngOrPlaceIdAsyncTask extends BasicLatLngOrPlaceIdAsyncTask {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd.show();
-            Tlog.i("Fetching Locality Object from latlng....");
-        }
-
-        @Override
-        protected void onPostExecute(LocalityObjectResponse localityObjectResponse) {
-            super.onPostExecute(localityObjectResponse);
-            pd.cancel();
-            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            if(localityObjectResponse!=null){
-                if(localityObjectResponse.getStatus()== LocalityObjectResponse.Status.SUCCESS) {
-                    switch (localityObjectResponse.getType()) {
-                        case  FOR_PLACEID:
-                            if(mLastLocation == null) {
-                                mLastLocation = new Location("");
-                            }
-                            if(localityObjectResponse.getLocality().getLat()!=0){
-                                mLastLocation.setLatitude(localityObjectResponse.getLocality().getLat());
-                            }
-                            if(localityObjectResponse.getLocality().getLng()!=0){
-                                mLastLocation.setLongitude(localityObjectResponse.getLocality().getLng());
-                            }
-                            break;
-                        case FOR_LATLNG:
-                            /* since the req was made with latlng i.e the users latlng
-                             and not the locality latlng, use that to make the final req*/
-                            break;
-                        default:
-                            break;
-                    }
-                    /* common setters  */
-                    if(!localityObjectResponse.getLocality().getLocalityName().isEmpty()){
-                        mAddressOutput = localityObjectResponse.getLocality().getLocalityName();
-                    }
-                    if(!localityObjectResponse.getLocality().getPlaceId().trim().isEmpty()){
-                        mPlaceId = localityObjectResponse.getLocality().getPlaceId();
-                    }
-                    mLatLngOrPlaceIdAsyncTask = null;
-                    mHomeLocalityTxtView.setText(mAddressOutput);
-                    mHomeLocalityTxtView.dismissDropDown();
-                    mHomeLocalityTxtView.clearFocus();
-                } else {
-                    showToast("Error While Fetching Locality. Please manually type your locality above.");
-                    mHomeLocalityTxtView.setText("");
-                    mAddressOutput = "";
-                    mHomeLocalityTxtView.clearFocus();
-                }
-            }
-        }
-    }
-
-
-    private class UpdatePreScreenOtherAsyncTask extends AsyncTask<UpdateCandidateOtherRequest,
-            Void, GenericResponse> {
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd.show();
-        }
-
-        @Override
-        protected GenericResponse doInBackground(UpdateCandidateOtherRequest ... params) {
-            return HttpRequest.updateCandidateOther(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(GenericResponse response) {
-            super.onPostExecute(response);
-            pd.cancel();
-            if(!Util.isConnectedToInternet(getContext())) {
-                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-            } else if(response == null){
-                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                if(response.getStatus() == GenericResponse.Status.SUCCESS){
-                    // todo call to go to interview selection comes here
-                } else{
-                    Toast.makeText(getContext(), "Looks like something went wrong while saving education profile. Please try again.",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-
     /**
      * Shows a toast with the given text.
      */
@@ -611,4 +448,49 @@ public class PreScreenOthers extends Fragment {
         }
     }
 
+    private class UpdatePreScreenOtherAsyncTask extends AsyncTask<UpdateCandidateOtherRequest,
+            Void, GenericResponse> {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected GenericResponse doInBackground(UpdateCandidateOtherRequest ... params) {
+            return HttpRequest.updateCandidateOther(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(GenericResponse response) {
+            super.onPostExecute(response);
+            pd.cancel();
+
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if(response == null){
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Tlog.i("status: " + response.getStatus());
+                if(response.getStatus() == GenericResponse.Status.SUCCESS){
+                    // todo call to go to interview selection comes here
+                    InterviewSlotSelectFragment interviewSlotSelectFragment = new InterviewSlotSelectFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("companyName", preScreenCompanyName);
+                    bundle.putString("jobRoleTitle", preScreenJobRoleTitle);
+                    bundle.putString("jobTitle", preScreenJobTitle);
+                    bundle.putLong("jobPostId", preScreenJobPostId);
+                    interviewSlotSelectFragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .addToBackStack(null)
+                            .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                            .replace(R.id.pre_screen, interviewSlotSelectFragment).commit();
+                    return;
+                } else {
+                    Toast.makeText(getContext(), "Looks like something went wrong while saving Other Details. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 }

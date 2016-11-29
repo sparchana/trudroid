@@ -342,7 +342,7 @@ public class CandidateProfileEducation extends Fragment {
                             }
                         }
                     });
-                } else{
+                } else {
                     Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                             Toast.LENGTH_LONG).show();
                     getActivity().getSupportFragmentManager().popBackStack();

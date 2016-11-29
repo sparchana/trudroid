@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:id="@+id/last_withdrawn_salary"
         android:textSize="@dimen/Edit_Text_Size"
-        android:maxLength="6"
+        android:maxLength="5"
         android:singleLine="true"
         android:inputType="number"
         android:paddingLeft="4dp"

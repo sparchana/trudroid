@@ -42,4 +42,8 @@ public class Config {
     public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_LANGUAGE = BASE_HTTP_URL + "/mUpdateCandidateLanguage";
     public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_EXPERIENCE = BASE_HTTP_URL + "/mUpdateCandidateExperience";
     public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_OTHERS = BASE_HTTP_URL + "/mUpdateCandidateOther";
+
+    // interview details
+    public static final String URL_UPDATE_CANDIDATE_INTERVIEW_DETAIL = BASE_HTTP_URL + "/mUpdateCandidateInterviewDetail";
+    public static final String URL_UPDATE_GET_INTERVIEW_SLOTS = BASE_HTTP_URL + "/mGetInterviewSlots";
 }

@@ -71,10 +71,9 @@
 
             <include layout="@layout/pre_screen_timeshift_pref" />
 
-            <include layout="@layout/pre_screen_last_withdrawn_salary" />
-
             <LinearLayout
-                android:id="@+id/asset_list_view"
+                android:id="@+id/ps_asset_list_view"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />

@@ -217,7 +217,13 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 break;
            default:
                PreScreenOthers others = new PreScreenOthers();
+               // adding the removed propId back
+               propertyIdQueue.add(propId);
                bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
+               bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+               bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+               bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobRoleTitle());
+               bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                others.setArguments(bundle);
                activity.getSupportFragmentManager().beginTransaction()
                        .addToBackStack(null)

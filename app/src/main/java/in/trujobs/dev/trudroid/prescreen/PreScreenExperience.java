@@ -384,6 +384,11 @@ public class PreScreenExperience extends Fragment{
                             lastWithdrawnSalary.setError("Please provide your last drawn Salary");
                             lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                             showDialog("Please provide your current Salary");
+                        } else if(isEmployed == 1 && (currentJobRoleValue == null || currentCompany.getText().toString().length() < 3)) {
+                            check = false;
+                            currentCompany.setError("Please provide your last drawn Salary");
+                            currentCompany.addTextChangedListener(new GenericTextWatcher(currentCompany));
+                            showDialog("Please provide your current Comapany details");
                         }
 
                         if(check){

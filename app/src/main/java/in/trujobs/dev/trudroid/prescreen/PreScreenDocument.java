@@ -73,7 +73,7 @@ public class PreScreenDocument extends Fragment {
             preScreenDocumentObject = PreScreenDocumentObject.parseFrom(bundle.getByteArray("document"));
 
             if(preScreenDocumentObject.isInitialized() && !preScreenDocumentObject.getIsMatching() ) {
-                getAllAssets(preScreenDocumentObject.getJobPostIdProofList());
+                getAllDocument(preScreenDocumentObject.getJobPostIdProofList());
 
 
                 Button saveDocumentDetail = (Button) view.findViewById(R.id.save_document_btn);
@@ -124,7 +124,7 @@ public class PreScreenDocument extends Fragment {
         return view;
     }
 
-    private void getAllAssets(List<IdProofObject> jobPostIdProofList) {
+    private void getAllDocument(List<IdProofObject> jobPostIdProofList) {
         for(IdProofObject idProofObject : jobPostIdProofList) {
             LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

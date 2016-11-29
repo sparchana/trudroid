@@ -31,6 +31,8 @@ import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
 import in.trujobs.proto.GetCandidateInformationResponse;
+import in.trujobs.proto.GetInterviewSlotsRequest;
+import in.trujobs.proto.GetInterviewSlotsResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
 import in.trujobs.proto.HomeLocalityRequest;
@@ -54,6 +56,7 @@ import in.trujobs.proto.UpdateCandidateDocumentRequest;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
 import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
 import in.trujobs.proto.UpdateCandidateExperienceRequest;
+import in.trujobs.proto.UpdateCandidateInterviewDetailRequest;
 import in.trujobs.proto.UpdateCandidateLanguageRequest;
 import in.trujobs.proto.UpdateCandidateOtherRequest;
 
@@ -642,6 +645,40 @@ public class HttpRequest {
         GenericResponse response = null;
         try {
             response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static GenericResponse updateCandidateInterviewDetail(UpdateCandidateInterviewDetailRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_INTERVIEW_DETAIL,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GenericResponse response = null;
+        try {
+            response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static GetInterviewSlotsResponse getInterviewSlots(GetInterviewSlotsRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_GET_INTERVIEW_SLOTS,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GetInterviewSlotsResponse response = null;
+        try {
+            response = GetInterviewSlotsResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
