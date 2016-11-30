@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.JobApplicationActivity;
+import in.trujobs.dev.trudroid.JobApplicationDetailActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -75,8 +76,16 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         LinearLayout reschedulePanel = (LinearLayout) rowView.findViewById(R.id.reschedule_panel);
         LinearLayout candidateStatusPanel = (LinearLayout) rowView.findViewById(R.id.candidate_status_panel);
 
-        ImageView acceptImageView = (ImageView) rowView.findViewById(R.id.accept_interview);
-        ImageView rejectImageView = (ImageView) rowView.findViewById(R.id.reject_interview);
+        android.support.v7.widget.CardView cardView = (android.support.v7.widget.CardView) rowView.findViewById(R.id.card_view);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JobApplicationDetailActivity.showDetail(getContext(), jobApplicationObject);
+            }
+        });
+
+        LinearLayout acceptImageView = (LinearLayout) rowView.findViewById(R.id.accept_interview);
+        LinearLayout rejectImageView = (LinearLayout) rowView.findViewById(R.id.reject_interview);
         ImageView navigateIcon = (ImageView) rowView.findViewById(R.id.navigate_icon);
         TextView navigateText = (TextView) rowView.findViewById(R.id.navigate_text);
 
@@ -165,9 +174,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
                     statusOptionLayout.setVisibility(View.GONE);
                 } else{
                     statusOptionLayout.setVisibility(View.VISIBLE);
-
-                    List<String> categories = new ArrayList<String>();
-                    categories.add("Select a Status");
 
                     if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
                         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
@@ -298,7 +304,7 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         mAsyncTask.execute(updateInterviewRequestBuilder.build());
     }
 
-    private class UpdateInterviewAsyncTask extends AsyncTask<UpdateInterviewRequest,
+    public class UpdateInterviewAsyncTask extends AsyncTask<UpdateInterviewRequest,
             Void, UpdateInterviewResponse> {
 
         protected void onPreExecute() {

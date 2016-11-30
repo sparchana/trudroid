@@ -1,6 +1,7 @@
 package in.trujobs.dev.trudroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,10 @@ import in.trujobs.proto.JobPostWorkFlowObject;
 
 public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
+    Activity ctx;
     public MyCompletedJobAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
         super(context, 0, jobApplicationObjectList);
+        ctx = context;
     }
 
     public class Holder
@@ -42,6 +45,14 @@ public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
         ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
         TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
+
+        android.support.v7.widget.CardView cardView = (android.support.v7.widget.CardView) rowView.findViewById(R.id.card_view);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JobApplicationDetailActivity.showDetail(getContext(), jobApplicationObject);
+            }
+        });
 
         //set job Application title
         holder.mJobApplicationTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);

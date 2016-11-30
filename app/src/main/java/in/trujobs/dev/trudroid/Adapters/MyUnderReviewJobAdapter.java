@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.JobApplicationDetailActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -44,6 +45,14 @@ public class MyUnderReviewJobAdapter extends ArrayAdapter<JobPostWorkFlowObject>
 
         ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
         TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
+
+        android.support.v7.widget.CardView cardView = (android.support.v7.widget.CardView) rowView.findViewById(R.id.card_view);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JobApplicationDetailActivity.showDetail(getContext(), jobApplicationObject);
+            }
+        });
 
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE ||
                 jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){

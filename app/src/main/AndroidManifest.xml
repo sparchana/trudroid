@@ -178,6 +178,12 @@
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
+
+        <activity android:name=".JobApplicationDetailActivity"
+            android:label="Detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction" />
+
     </application>
 
 </manifest>
