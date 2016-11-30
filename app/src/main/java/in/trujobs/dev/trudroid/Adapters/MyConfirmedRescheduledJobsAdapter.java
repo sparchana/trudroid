@@ -272,9 +272,9 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         globalCandidateStatus = val;
         UpdateCandidateStatusRequest.Builder updateCandidateStatusRequestBuilder = UpdateCandidateStatusRequest.newBuilder();
         updateCandidateStatusRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-        updateCandidateStatusRequestBuilder.setVal(val);
+        updateCandidateStatusRequestBuilder.setCandidateStatus(val);
         updateCandidateStatusRequestBuilder.setJpId(jpId);
-        updateCandidateStatusRequestBuilder.setReasonval(0);
+        updateCandidateStatusRequestBuilder.setNotGoingReason(0);
         globalJpId = jpId;
 
         if (mAsyncTask != null) {
@@ -288,7 +288,7 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
     private void updateRescheduledInterviewConfirmation(Integer value, Long jpId){
         UpdateInterviewRequest.Builder updateInterviewRequestBuilder = UpdateInterviewRequest.newBuilder();
         updateInterviewRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-        updateInterviewRequestBuilder.setVal(value);
+        updateInterviewRequestBuilder.setInterviewStatus(value);
         updateInterviewRequestBuilder.setJpId(jpId);
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
@@ -400,9 +400,9 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
                     if(selectedNotGoingReasonIndex > 0){
                         UpdateCandidateStatusRequest.Builder updateCandidateStatusRequestBuilder = UpdateCandidateStatusRequest.newBuilder();
                         updateCandidateStatusRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-                        updateCandidateStatusRequestBuilder.setVal(globalCandidateStatus);
+                        updateCandidateStatusRequestBuilder.setCandidateStatus(globalCandidateStatus);
                         updateCandidateStatusRequestBuilder.setJpId(globalJpId);
-                        updateCandidateStatusRequestBuilder.setReasonval(reasonIdList[selectedNotGoingReasonIndex]);
+                        updateCandidateStatusRequestBuilder.setNotGoingReason(reasonIdList[selectedNotGoingReasonIndex]);
                         globalCandidateStatus = 0;
 
                         if (mAsyncTask != null) {

@@ -1,5 +1,8 @@
 package in.trujobs.dev.trudroid.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by batcoder1 on 25/7/16.
  */
