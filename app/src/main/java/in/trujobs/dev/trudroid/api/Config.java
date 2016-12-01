@@ -46,4 +46,5 @@ public class Config {
     // interview details
     public static final String URL_UPDATE_CANDIDATE_INTERVIEW_DETAIL = BASE_HTTP_URL + "/mUpdateCandidateInterviewDetail";
     public static final String URL_UPDATE_GET_INTERVIEW_SLOTS = BASE_HTTP_URL + "/mGetInterviewSlots";
+    public static final String URL_CHECK_INTERVIEW_SLOT_AVALABILITY = BASE_HTTP_URL + "/mCheckInterviewSlotAvailability";
 }

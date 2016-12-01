@@ -182,9 +182,6 @@ public class InterviewSlotSelectFragment extends Fragment {
                         }
                     }
                 });
-
-
-
             }
         }
     }

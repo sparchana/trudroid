@@ -476,19 +476,9 @@ public class PreScreenOthers extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else {
                 Tlog.i("status: " + response.getStatus());
-                if(response.getStatus() == GenericResponse.Status.SUCCESS){
-                    // todo call to go to interview selection comes here
-                    InterviewSlotSelectFragment interviewSlotSelectFragment = new InterviewSlotSelectFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("companyName", preScreenCompanyName);
-                    bundle.putString("jobRoleTitle", preScreenJobRoleTitle);
-                    bundle.putString("jobTitle", preScreenJobTitle);
-                    bundle.putLong("jobPostId", jobPostId);
-                    interviewSlotSelectFragment.setArguments(bundle);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .addToBackStack(null)
-                            .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                            .replace(R.id.pre_screen, interviewSlotSelectFragment).commit();
+                if(response.getStatus() == GenericResponse.Status.SUCCESS) {
+                    PreScreenActivity.propertyIdQueue.clear();
+                    PreScreenActivity.showRequiredFragment(getActivity());
                     return;
                 } else {
                     Toast.makeText(getContext(), "Looks like something went wrong while saving Other Details. Please try again.",

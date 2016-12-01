@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
@@ -12,12 +13,16 @@ import java.util.Queue;
 
 import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.TruJobsBaseActivity;
+import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
+import in.trujobs.proto.CheckInterviewSlotRequest;
+import in.trujobs.proto.CheckInterviewSlotResponse;
 import in.trujobs.proto.PreScreenPopulateProtoRequest;
 import in.trujobs.proto.PreScreenPopulateProtoResponse;
 
@@ -32,8 +37,11 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
     private android.os.AsyncTask<PreScreenPopulateProtoRequest, Void, PreScreenPopulateProtoResponse> mAsyncTaskPreScreen;
 
+    private static AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask;
+
     private static Long jobPostId;
     private static ApplyJobResponseBundle applyJobResponseBundle ;
+
     public static void start(Context context, Long jpId, ApplyJobResponseBundle responseBundle) {
         Intent intent = new Intent(context, PreScreenActivity.class);
         Tlog.i("Starting prescreen activity");
@@ -103,6 +111,48 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         mAsyncTaskPreScreen.execute(requestBuilder.build());
     }
 
+    public static class CheckInterviewSlotAsyncTask extends AsyncTask<CheckInterviewSlotRequest,
+            Void, CheckInterviewSlotResponse> {
+        String preScreenCompanyName;
+        String preScreenJobRoleTitle;
+        String preScreenJobTitle;
+        FragmentActivity activity;
+
+        public CheckInterviewSlotAsyncTask(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle) {
+            this.activity = activity;
+            this.preScreenCompanyName = preScreenCompanyName;
+            this.preScreenJobRoleTitle = preScreenJobRoleTitle;
+            this.preScreenJobTitle =  preScreenJobTitle;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected CheckInterviewSlotResponse doInBackground(CheckInterviewSlotRequest... params) {
+            return HttpRequest.checkInterviewSlot(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(CheckInterviewSlotResponse checkInterviewSlotResponse) {
+            super.onPostExecute(checkInterviewSlotResponse);
+
+           if (checkInterviewSlotResponse == null) {
+                Tlog.w("Null, checkInterviewResponse");
+                return;
+            } else if(checkInterviewSlotResponse.getStatus() == CheckInterviewSlotResponse.Status.FAILURE
+                   || checkInterviewSlotResponse.getStatus() == CheckInterviewSlotResponse.Status.INVALID){
+               Tlog.w("something went wrong, try again");
+           } else if (checkInterviewSlotResponse.getShouldShowInterview()) {
+                    showInterviewFragment(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
+           } else {
+
+           }
+        }
+    }
+
     private class PreScreenPopulateAsyncTask extends android.os.AsyncTask<PreScreenPopulateProtoRequest,
             Void, PreScreenPopulateProtoResponse> {
         Context mContext;
@@ -143,11 +193,11 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
             Tlog.i("size: " + preScreenPopulateResponse.getPropertyIdList().size());
             if(preScreenPopulateResponse.getPropertyIdCount() > 0) {
-                for(Integer jobPostId : preScreenPopulateResponse.getPropertyIdList()){
-                    if (jobPostId == 0 || jobPostId == 1 || jobPostId == 4 || jobPostId == 5) {
-                        hpQueue.add(jobPostId);
+                for(Integer propId : preScreenPopulateResponse.getPropertyIdList()){
+                    if (propId == 0 || propId == 1 || propId == 4 || propId == 5) {
+                        hpQueue.add(propId);
                     } else {
-                        lpQueue.add(jobPostId);
+                        lpQueue.add(propId);
                     }
                 }
                 while (!hpQueue.isEmpty()) {
@@ -165,13 +215,20 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         PreScreenPopulateProtoResponse preScreenPopulateResponse =  globalPreScreenPopulateResponse;
         Bundle bundle = new Bundle();
 
-        if(propertyIdQueue.size() == 0) {
+        Integer propId = null;
+        if(propertyIdQueue.isEmpty()){
             Tlog.e("Property Id Queue empty");
+            PreScreenActivity.triggerInterviewFragment(activity,
+                    preScreenPopulateResponse.getPreScreenCompanyName(),
+                    preScreenPopulateResponse.getPreScreenJobRoleTitle(),
+                    preScreenPopulateResponse.getPreScreenJobTitle(), true);
+        } else {
+            propId = (Integer) propertyIdQueue.remove();
+        }
+
+        if(propId == null) {
             return;
         }
-        Tlog.e("Property Queue size: " + propertyIdQueue.size());
-        Integer propId = (int) propertyIdQueue.remove();
-
         Tlog.i("current Property id: " + propId);
         for(Object item : propertyIdQueue){
             Tlog.i(item.toString());
@@ -260,5 +317,43 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                        .replace(R.id.pre_screen, others).commit();
                break;
         }
+    }
+
+    public static void triggerInterviewFragment(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle, boolean isFinalFragment){
+        if(isFinalFragment) {
+            // check if interview should open
+            CheckInterviewSlotRequest.Builder interviewSlotCheckBuilder = CheckInterviewSlotRequest.newBuilder();
+            interviewSlotCheckBuilder.setJobPostId(jobPostId);
+
+            checkInterviewSlotAsyncTask = new CheckInterviewSlotAsyncTask(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
+            checkInterviewSlotAsyncTask.execute(interviewSlotCheckBuilder.build());
+
+        } else {
+            // show successfully applied message and redirect to search screen
+
+        }
+    }
+
+    public static void showInterviewFragment(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle){
+        InterviewSlotSelectFragment interviewSlotSelectFragment = new InterviewSlotSelectFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("companyName", preScreenCompanyName);
+        bundle.putString("jobRoleTitle", preScreenJobRoleTitle);
+        bundle.putString("jobTitle", preScreenJobTitle);
+        bundle.putLong("jobPostId", jobPostId);
+        interviewSlotSelectFragment.setArguments(bundle);
+        activity.getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                .replace(R.id.pre_screen, interviewSlotSelectFragment).commit();
+    }
+
+    // not working
+    public void redirectToSearchFragment(){
+        Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+        this.finish();
     }
 }

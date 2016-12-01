@@ -24,6 +24,8 @@ import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
 import in.trujobs.proto.CandidateAppliedJobsResponse;
 import in.trujobs.proto.CandidateInformationRequest;
+import in.trujobs.proto.CheckInterviewSlotRequest;
+import in.trujobs.proto.CheckInterviewSlotResponse;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.GenericResponse;
@@ -645,6 +647,22 @@ public class HttpRequest {
         GenericResponse response = null;
         try {
             response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+    public static CheckInterviewSlotResponse checkInterviewSlot(CheckInterviewSlotRequest param) {
+        String responseString = postToServer(Config.URL_CHECK_INTERVIEW_SLOT_AVALABILITY,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        CheckInterviewSlotResponse response = null;
+        try {
+            response = CheckInterviewSlotResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
