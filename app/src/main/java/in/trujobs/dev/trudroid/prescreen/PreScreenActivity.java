@@ -3,19 +3,20 @@ package in.trujobs.dev.trudroid.prescreen;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.TruJobsBaseActivity;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -32,15 +33,19 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_EXPERIENCE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LANGUAGE;
 
 public class PreScreenActivity extends TruJobsBaseActivity {
-    public static Queue propertyIdQueue;
+    public static Stack propertyIdStack;
+    public static Stack propertyIdBackStack;
+    public static Stack otherPropertyIdStack;
     public static PreScreenPopulateProtoResponse globalPreScreenPopulateResponse;
-
+    public static Context mContext;
     private android.os.AsyncTask<PreScreenPopulateProtoRequest, Void, PreScreenPopulateProtoResponse> mAsyncTaskPreScreen;
 
     private static AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask;
 
     private static Long jobPostId;
     private static ApplyJobResponseBundle applyJobResponseBundle ;
+    public static boolean interviewSlotOpenned = false;
+
 
     public static void start(Context context, Long jpId, ApplyJobResponseBundle responseBundle) {
         Intent intent = new Intent(context, PreScreenActivity.class);
@@ -56,7 +61,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         setContentView(R.layout.activity_pre_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        mContext = this.getApplicationContext();
         openPreScreenWizard(jobPostId, applyJobResponseBundle);
     }
 
@@ -173,6 +178,9 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         protected void onPostExecute(PreScreenPopulateProtoResponse preScreenPopulateResponse) {
             super.onPostExecute(preScreenPopulateResponse);
             Tlog.i("should show the prescreen flow : " + preScreenPopulateResponse.getShouldShow());
+            if(preScreenPopulateResponse.getShouldShow()){
+
+            }
             Tlog.i(preScreenPopulateResponse.getPropertyIdList().size() + "--> List count");
             // check object for only which property id is available and at the same time object should be initialized and propertyId should match
 
@@ -186,25 +194,27 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 return;
             }
             globalPreScreenPopulateResponse = preScreenPopulateResponse;
-            propertyIdQueue = new LinkedList();
+            propertyIdStack = new Stack();
+            propertyIdBackStack = new Stack();
 
-            Queue hpQueue = new LinkedList(); // all solo fragment prop ids, {0,1,4, 5}
-            Queue lpQueue = new LinkedList(); // all in one fragment prop id, {rest}
+            Stack hpQueue = new Stack(); // all solo fragment prop ids, {0,1,4, 5}
+            Stack lpQueue = new Stack(); // all in one fragment prop id, {rest}
 
             Tlog.i("size: " + preScreenPopulateResponse.getPropertyIdList().size());
             if(preScreenPopulateResponse.getPropertyIdCount() > 0) {
                 for(Integer propId : preScreenPopulateResponse.getPropertyIdList()){
                     if (propId == 0 || propId == 1 || propId == 4 || propId == 5) {
-                        hpQueue.add(propId);
+                        hpQueue.push(propId);
                     } else {
-                        lpQueue.add(propId);
+                        lpQueue.push(propId);
                     }
                 }
-                while (!hpQueue.isEmpty()) {
-                    propertyIdQueue.add(hpQueue.remove());
-                }
+
                 while (!lpQueue.isEmpty()) {
-                    propertyIdQueue.add(lpQueue.remove());
+                    propertyIdStack.push(lpQueue.pop());
+                }
+                while (!hpQueue.isEmpty()) {
+                    propertyIdStack.push(hpQueue.pop());
                 }
             }
             showRequiredFragment(((FragmentActivity) mContext));
@@ -216,22 +226,28 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         Bundle bundle = new Bundle();
 
         Integer propId = null;
-        if(propertyIdQueue.isEmpty()){
+        if(propertyIdStack.isEmpty()){
             Tlog.e("Property Id Queue empty");
             PreScreenActivity.triggerInterviewFragment(activity,
                     preScreenPopulateResponse.getPreScreenCompanyName(),
                     preScreenPopulateResponse.getPreScreenJobRoleTitle(),
                     preScreenPopulateResponse.getPreScreenJobTitle(), true);
         } else {
-            propId = (Integer) propertyIdQueue.remove();
+            propId = (Integer) propertyIdStack.pop();
+            if(!(propertyIdBackStack.contains(propId))) {
+                propertyIdBackStack.push(propId);
+            }
         }
 
         if(propId == null) {
             return;
         }
         Tlog.i("current Property id: " + propId);
-        for(Object item : propertyIdQueue){
+        for(Object item : propertyIdStack){
             Tlog.i(item.toString());
+        }
+        for(Object item : propertyIdBackStack) {
+            Tlog.i("backStack: "+item.toString());
         }
 
 //        ////
@@ -257,53 +273,52 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle = new Bundle();
                 PreScreenDocument document = new PreScreenDocument();
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
-                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
+                bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
 
                 document.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                        .replace(R.id.pre_screen, document).commit();
+                        .add(R.id.pre_screen, document).commit();
                 break;
             case PROPERTY_TYPE_LANGUAGE : // language
                 PreScreenLanguage language = new PreScreenLanguage();
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
-                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
+                bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
 
                 language.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                        .replace(R.id.pre_screen, language).commit();
+                        .add(R.id.pre_screen, language).commit();
                 break;
             case PROPERTY_TYPE_EXPERIENCE : // exp
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
-                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
+                bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
 
                 experience.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                        .replace(R.id.pre_screen, experience).commit();
+                        .add(R.id.pre_screen, experience).commit();
                 break;
             case PROPERTY_TYPE_EDUCATION : // education
                 PreScreenEducation education = new PreScreenEducation();
                 bundle.putByteArray("education", preScreenPopulateResponse.getEducation().toByteArray());
                 bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
-                bundle.putBoolean("isFinalFragment", propertyIdQueue.size() == 0);
-
+                bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
 
                 education.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                        .replace(R.id.pre_screen, education).commit();
+                        .add(R.id.pre_screen, education).commit();
                 break;
            default:
                PreScreenOthers others = new PreScreenOthers();
                // adding the removed propId back
-               propertyIdQueue.add(propId);
+               propertyIdStack.push(propertyIdBackStack.pop());
                bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
                bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
@@ -314,7 +329,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                activity.getSupportFragmentManager().beginTransaction()
                        .addToBackStack(null)
                        .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                       .replace(R.id.pre_screen, others).commit();
+                       .add(R.id.pre_screen, others).commit();
                break;
         }
     }
@@ -330,7 +345,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         } else {
             // show successfully applied message and redirect to search screen
-
+            redirectToSearch();
         }
     }
 
@@ -345,15 +360,66 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         activity.getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
                 .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-                .replace(R.id.pre_screen, interviewSlotSelectFragment).commit();
+                .add(R.id.pre_screen, interviewSlotSelectFragment).commit();
     }
 
-    // not working
-    public void redirectToSearchFragment(){
-        Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
+    public static void redirectToSearch(){
+        Intent intent = new Intent(mContext, SearchJobsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-        this.finish();
+        mContext.startActivity(intent);
+    }
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        Tlog.i("back pressed");
+        if(interviewSlotOpenned){
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                //Track this action
+//                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EXIT);
+
+                Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                interviewSlotOpenned = false;
+                this.finish();
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            showToast("Press back again to  cancel Interview Scheduling.");
+
+            //Track this action
+            addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_EXIT);
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2500);
+            return;
+
+        } else if(propertyIdStack.isEmpty() && !otherPropertyIdStack.isEmpty()){
+            // restore all ids of other fragment
+            Tlog.i("adding all other prop id to propidstack");
+            while(!otherPropertyIdStack.isEmpty()){
+                Tlog.i("added : " + otherPropertyIdStack.peek());
+                propertyIdStack.push(otherPropertyIdStack.pop());
+            }
+            interviewSlotOpenned = false;
+            otherPropertyIdStack.clear();
+        } else if(!propertyIdBackStack.isEmpty() && !propertyIdStack.contains(propertyIdBackStack.peek())){
+            Tlog.i("onbackpress case 2");
+            propertyIdStack.push(propertyIdBackStack.pop());
+            if(!propertyIdBackStack.isEmpty()) Tlog.i("bStack top:" + propertyIdBackStack.peek());
+            if(!propertyIdStack.isEmpty()) Tlog.i("mStack top:" + propertyIdStack.peek());
+        } else {
+            Tlog.i("onbackpress case 3");
+            if(!propertyIdBackStack.isEmpty()) Tlog.i("m contains bStack top:" + propertyIdBackStack.peek());
+        }
+        super.onBackPressed();
     }
 }

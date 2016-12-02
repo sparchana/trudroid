@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.R;
@@ -61,6 +62,7 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_GENDER;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LOCALITY;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_MAX_AGE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_WORK_SHIFT;
+import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.otherPropertyIdStack;
 
 public class PreScreenOthers extends Fragment {
     View view;
@@ -148,7 +150,7 @@ public class PreScreenOthers extends Fragment {
         pd = CustomProgressDialog.get(getActivity());
 
         remainingPropIdList = new ArrayList<>();
-        for(Object integer : PreScreenActivity.propertyIdQueue) {
+        for(Object integer : PreScreenActivity.propertyIdStack) {
             remainingPropIdList.add((int) integer);
         }
         // all elements in this view are by default set to VISIBILITY.GONE
@@ -270,6 +272,12 @@ public class PreScreenOthers extends Fragment {
                 }
             }
         });
+
+        // remove AIO ids
+        otherPropertyIdStack = new Stack();
+        while (!PreScreenActivity.propertyIdStack.isEmpty()){
+            otherPropertyIdStack.push(PreScreenActivity.propertyIdStack.pop());
+        }
 
         Tlog.i("remaining ids, that needed to be shown in one fragment: ");
         return view;
@@ -477,7 +485,6 @@ public class PreScreenOthers extends Fragment {
             } else {
                 Tlog.i("status: " + response.getStatus());
                 if(response.getStatus() == GenericResponse.Status.SUCCESS) {
-                    PreScreenActivity.propertyIdQueue.clear();
                     PreScreenActivity.showRequiredFragment(getActivity());
                     return;
                 } else {

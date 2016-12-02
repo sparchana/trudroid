@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -54,9 +53,6 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
-import in.trujobs.dev.trudroid.prescreen.PreScreenActivity;
-import in.trujobs.dev.trudroid.prescreen.PreScreenActivityFragment;
-import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.FetchCandidateAlertRequest;
 import in.trujobs.proto.FetchCandidateAlertResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
@@ -70,10 +66,6 @@ import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
 import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
-import in.trujobs.proto.PreScreenPopulateProtoRequest;
-import in.trujobs.proto.PreScreenPopulateProtoResponse;
-
-import static java.security.AccessController.getContext;
 
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
@@ -1164,7 +1156,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 }
             }
         }
-
         initializeAndStartSearch();
     }
 

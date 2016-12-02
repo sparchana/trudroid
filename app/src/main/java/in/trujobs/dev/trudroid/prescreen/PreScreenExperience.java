@@ -94,54 +94,9 @@ public class PreScreenExperience extends Fragment{
 
         JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
         fetchAllJobs.execute();
-
-//        try {
-//            preScreenExperienceObject = PreScreenExperienceObject.parseFrom(bundle.getByteArray("experience"));
-//
-//        } catch (InvalidProtocolBufferException e) {
-//            e.printStackTrace();
-//        }
+        
         return view;
     }
-
-
-//
-//    private class GetExperienceStaticAsyncTask extends AsyncTask<Void,
-//            Void, GetCandidateExperienceProfileStaticResponse> {
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            pd.show();
-//        }
-//
-//        @Override
-//        protected GetCandidateExperienceProfileStaticResponse doInBackground(Void... params) {
-//            return HttpRequest.getCandidateExperienceProfileStatic();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(final GetCandidateExperienceProfileStaticResponse getCandidateExperienceProfileStaticResponse) {
-//            super.onPostExecute(getCandidateExperienceProfileStaticResponse);
-//            pd.cancel();
-//
-//            if(!Util.isConnectedToInternet(getContext())) {
-//                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-//            } else if (getCandidateExperienceProfileStaticResponse == null) {
-//                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
-//                        Toast.LENGTH_LONG).show();
-//                Log.w("", "Null Response");
-//                return;
-//            } else {
-//                if(getCandidateExperienceProfileStaticResponse.getStatusValue() == ServerConstants.SUCCESS){
-//
-//
-//                } else{
-//                    Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
-//                            Toast.LENGTH_LONG).show();
-//                    getActivity().getSupportFragmentManager().popBackStack();
-//                }
-//            }
-//        }
-//    }
 
     public void showExperiencePicker(){
         final Dialog expDialog = new Dialog(getActivity());

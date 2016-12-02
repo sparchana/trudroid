@@ -49,6 +49,7 @@ public class InterviewUtil {
     }
 
     public static boolean checkSlotAvailability(Date x, String interviewDays) {
+        Tlog.i("interviewDays"+interviewDays);
         if(x.getDay() == 1 && interviewDays.charAt(0) == '1') { //monday
             return true;
         } else if(x.getDay() == 2 && interviewDays.charAt(1) == '1') { //tue
