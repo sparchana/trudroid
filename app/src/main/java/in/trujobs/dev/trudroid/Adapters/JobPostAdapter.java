@@ -61,7 +61,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         LinearLayout otherJobsHeader;
     }
 
-
     public Button applyingJobButton;
     public Button applyingJobButtonDetail;
     public ImageView applyingJobColor;

@@ -60,7 +60,7 @@ public class PreScreenDocument extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((PreScreenActivity)getActivity()).setSupportActionBar(toolbar);
 
-        ((PreScreenActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((PreScreenActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         // track screen view
         ((PreScreenActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_DOCUMENT_PRESCREEN);

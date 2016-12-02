@@ -1,5 +1,8 @@
 package in.trujobs.dev.trudroid.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by batcoder1 on 25/7/16.
  */
@@ -26,6 +29,34 @@ public class ServerConstants {
     public static String ALL_JOBS = "All Jobs";
     public static final String ERROR_WHILE_SAVING_HOME_LOCALITY = "Something went wrong while saving home locality. Please try again later!";
     public static final String NETWORK_NOT_FOUND = "Please turn on your wifi/mobile data in order to use this feature";
+
+    public static String CANDIDATE_STATUS_NOT_GOING = "Not Going";
+    public static String CANDIDATE_STATUS_DELAYED = "Delayed";
+    public static String CANDIDATE_STATUS_STARTED = "Started";
+    public static String CANDIDATE_STATUS_REACHED = "Reached";
+
+    public static final int CANDIDATE_STATUS_NOT_GOING_VAL = 1;
+    public static final int CANDIDATE_STATUS_DELAYED_VAL = 2;
+    public static final int CANDIDATE_STATUS_STARTED_VAL = 3;
+    public static final int CANDIDATE_STATUS_REACHED_VAL = 4;
+
+    public static final int CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_ACCEPT = 1;
+    public static final int CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_REJECT = 0;
+
+    public static final int JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT = 6;
+    public static final int JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE = 7;
+    public static final int JWF_STATUS_INTERVIEW_RESCHEDULE = 8;
+    public static final int JWF_STATUS_INTERVIEW_CONFIRMED = 9;
+
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING = 10;
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED = 11;
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_STARTED = 12;
+    public static final int JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED = 13;
+
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED = 14;
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_REJECTED = 15;
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_NO_SHOW = 16;
+    public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_NOT_QUALIFIED = 17;
 
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";

@@ -151,9 +151,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
         <activity
-            android:name=".MyAppliedJobs"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ReferFriends"
             android:screenOrientation="portrait" />
         <activity
@@ -175,6 +172,17 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".JobApplicationActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction" />
+
+        <activity android:name=".JobApplicationDetailActivity"
+            android:label="Detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction" />
 
         <activity
             android:name=".prescreen.PreScreenActivity"
