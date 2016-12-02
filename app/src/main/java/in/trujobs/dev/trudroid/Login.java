@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
+
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -153,6 +157,20 @@ public class Login extends TruJobsBaseActivity {
 
             else if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
                 showToast("Log In Successful!");
+
+                //setting and generating token
+                // Resets Instance ID and revokes all tokens.
+                try {
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // Now manually call onTokenRefresh()
+                FirebaseInstanceId.getInstance().getToken();
+                Tlog.e("New token: " + FirebaseInstanceId.getInstance().getToken());
+                Prefs.fcmToken.put(FirebaseInstanceId.getInstance().getToken());
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mPassword.getWindowToken(), 0);
 
@@ -201,4 +219,6 @@ public class Login extends TruJobsBaseActivity {
             }
         }
     }
+
+
 }
