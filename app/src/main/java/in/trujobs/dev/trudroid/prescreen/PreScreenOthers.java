@@ -230,8 +230,6 @@ public class PreScreenOthers extends Fragment {
 
                 if(shift_option != null) {
                     shiftValue = Long.valueOf(shiftIds.get(shift_option.getSelectedItemPosition()));
-                } else {
-                    check = false;
                 }
 
                 if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && candidateDob.getText().toString().trim().isEmpty()){
@@ -313,7 +311,7 @@ public class PreScreenOthers extends Fragment {
                     } else {
                         // remove
                         if(!candidateAssetIdList.isEmpty()){
-                            candidateAssetIdList.remove(assetCheckbox.getId());
+                            candidateAssetIdList.remove((Integer) assetCheckbox.getId());
                         }
                     }
                 }

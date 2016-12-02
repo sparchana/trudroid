@@ -340,17 +340,19 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 Tlog.w("Null Response");
                 return;
             }
-            Tlog.i("post of apply job");
             applyJobResponseBundle.setApplyJobResponse(applyJobResponse);
             if(applyJobResponse.getIsPreScreenAvailable()){
+                Tlog.i("pre screen is available");
                 PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId(), applyJobResponseBundle);
-            } else if(applyJobResponse.getIsInterviewAvailable()){
+            } else if(applyJobResponse.getIsInterviewAvailable()) {
+                Tlog.i("interview is available");
                 InterviewSlotSelectActivity.start(getContext(),
                         applyJobResponse.getJobPostId(),
                         applyJobResponse.getCompanyName(),
                         applyJobResponse.getJobRoleTitle(),
                         applyJobResponse.getJobTitle());
             } else {
+
                 ViewDialog alert = new ViewDialog();
                 if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
                     alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);

@@ -22,6 +22,7 @@ import java.util.Date;
 
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.TruJobsBaseActivity;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -87,12 +88,12 @@ public class InterviewSlotSelectFragment extends Fragment {
         jobTitle.setText(preScreenJobTitle);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((PreScreenActivity)getActivity()).setSupportActionBar(toolbar);
+        ((TruJobsBaseActivity) getActivity()).setSupportActionBar(toolbar);
 
-        ((PreScreenActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((TruJobsBaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // track screen view
-        ((PreScreenActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN);
+        ((TruJobsBaseActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -106,7 +107,6 @@ public class InterviewSlotSelectFragment extends Fragment {
         PreScreenActivity.interviewSlotOpenned = true;
         mGetInterviewSlotAsyncTask = new GetInterviewSlotAsyncTask();
         mGetInterviewSlotAsyncTask.execute(req.build());
-
 
         return view;
     }
@@ -255,7 +255,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        redirectToSearch();
+                        redirectToSearch(getActivity());
                     }
                 });
         alertDialog.show();

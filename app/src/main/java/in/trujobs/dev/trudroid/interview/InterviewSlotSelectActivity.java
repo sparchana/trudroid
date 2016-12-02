@@ -13,19 +13,18 @@ import in.trujobs.dev.trudroid.TruJobsBaseActivity;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.prescreen.InterviewSlotSelectFragment;
-import in.trujobs.dev.trudroid.prescreen.PreScreenActivity;
 
 public class InterviewSlotSelectActivity extends TruJobsBaseActivity {
 
-    private static Long jobPostId;
-    private static String preScreenCompanyName;
-    private static String preScreenJobRoleTitle;
-    private static String preScreenJobTitle;
+    public static Long jobPostId;
+    public static String preScreenCompanyName;
+    public static String preScreenJobRoleTitle;
+    public static String preScreenJobTitle;
 
     public static void start(Context context, Long jpId, String companyName,
                              String jobRoleTitle, String jobTitle) {
-        Intent intent = new Intent(context, PreScreenActivity.class);
-        Tlog.i("Starting prescreen activity");
+        Intent intent = new Intent(context, InterviewSlotSelectActivity.class);
+        Tlog.i("Starting interview activity for jobPostId");
         jobPostId = jpId;
         preScreenCompanyName = companyName;
         preScreenJobRoleTitle = jobRoleTitle;

@@ -33,26 +33,26 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_EXPERIENCE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LANGUAGE;
 
 public class PreScreenActivity extends TruJobsBaseActivity {
-    public static Stack propertyIdStack;
-    public static Stack propertyIdBackStack;
-    public static Stack otherPropertyIdStack;
+    public static Stack propertyIdStack = new Stack();
+    public static Stack propertyIdBackStack = new Stack();
+    public static Stack otherPropertyIdStack = new Stack();
     public static PreScreenPopulateProtoResponse globalPreScreenPopulateResponse;
     public static Context mContext;
     private android.os.AsyncTask<PreScreenPopulateProtoRequest, Void, PreScreenPopulateProtoResponse> mAsyncTaskPreScreen;
 
     private static AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask;
 
-    private static Long jobPostId;
-    private static ApplyJobResponseBundle applyJobResponseBundle ;
+    protected static Long jobPostId;
+    protected static ApplyJobResponseBundle applyJobResponseBundle ;
     public static boolean interviewSlotOpenned = false;
     boolean doubleBackToExitPressedOnce = false;
 
 
     public static void start(Context context, Long jpId, ApplyJobResponseBundle responseBundle) {
         Intent intent = new Intent(context, PreScreenActivity.class);
-        Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         jobPostId = jpId;
         applyJobResponseBundle = responseBundle;
+        Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         context.startActivity(intent);
     }
 
@@ -63,6 +63,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this.getApplicationContext();
+        if(jobPostId ==null){
+            Tlog.e("null jobPostId passed to preScreenActivity");
+            return;
+        }
         openPreScreenWizard(jobPostId, applyJobResponseBundle);
     }
 
@@ -158,7 +162,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
            } else {
                Toast.makeText(activity, "Application Successfully completed.",
                        Toast.LENGTH_LONG).show();
-               redirectToSearch();
+               redirectToSearch(mContext);
            }
         }
     }
@@ -352,7 +356,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             // show successfully applied message and redirect to search screen
             Toast.makeText(activity, "Application Successfully completed.",
                     Toast.LENGTH_LONG).show();
-            redirectToSearch();
+            redirectToSearch(mContext);
         }
     }
 
@@ -370,7 +374,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 .add(R.id.pre_screen, interviewSlotSelectFragment).commit();
     }
 
-    public static void redirectToSearch(){
+    public static void redirectToSearch(Context mContext){
         Intent intent = new Intent(mContext, SearchJobsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
         mContext.startActivity(intent);

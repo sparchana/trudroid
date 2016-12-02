@@ -123,6 +123,7 @@ public class Constants {
     public static final String GA_ACTION_SAVE_EDUCATION_PRESCREEN = "SAVE_EDUCATION_PRESCREEN";
     public static final String GA_SCREEN_NAME_EDIT_OTHER_DETAIL_PRESCREEN = "EDIT_OTHER_DETAIL_PRESCREEN";
     public static final String GA_ACTION_SAVE_OTHER_DETAIL_PRESCREEN = "SAVE_OTHER_DETAIL_PRESCREEN";
+    public static final String GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT = "SELECT_INTERVIEW_SLOT";
 
 
     /* ---  Pre Screening Key ---- */
