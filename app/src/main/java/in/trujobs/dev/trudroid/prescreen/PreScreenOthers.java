@@ -228,24 +228,27 @@ public class PreScreenOthers extends Fragment {
                     minAgeDiff = ((Calendar.getInstance().get(Calendar.YEAR) - 80) - year);
                 }
 
-                int pos = shift_option.getSelectedItemPosition();
-                shiftValue = Long.valueOf(shiftIds.get(pos));
+                if(shift_option != null) {
+                    shiftValue = Long.valueOf(shiftIds.get(shift_option.getSelectedItemPosition()));
+                } else {
+                    check = false;
+                }
 
-                if(candidateDob.getText().toString().trim().isEmpty()){
+                if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && candidateDob.getText().toString().trim().isEmpty()){
                     check = false;
                     candidateDob.setError("Select date of birth");
                     candidateDob.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(candidateDob));
                     showDialog("Please enter your Date of Birth");
-                } else if(ageDiff < 0 || minAgeDiff > 0){
+                } else if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && (ageDiff < 0 || minAgeDiff > 0)){
                     check = false;
                     candidateDob.setError("Select valid date of birth (min: 18 yrs, max: 80 yrs)");
                     candidateDob.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(candidateDob));
                     showDialog("Please provide a valid date of birth (min: 18 yrs, max: 80 yrs  )");
-                } else if(genderValue < 0){
+                } else if(remainingPropIdList.contains(PROPERTY_TYPE_GENDER) && genderValue < 0){
                     check = false;
                     genderBtnLayout.setBackgroundResource(R.drawable.border);
                     showDialog("Please provide your gender");
-                } else if(shiftValue < 1 ){
+                } else if(remainingPropIdList.contains(PROPERTY_TYPE_WORK_SHIFT)  && shiftValue!= null && shiftValue < 1 ){
                     check = false;
                     showDialog("Please provide your preferred Time Shift");
                     shiftLayout.setBackgroundResource(R.drawable.border);
@@ -257,14 +260,19 @@ public class PreScreenOthers extends Fragment {
 
                     //update other basic information
                     UpdateCandidateOtherRequest.Builder updatePreScreenOther = UpdateCandidateOtherRequest.newBuilder();
-                    updatePreScreenOther.setCandidateDOB(candidateDob.getText().toString());
+                    if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE))
+                        updatePreScreenOther.setCandidateDOB(candidateDob.getText().toString());
                     updatePreScreenOther.setCandidateMobile(Prefs.candidateMobile.get());
-                    updatePreScreenOther.setCandidateGender(genderValue);
-                    updatePreScreenOther.setCandidateTimeshiftPref(shiftValue);
-                    updatePreScreenOther.addAllAssetId(candidateAssetIdList);
-                    updatePreScreenOther.addAllPropertyId(remainingPropIdList);
+                    if(remainingPropIdList.contains(PROPERTY_TYPE_GENDER))
+                        updatePreScreenOther.setCandidateGender(genderValue);
+                    if(remainingPropIdList.contains(PROPERTY_TYPE_WORK_SHIFT))
+                        updatePreScreenOther.setCandidateTimeshiftPref(shiftValue);
+                    if(remainingPropIdList.contains(PROPERTY_TYPE_ASSET_OWNED))
+                        updatePreScreenOther.addAllAssetId(candidateAssetIdList);
+
                     updatePreScreenOther.setIsFinalFragment(isFinalFragment);
                     updatePreScreenOther.setJobPostId(jobPostId);
+                    updatePreScreenOther.addAllPropertyId(remainingPropIdList);
 
                     // update pre screen other value Async Task will come here
                     mUpdateOtherAsyncTask = new UpdatePreScreenOtherAsyncTask();
@@ -304,7 +312,9 @@ public class PreScreenOthers extends Fragment {
                         candidateAssetIdList.add(assetCheckbox.getId());
                     } else {
                         // remove
-                        candidateAssetIdList.remove(assetCheckbox.getId());
+                        if(!candidateAssetIdList.isEmpty()){
+                            candidateAssetIdList.remove(assetCheckbox.getId());
+                        }
                     }
                 }
             } );
@@ -365,8 +375,6 @@ public class PreScreenOthers extends Fragment {
                     });
 
                     shift_option.setSelection(0);
-
-
                 } else{
                     Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                             Toast.LENGTH_LONG).show();

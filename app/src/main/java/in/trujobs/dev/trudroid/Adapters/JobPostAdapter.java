@@ -30,6 +30,7 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
+import in.trujobs.dev.trudroid.interview.InterviewSlotSelectActivity;
 import in.trujobs.dev.trudroid.prescreen.PreScreenActivity;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
@@ -342,7 +343,13 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             Tlog.i("post of apply job");
             applyJobResponseBundle.setApplyJobResponse(applyJobResponse);
             if(applyJobResponse.getIsPreScreenAvailable()){
-                PreScreenActivity.start(getContext(), jpId, applyJobResponseBundle);
+                PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId(), applyJobResponseBundle);
+            } else if(applyJobResponse.getIsInterviewAvailable()){
+                InterviewSlotSelectActivity.start(getContext(),
+                        applyJobResponse.getJobPostId(),
+                        applyJobResponse.getCompanyName(),
+                        applyJobResponse.getJobRoleTitle(),
+                        applyJobResponse.getJobTitle());
             } else {
                 ViewDialog alert = new ViewDialog();
                 if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){

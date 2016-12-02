@@ -45,11 +45,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
     private static Long jobPostId;
     private static ApplyJobResponseBundle applyJobResponseBundle ;
     public static boolean interviewSlotOpenned = false;
+    boolean doubleBackToExitPressedOnce = false;
 
 
     public static void start(Context context, Long jpId, ApplyJobResponseBundle responseBundle) {
         Intent intent = new Intent(context, PreScreenActivity.class);
-        Tlog.i("Starting prescreen activity");
+        Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         jobPostId = jpId;
         applyJobResponseBundle = responseBundle;
         context.startActivity(intent);
@@ -150,10 +151,14 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             } else if(checkInterviewSlotResponse.getStatus() == CheckInterviewSlotResponse.Status.FAILURE
                    || checkInterviewSlotResponse.getStatus() == CheckInterviewSlotResponse.Status.INVALID){
                Tlog.w("something went wrong, try again");
+               Toast.makeText(activity, "Something went wrong, try again",
+                       Toast.LENGTH_LONG).show();
            } else if (checkInterviewSlotResponse.getShouldShowInterview()) {
                     showInterviewFragment(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
            } else {
-
+               Toast.makeText(activity, "Application Successfully completed.",
+                       Toast.LENGTH_LONG).show();
+               redirectToSearch();
            }
         }
     }
@@ -345,6 +350,8 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         } else {
             // show successfully applied message and redirect to search screen
+            Toast.makeText(activity, "Application Successfully completed.",
+                    Toast.LENGTH_LONG).show();
             redirectToSearch();
         }
     }
@@ -368,7 +375,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
         mContext.startActivity(intent);
     }
-    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
@@ -428,6 +434,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Tlog.i("onbackpress case 3");
             if(!propertyIdBackStack.isEmpty()) Tlog.i("m contains bStack top:" + propertyIdBackStack.peek());
         }
+        interviewSlotOpenned =false;
         super.onBackPressed();
     }
 }
