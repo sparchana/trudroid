@@ -7,12 +7,12 @@ public class Config {
     /**
      * AWS prod-like-test-server for all trujobs-dev requirements is hosted @ 52.42.8.205:80
      */
-   public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
+//   public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
     /**
      * replace ip below with your local ip for development
      * and uncomment the line, also comment out aws prod-like-test-server ip above
      */
-//    public static final String BASE_HTTP_URL = "http://192.168.0.103:9000";
+    public static final String BASE_HTTP_URL = "http://192.168.0.101:9000";
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
@@ -38,4 +38,5 @@ public class Config {
     public static final String URL_CANDIDATE_STATUS_SPECIFIC_ALERT = BASE_HTTP_URL + "/mFetchCandidateAlert";
     public static final String URL_JOB_SEARCH = BASE_HTTP_URL + "/mSearchJobs";
     public static final String URL_GET_LOCALITY_FOR_LATLNG = BASE_HTTP_URL + "/mGetLocalityForLatLngOrPlaceId";
+    public static final String URL_UPDATE_CANDIDATE_TOKEN = BASE_HTTP_URL + "/mUpdateCandidateToken";
 }
