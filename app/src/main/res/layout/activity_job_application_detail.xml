@@ -163,7 +163,7 @@
                         <ImageView
                             android:layout_width="8dp"
                             android:layout_height="8dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:src="@drawable/green_dot"/>
 
                         <TextView
@@ -191,7 +191,7 @@
                         <ImageView
                             android:layout_width="6dp"
                             android:layout_height="6dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:layout_marginLeft="1dp"
                             android:src="@drawable/green_dot"/>
 
@@ -220,7 +220,7 @@
                         <ImageView
                             android:layout_width="6dp"
                             android:layout_height="6dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:layout_marginLeft="1dp"
                             android:src="@drawable/green_dot"/>
 
@@ -250,7 +250,7 @@
                         <ImageView
                             android:layout_width="6dp"
                             android:layout_height="6dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:layout_marginLeft="1dp"
                             android:src="@drawable/green_dot"/>
 
@@ -537,7 +537,7 @@
                         <ImageView
                             android:layout_width="6dp"
                             android:layout_height="6dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:src="@drawable/green_dot"/>
 
                         <TextView
@@ -565,7 +565,7 @@
                         <ImageView
                             android:layout_width="6dp"
                             android:layout_height="6dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:src="@drawable/green_dot"/>
 
                         <TextView
@@ -593,7 +593,7 @@
                         <ImageView
                             android:layout_width="6dp"
                             android:layout_height="6dp"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="6dp"
                             android:src="@drawable/green_dot"/>
 
                         <TextView

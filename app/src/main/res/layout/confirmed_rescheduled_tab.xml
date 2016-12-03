@@ -22,7 +22,7 @@
             android:textSize="12dp"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:text="My Confirmed/Rescheduled Application(s)"/>
+            android:text="My Confirmed Interview(s)"/>
 
     </LinearLayout>
 
