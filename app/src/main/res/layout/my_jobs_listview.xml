@@ -213,67 +213,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:visibility="gone"
-                        android:id="@+id/reschedule_panel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="wrap_content">
-
-                            <LinearLayout
-                                android:id="@+id/accept_interview"
-                                android:layout_width="0dp"
-                                android:layout_weight="0.5"
-                                android:orientation="horizontal"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_width="24dp"
-                                    android:background="@drawable/ic_correct"
-                                    android:layout_height="24dp" />
-
-                                <TextView
-                                    android:layout_marginTop="12dp"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Accept"/>
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/reject_interview"
-                                android:layout_width="0dp"
-                                android:layout_weight="0.5"
-                                android:orientation="horizontal"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_width="24dp"
-                                    android:background="@drawable/ic_error"
-                                    android:layout_height="24dp" />
-
-                                <TextView
-                                    android:layout_marginTop="12dp"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Reject"/>
-
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/candidate_status_panel"
                         android:layout_width="match_parent"
                         android:orientation="vertical"

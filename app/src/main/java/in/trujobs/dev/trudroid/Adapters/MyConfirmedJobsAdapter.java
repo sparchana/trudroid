@@ -42,10 +42,10 @@ import in.trujobs.proto.UpdateInterviewResponse;
 /**
  * Created by batcoder1 on 8/8/16.
  */
-public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
+public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
     Activity ctx;
-    public MyConfirmedRescheduledJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
+    public MyConfirmedJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
         super(context, 0, jobApplicationObjectList);
         ctx = context;
     }
@@ -59,7 +59,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
     private Integer globalCandidateStatus = 0;
     private Integer selectedNotGoingReasonIndex = 0;
     private Long globalJpId = 0L;
-    private AsyncTask<UpdateInterviewRequest, Void, UpdateInterviewResponse> mAsyncTask;
     private AsyncTask<UpdateCandidateStatusRequest, Void, UpdateCandidateStatusResponse> mCandidateStatusAsyncTask;
 
     @Override
@@ -73,7 +72,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
 
         pd = CustomProgressDialog.get(parent.getContext());
 
-        LinearLayout reschedulePanel = (LinearLayout) rowView.findViewById(R.id.reschedule_panel);
         LinearLayout candidateStatusPanel = (LinearLayout) rowView.findViewById(R.id.candidate_status_panel);
 
         android.support.v7.widget.CardView cardView = (android.support.v7.widget.CardView) rowView.findViewById(R.id.card_view);
@@ -84,8 +82,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
             }
         });
 
-        LinearLayout acceptImageView = (LinearLayout) rowView.findViewById(R.id.accept_interview);
-        LinearLayout rejectImageView = (LinearLayout) rowView.findViewById(R.id.reject_interview);
         ImageView navigateIcon = (ImageView) rowView.findViewById(R.id.navigate_icon);
         TextView navigateText = (TextView) rowView.findViewById(R.id.navigate_text);
 
@@ -98,11 +94,10 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         LinearLayout startedLayout = (LinearLayout) rowView.findViewById(R.id.started);
         LinearLayout reachedLayout = (LinearLayout) rowView.findViewById(R.id.reached);
 
-        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){ //confirmed and/or has current status
+        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() >= ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){ //confirmed and/or has current status
 
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_correct);
             applicationStatusText.setText("Confirmed");
-            reschedulePanel.setVisibility(View.GONE);
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
 
             if(jobApplicationObject.getInterviewLat() != 0.0){
@@ -133,21 +128,6 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
 
             navigateIcon.setVisibility(View.GONE);
             navigateText.setVisibility(View.GONE);
-            reschedulePanel.setVisibility(View.VISIBLE);
-
-            acceptImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updateRescheduledInterviewConfirmation(ServerConstants.CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_ACCEPT, jobApplicationObject.getJobPostObject().getJobPostId());
-                }
-            });
-
-            rejectImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updateRescheduledInterviewConfirmation(ServerConstants.CANDIDATE_STATUS_RESCHEDULED_INTERVIEW_REJECT, jobApplicationObject.getJobPostObject().getJobPostId());
-                }
-            });
         }
 
         Calendar now = Calendar.getInstance();
@@ -283,55 +263,12 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         updateCandidateStatusRequestBuilder.setNotGoingReason(0);
         globalJpId = jpId;
 
-        if (mAsyncTask != null) {
-            mAsyncTask.cancel(true);
+        if (mCandidateStatusAsyncTask != null) {
+            mCandidateStatusAsyncTask.cancel(true);
         }
 
         mCandidateStatusAsyncTask = new UpdateCandidateStatusAsyncTask();
         mCandidateStatusAsyncTask.execute(updateCandidateStatusRequestBuilder.build());
-    }
-
-    private void updateRescheduledInterviewConfirmation(Integer value, Long jpId){
-        UpdateInterviewRequest.Builder updateInterviewRequestBuilder = UpdateInterviewRequest.newBuilder();
-        updateInterviewRequestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
-        updateInterviewRequestBuilder.setInterviewStatus(value);
-        updateInterviewRequestBuilder.setJpId(jpId);
-        if (mAsyncTask != null) {
-            mAsyncTask.cancel(true);
-        }
-
-        mAsyncTask = new UpdateInterviewAsyncTask();
-        mAsyncTask.execute(updateInterviewRequestBuilder.build());
-    }
-
-    public class UpdateInterviewAsyncTask extends AsyncTask<UpdateInterviewRequest,
-            Void, UpdateInterviewResponse> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd = CustomProgressDialog.get(getContext());
-            pd.show();
-        }
-
-        @Override
-        protected UpdateInterviewResponse doInBackground(UpdateInterviewRequest... params) {
-            return HttpRequest.updateInterview(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(UpdateInterviewResponse updateInterviewResponse) {
-            super.onPostExecute(updateInterviewResponse);
-            mAsyncTask = null;
-            pd.cancel();
-            if(updateInterviewResponse.getStatus().getNumber() == UpdateInterviewResponse.Status.SUCCESS_VALUE){
-                Toast.makeText(getContext(), "Updated!", Toast.LENGTH_LONG).show();
-                ctx.finish();
-                Intent intent = new Intent(ctx, JobApplicationActivity.class);
-                ctx.startActivity(intent);
-            } else{
-                Toast.makeText(getContext(), "Something went wrong. Please try again later!", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private class UpdateCandidateStatusAsyncTask extends AsyncTask<UpdateCandidateStatusRequest,
@@ -351,7 +288,7 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         @Override
         protected void onPostExecute(UpdateCandidateStatusResponse updateCandidateStatusResponse) {
             super.onPostExecute(updateCandidateStatusResponse);
-            mAsyncTask = null;
+            mCandidateStatusAsyncTask = null;
             pd.cancel();
             if(updateCandidateStatusResponse.getStatus().getNumber() == UpdateCandidateStatusResponse.Status.SUCCESS_VALUE){
 
@@ -387,7 +324,7 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
         @Override
         protected void onPostExecute(in.trujobs.proto.NotGoingReasonResponse notGoingReasonResponse) {
             super.onPostExecute(notGoingReasonResponse);
-            mAsyncTask = null;
+            mCandidateStatusAsyncTask = null;
             pd.cancel();
 
             //initializing the list of reason
@@ -411,8 +348,8 @@ public class MyConfirmedRescheduledJobsAdapter extends ArrayAdapter<JobPostWorkF
                         updateCandidateStatusRequestBuilder.setNotGoingReason(reasonIdList[selectedNotGoingReasonIndex]);
                         globalCandidateStatus = 0;
 
-                        if (mAsyncTask != null) {
-                            mAsyncTask.cancel(true);
+                        if (mCandidateStatusAsyncTask != null) {
+                            mCandidateStatusAsyncTask.cancel(true);
                         }
 
                         mCandidateStatusAsyncTask = new UpdateCandidateStatusAsyncTask();

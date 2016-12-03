@@ -115,7 +115,6 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                         int interviewYear = interviewCalendar.get(Calendar.YEAR);
                         int interviewMonth = interviewCalendar.get(Calendar.MONTH) + 1;
                         int interviewDay = interviewCalendar.get(Calendar.DAY_OF_MONTH);
-                        Tlog.e(jwpf.getInterviewDateMillis() + " ----- " + now.getTimeInMillis() + "------------------");
 
                         if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE){
                             rescheduledList.add(jwpf);
@@ -164,6 +163,11 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
 
                 for(JobPostWorkFlowObject jwpf: pastInterviewList){
                     confirmedTabList.add(jwpf);
+                }
+
+                Tlog.e("----------------pending ------------");
+                for(JobPostWorkFlowObject jwpf: pendingTabList){
+                    Tlog.e("--- " + jwpf.getJobPostObject().getJobPostTitle());
                 }
 
 

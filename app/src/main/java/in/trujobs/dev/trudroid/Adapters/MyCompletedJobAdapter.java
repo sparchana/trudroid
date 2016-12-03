@@ -1,7 +1,6 @@
-package in.trujobs.dev.trudroid;
+package in.trujobs.dev.trudroid.Adapters;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.JobApplicationDetailActivity;
+import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 

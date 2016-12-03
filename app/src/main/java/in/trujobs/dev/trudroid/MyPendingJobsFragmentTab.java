@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import in.trujobs.dev.trudroid.Adapters.MyUnderReviewJobAdapter;
+import in.trujobs.dev.trudroid.Adapters.MyPendingJobAdapter;
 
 /**
  * Created by dodo on 25/11/16.
@@ -27,8 +27,8 @@ public class MyPendingJobsFragmentTab extends Fragment {
         ListView myUnderReviewJobListView = (ListView) rowView.findViewById(R.id.my_jobs_under_review_list_view);
 
         if(jobApplicationActivity.pendingTabList.size() > 0){
-            MyUnderReviewJobAdapter myUnderReviewJobAdapter = new MyUnderReviewJobAdapter(getActivity(), jobApplicationActivity.pendingTabList);
-            myUnderReviewJobListView.setAdapter(myUnderReviewJobAdapter);
+            MyPendingJobAdapter myPendingJobAdapter = new MyPendingJobAdapter(getActivity(), jobApplicationActivity.pendingTabList);
+            myUnderReviewJobListView.setAdapter(myPendingJobAdapter);
         } else{
             ImageView noUnderReviewJobImage = (ImageView) rowView.findViewById(R.id.no_under_review_jobs_image);
             noUnderReviewJobImage.setVisibility(View.VISIBLE);
