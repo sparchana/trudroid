@@ -26,8 +26,8 @@ public class MyJobsConfirmedFragmentTab extends Fragment {
 
         ListView myConfirmedJobListView = (ListView) rowView.findViewById(R.id.my_jobs_confirmed_list_view);
 
-        if(jobApplicationActivity.todaysInterviewList.size() > 0){
-            MyConfirmedRescheduledJobsAdapter myConfirmedRescheduledJobsAdapter = new MyConfirmedRescheduledJobsAdapter(getActivity(), jobApplicationActivity.todaysInterviewList);
+        if(jobApplicationActivity.confirmedTabList.size() > 0){
+            MyConfirmedRescheduledJobsAdapter myConfirmedRescheduledJobsAdapter = new MyConfirmedRescheduledJobsAdapter(getActivity(), jobApplicationActivity.confirmedTabList);
             myConfirmedJobListView.setAdapter(myConfirmedRescheduledJobsAdapter);
         } else{
             ImageView noConfirmedJobImage = (ImageView) rowView.findViewById(R.id.no_confirmed_jobs_image);
