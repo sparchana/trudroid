@@ -324,7 +324,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 //Track this action
-//                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EXIT);
+                addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_INTERVIEW_EXIT);
 
                 Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -338,7 +338,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             showToast("Press back again to  cancel Interview Scheduling.");
 
             //Track this action
-            addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_EXIT);
+            addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_ACTION_TRIED_INTERVIEW_EXIT);
 
             new Handler().postDelayed(new Runnable() {
 
@@ -358,7 +358,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             otherPropertyIdStack.clear();
         } else if(!propertyIdBackStack.isEmpty() && !propertyIdStack.contains(propertyIdBackStack.peek())){
             propertyIdStack.push(propertyIdBackStack.pop());
-        } else {
         }
         interviewSlotOpenned =false;
         super.onBackPressed();
