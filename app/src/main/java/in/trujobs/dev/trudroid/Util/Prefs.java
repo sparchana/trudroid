@@ -47,6 +47,8 @@ public class Prefs {
 
     public static final File.SharedPreference<String> fcmToken = sFile.stringValue("fcmToken", "");
 
+    public static final File.SharedPreference<Integer> defaultMyJobsTab = sFile.intValue("defaultMyJobsTab", 0);
+
     public static void clearPrefValues() {
         Prefs.firstName.remove();
         Prefs.lastName.remove();

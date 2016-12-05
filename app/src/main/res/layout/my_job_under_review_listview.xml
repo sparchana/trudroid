@@ -24,14 +24,13 @@
             android:textSize="12dp"
             android:textColor="@color/white"
             android:background="@color/colorLightOrange"
-            android:text="Rescheduled Interview(s)"/>
+            android:text="Interview(s) Rescheduled"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/under_review_header"
-        android:visibility="gone"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
@@ -41,14 +40,13 @@
             android:textSize="12dp"
             android:textColor="@color/white"
             android:background="@color/colorLightOrange"
-            android:text="Under review Application(s)"/>
+            android:text="Application(s) Under Review "/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/rejected_header"
-        android:visibility="gone"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
@@ -58,7 +56,7 @@
             android:textSize="12dp"
             android:textColor="@color/white"
             android:background="@color/colorRed"
-            android:text="Not Shortlisted Application(s)"/>
+            android:text="Application(s) Not Shortlisted"/>
 
     </LinearLayout>
 
@@ -95,16 +93,31 @@
                         android:src="@drawable/green_dot"/>
 
                 </LinearLayout>
-                <TextView
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="42dp"
-                    android:textSize="14dp"
-                    android:paddingLeft="4dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:id="@+id/job_post_title_text_view"
-                    android:text="White Board Driver" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.9"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="42dp"
+                        android:textSize="14dp"
+                        android:paddingLeft="4dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:id="@+id/job_post_title_text_view"
+                        android:text="White Board Driver" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.1"
+                        android:layout_height="24dp"
+                        android:src="@drawable/info" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

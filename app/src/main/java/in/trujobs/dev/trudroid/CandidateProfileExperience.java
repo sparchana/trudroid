@@ -506,6 +506,8 @@ public class CandidateProfileExperience extends Fragment {
 
                     if(getCandidateExperienceProfileStaticResponse.getSkillObjectList().size() < 1){
                         checkSkills = false;
+                        LinearLayout skillSection = (LinearLayout) view.findViewById(R.id.skill_section);
+                        skillSection.setVisibility(View.GONE);
                     }
 
                     for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){

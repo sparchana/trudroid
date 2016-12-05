@@ -177,6 +177,7 @@ public class EnterPassword extends TruJobsBaseActivity {
                     overridePendingTransition(R.anim.slide_up, R.anim.no_change);
                     finish();
                 }
+
             }
             else {
                 showToast(MessageConstants.SOMETHING_WENT_WRONG);

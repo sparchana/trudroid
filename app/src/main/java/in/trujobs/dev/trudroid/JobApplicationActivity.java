@@ -188,6 +188,9 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {}
                 });
+
+                viewPager.setCurrentItem(Prefs.defaultMyJobsTab.get());
+                Prefs.defaultMyJobsTab.put(0);
             }
         }
     }

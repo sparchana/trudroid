@@ -60,17 +60,30 @@
                         android:src="@drawable/green_dot"/>
 
                 </LinearLayout>
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="42dp"
-                    android:textSize="14dp"
-                    android:paddingLeft="4dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:id="@+id/job_post_title_text_view"
-                    android:text="White Board Driver" />
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.9"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="42dp"
+                        android:textSize="14dp"
+                        android:paddingLeft="4dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:id="@+id/job_post_title_text_view"
+                        android:text="White Board Driver" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.1"
+                        android:layout_height="24dp"
+                        android:src="@drawable/info" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

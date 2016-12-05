@@ -36,8 +36,10 @@ import in.trujobs.dev.trudroid.CandidateProfileActivity;
 import in.trujobs.dev.trudroid.CandidateProfileBasic;
 import in.trujobs.dev.trudroid.JobApplicationActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.ReferFriends;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.SplashScreenActivity;
+import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 
@@ -96,10 +98,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_SEARCH_JOBS))){ //search jobs activity
                 intent = new Intent(this, SearchJobsActivity.class);
-            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS))){ //My Jobs
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_PENDING))){ //My Jobs (pending tab)
                 intent = new Intent(this, JobApplicationActivity.class);
+                Prefs.defaultMyJobsTab.put(0);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_CONFIRMED))){ //My Jobs (confirmed tab tab)
+                intent = new Intent(this, JobApplicationActivity.class);
+                Prefs.defaultMyJobsTab.put(1);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_COMPLETED))){ //My Jobs (pending tab)
+                intent = new Intent(this, JobApplicationActivity.class);
+                Prefs.defaultMyJobsTab.put(2);
             } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_PROFILE))){ //My Profile
                 intent = new Intent(this, CandidateProfileActivity.class);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_REFER))){ //My Profile
+                intent = new Intent(this, ReferFriends.class);
             }
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
