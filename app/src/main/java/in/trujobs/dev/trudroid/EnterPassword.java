@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import in.trujobs.dev.trudroid.Util.Constants;
@@ -127,26 +129,39 @@ public class EnterPassword extends TruJobsBaseActivity {
                 Prefs.candidatePrefJobRoleIdThree.put(logInResponse.getCandidatePrefJobRoleIdThree());
                 Prefs.candidateHomeLocalityName.put(logInResponse.getCandidateHomeLocalityName());
 
-                //setting and generating token
-                if(FirebaseInstanceId.getInstance().getToken() != null){
-                    //generating token
+                Boolean proceedWithoutToken = false;
+                //Checking play service is available or not
+                int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+
+                //if play service is not available
+                if(ConnectionResult.SUCCESS != resultCode && !GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                    Toast.makeText(getApplicationContext(), "This device does not support for Google Play Service!", Toast.LENGTH_LONG).show();
+                } else {
+                    //Starting intent to register device and generating token
                     FirebaseInstanceId.getInstance().getToken();
-                    Tlog.e("New token: " + FirebaseInstanceId.getInstance().getToken());
+                    if(FirebaseInstanceId.getInstance().getToken() != null){
+                        proceedWithoutToken = true;
+                        Tlog.e("New token: " + FirebaseInstanceId.getInstance().getToken());
 
-                    //saving in prefs
-                    Prefs.fcmToken.put(FirebaseInstanceId.getInstance().getToken());
+                        //saving in prefs
+                        Prefs.fcmToken.put(FirebaseInstanceId.getInstance().getToken());
 
-                    //update candidate token
-                    UpdateTokenRequest.Builder requestBuilder = UpdateTokenRequest.newBuilder();
-                    requestBuilder.setCandidateId(String.valueOf(logInResponse.getCandidateId()));
-                    requestBuilder.setToken(Prefs.fcmToken.get());
+                        //update candidate token
+                        UpdateTokenRequest.Builder requestBuilder = UpdateTokenRequest.newBuilder();
+                        requestBuilder.setCandidateId(String.valueOf(logInResponse.getCandidateId()));
+                        requestBuilder.setToken(Prefs.fcmToken.get());
 
-                    if (mUpdateTokenAsyncTask != null) {
-                        mUpdateTokenAsyncTask.cancel(true);
+                        if (mUpdateTokenAsyncTask != null) {
+                            mUpdateTokenAsyncTask.cancel(true);
+                        }
+                        mUpdateTokenAsyncTask = new EnterPassword.UpdateTokenRequestAsyncTask();
+                        mUpdateTokenAsyncTask.execute(requestBuilder.build());
+                    } else{
+                        proceedWithoutToken = false;
                     }
-                    mUpdateTokenAsyncTask = new EnterPassword.UpdateTokenRequestAsyncTask();
-                    mUpdateTokenAsyncTask.execute(requestBuilder.build());
-                } else{
+                }
+
+                if(!proceedWithoutToken){ //token was not registered. So continuing a normal flow
                     Intent intent;
                     if(Prefs.candidateJobPrefStatus.get() == 0){
                         showToast(MessageConstants.SIGNUP_SUCCESS_PRE_JOB_PREF);

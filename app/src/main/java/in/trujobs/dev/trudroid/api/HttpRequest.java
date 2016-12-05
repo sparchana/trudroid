@@ -47,6 +47,8 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.LogoutCandidateRequest;
+import in.trujobs.proto.LogoutCandidateResponse;
 import in.trujobs.proto.NotGoingReasonResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
@@ -643,6 +645,23 @@ public class HttpRequest {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return updateTokenResponse;
+    }
+
+    public static LogoutCandidateResponse logoutCandidate(LogoutCandidateRequest logoutCandidateRequest) {
+        String responseString = postToServer(Config.URL_LOGOUT_CANDIDATE,
+                Base64.encodeToString(logoutCandidateRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        LogoutCandidateResponse logoutCandidateResponse = null;
+        try {
+            logoutCandidateResponse = LogoutCandidateResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return logoutCandidateResponse;
     }
 
 }

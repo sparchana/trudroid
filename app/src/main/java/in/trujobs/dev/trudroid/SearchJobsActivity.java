@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -66,6 +67,10 @@ import in.trujobs.proto.JobSearchByJobRoleRequest;
 import in.trujobs.proto.JobSearchRequest;
 import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
+import in.trujobs.proto.LogoutCandidateRequest;
+import in.trujobs.proto.LogoutCandidateResponse;
+import in.trujobs.proto.UpdateTokenRequest;
+import in.trujobs.proto.UpdateTokenResponse;
 
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
@@ -87,6 +92,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     private List<NavItem> mNavItems;
     private AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> mLatLngOrPlaceIdAsyncTask;
     private AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
+    private AsyncTask<LogoutCandidateRequest, Void, LogoutCandidateResponse> mLogoutAsyncTask;
 
     private FilterJobFragment filterJobFragment;
     private static Double mSearchLat;
@@ -404,12 +410,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         switch (get_index(position)) {
             case 0:
                 if (Util.isLoggedIn()) {
-                    Prefs.clearPrefValues();
-                    Toast.makeText(SearchJobsActivity.this, "Logout Successful",
-                            Toast.LENGTH_LONG).show();
-
-                    //Track this action
-                    addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_LOGGED_OUT);
+                    logoutUser();
                 }
                 openItem(WelcomeScreen.class);
 
@@ -441,6 +442,22 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             default:
                 break;
         }
+    }
+
+    private void logoutUser() {
+        //update candidate token
+        LogoutCandidateRequest.Builder requestBuilder = LogoutCandidateRequest.newBuilder();
+        requestBuilder.setCandidateId(String.valueOf(Prefs.candidateId.get()));
+
+        if (mLogoutAsyncTask != null) {
+            mLogoutAsyncTask.cancel(true);
+        }
+        mLogoutAsyncTask = new SearchJobsActivity.LogoutCandidateAsyncTask();
+        mLogoutAsyncTask.execute(requestBuilder.build());
+
+        //Track this action
+        addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_LOGGED_OUT);
+
     }
 
     private void showJobPosts() {
@@ -1152,6 +1169,41 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         initializeAndStartSearch();
     }
+
+    private class LogoutCandidateAsyncTask extends AsyncTask<LogoutCandidateRequest,
+            Void, LogoutCandidateResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected LogoutCandidateResponse doInBackground(LogoutCandidateRequest... params) {
+            return HttpRequest.logoutCandidate(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(LogoutCandidateResponse logoutCandidateResponse) {
+            super.onPostExecute(logoutCandidateResponse);
+            mLogoutAsyncTask = null;
+            pd.cancel();
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (logoutCandidateResponse == null) {
+                showToast(MessageConstants.FAILED_REQUEST);
+                Log.w("","Null signIn Response");
+                return;
+            }
+
+            Prefs.clearPrefValues();
+            Toast.makeText(SearchJobsActivity.this, "Logout Successful",
+                    Toast.LENGTH_LONG).show();
+
+        }
+    }
+
 
     @Override
     protected void onStop() {

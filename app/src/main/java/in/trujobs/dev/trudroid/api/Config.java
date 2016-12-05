@@ -39,4 +39,5 @@ public class Config {
     public static final String URL_JOB_SEARCH = BASE_HTTP_URL + "/mSearchJobs";
     public static final String URL_GET_LOCALITY_FOR_LATLNG = BASE_HTTP_URL + "/mGetLocalityForLatLngOrPlaceId";
     public static final String URL_UPDATE_CANDIDATE_TOKEN = BASE_HTTP_URL + "/mUpdateCandidateToken";
+    public static final String URL_LOGOUT_CANDIDATE = BASE_HTTP_URL + "/mCandidateLogout";
 }
