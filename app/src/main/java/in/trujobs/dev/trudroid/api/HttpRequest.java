@@ -60,6 +60,8 @@ import in.trujobs.proto.UpdateCandidateStatusRequest;
 import in.trujobs.proto.UpdateCandidateStatusResponse;
 import in.trujobs.proto.UpdateInterviewRequest;
 import in.trujobs.proto.UpdateInterviewResponse;
+import in.trujobs.proto.UpdateTokenRequest;
+import in.trujobs.proto.UpdateTokenResponse;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -625,4 +627,22 @@ public class HttpRequest {
         }
         return localityObjectResponse;
     }
+
+    public static UpdateTokenResponse updateTokenRequest(UpdateTokenRequest updateTokenRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_TOKEN,
+                Base64.encodeToString(updateTokenRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateTokenResponse updateTokenResponse = null;
+        try {
+            updateTokenResponse = UpdateTokenResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateTokenResponse;
+    }
+
 }

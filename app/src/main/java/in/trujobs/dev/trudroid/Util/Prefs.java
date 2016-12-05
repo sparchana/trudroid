@@ -3,6 +3,10 @@ package in.trujobs.dev.trudroid.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
+
 /**
  * Created by batcoder1 on 25/7/16.
  */
@@ -41,6 +45,8 @@ public class Prefs {
 
     public static final File.SharedPreference<Integer> firstTime = sFile.intValue("firstTime", 0);
 
+    public static final File.SharedPreference<String> fcmToken = sFile.stringValue("fcmToken", "");
+
     public static void clearPrefValues() {
         Prefs.firstName.remove();
         Prefs.lastName.remove();
@@ -64,6 +70,13 @@ public class Prefs {
         Prefs.candidateHomeLocalityStatus.remove();
         Prefs.jobPrefString.remove();
         Prefs.candidateHomeLocalityPlaceId.remove();
+        Prefs.fcmToken.remove();
+
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /* TODO maintain session and authToken across server and app */
