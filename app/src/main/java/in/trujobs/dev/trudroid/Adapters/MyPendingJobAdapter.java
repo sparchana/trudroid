@@ -58,8 +58,8 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
     public class Holder
     {
         TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView,
-                mJobApplicationExperienceTextView, mLastUpdateTextView, mJobApplicationInterviewSchedule, mheaderTitle;
-        LinearLayout rescheduledHeader, underReviewHeader, rejectedHeader;
+                mJobApplicationExperienceTextView, mLastUpdateTextView, mJobApplicationInterviewSchedule, mInterviewDate;
+        LinearLayout rescheduledHeader, underReviewHeader, rejectedHeader, interviewDateView;
     }
 
     @Override
@@ -91,6 +91,9 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         holder.rescheduledHeader.setVisibility(View.GONE);
         holder.underReviewHeader.setVisibility(View.GONE);
         holder.rejectedHeader.setVisibility(View.GONE);
+
+        holder.interviewDateView = (LinearLayout) rowView.findViewById(R.id.scheduled_interview_date);
+        holder.interviewDateView.setVisibility(View.GONE);
 
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE){
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
@@ -135,6 +138,9 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                 holder.underReviewHeader.setVisibility(View.VISIBLE);
             }
 
+            if(jobApplicationObject.getInterviewDateMillis() != 0){
+                holder.interviewDateView.setVisibility(View.VISIBLE);
+            }
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
             applicationStatusText.setText("Under Review");
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
@@ -162,6 +168,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         holder.mJobApplicationExperienceTextView = (TextView) rowView.findViewById(R.id.job_post_exp_text_view);
         holder.mJobApplicationExperienceTextView.setText(jobApplicationObject.getJobPostObject().getJobPostExperience().getExperienceType());
 
+
         //last update
         holder.mLastUpdateTextView = (TextView) rowView.findViewById(R.id.last_update_date);
         Calendar lastUpdateCalendar = Calendar.getInstance();
@@ -183,6 +190,8 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         holder.mLastUpdateTextView.setText(cDay + "-" + cMonth + "-" + mYear);
 
         holder.mJobApplicationInterviewSchedule = (TextView) rowView.findViewById(R.id.interview_schedule_text_view);
+        holder.mInterviewDate = (TextView) rowView.findViewById(R.id.interview_date);
+
         Calendar calendar = Calendar.getInstance();
         if(jobApplicationObject.getInterviewDateMillis() != 0){
             calendar.setTimeInMillis(jobApplicationObject.getInterviewDateMillis());
@@ -201,6 +210,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
             }
 
             holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
+            holder.mInterviewDate.setText(cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         } else{
             holder.mJobApplicationInterviewSchedule.setVisibility(View.GONE);
         }

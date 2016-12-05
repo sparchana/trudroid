@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,9 +25,11 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
+import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.api.HttpRequest;
+import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 import in.trujobs.proto.UpdateCandidateStatusRequest;
@@ -38,11 +42,13 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
     private ProgressDialog pd;
     private Integer globalCandidateStatus = 0;
     private Integer selectedNotGoingReasonIndex = 0;
+    private Integer PERMISSIONS_REQUEST_CALL_PHONE = 1;
     private Long globalJpId = 0L;
     private AsyncTask<UpdateCandidateStatusRequest, Void, UpdateCandidateStatusResponse> mCandidateStatusAsyncTask;
     AsyncTask<UpdateInterviewRequest, Void, UpdateInterviewResponse> mAsyncTask;
 
     private static JobPostWorkFlowObject JPWFObject;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +57,9 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         CollapsingToolbarLayout collapsingToolbarLayout;
 
         ImageView companyLogo = (ImageView) findViewById(R.id.company_logo);
+
+        ImageView callHotline = (ImageView) findViewById(R.id.call_hotline);
+        ImageView shareNow = (ImageView) findViewById(R.id.share_now);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,6 +87,30 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         LinearLayout statusPanel = (LinearLayout) findViewById(R.id.candidate_status_panel);
         LinearLayout statusOptions = (LinearLayout) findViewById(R.id.status_options);
 
+        callHotline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:8880007799"));
+                if (ActivityCompat.checkSelfPermission(JobApplicationDetailActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(JobApplicationDetailActivity.this,
+                            new String[]{android.Manifest.permission.CALL_PHONE},
+                            PERMISSIONS_REQUEST_CALL_PHONE);
+                    return;
+                }
+                startActivity(callIntent);
+            }
+        });
+
+        shareNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, MessageConstants.REFER_MESSAGE_TEXT);
+                startActivity(Intent.createChooser(shareIntent, "Share using"));
+            }
+        });
         //candidate status options
         LinearLayout notGoingLayout = (LinearLayout) findViewById(R.id.not_going);
         LinearLayout delayedLayout = (LinearLayout) findViewById(R.id.delayed);

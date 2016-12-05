@@ -165,6 +165,16 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                     confirmedTabList.add(jwpf);
                 }
 
+                if(todaysInterviewList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(1);
+                } else if(rescheduledList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(0);
+                } else if(completedInterviewList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(2);
+                } else{
+                    Prefs.defaultMyJobsTab.put(0);
+                }
+
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.my_jobs_tab_layout);
                 tabLayout.addTab(tabLayout.newTab().setText("Pending Confirmation"));
                 tabLayout.addTab(tabLayout.newTab().setText("Confirmed"));

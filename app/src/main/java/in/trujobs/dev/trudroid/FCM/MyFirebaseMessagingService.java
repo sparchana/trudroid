@@ -20,6 +20,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -121,7 +122,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.launcher_icon)
-                    .setContentTitle(messageBody.getData().get("title"))
+                    .setColor(getResources().getColor(R.color.colorPrimary))
+                    .setContentTitle("TruJobs.in - " + messageBody.getData().get("title"))
                     .setContentText(messageBody.getData().get("message"))
                     .setAutoCancel(true)
                     .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE | DEFAULT_LIGHTS)
