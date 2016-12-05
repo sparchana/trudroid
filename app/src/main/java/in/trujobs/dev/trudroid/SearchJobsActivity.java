@@ -41,7 +41,6 @@ import in.trujobs.dev.trudroid.Adapters.PlacesAutoCompleteAdapter;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicJobSearchAsyncTask;
 import in.trujobs.dev.trudroid.CustomAsyncTask.BasicLatLngOrPlaceIdAsyncTask;
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
-import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.Helper.PlaceAPIHelper;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
@@ -70,44 +69,37 @@ import in.trujobs.proto.LocalityObjectResponse;
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
 
-    private AsyncTask<JobSearchRequest, Void, JobPostResponse> mAsyncTask;
-    private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mJobPostAsyncTask;
-    private AsyncTask<FetchCandidateAlertRequest, Void, FetchCandidateAlertResponse> mAlertAsyncTask;
-
-    ProgressDialog pd;
-    int preScreenLocationIndex = 0;
+    private ProgressDialog pd;
+    private int preScreenLocationIndex = 0;
     private ListView mNavigationItemListView;
-    public ListView jobPostListView;
-    public AutoCompleteTextView mSearchJobAcTxtView;
-    public TextView mSearchJobsByJobRoleTxtView, userNameTextView, userMobileTextView;
+    private ListView jobPostListView;
+    private AutoCompleteTextView mSearchJobAcTxtView;
+    private TextView mSearchJobsByJobRoleTxtView;
     public static String mSearchAddressOutput;
-    public String mSearchedPlaceId;
+    private String mSearchedPlaceId;
     private DrawerLayout mDrawerLayout;
-    private FloatingActionButton fab;
     private List<NavItem> mNavItems;
     private AsyncTask<LatLngOrPlaceIdRequest, Void, LocalityObjectResponse> mLatLngOrPlaceIdAsyncTask;
-    private AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask;
 
-    private FilterJobFragment filterJobFragment;
     private static Double mSearchLat;
     private static Double mSearchLng;
     private JobSearchRequest.Builder jobSearchRequest;
     public static JobSearchByJobRoleRequest.Builder jobRolesFilter;
     public static JobFilterRequest.Builder jobFilterRequestBkp;
-    public List<JobRoleObject> jobRoleObjectList;
-    public List<Long> selectedJobRoleList;
-    public List<Long> jobRoleIdList;
+    private List<JobRoleObject> jobRoleObjectList;
+    private List<Long> selectedJobRoleList;
+    private List<Long> jobRoleIdList;
 
-    public boolean[] checkedItems = null;
-    public BiMap<Integer, Long> biMap = null;
-    public BiMap<Long, Integer> invBiMap = null;
-    public CharSequence[] jobRoleNameList = null;
-    public int externalJobPostStartIndex = -1;
+    private boolean[] checkedItems = null;
+    private BiMap<Integer, Long> biMap = null;
+    private BiMap<Long, Integer> invBiMap = null;
+    private CharSequence[] jobRoleNameList = null;
+    private int externalJobPostStartIndex = -1;
 
-    boolean doubleBackToExitPressedOnce = false;
-    Long jobRoleIdFromHttpIntent;
+    private boolean doubleBackToExitPressedOnce = false;
+    private Long jobRoleIdFromHttpIntent;
 
-    TextView selectedJobRolesNameTxtView;
+    private TextView selectedJobRolesNameTxtView;
     public static ImageView btnFilterJob;
 
     @Override
@@ -155,7 +147,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_POST_LOGIN_APPLY_TO_JOBS);
 
-                mJobPostAsyncTask = new JobPostDetailAsyncTask();
+                AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mJobPostAsyncTask = new JobPostDetailAsyncTask();
                 mJobPostAsyncTask.execute(requestBuilder.build());
             }
         }
@@ -167,7 +159,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Search jobs");
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         // Show the floating action button only if the user is logged-in
         if (Util.isLoggedIn()) {
@@ -273,11 +265,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    public Button applyingJobButton;
-    public Button applyingJobButtonDetail;
-    public ImageView applyingJobColor;
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -287,8 +274,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void setNavigationItems() {
         mNavItems = new ArrayList<>();
-        userNameTextView = (TextView) findViewById(R.id.userName);
-        userMobileTextView = (TextView) findViewById(R.id.userMobile);
+        TextView userNameTextView = (TextView) findViewById(R.id.userName);
+        TextView userMobileTextView = (TextView) findViewById(R.id.userMobile);
 
         mNavItems.add(new NavItem("Search Job", R.drawable.search_icon));
         if (Util.isLoggedIn()) {
@@ -357,7 +344,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private void showJobPosts() {
         JobSearchReqInit();
-        mAsyncTask = new JobSearchAsyncTask();
+        AsyncTask<JobSearchRequest, Void, JobPostResponse> mAsyncTask = new JobSearchAsyncTask();
         mAsyncTask.execute(jobSearchRequest.build());
     }
 
@@ -401,7 +388,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    public void openItem(final Class <?> cls){
+    private void openItem(final Class<?> cls){
         mDrawerLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -422,7 +409,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             case R.id.btn_job_filter:
                 if (findViewById(R.id.overlay_job_filter_fragment_container) != null) {
                     // Create a new Fragment to be placed in the activity layout
-                    filterJobFragment = new FilterJobFragment();
+                    FilterJobFragment filterJobFragment = new FilterJobFragment();
 
                     // In case this activity was started with special instructions from an
                     // Intent, pass the Intent's extras to the fragment as arguments
@@ -443,7 +430,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 requestBuilder.setCandidateMobile(Prefs.candidateMobile.get());
                 loaderStart();
 
-                mAlertAsyncTask = new FetchAlertAsyncTask();
+                AsyncTask<FetchCandidateAlertRequest, Void, FetchCandidateAlertResponse> mAlertAsyncTask = new FetchAlertAsyncTask();
 
                 mAlertAsyncTask.execute(requestBuilder.build());
 
@@ -556,10 +543,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 applyDialogBuilder.setCustomTitle(customTitleLayout);
                 applyDialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        List<JobPostObject> list = new ArrayList<JobPostObject>();
+                        List<JobPostObject> list = new ArrayList<>();
                         list.add(getJobPostDetailsResponse.getJobPost());
-                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
-                        ApplyJobResponseBundle applyJobResponseBundle = jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
                         // TODO condition to check if response is already applied, or failed , accordingly allow to pass it to prescreen activity
                         Tlog.i("prescreen triggered");
 
@@ -627,7 +612,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 errorImageView.setVisibility(View.VISIBLE);
                 jobPostListView.setVisibility(View.GONE);
                 Tlog.w("Null JobPosts Response");
-                return;
             } else{
                 updateJobPostUISearch(jobPostResponse.getJobPostList());
             }
@@ -678,7 +662,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         mSearchJobAcTxtView.dismissDropDown();
                         jobSearchRequest.setLocalityName(mSearchJobAcTxtView.getText().toString());
 
-                        mJobSearchAsyncTask = new JobSearchAsyncTask();
+                        AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask = new JobSearchAsyncTask();
                         mJobSearchAsyncTask.execute(jobSearchRequest.build());
                     }
                     else if(!Util.isConnectedToInternet(getApplicationContext())) {
@@ -695,10 +679,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     private class FetchAlertAsyncTask extends AsyncTask<FetchCandidateAlertRequest,
             Void, FetchCandidateAlertResponse> {
 
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected FetchCandidateAlertResponse doInBackground(FetchCandidateAlertRequest... params) {
             return HttpRequest.fetchCandidateAlert(params[0]);
@@ -710,7 +690,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             super.onPostExecute(candidateAlertResponse);
             if (candidateAlertResponse == null) {
                 Tlog.e("Null Candidate Alert Response");
-                return;
             } else {
                 ViewDialog alert = new ViewDialog();
 
@@ -737,9 +716,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
     private class JobRoleAsyncTask extends AsyncTask<Void,
             Void, JobRoleResponse> {
 
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
         @Override
         protected JobRoleResponse doInBackground(Void... params) {
             return HttpRequest.getJobRoles();
@@ -819,7 +795,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    public void updateJobPostUISearch(List<JobPostObject> jobPostObjectList) {
+    private void updateJobPostUISearch(List<JobPostObject> jobPostObjectList) {
         updateJobPostUI(jobPostObjectList);
 
         //hiding keyboard
@@ -851,14 +827,14 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
 
             // if atleast one popular jobs is found, add 'Popular Jobs' header
-            if(isPopularJobAvailable == true) {
-                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.no_popular_jobs));
-                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.start_of_result));
+            if(isPopularJobAvailable) {
+                jobPostListView.removeHeaderView(findViewById(R.id.no_popular_jobs));
+                jobPostListView.removeHeaderView(findViewById(R.id.start_of_result));
                 jobPostListView.addHeaderView(getLayoutInflater().inflate(R.layout.start_popular_jobs, null));
             }
             else {
-                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.no_popular_jobs));
-                jobPostListView.removeHeaderView((LinearLayout) findViewById(R.id.start_of_result));
+                jobPostListView.removeHeaderView(findViewById(R.id.no_popular_jobs));
+                jobPostListView.removeHeaderView(findViewById(R.id.start_of_result));
                 jobPostListView.addHeaderView(getLayoutInflater().inflate(R.layout.no_popular_jobs, null));
             }
 
@@ -947,7 +923,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
     }
 
-    public void searchJobsByJobRole() {
+    private void searchJobsByJobRole() {
         loaderStart();
         JobSearchRequest.Builder jobSearch;
         if(jobSearchRequest != null){
@@ -1106,7 +1082,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         return mSearchLng;
     }
 
-    public List<String> setSelectedJobRolesNameTxtView() {
+    private List<String> setSelectedJobRolesNameTxtView() {
         List<String> mSelectedJobsName = new ArrayList<>();
         if (selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
             for(int j=0; j<selectedJobRoleList.size();j++){
@@ -1168,21 +1144,23 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private int get_index(int position){
         String title = mNavItems.get(position).mTitle;
-        if(title.equals("Logout"))
-            return 0;
-        else if(title.equals("Login/Sign Up"))
-            return 0;
-        else if(title.equals("Search Job"))
-            return 1;
-        else if(title.equals("My Profile"))
-            return 2;
-        else if(title.equals("My Jobs"))
-            return 3;
-        else if(title.equals("My Home Location"))
-            return 4;
-        else if(title.equals("Refer friends"))
-            return 5;
-        else
-            return -1;
+        switch (title) {
+            case "Logout":
+                return 0;
+            case "Login/Sign Up":
+                return 0;
+            case "Search Job":
+                return 1;
+            case "My Profile":
+                return 2;
+            case "My Jobs":
+                return 3;
+            case "My Home Location":
+                return 4;
+            case "Refer friends":
+                return 5;
+            default:
+                return -1;
+        }
     }
 }

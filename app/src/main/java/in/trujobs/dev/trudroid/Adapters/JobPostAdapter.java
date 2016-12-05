@@ -47,6 +47,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
     int preScreenLocationIndex = 0;
     int otherJobsSectionIndex = -1;
+    private Long myJobPostId;
 
     public JobPostAdapter(Activity context, List<JobPostObject> jobPostList, int externalJobSectionIndex) {
         super(context, 0, jobPostList);
@@ -284,12 +285,11 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         }
     }
 
-    private Long jpId;
     public ApplyJobResponseBundle applyJob(Long jobPostId, Long localityId, Button detailPageApplyBtn){
         if(detailPageApplyBtn != null){
             applyingJobButtonDetail = detailPageApplyBtn;
         }
-        jpId = jobPostId;
+        myJobPostId = jobPostId;
         ApplyJobRequest.Builder requestBuilder = ApplyJobRequest.newBuilder();
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setLocalityId(localityId);

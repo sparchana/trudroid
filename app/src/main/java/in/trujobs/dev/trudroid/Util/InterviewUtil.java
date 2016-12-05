@@ -49,23 +49,12 @@ public class InterviewUtil {
     }
 
     public static boolean checkSlotAvailability(Date x, String interviewDays) {
-        Tlog.i("interviewDays"+interviewDays);
-        if(x.getDay() == 1 && interviewDays.charAt(0) == '1') { //monday
+        if(x.getDay() > 0 && interviewDays.charAt(x.getDay() - 1)  == '1'){
             return true;
-        } else if(x.getDay() == 2 && interviewDays.charAt(1) == '1') { //tue
-            return true;
-        } else if(x.getDay() == 3 && interviewDays.charAt(2) == '1') { //wed
-            return true;
-        } else if(x.getDay() == 4 && interviewDays.charAt(3) == '1') { //thu
-            return true;
-        } else if(x.getDay() == 5 && interviewDays.charAt(4) == '1') { //fri
-            return true;
-        } else if(x.getDay() == 6 && interviewDays.charAt(5) == '1') { //sat
-            return true;
-        } else if(x.getDay() == 0 && interviewDays.charAt(6) == '1') { //sun
+        } else if(x.getDay() == 0 && interviewDays.charAt(6) == '1') {
             return true;
         } else {
-            return  false;
+            return false;
         }
     }
 }

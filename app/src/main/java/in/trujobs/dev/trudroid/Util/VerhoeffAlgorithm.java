@@ -36,22 +36,22 @@ public class VerhoeffAlgorithm {
 
     public static boolean validateVerhoeff(String num){
         int c = 0;
-        int[] myArray = StringToReversedIntArray(num);
+        int[] myArray = stringToReversedIntArray(num);
         for (int i = 0; i < myArray.length; i++){
             c = d[c][p[(i % 8)][myArray[i]]];
         }
 
         return (c == 0);
     }
-    private static int[] StringToReversedIntArray(String num){
+    private static int[] stringToReversedIntArray(String num){
         int[] myArray = new int[num.length()];
         for(int i = 0; i < num.length(); i++){
             myArray[i] = Integer.parseInt(num.substring(i, i + 1));
         }
-        myArray = Reverse(myArray);
+        myArray = reverse(myArray);
         return myArray;
     }
-    private static int[] Reverse(int[] myArray){
+    private static int[] reverse(int[] myArray){
         int[] reversed = new int[myArray.length];
         for(int i = 0; i < myArray.length ; i++){
             reversed[i] = myArray[myArray.length - (i + 1)];

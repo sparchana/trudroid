@@ -76,44 +76,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setCandidateMobile(String.valueOf(Prefs.candidateMobile.get()));
 
-//        ViewDialog alert = new ViewDialog();
-//        ApplyJobResponse applyJobResponse = applyJobResponseBundle.getApplyJobResponse();
-//        applyingJobColor = applyJobResponseBundle.getApplyingJobColor();
-//        applyingJobButton = applyJobResponseBundle.getApplyingJobButton();
-//        applyingJobButtonDetail = applyJobResponseBundle.getApplyingJobButtonDetail();
-//        if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS) {
-//            alert.showDialog(getApplicationContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
-//            //setting "already applied" to apply button of the jobs list
-//            try {
-//                applyingJobColor.setImageResource(R.drawable.orange_dot);
-//                applyingJobButton.setEnabled(false);
-//                applyingJobButton.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.back_grey_dark));
-//                applyingJobButton.setText("Applied");
-//            } catch (Exception ignored){}
-//
-//            //setting "already applied" to job detail activity button
-//            try {
-//                applyingJobButtonDetail.setText("Applied");
-//                applyingJobButtonDetail.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.back_grey_dark));
-//                applyingJobButtonDetail.setEnabled(false);
-//            } catch (Exception ignored){}
-//        } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED) {
-//            alert.showDialog(getApplicationContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
-//            try {
-//                applyingJobButton.setEnabled(false);
-//                applyingJobButton.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.back_grey_dark));
-//                applyingJobButton.setText("Applied");
-//            } catch (Exception ignored){}
-//        } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB) {
-//            alert.showDialog(getApplicationContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
-//        } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE) {
-//            alert.showDialog(getApplicationContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 0);
-//        } else if(!Util.isConnectedToInternet(getApplicationContext())) {
-//            Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-//        } else {
-//            alert.showDialog(getApplicationContext(), "Something went wrong! Please try again", "Unable to contact our servers", "",  R.drawable.sent, 0);
-//        }
-
         if (mAsyncTaskPreScreen != null) {
             mAsyncTaskPreScreen.cancel(true);
         }

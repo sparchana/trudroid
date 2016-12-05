@@ -28,7 +28,6 @@ import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.InterviewUtil;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -49,20 +48,13 @@ public class InterviewSlotSelectFragment extends Fragment {
 
     private AsyncTask<UpdateCandidateInterviewDetailRequest,
             Void, GenericResponse> updateCandidateInterviewDetailAsyncTask;
-    private AsyncTask<GetInterviewSlotsRequest,
-            Void, GetInterviewSlotsResponse> mGetInterviewSlotAsyncTask;
 
-    public String preScreenCompanyName;
-    public String preScreenJobTitle;
-    public String preScreenJobRoleTitle;
-    public Long preScreenJobPostId;
-    SpinnerAdapter adapter;
-    String[] interviewSlotArray = new String[0];
-    Integer[] interviewSlotIdArray = new Integer[0];
-    Date[] interviewSlotDateArray = new Date[0];
-    View view;
+    private Long preScreenJobPostId;
+    private Integer[] interviewSlotIdArray = new Integer[0];
+    private Date[] interviewSlotDateArray = new Date[0];
+    private View view;
 
-    ProgressDialog pd;
+    private ProgressDialog pd;
 
     public InterviewSlotSelectFragment() {
         // Required empty public constructor
@@ -77,9 +69,8 @@ public class InterviewSlotSelectFragment extends Fragment {
 
         pd = CustomProgressDialog.get(getActivity());
 
-        preScreenCompanyName = bundle.getString("companyName");
-        preScreenJobRoleTitle = bundle.getString("jobRoleTitle");
-        preScreenJobTitle = bundle.getString("jobTitle");
+        String preScreenCompanyName = bundle.getString("companyName");
+        String preScreenJobTitle = bundle.getString("jobTitle");
         preScreenJobPostId = bundle.getLong("jobPostId");
 
         TextView companyName = (TextView) view.findViewById(R.id.interview_company_title);
@@ -90,7 +81,8 @@ public class InterviewSlotSelectFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((TruJobsBaseActivity) getActivity()).setSupportActionBar(toolbar);
 
-        ((TruJobsBaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(((TruJobsBaseActivity) getActivity()).getSupportActionBar() != null)
+            ((TruJobsBaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // track screen view
         ((TruJobsBaseActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT);
@@ -103,9 +95,8 @@ public class InterviewSlotSelectFragment extends Fragment {
 
         GetInterviewSlotsRequest.Builder req = GetInterviewSlotsRequest.newBuilder();
         req.setJobPostId(preScreenJobPostId);
-        Tlog.i("jobPostId: " + preScreenJobPostId);
         PreScreenActivity.interviewSlotOpenned = true;
-        mGetInterviewSlotAsyncTask = new GetInterviewSlotAsyncTask();
+        AsyncTask<GetInterviewSlotsRequest, Void, GetInterviewSlotsResponse> mGetInterviewSlotAsyncTask = new GetInterviewSlotAsyncTask();
         mGetInterviewSlotAsyncTask.execute(req.build());
 
         return view;
@@ -113,9 +104,6 @@ public class InterviewSlotSelectFragment extends Fragment {
 
     private class GetInterviewSlotAsyncTask extends AsyncTask<GetInterviewSlotsRequest,
             Void, GetInterviewSlotsResponse> {
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected GetInterviewSlotsResponse doInBackground(GetInterviewSlotsRequest... params) {
@@ -135,54 +123,53 @@ public class InterviewSlotSelectFragment extends Fragment {
                 // construct value
                 final Spinner interviewSlot = (Spinner) view.findViewById(R.id.interview_slot_select);
 
-                Tlog.i("slot size: " + response.getInterviewSlotsList().size());
                 ArrayList<String> interviewSlotList = new ArrayList<>();
                 interviewSlotIdArray = new Integer[response.getInterviewSlotsList().size() * 7 + 1];
                 interviewSlotDateArray = new Date[response.getInterviewSlotsList().size() * 7 + 1];
 
-                // setting the following values run in paralle
+                // setting the following values run in parallel
                 interviewSlotList.add("Select Interview Slot");
-                interviewSlotIdArray[0] = Integer.valueOf(-1);
+                interviewSlotIdArray[0] = -1;
                 interviewSlotDateArray[0] = null;
 
-                for(int i = 1, k = 2; k < 9; ++k) {
-                        Calendar newCalendar = Calendar.getInstance();
-                        newCalendar.get(Calendar.YEAR);
-                        newCalendar.get(Calendar.MONTH);
-                        newCalendar.get(Calendar.DAY_OF_MONTH);
-                        Date today = newCalendar.getTime();
+                // get today's date
+                Calendar newCalendar = Calendar.getInstance();
+                newCalendar.get(Calendar.YEAR);
+                newCalendar.get(Calendar.MONTH);
+                newCalendar.get(Calendar.DAY_OF_MONTH);
+                Date today = newCalendar.getTime();
 
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(today);
+                for(int i = 1, k = 2; k < 9; ++k) {
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(today);
                     c.add(Calendar.DATE, k);
-                    Date x = c.getTime();
-                    Tlog.i("creating for :" + x);
+                    Date future = c.getTime();
 
                     for(int j = 0; j< response.getInterviewSlotsList().size(); ++j) {
 
-                        Tlog.i("slot no :" + j);
                         // in a day , create entry for each different time slot
                         String interviewDays = response.getInterviewSlotsList().get(j).getInterviewDays();
 
-                        if (InterviewUtil.checkSlotAvailability(x, interviewDays)) {
+                        if (InterviewUtil.checkSlotAvailability(future, interviewDays)) {
                             interviewSlotIdArray[i] = response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotId();
-                            interviewSlotDateArray[i] = x;
-                            String slotString = getDayVal(x.getDay())+ ", "
-                                    + x.getDate() + " " + getMonthVal((x.getMonth() + 1))
+                            interviewSlotDateArray[i] = future;
+                            String slotString = getDayVal(future.getDay())+ ", "
+                                    + future.getDate() + " " + getMonthVal((future.getMonth() + 1))
                                     + " (" + response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotTitle() + ")" ;
                             interviewSlotList.add(slotString);
                             i++;
                         }
                     }
                 }
-                interviewSlotArray = new String[interviewSlotList.size()];
+                String[] interviewSlotArray;
                 //First Step: convert ArrayList to an Object array.
                 Object[] objDays = interviewSlotList.toArray();
 
                 //Second Step: convert Object array to String array
                 interviewSlotArray = Arrays.copyOf(objDays, objDays.length, String[].class);
 
-                adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, interviewSlotArray);
+                SpinnerAdapter adapter = new SpinnerAdapter(getContext(), R.layout.spinner_layout, interviewSlotArray);
                 interviewSlot.setAdapter(adapter);
 
                 Button saveInterviewSlot = (Button) view.findViewById(R.id.save_interview_btn);
@@ -190,7 +177,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         boolean check = true;
-                        if(interviewSlot.getSelectedItemPosition() < 0){
+                        if(interviewSlot.getSelectedItemPosition() < 1){
                             check = false;
                         }
                         if(check){
@@ -204,8 +191,6 @@ public class InterviewSlotSelectFragment extends Fragment {
                             interviewDetails.setScheduledInterviewDateInMills(slotDate.getTime());
                             interviewDetails.setTimeSlotId(slotTimeId);
 
-                            Tlog.i("interview date" + slotDate.toString());
-                            Tlog.i("interview time" + slotTimeId);
                             updateCandidateInterviewDetailAsyncTask = new UpdateCandidateInterviewAsyncTask();
                             updateCandidateInterviewDetailAsyncTask.execute(interviewDetails.build());
                         }
@@ -240,14 +225,15 @@ public class InterviewSlotSelectFragment extends Fragment {
                 if (response.getStatus() == GenericResponse.Status.SUCCESS) {
                     // back to search
                     // show successfully applied message and redirect to search screen
-                    showDialog("Interview Scheduled Successfully");
+                    showDialog("Interview Scheduled Successfully." +
+                            "You can track your applications from 'My Jobs' option from menu");
                 } else {
                     showDialog("Something went wrong. Please try again.");
                 }
             }
         }
     }
-    public void showDialog(String msg){
+    private void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);
