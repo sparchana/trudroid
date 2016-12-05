@@ -178,6 +178,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     public void onClick(View view) {
                         boolean check = true;
                         if(interviewSlot.getSelectedItemPosition() < 1){
+                            showDialog("No Interview slot selected. Please select an Interview Slot.");
                             check = false;
                         }
                         if(check){
