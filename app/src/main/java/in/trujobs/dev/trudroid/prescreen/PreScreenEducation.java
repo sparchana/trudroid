@@ -37,31 +37,33 @@ import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
 
 public class PreScreenEducation extends Fragment {
-    ProgressDialog pd;
-    private AsyncTask<UpdateCandidateEducationProfileRequest, Void, UpdateCandidateBasicProfileResponse> UpdateEducationAsyncTask;
-    private AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask;
+    private ProgressDialog pd;
+    private AsyncTask<UpdateCandidateEducationProfileRequest, Void, UpdateCandidateBasicProfileResponse> updateEducationAsyncTask;
 
-    LinearLayout degreeSection;
-    LinearLayout qualificationLayout;
-    LinearLayout degreeLayout;
-    LinearLayout educationStatus;
-    EditText candidateCollege;
-    Button updateEducationProfile, educationStatusYes, educationStatusNo;
-    int qualificationPos = 0, degreePos = 0, firstTimeSetting = 0;
-    SpinnerAdapter adapter;
-    public PreScreenActivity preScreenActivity;
-    View view;
+    private LinearLayout degreeSection;
+    private LinearLayout qualificationLayout;
+    private LinearLayout degreeLayout;
+    private LinearLayout educationStatus;
+    private EditText candidateCollege;
+    private Button updateEducationProfile;
+    private Button educationStatusYes;
+    private Button educationStatusNo;
+    private final int qualificationPos = 0;
+    private final int degreePos = 0;
+    private int firstTimeSetting = 0;
+    private SpinnerAdapter adapter;
+    private View view;
 
-    String[] qualificationLevel = new String[0];
-    Long[] qualificationId = new Long[0];
+    private String[] qualificationLevel = new String[0];
+    private Long[] qualificationId = new Long[0];
 
-    String[] degreeName = new String[0];
-    Long[] degreeId = new Long[0];
-    public boolean isFinalFragment = false;
-    public Long jobPostId;
+    private String[] degreeName = new String[0];
+    private Long[] degreeId = new Long[0];
+    private boolean isFinalFragment = false;
+    private Long jobPostId;
 
-    private Long qualificationSelected = Long.valueOf(0), degreeSelected = Long.valueOf(0);
-    Integer qualificationStatus = -1;
+    private Long qualificationSelected = 0L, degreeSelected = 0L;
+    private Integer qualificationStatus = -1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         view = inflater.inflate(R.layout.pre_screen_education, container, false);
@@ -89,7 +91,7 @@ public class PreScreenEducation extends Fragment {
         jobPostId = getArguments().getLong("jobPostId");
 
 
-        mAsyncTask = new GetEducationStaticAsyncTask();
+        AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask = new GetEducationStaticAsyncTask();
         mAsyncTask.execute();
 
         PreScreenEducationObject preScreenEducationObject = null;
@@ -127,10 +129,8 @@ public class PreScreenEducation extends Fragment {
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("", "Null Response");
-                return;
             } else {
                 if(getCandidateEducationProfileStaticResponse.getStatusValue() == ServerConstants.SUCCESS){
-                    preScreenActivity = (PreScreenActivity) getActivity();
 
                     updateEducationProfile = (Button) view.findViewById(R.id.save_ps_education_btn);
                     final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
@@ -146,7 +146,7 @@ public class PreScreenEducation extends Fragment {
                     degreeId = new Long[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
 
                     qualificationLevel[0] = "Select Education Level";
-                    qualificationId[0] = Long.valueOf(-1);
+                    qualificationId[0] = (long) -1;
                     for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getEducationObjectCount() ; i++){
                         qualificationLevel[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationName();
                         qualificationId[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
@@ -158,7 +158,7 @@ public class PreScreenEducation extends Fragment {
 
 
                     degreeName[0] = "Select Highest Degree";
-                    degreeId[0] = Long.valueOf(-1);
+                    degreeId[0] = (long) -1;
 
                     educationStatusYes.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -256,23 +256,23 @@ public class PreScreenEducation extends Fragment {
                     updateEducationProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            boolean check = true;
+                            boolean isValidationPassed = true;
                             Tlog.e("Qualification status: = " + qualificationStatus);
                             if(qualificationSelected < 1){
                                 showDialog("Please select your education level");
                                 qualificationLayout.setBackgroundResource(R.drawable.border);
-                                check = false;
+                                isValidationPassed = false;
                             } else if(qualificationSelected > 3 && degreeSelected < 1){
-                                check = false;
+                                isValidationPassed = false;
                                 showDialog("Please select your Degree");
                                 degreeLayout.setBackgroundResource(R.drawable.border);
                             } else if(qualificationStatus == -1){
-                                check = false;
+                                isValidationPassed = false;
                                 showDialog("Please answer: \"Have you successfully completed this course?\"");
                                 educationStatus.setBackgroundResource(R.drawable.border);
                             }
 
-                            if(check){
+                            if(isValidationPassed){
 
                                 //Track this action
                                 ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN, Constants.GA_ACTION_SAVE_EDUCATION_PRESCREEN);
@@ -288,8 +288,8 @@ public class PreScreenEducation extends Fragment {
                                 educationBuilder.setJobPostId(jobPostId);
                                 educationBuilder.setIsFinalFragment(isFinalFragment);
                                 // this same api will add/update candidate education
-                                UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
-                                UpdateEducationAsyncTask.execute(educationBuilder.build());
+                                updateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
+                                updateEducationAsyncTask.execute(educationBuilder.build());
                             }
                         }
                     });
@@ -334,7 +334,7 @@ public class PreScreenEducation extends Fragment {
         }
     }
 
-    public void showDialog(String msg){
+    private void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);

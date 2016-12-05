@@ -40,14 +40,14 @@ import in.trujobs.proto.PreScreenDocumentObject;
 import in.trujobs.proto.UpdateCandidateDocumentRequest;
 
 public class PreScreenDocument extends Fragment {
-    ProgressDialog pd;
-    List<IdProofObjectWithNumber> candidateDocument = new ArrayList<IdProofObjectWithNumber>();
-    final Map<Integer, IdProofObjectWithNumber> candidateDocumentMap = new HashMap<>();
+    private ProgressDialog pd;
+    private List<IdProofObjectWithNumber> candidateDocumentList = new ArrayList<>();
+    private final Map<Integer, IdProofObjectWithNumber> candidateDocumentMap = new HashMap<>();
     private AsyncTask<UpdateCandidateDocumentRequest, Void, GenericResponse> mUpdateDocumentAsyncTask;
-    LinearLayout documentListView;
-    View view;
-    public boolean isFinalFragment = false;
-    public Long jobPostId;
+    private LinearLayout documentListView;
+    private View view;
+    private boolean isFinalFragment = false;
+    private Long jobPostId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -77,7 +77,7 @@ public class PreScreenDocument extends Fragment {
             isFinalFragment = bundle.getBoolean("isFinalFragment");
             jobPostId = bundle.getLong("jobPostId");
             if(preScreenDocumentObject.isInitialized() && !preScreenDocumentObject.getIsMatching() ) {
-                getAllDocument(preScreenDocumentObject.getJobPostIdProofList());
+                initDocument(preScreenDocumentObject.getJobPostIdProofList());
 
 
                 Button saveDocumentDetail = (Button) view.findViewById(R.id.save_document_btn);
@@ -85,32 +85,32 @@ public class PreScreenDocument extends Fragment {
                     @Override
                     public void onClick(View view) {
                         UpdateCandidateDocumentRequest.Builder documentBuilder = UpdateCandidateDocumentRequest.newBuilder();
-                        boolean check = true;
-                        candidateDocument =  new ArrayList<IdProofObjectWithNumber>();
+                        boolean isValidationPassed = true;
+                        candidateDocumentList = new ArrayList<>();
 
                         for(Map.Entry<Integer, IdProofObjectWithNumber> entry: candidateDocumentMap.entrySet()){
-                            candidateDocument.add(entry.getValue());
+                            candidateDocumentList.add(entry.getValue());
                         }
-                        Tlog.i("size: " + candidateDocument.size());
-                        if(candidateDocument.size() > 0) {
+                        Tlog.i("size: " + candidateDocumentList.size());
+                        if(candidateDocumentList.size() > 0) {
                             // validate document
-                            for (IdProofObjectWithNumber idProofObjectWithNumber: candidateDocument) {
+                            for (IdProofObjectWithNumber idProofObjectWithNumber: candidateDocumentList) {
                                 Tlog.i("id: " + idProofObjectWithNumber.getIdProof().getIdProofId() + " val: " +
                                         idProofObjectWithNumber.getIdProofNumber());
-                                if(!ValidateIdProof(idProofObjectWithNumber.getIdProof().getIdProofId(),
+                                if(!validateIdProof(idProofObjectWithNumber.getIdProof().getIdProofId(),
                                         idProofObjectWithNumber.getIdProofNumber())){
-                                    check = false;
+                                    isValidationPassed = false;
                                     break;
                                 }
                             }
                         }
-                        if(check) {
+                        if(isValidationPassed) {
                             //Track this action
                             ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_DOCUMENT_PRESCREEN, Constants.GA_ACTION_SAVE_DOCUMENT_PRESCREEN);
 
                             documentBuilder.setCandidateMobile(Prefs.candidateMobile.get());
 
-                            documentBuilder.addAllIdProof(candidateDocument);
+                            documentBuilder.addAllIdProof(candidateDocumentList);
                             documentBuilder.setJobPostId(jobPostId);
                             documentBuilder.setIsFinalFragment(isFinalFragment);
 
@@ -130,21 +130,18 @@ public class PreScreenDocument extends Fragment {
         return view;
     }
 
-    private void getAllDocument(List<IdProofObject> jobPostIdProofList) {
+    private void initDocument(List<IdProofObject> jobPostIdProofList) {
         for(IdProofObject idProofObject : jobPostIdProofList) {
             LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View mLinearView = inflater.inflate(R.layout.document_list_item, null);
-            EditText idProofTitle = (EditText) mLinearView
-                    .findViewById(R.id.idproof_value);
 
-            Tlog.i("idProofId Name : " + idProofObject.getIdProofName());
-            idProofTitle.setHint(idProofObject.getIdProofName());
             documentListView.addView(mLinearView);
 
             final CheckBox documentCheckbox = (CheckBox) mLinearView.findViewById(R.id.idproof_checkbox);
             final EditText documentValue = (EditText) mLinearView.findViewById(R.id.idproof_value);
             documentCheckbox.setId(idProofObject.getIdProofId());
+            documentValue.setHint(idProofObject.getIdProofName());
 
             documentValue.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -225,7 +222,7 @@ public class PreScreenDocument extends Fragment {
         }
     }
 
-    public void showDialog(String msg){
+    private void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);
@@ -238,7 +235,7 @@ public class PreScreenDocument extends Fragment {
         alertDialog.show();
     }
 
-    public boolean ValidateIdProof(int id, String value){
+    private boolean validateIdProof(int id, String value){
         if(value == null) {
             return false;
         }
@@ -260,7 +257,7 @@ public class PreScreenDocument extends Fragment {
             case 3:
                 flag = Validator.validateAadhaar(value);
                 if(!flag){
-                    Tlog.e("aadhar card value: " + value);
+                    Tlog.e("aadhaar card value: " + value);
                     showDialog("Please provide a valid Aadhaar Number");
                 }
                 return flag;

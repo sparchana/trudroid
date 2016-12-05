@@ -76,19 +76,16 @@ public class PreScreenLanguage extends Fragment{
             jobPostId = bundle.getLong("jobPostId");
 
             if(preScreenLanguageObject.isInitialized() && !preScreenLanguageObject.getIsMatching() ) {
-                getAllLanguages(preScreenLanguageObject.getJobPostLanguageList());
+                initLanguages(preScreenLanguageObject.getJobPostLanguageList());
 
                 Button saveLanguageDetail = (Button) view.findViewById(R.id.save_language_btn);
                 saveLanguageDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         UpdateCandidateLanguageRequest.Builder languageBuilder = UpdateCandidateLanguageRequest.newBuilder();
-                        boolean check = true;
                         if(candidateLanguageKnown.size() < 1){
-                            check = false;
-                            showDialog("Please select at least one language that you know");
-                        }
-                        if(check) {
+                            PreScreenActivity.showRequiredFragment(getActivity());
+                        } else {
                             //Track this action
                             ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_LANGUAGE_PRESCREEN, Constants.GA_ACTION_SAVE_LANGUAGE_PRESCREEN);
 
@@ -113,7 +110,7 @@ public class PreScreenLanguage extends Fragment{
     }
 
 
-    public void getAllLanguages(List<LanguageObject> languageObjectList) {
+    public void initLanguages(List<LanguageObject> languageObjectList) {
         for(final LanguageObject languageObject : languageObjectList){
             LayoutInflater inflater = null;
             inflater = (LayoutInflater) getActivity().getApplicationContext()

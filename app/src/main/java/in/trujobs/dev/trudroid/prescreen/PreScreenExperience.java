@@ -40,26 +40,35 @@ import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.UpdateCandidateExperienceRequest;
 
 public class PreScreenExperience extends Fragment{
-    LinearLayout qualificationLayout, experiencedSection, fresherExperienceLayout, isEmployedLayout;
-    Integer isCandidateExperienced = -1;
-    ProgressDialog pd;
-    public PreScreenActivity preScreenActivity;
-    TextView selectExp;
+    private LinearLayout qualificationLayout;
+    private LinearLayout experiencedSection;
+    private LinearLayout fresherExperienceLayout;
+    private LinearLayout isEmployedLayout;
+    private Integer isCandidateExperienced = -1;
+    private ProgressDialog pd;
+    private TextView selectExp;
     private AsyncTask<Void, Void, GetCandidateExperienceProfileStaticResponse> mAsyncTask;
-    View view;
-    EditText currentJobRole, lastWithdrawnSalary, currentCompany;
-    Button saveExperienceBtn, isExperienced, isFresher, isEmployedYes, isEmployedNo;
-    ImageView experiencePicker, currentJobRolePicker;
-    Integer expInYears = 0;
-    Integer isEmployed = -1;
-    JobRoleObject currentJobRoleValue;
-    String selectedExpValue = "";
-    final List<String> jobRoleList = new ArrayList<>();
-    final List<Long> jobRoleIdList = new ArrayList<Long>();
+    private View view;
+    private EditText currentJobRole;
+    private EditText lastWithdrawnSalary;
+    private EditText currentCompany;
+    private Button saveExperienceBtn;
+    private Button isExperienced;
+    private Button isFresher;
+    private Button isEmployedYes;
+    private Button isEmployedNo;
+    private ImageView experiencePicker;
+    private ImageView currentJobRolePicker;
+    private Integer expInYears = 0;
+    private Integer isEmployed = -1;
+    private JobRoleObject currentJobRoleValue;
+    private String selectedExpValue = "";
+    private final List<String> jobRoleList = new ArrayList<>();
+    private final List<Long> jobRoleIdList = new ArrayList<>();
     private AsyncTask<UpdateCandidateExperienceRequest, Void, GenericResponse> mUpdateExperienceAsyncTask;
 
-    public boolean isFinalFragment = false;
-    public Long jobPostId;
+    private boolean isFinalFragment = false;
+    private Long jobPostId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -90,15 +99,13 @@ public class PreScreenExperience extends Fragment{
 
         selectExp = (TextView) view.findViewById(R.id.select_experience);
 
-        preScreenActivity = (PreScreenActivity) getActivity();
-
         JobRoleAsyncTask fetchAllJobs = new JobRoleAsyncTask();
         fetchAllJobs.execute();
         
         return view;
     }
 
-    public void showExperiencePicker(){
+    private void showExperiencePicker(){
         final Dialog expDialog = new Dialog(getActivity());
         expDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         expDialog.setContentView(R.layout.experience_picker);
@@ -138,7 +145,7 @@ public class PreScreenExperience extends Fragment{
 
         expDialog.show();
     }
-    public void showDialog(String msg){
+    private void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);
@@ -151,7 +158,7 @@ public class PreScreenExperience extends Fragment{
         alertDialog.show();
     }
     private class GenericTextWatcher implements TextWatcher {
-        private View view;
+        private final View view;
         private GenericTextWatcher(View view) {
             this.view = view;
         }
@@ -290,7 +297,7 @@ public class PreScreenExperience extends Fragment{
                 currentJobRole.setEnabled(false);
 
                 if(jobRoleList == null){
-                    Tlog.e("jobrole list null");
+                    Tlog.e("jobRole list null");
                 }
                 final CharSequence[] jRoleList = jobRoleList.toArray(new CharSequence[jobRoleList.size()]);
 
@@ -326,34 +333,34 @@ public class PreScreenExperience extends Fragment{
                     @Override
                     public void onClick(View view) {
                         UpdateCandidateExperienceRequest.Builder experienceBuilder = UpdateCandidateExperienceRequest.newBuilder();
-                        boolean check = true;
+                        boolean isValidationPassed = true;
 
                         if(isCandidateExperienced < 0){
-                            check = false;
+                            isValidationPassed = false;
                             showDialog("Please answer the question: Are you a fresher or an experienced candidate?");
                             fresherExperienceLayout.setBackgroundResource(R.drawable.border);
                         } else if(isCandidateExperienced == 1 && (expInYears < 1)){
-                            check = false;
+                            isValidationPassed = false;
                             selectExp.setError("Please answer the question: Total Work Experience");
                             selectExp.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                             showDialog("Please answer the question: Total Work Experience");
                         } else if(expInYears > 1 && isEmployed < 0){
-                            check = false;
+                            isValidationPassed = false;
                             showDialog("Please answer the question: Are you currently working?");
                             isEmployedLayout.setBackgroundResource(R.drawable.border);
                         } else if(expInYears > 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
-                            check = false;
+                            isValidationPassed = false;
                             lastWithdrawnSalary.setError("Please provide your last drawn Salary");
                             lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
                             showDialog("Please provide your current Salary");
                         } else if(isEmployed == 1 && (currentJobRoleValue == null || currentCompany.getText().toString().length() < 3)) {
-                            check = false;
-                            currentCompany.setError("Please provide your last drawn Salary");
+                            isValidationPassed = false;
+                            currentCompany.setError("Please provide your current company details");
                             currentCompany.addTextChangedListener(new GenericTextWatcher(currentCompany));
-                            showDialog("Please provide your current Comapany details");
+                            showDialog("Please provide your current Company details");
                         }
 
-                        if(check){
+                        if(isValidationPassed){
 
                             //Track this action
                             ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EXPERIENCE_PRESCREEN, Constants.GA_ACTION_SAVE_EXPERIENCE_PRESCREEN);

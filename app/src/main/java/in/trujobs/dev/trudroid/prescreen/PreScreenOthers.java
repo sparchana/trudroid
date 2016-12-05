@@ -207,7 +207,7 @@ public class PreScreenOthers extends Fragment {
             // render assets
             try {
                 preScreenAssetObject = PreScreenAssetObject.parseFrom(bundle.getByteArray("asset"));
-                getAllAsset(preScreenAssetObject.getJobPostAssetList());
+                initAsset(preScreenAssetObject.getJobPostAssetList());
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -218,7 +218,7 @@ public class PreScreenOthers extends Fragment {
         saveBasicProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean check = true;
+                boolean isValidationPassed = true;
 
                 int year, ageDiff = 0, minAgeDiff = 0;
                 if(candidateDob.getText().toString().length() > 0){
@@ -233,26 +233,26 @@ public class PreScreenOthers extends Fragment {
                 }
 
                 if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && candidateDob.getText().toString().trim().isEmpty()){
-                    check = false;
+                    isValidationPassed = false;
                     candidateDob.setError("Select date of birth");
                     candidateDob.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(candidateDob));
                     showDialog("Please enter your Date of Birth");
                 } else if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && (ageDiff < 0 || minAgeDiff > 0)){
-                    check = false;
+                    isValidationPassed = false;
                     candidateDob.setError("Select valid date of birth (min: 18 yrs, max: 80 yrs)");
                     candidateDob.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(candidateDob));
                     showDialog("Please provide a valid date of birth (min: 18 yrs, max: 80 yrs  )");
                 } else if(remainingPropIdList.contains(PROPERTY_TYPE_GENDER) && genderValue < 0){
-                    check = false;
+                    isValidationPassed = false;
                     genderBtnLayout.setBackgroundResource(R.drawable.border);
                     showDialog("Please provide your gender");
                 } else if(remainingPropIdList.contains(PROPERTY_TYPE_WORK_SHIFT)  && shiftValue!= null && shiftValue < 1 ){
-                    check = false;
+                    isValidationPassed = false;
                     showDialog("Please provide your preferred Time Shift");
                     shiftLayout.setBackgroundResource(R.drawable.border);
                 }
 
-                if(check) {
+                if(isValidationPassed) {
                     //Track this action
                     ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_OTHER_DETAIL_PRESCREEN, Constants.GA_ACTION_SAVE_OTHER_DETAIL_PRESCREEN);
 
@@ -289,7 +289,7 @@ public class PreScreenOthers extends Fragment {
         return view;
     }
 
-    private void getAllAsset(List<AssetObject> jobPostAssetList) {
+    private void initAsset(List<AssetObject> jobPostAssetList) {
         for(AssetObject assetObject : jobPostAssetList){
             LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
