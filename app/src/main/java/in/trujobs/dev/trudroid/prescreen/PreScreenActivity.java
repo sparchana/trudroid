@@ -171,7 +171,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Stack hpQueue = new Stack(); // all solo fragment prop ids, {0,1,4, 5}
             Stack lpQueue = new Stack(); // all in one fragment prop id, {rest}
 
-            Tlog.i("size: " + preScreenPopulateResponse.getPropertyIdList().size());
             if(preScreenPopulateResponse.getPropertyIdCount() > 0) {
                 for(Integer propId : preScreenPopulateResponse.getPropertyIdList()){
                     if(propId == null) continue;
@@ -313,7 +312,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
     @Override
     public void onBackPressed() {
-        Tlog.i("back pressed");
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -353,21 +351,14 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         } else if(propertyIdStack.isEmpty() && !otherPropertyIdStack.isEmpty()){
             // restore all ids of other fragment
-            Tlog.i("adding all other prop id to propidstack");
             while(!otherPropertyIdStack.isEmpty()){
-                Tlog.i("added : " + otherPropertyIdStack.peek());
                 propertyIdStack.push(otherPropertyIdStack.pop());
             }
             interviewSlotOpenned = false;
             otherPropertyIdStack.clear();
         } else if(!propertyIdBackStack.isEmpty() && !propertyIdStack.contains(propertyIdBackStack.peek())){
-            Tlog.i("onbackpress case 2");
             propertyIdStack.push(propertyIdBackStack.pop());
-            if(!propertyIdBackStack.isEmpty()) Tlog.i("bStack top:" + propertyIdBackStack.peek());
-            if(!propertyIdStack.isEmpty()) Tlog.i("mStack top:" + propertyIdStack.peek());
         } else {
-            Tlog.i("onbackpress case 3");
-            if(!propertyIdBackStack.isEmpty()) Tlog.i("m contains bStack top:" + propertyIdBackStack.peek());
         }
         interviewSlotOpenned =false;
         super.onBackPressed();

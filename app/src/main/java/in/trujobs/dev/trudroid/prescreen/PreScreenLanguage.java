@@ -26,7 +26,6 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.LanguageKnownObject;
@@ -102,9 +101,6 @@ public class PreScreenLanguage extends Fragment{
             }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-        }
-        if(preScreenLanguageObject != null) {
-            Tlog.i("language list size" + preScreenLanguageObject.getJobPostLanguageList().size());
         }
         return view;
     }

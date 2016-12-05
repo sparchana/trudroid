@@ -285,7 +285,6 @@ public class PreScreenOthers extends Fragment {
             otherPropertyIdStack.push(PreScreenActivity.propertyIdStack.pop());
         }
 
-        Tlog.i("remaining ids, that needed to be shown in one fragment: ");
         return view;
     }
 
@@ -489,7 +488,6 @@ public class PreScreenOthers extends Fragment {
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
             } else {
-                Tlog.i("status: " + response.getStatus());
                 if(response.getStatus() == GenericResponse.Status.SUCCESS) {
                     PreScreenActivity.showRequiredFragment(getActivity());
                     return;

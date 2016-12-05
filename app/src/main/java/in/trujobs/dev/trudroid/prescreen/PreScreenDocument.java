@@ -91,12 +91,9 @@ public class PreScreenDocument extends Fragment {
                         for(Map.Entry<Integer, IdProofObjectWithNumber> entry: candidateDocumentMap.entrySet()){
                             candidateDocumentList.add(entry.getValue());
                         }
-                        Tlog.i("size: " + candidateDocumentList.size());
                         if(candidateDocumentList.size() > 0) {
                             // validate document
                             for (IdProofObjectWithNumber idProofObjectWithNumber: candidateDocumentList) {
-                                Tlog.i("id: " + idProofObjectWithNumber.getIdProof().getIdProofId() + " val: " +
-                                        idProofObjectWithNumber.getIdProofNumber());
                                 if(!validateIdProof(idProofObjectWithNumber.getIdProof().getIdProofId(),
                                         idProofObjectWithNumber.getIdProofNumber())){
                                     isValidationPassed = false;
@@ -123,9 +120,6 @@ public class PreScreenDocument extends Fragment {
             }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-        }
-        if(preScreenDocumentObject != null) {
-            Tlog.i("document value" + preScreenDocumentObject.getJobPostIdProofList().size());
         }
         return view;
     }
@@ -159,11 +153,9 @@ public class PreScreenDocument extends Fragment {
                         document.setIdProofNumber(String.valueOf(documentValue.getText()));
 
                         if(candidateDocumentMap.containsKey(document.getIdProof().getIdProofId())){
-                            Tlog.i(document.getIdProof().getIdProofId() + " rm added ");
                             candidateDocumentMap.remove(document.getIdProof().getIdProofId());
                             candidateDocumentMap.put(document.getIdProof().getIdProofId(), document.build());
                         } else {
-                            Tlog.i(document.getIdProof().getIdProofId() + " added ");
                             candidateDocumentMap.put(document.getIdProof().getIdProofId(), document.build());
                         }
                     }
@@ -180,7 +172,6 @@ public class PreScreenDocument extends Fragment {
                     IdProofObjectWithNumber.Builder document = IdProofObjectWithNumber.newBuilder();
 
                     if(!b){
-                        Tlog.i(documentCheckbox.getId() + " removed ");
                         candidateDocumentMap.remove(documentCheckbox.getId());
                     } else {
                         if(documentValue.getText().toString() != ""){
@@ -257,7 +248,6 @@ public class PreScreenDocument extends Fragment {
             case 3:
                 flag = Validator.validateAadhaar(value);
                 if(!flag){
-                    Tlog.e("aadhaar card value: " + value);
                     showDialog("Please provide a valid Aadhaar Number");
                 }
                 return flag;

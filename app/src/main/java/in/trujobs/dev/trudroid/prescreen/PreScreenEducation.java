@@ -26,7 +26,6 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -99,7 +98,6 @@ public class PreScreenEducation extends Fragment {
 
         try {
             preScreenEducationObject = PreScreenEducationObject.parseFrom(bundle.getByteArray("education"));
-            Tlog.i("education is matching: " + preScreenEducationObject.getIsMatching());
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
@@ -257,7 +255,6 @@ public class PreScreenEducation extends Fragment {
                         @Override
                         public void onClick(View view) {
                             boolean isValidationPassed = true;
-                            Tlog.e("Qualification status: = " + qualificationStatus);
                             if(qualificationSelected < 1){
                                 showDialog("Please select your education level");
                                 qualificationLayout.setBackgroundResource(R.drawable.border);
