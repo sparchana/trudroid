@@ -176,12 +176,9 @@ public class InterviewSlotSelectFragment extends Fragment {
                 saveInterviewSlot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        boolean check = true;
                         if(interviewSlot.getSelectedItemPosition() < 1){
                             showDialog("No Interview slot selected. Please select an Interview Slot.");
-                            check = false;
-                        }
-                        if(check){
+                        } else {
                             int slotTimeId = interviewSlotIdArray[interviewSlot.getSelectedItemPosition()];
                             Date slotDate = interviewSlotDateArray[interviewSlot.getSelectedItemPosition()];
 
