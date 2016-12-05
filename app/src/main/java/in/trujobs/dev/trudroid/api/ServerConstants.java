@@ -58,6 +58,15 @@ public class ServerConstants {
     public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_NO_SHOW = 16;
     public static final int JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_NOT_QUALIFIED = 17;
 
+
+    /* android notification intent type */
+    public static final int ANDROID_INTENT_ACTIVITY_SEARCH_JOBS = 1;
+    public static final int ANDROID_INTENT_ACTIVITY_MY_JOBS = 2;
+    public static final int ANDROID_INTENT_ACTIVITY_MY_PROFILE = 3;
+    public static final int ANDROID_INTENT_ACTIVITY_REFER = 4;
+    public static final int ANDROID_INTENT_ACTIVITY_FEEDBACK = 5;
+    public static final int ANDROID_INTENT_ACTIVITY_INTERVIEW_TIPS = 6;
+
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
 

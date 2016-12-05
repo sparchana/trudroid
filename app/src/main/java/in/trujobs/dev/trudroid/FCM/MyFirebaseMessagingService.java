@@ -22,17 +22,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
 import java.util.Random;
 
+import in.trujobs.dev.trudroid.CandidateProfileActivity;
+import in.trujobs.dev.trudroid.CandidateProfileBasic;
 import in.trujobs.dev.trudroid.JobApplicationActivity;
 import in.trujobs.dev.trudroid.R;
+import in.trujobs.dev.trudroid.SearchJobsActivity;
+import in.trujobs.dev.trudroid.SplashScreenActivity;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.api.ServerConstants;
 
 import static android.app.Notification.DEFAULT_LIGHTS;
 import static android.app.Notification.DEFAULT_SOUND;
@@ -86,12 +93,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendNotification(RemoteMessage messageBody) {
         Intent intent = new Intent(this, JobApplicationActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_SEARCH_JOBS))){ //search jobs activity
+                intent = new Intent(this, SearchJobsActivity.class);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS))){ //My Jobs
+                intent = new Intent(this, JobApplicationActivity.class);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_PROFILE))){ //My Profile
+                intent = new Intent(this, CandidateProfileActivity.class);
+            }
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder notificationBuilder = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.launcher_icon)
                     .setContentTitle(messageBody.getData().get("title"))

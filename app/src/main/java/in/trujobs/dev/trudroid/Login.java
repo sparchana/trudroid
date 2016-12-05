@@ -161,11 +161,6 @@ public class Login extends TruJobsBaseActivity {
             else if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
                 showToast("Log In Successful!");
 
-                //setting and generating token
-                FirebaseInstanceId.getInstance().getToken();
-                Tlog.e("New token: " + FirebaseInstanceId.getInstance().getToken());
-                Prefs.fcmToken.put(FirebaseInstanceId.getInstance().getToken());
-
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mPassword.getWindowToken(), 0);
 
@@ -190,17 +185,40 @@ public class Login extends TruJobsBaseActivity {
                 /* TODO find a better way to clear jobFilterbkp on login */
                 SearchJobsActivity.jobFilterRequestBkp = null;
 
-                //update candidate token
-                UpdateTokenRequest.Builder requestBuilder = UpdateTokenRequest.newBuilder();
-                requestBuilder.setCandidateId(String.valueOf(logInResponse.getCandidateId()));
-                requestBuilder.setToken(FirebaseInstanceId.getInstance().getToken());
+                Tlog.e(checkPlayServices() + " ------------------------------------");
+                //setting and generating token
+                if(FirebaseInstanceId.getInstance().getToken() != null){
+                    //generating token
+                    FirebaseInstanceId.getInstance().getToken();
+                    Tlog.e("New token: " + FirebaseInstanceId.getInstance().getToken());
 
-                if (mUpdateTokenAsyncTask != null) {
-                    mUpdateTokenAsyncTask.cancel(true);
+                    //saving in prefs
+                    Prefs.fcmToken.put(FirebaseInstanceId.getInstance().getToken());
+
+                    //update candidate token
+                    UpdateTokenRequest.Builder requestBuilder = UpdateTokenRequest.newBuilder();
+                    requestBuilder.setCandidateId(String.valueOf(logInResponse.getCandidateId()));
+                    requestBuilder.setToken(Prefs.fcmToken.get());
+
+                    if (mUpdateTokenAsyncTask != null) {
+                        mUpdateTokenAsyncTask.cancel(true);
+                    }
+                    mUpdateTokenAsyncTask = new UpdateTokenRequestAsyncTask();
+                    mUpdateTokenAsyncTask.execute(requestBuilder.build());
+                } else{
+                    Intent intent;
+                    if(Prefs.candidateJobPrefStatus.get() == 0){
+                        intent = new Intent(Login.this, JobPreference.class);
+                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        intent = new Intent(Login.this, HomeLocality.class);
+                    } else{
+                        intent = new Intent(Login.this, SearchJobsActivity.class);
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
                 }
-                mUpdateTokenAsyncTask = new UpdateTokenRequestAsyncTask();
-                mUpdateTokenAsyncTask.execute(requestBuilder.build());
-
             } else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 showToast(MessageConstants.INCORRECT_PASSWORD);
             }
@@ -251,7 +269,6 @@ public class Login extends TruJobsBaseActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             finish();
-
         }
     }
 
