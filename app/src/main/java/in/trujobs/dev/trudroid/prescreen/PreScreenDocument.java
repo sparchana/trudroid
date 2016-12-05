@@ -3,6 +3,7 @@ package in.trujobs.dev.trudroid.prescreen;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -16,8 +17,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.common.io.LineReader;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.ArrayList;
@@ -71,6 +75,15 @@ public class PreScreenDocument extends Fragment {
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         pd = CustomProgressDialog.get(getActivity());
+
+        /*LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
+        for(int i=0;i<=3;i++){
+            View progressDot = new View(getContext());
+            progressDot.setBackgroundResource(R.drawable.circle_small);
+            progressDot.getLayoutParams().height=10;
+            progressDot.getLayoutParams().width=10;
+            progressLayout.addView(progressDot);
+        }*/
 
         try {
             preScreenDocumentObject = PreScreenDocumentObject.parseFrom(bundle.getByteArray("document"));
