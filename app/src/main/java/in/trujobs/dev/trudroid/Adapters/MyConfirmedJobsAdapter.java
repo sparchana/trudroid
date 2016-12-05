@@ -279,7 +279,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
             cMonth = "0" + mMonth;
         }
 
-        holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotName());
+        holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         return rowView;
     }
 

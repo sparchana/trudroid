@@ -134,7 +134,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         interviewDateTv.setText(cDay + "-" + cMonth + "-" + mYear);
 
         //set interview time slot
-        interviewTimeTv.setText(JPWFObject.getInterviewTimeSlotObject().getSlotName());
+        interviewTimeTv.setText(JPWFObject.getInterviewTimeSlotObject().getSlotTitle());
 
         //set job Application status
         if(JPWFObject.getCandidateInterviewStatus() != null){
