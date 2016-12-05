@@ -26,7 +26,8 @@ public class MyJobsCompletedFragmentTab extends Fragment {
         ListView myCompletedJobListView = (ListView) rowView.findViewById(R.id.my_completed_jobs_list_view);
 
         if(jobApplicationActivity.completedInterviewList.size() > 0){
-            MyCompletedJobAdapter myUnderReviewJobAdapter = new MyCompletedJobAdapter(getActivity(), jobApplicationActivity.completedInterviewList);
+            int completedApplicationStartIndex = 0;
+            MyCompletedJobAdapter myUnderReviewJobAdapter = new MyCompletedJobAdapter(getActivity(), jobApplicationActivity.completedInterviewList, completedApplicationStartIndex);
             myCompletedJobListView.setAdapter(myUnderReviewJobAdapter);
         } else{
             ImageView noCompletedJobImage = (ImageView) rowView.findViewById(R.id.no_completed_jobs_image);

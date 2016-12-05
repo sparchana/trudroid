@@ -44,15 +44,24 @@ import in.trujobs.proto.UpdateInterviewResponse;
  */
 public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
-    Activity ctx;
-    public MyConfirmedJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
+    private int todayInterviewStartIndex;
+    private int upcomingInterviewStartIndex;
+    private int pastInterviewStartIndex;
+
+    private Activity ctx;
+    public MyConfirmedJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList,
+                                  int todayInterviewStartIndex, int upcomingInterviewStartIndex, int pastInterviewStartIndex) {
         super(context, 0, jobApplicationObjectList);
         ctx = context;
+        this.todayInterviewStartIndex = todayInterviewStartIndex;
+        this.upcomingInterviewStartIndex = upcomingInterviewStartIndex;
+        this.pastInterviewStartIndex = pastInterviewStartIndex;
     }
 
     public class Holder
     {
         TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView, mJobApplicationExperienceTextView, mJobApplicationInterviewSchedule, mCurrentStatus;
+        LinearLayout todayInterviewHeader, upcomingInterviewHeader, pastInterviewHeader;
     }
 
     private ProgressDialog pd;
@@ -73,6 +82,26 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         pd = CustomProgressDialog.get(parent.getContext());
 
         LinearLayout candidateStatusPanel = (LinearLayout) rowView.findViewById(R.id.candidate_status_panel);
+
+        holder.todayInterviewHeader = (LinearLayout) rowView.findViewById(R.id.todays_interview_header);
+        holder.upcomingInterviewHeader = (LinearLayout) rowView.findViewById(R.id.upcoming_interview_header);
+        holder.pastInterviewHeader = (LinearLayout) rowView.findViewById(R.id.past_interview_header);
+
+        holder.todayInterviewHeader.setVisibility(View.GONE);
+        holder.upcomingInterviewHeader.setVisibility(View.GONE);
+        holder.pastInterviewHeader.setVisibility(View.GONE);
+
+        if(position == todayInterviewStartIndex && todayInterviewStartIndex != -1){
+            holder.todayInterviewHeader.setVisibility(View.VISIBLE);
+        }
+
+        if(position == upcomingInterviewStartIndex && upcomingInterviewStartIndex != -1){
+            holder.upcomingInterviewHeader.setVisibility(View.VISIBLE);
+        }
+
+        if(position == pastInterviewStartIndex && pastInterviewStartIndex != -1){
+            holder.pastInterviewHeader.setVisibility(View.VISIBLE);
+        }
 
         android.support.v7.widget.CardView cardView = (android.support.v7.widget.CardView) rowView.findViewById(R.id.card_view);
         cardView.setOnClickListener(new View.OnClickListener() {

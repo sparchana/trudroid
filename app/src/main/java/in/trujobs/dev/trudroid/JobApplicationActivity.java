@@ -165,12 +165,6 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                     confirmedTabList.add(jwpf);
                 }
 
-                Tlog.e("----------------pending ------------");
-                for(JobPostWorkFlowObject jwpf: pendingTabList){
-                    Tlog.e("--- " + jwpf.getJobPostObject().getJobPostTitle());
-                }
-
-
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.my_jobs_tab_layout);
                 tabLayout.addTab(tabLayout.newTab().setText("Pending Confirmation"));
                 tabLayout.addTab(tabLayout.newTab().setText("Confirmed"));

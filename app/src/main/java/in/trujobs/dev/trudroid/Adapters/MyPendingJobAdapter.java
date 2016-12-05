@@ -22,6 +22,7 @@ import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
@@ -36,22 +37,29 @@ import static in.trujobs.dev.trudroid.api.ServerConstants.JWF_STATUS_INTERVIEW_R
 
 public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
-    Activity ctx;
+    private Activity ctx;
     private ProgressDialog pd;
-    Boolean underReviewFlag = false;
-    Boolean rescheduledFlag = false;
-    Boolean rejectedFlag = false;
+
+    private int rescheduledStartIndex;
+    private int underReviewStartIndex;
+    private int rejectedStartIndex;
 
     private AsyncTask<UpdateInterviewRequest, Void, UpdateInterviewResponse> mAsyncTask;
 
-    public MyPendingJobAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
+    public MyPendingJobAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList, int rescheduledStartIndex,
+                               int underReviewStartIndex, int rejectedStartIndex) {
         super(context, 0, jobApplicationObjectList);
         ctx = context;
+        this.rescheduledStartIndex = rescheduledStartIndex;
+        this.underReviewStartIndex = underReviewStartIndex;
+        this.rejectedStartIndex = rejectedStartIndex;
     }
 
     public class Holder
     {
-        TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView, mJobApplicationExperienceTextView, mLastUpdateTextView, mJobApplicationInterviewSchedule;
+        TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView,
+                mJobApplicationExperienceTextView, mLastUpdateTextView, mJobApplicationInterviewSchedule, mheaderTitle;
+        LinearLayout rescheduledHeader, underReviewHeader, rejectedHeader;
     }
 
     @Override
@@ -76,6 +84,13 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         });
 
         LinearLayout reschedulePanel = (LinearLayout) rowView.findViewById(R.id.reschedule_panel);
+        holder.rescheduledHeader = (LinearLayout) rowView.findViewById(R.id.rescheduled_header);
+        holder.underReviewHeader = (LinearLayout) rowView.findViewById(R.id.under_review_header);
+        holder.rejectedHeader = (LinearLayout) rowView.findViewById(R.id.rejected_header);
+
+        holder.rescheduledHeader.setVisibility(View.GONE);
+        holder.underReviewHeader.setVisibility(View.GONE);
+        holder.rejectedHeader.setVisibility(View.GONE);
 
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE){
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
@@ -85,7 +100,11 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
             LinearLayout acceptImageView = (LinearLayout) rowView.findViewById(R.id.accept_interview);
             LinearLayout rejectImageView = (LinearLayout) rowView.findViewById(R.id.reject_interview);
 
+            if(position == rescheduledStartIndex && rescheduledStartIndex != -1){
+                holder.rescheduledHeader.setVisibility(View.VISIBLE);
+            }
             reschedulePanel.setVisibility(View.VISIBLE);
+
             acceptImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,15 +119,22 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                 }
             });
 
-
         } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE ||
                 jobApplicationObject.getCandidateInterviewStatus().getStatusId() == JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
+
+            if(position == rejectedStartIndex && rejectedStartIndex != -1){
+                holder.rejectedHeader.setVisibility(View.VISIBLE);
+            }
 
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_error);
             applicationStatusText.setText("Not Shortlisted");
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorRed));
 
         } else {
+            if(position == underReviewStartIndex && underReviewStartIndex != -1){
+                holder.underReviewHeader.setVisibility(View.VISIBLE);
+            }
+
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
             applicationStatusText.setText("Under Review");
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
