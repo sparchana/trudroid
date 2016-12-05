@@ -285,8 +285,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         }
     }
 
-    public ApplyJobResponseBundle applyJob(Long jobPostId, Long localityId, Button detailPageApplyBtn){
-        if(detailPageApplyBtn != null){
+    public void applyJob(Long jobPostId, Long localityId, Button detailPageApplyBtn){
+
+        if(detailPageApplyBtn != null) {
             applyingJobButtonDetail = detailPageApplyBtn;
         }
         myJobPostId = jobPostId;
@@ -298,17 +299,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
         }
-        if(applyJobResponseBundle == null) {
-            applyJobResponseBundle = new ApplyJobResponseBundle();
-        }
-        applyJobResponseBundle.setApplyingJobColor(applyingJobColor);
-        applyJobResponseBundle.setApplyingJobButton(applyingJobButton);
-        applyJobResponseBundle.setApplyingJobButtonDetail(applyingJobButtonDetail);
 
         mAsyncTask = new ApplyJobAsyncTask();
         mAsyncTask.execute(requestBuilder.build());
-
-        return applyJobResponseBundle;
+        return;
     }
 
     private class ApplyJobAsyncTask extends AsyncTask<ApplyJobRequest,
@@ -339,10 +333,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 Tlog.w("Null Response");
                 return;
             }
-            applyJobResponseBundle.setApplyJobResponse(applyJobResponse);
             if(applyJobResponse.getIsPreScreenAvailable()){
                 Tlog.i("pre screen is available");
-                PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId(), applyJobResponseBundle);
+                PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId());
             } else if(applyJobResponse.getIsInterviewAvailable()) {
                 Tlog.i("interview is available");
                 InterviewSlotSelectActivity.start(getContext(),

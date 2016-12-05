@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import java.util.Stack;
 
-import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.TruJobsBaseActivity;
@@ -33,25 +32,21 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_EXPERIENCE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LANGUAGE;
 
 public class PreScreenActivity extends TruJobsBaseActivity {
-    public static Stack propertyIdStack = new Stack();
-    public static Stack propertyIdBackStack = new Stack();
-    public static Stack otherPropertyIdStack = new Stack();
+    public static Stack<Integer> propertyIdStack = new Stack<>();
+    public static Stack<Integer> propertyIdBackStack = new Stack<>();
+    public static Stack<Integer> otherPropertyIdStack = new Stack<>();
     public static PreScreenPopulateProtoResponse globalPreScreenPopulateResponse;
     public static Context mContext;
     private android.os.AsyncTask<PreScreenPopulateProtoRequest, Void, PreScreenPopulateProtoResponse> mAsyncTaskPreScreen;
 
-    private static AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask;
-
     protected static Long jobPostId;
-    protected static ApplyJobResponseBundle applyJobResponseBundle ;
     public static boolean interviewSlotOpenned = false;
     boolean doubleBackToExitPressedOnce = false;
 
 
-    public static void start(Context context, Long jpId, ApplyJobResponseBundle responseBundle) {
+    public static void start(Context context, Long jpId) {
         Intent intent = new Intent(context, PreScreenActivity.class);
         jobPostId = jpId;
-        applyJobResponseBundle = responseBundle;
         Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         context.startActivity(intent);
     }
@@ -67,11 +62,11 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Tlog.e("null jobPostId passed to preScreenActivity");
             return;
         }
-        openPreScreenWizard(jobPostId, applyJobResponseBundle);
+        openPreScreenWizard(jobPostId);
     }
 
 
-    private void openPreScreenWizard(Long jobPostId, ApplyJobResponseBundle applyJobResponseBundle) {
+    private void openPreScreenWizard(Long jobPostId) {
         PreScreenPopulateProtoRequest.Builder requestBuilder = PreScreenPopulateProtoRequest.newBuilder();
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setCandidateMobile(String.valueOf(Prefs.candidateMobile.get()));
@@ -165,27 +160,27 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 return;
             }
             globalPreScreenPopulateResponse = preScreenPopulateResponse;
-            propertyIdStack = new Stack();
-            propertyIdBackStack = new Stack();
+            propertyIdStack = new Stack<>();
+            propertyIdBackStack = new Stack<>();
 
-            Stack hpQueue = new Stack(); // all solo fragment prop ids, {0,1,4, 5}
-            Stack lpQueue = new Stack(); // all in one fragment prop id, {rest}
+            Stack<Integer> hpStack = new Stack<>(); // all solo fragment prop ids, {0,1,4, 5}
+            Stack<Integer> lpStack = new Stack<>(); // all in one fragment prop id, {rest}
 
             if(preScreenPopulateResponse.getPropertyIdCount() > 0) {
                 for(Integer propId : preScreenPopulateResponse.getPropertyIdList()){
                     if(propId == null) continue;
-                    if (propId == 0 || propId == 1 || propId == 4 || propId == 5) {
-                        hpQueue.push(propId);
+                    if (preScreenPopulateResponse.getHpPropertyIdList().contains(propId)) {
+                        hpStack.push(propId);
                     } else {
-                        lpQueue.push(propId);
+                        lpStack.push(propId);
                     }
                 }
 
-                while (!lpQueue.isEmpty()) {
-                    propertyIdStack.push(lpQueue.pop());
+                while (!lpStack.isEmpty()) {
+                    propertyIdStack.push(lpStack.pop());
                 }
-                while (!hpQueue.isEmpty()) {
-                    propertyIdStack.push(hpQueue.pop());
+                while (!hpStack.isEmpty()) {
+                    propertyIdStack.push(hpStack.pop());
                 }
             }
             showRequiredFragment(((FragmentActivity) mContext));
@@ -204,7 +199,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                     preScreenPopulateResponse.getPreScreenJobRoleTitle(),
                     preScreenPopulateResponse.getPreScreenJobTitle());
         } else {
-            propId = (Integer) propertyIdStack.pop();
+            propId = propertyIdStack.pop();
             if(propId!= null && !(propertyIdBackStack.contains(propId))) {
                 propertyIdBackStack.push(propId);
             }
@@ -285,7 +280,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         CheckInterviewSlotRequest.Builder interviewSlotCheckBuilder = CheckInterviewSlotRequest.newBuilder();
         interviewSlotCheckBuilder.setJobPostId(jobPostId);
 
-        checkInterviewSlotAsyncTask = new CheckInterviewSlotAsyncTask(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
+        AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask = new CheckInterviewSlotAsyncTask(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
         checkInterviewSlotAsyncTask.execute(interviewSlotCheckBuilder.build());
 
     }

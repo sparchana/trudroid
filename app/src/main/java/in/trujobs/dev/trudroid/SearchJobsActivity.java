@@ -545,6 +545,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                     public void onClick(DialogInterface dialog, int which) {
                         List<JobPostObject> list = new ArrayList<>();
                         list.add(getJobPostDetailsResponse.getJobPost());
+                        JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
+                        jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
+
                         // TODO condition to check if response is already applied, or failed , accordingly allow to pass it to prescreen activity
                         Tlog.i("prescreen triggered");
 
