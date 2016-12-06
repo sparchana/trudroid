@@ -3,6 +3,7 @@ package in.trujobs.dev.trudroid.Adapters;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,7 +157,9 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
         //set job Application Company
         holder.mJobApplicationCompanyTextView = (TextView) rowView.findViewById(R.id.job_post_company_text_view);
-        holder.mJobApplicationCompanyTextView.setText(jobApplicationObject.getJobPostObject().getJobPostCompanyName());
+
+        String title = "<b>" + jobApplicationObject.getJobPostObject().getJobPostCompanyName() + "</b>";
+        holder.mJobApplicationCompanyTextView.setText(Html.fromHtml(title));
 
         //set job Application salary
         DecimalFormat formatter = new DecimalFormat("#,###");

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -235,7 +236,8 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
         //set job Application Company
         holder.mJobApplicationCompanyTextView = (TextView) rowView.findViewById(R.id.job_post_company_text_view);
-        holder.mJobApplicationCompanyTextView.setText(jobApplicationObject.getJobPostObject().getJobPostCompanyName());
+        String title = "<b>" + jobApplicationObject.getJobPostObject().getJobPostCompanyName() + "</b>";
+        holder.mJobApplicationCompanyTextView.setText(Html.fromHtml(title));
 
         //set job Application salary
         DecimalFormat formatter = new DecimalFormat("#,###");

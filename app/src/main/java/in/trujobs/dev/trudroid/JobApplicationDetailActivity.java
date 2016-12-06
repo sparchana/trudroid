@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -109,7 +110,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         LinearLayout startedLayout = (LinearLayout) findViewById(R.id.started);
         LinearLayout reachedLayout = (LinearLayout) findViewById(R.id.reached);
 
-        // accept/reject inteview options
+        // accept/reject interview options
         LinearLayout acceptInterview = (LinearLayout) findViewById(R.id.accept_interview);
         LinearLayout rejectInterview = (LinearLayout) findViewById(R.id.reject_interview);
 
@@ -118,7 +119,9 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         statusPanel.setVisibility(View.GONE);
         statusOptions.setVisibility(View.GONE);
 
-        companyNameTv.setText(JPWFObject.getJobPostObject().getJobPostCompanyName());
+        String title = "<b>" + JPWFObject.getJobPostObject().getJobPostCompanyName() + "</b>";
+        companyNameTv.setText(Html.fromHtml(title));
+
         companyAddressTv.setText(JPWFObject.getJobPostObject().getJobPostAddress());
 
         //set job Application salary

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,6 +60,7 @@ public class FeedbackActivity extends TruJobsBaseActivity {
     private ImageView ratingFour;
     private ImageView ratingFive;
     private Button submitFeedback;
+    private EditText feedbackComment;
 
     private ProgressDialog pd;
 
@@ -75,7 +78,7 @@ public class FeedbackActivity extends TruJobsBaseActivity {
         setContentView(R.layout.activity_feedback);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Your Feedback!");
+        setTitle("Let us know your feedback");
 
         ratingOne = (ImageView) findViewById(R.id.rating_1);
         ratingTwo = (ImageView) findViewById(R.id.rating_2);
@@ -95,8 +98,11 @@ public class FeedbackActivity extends TruJobsBaseActivity {
         reasonHeading.setVisibility(View.GONE);
 
         submitFeedback = (Button) findViewById(R.id.submit_feedback);
+        submitFeedback.setVisibility(View.GONE);
 
         feedbackReason = (LinearLayout) findViewById(R.id.feedback_reason);
+        feedbackComment = (EditText) findViewById(R.id.feedback_comment);
+        feedbackComment.setVisibility(View.GONE);
 
         //getting all the feedback reasons
         AsyncTask<Void, Void, FeedbackReasonResponse> reasonAsyncTask = new FeedbackActivity.FeedbackReasonAsyncTask();
@@ -139,12 +145,16 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 1;
                         ratingStatus.setVisibility(View.VISIBLE);
-                        ratingStatus.setText("Very Bad");
+                        String title = "<b>Very Bad</b>";
+                        ratingStatus.setText(Html.fromHtml(title));
+
                         ratingStatus.setTextColor(getResources().getColor(R.color.colorRed));
 
                         reasonHeading.setVisibility(View.VISIBLE);
-                        reasonHeading.setText("What went bad");
+                        reasonHeading.setText("Sorry to hear that! Please tell us what went wrong");
 
+                        feedbackComment.setVisibility(View.VISIBLE);
+                        submitFeedback.setVisibility(View.VISIBLE);
                         populateFeedbackReasons(1);
 
                         return false;
@@ -161,12 +171,16 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 2;
                         ratingStatus.setVisibility(View.VISIBLE);
-                        ratingStatus.setText("Bad");
+                        submitFeedback.setVisibility(View.VISIBLE);
+                        String title = "<b>Bad</b>";
+                        ratingStatus.setText(Html.fromHtml(title));
+
                         ratingStatus.setTextColor(getResources().getColor(R.color.colorRed));
 
                         reasonHeading.setVisibility(View.VISIBLE);
-                        reasonHeading.setText("What went bad");
+                        reasonHeading.setText("Sorry to hear that! Please tell us what went wrong");
 
+                        feedbackComment.setVisibility(View.VISIBLE);
                         populateFeedbackReasons(1);
 
                         return false;
@@ -183,12 +197,15 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 3;
                         ratingStatus.setVisibility(View.VISIBLE);
-                        ratingStatus.setText("Average");
+                        submitFeedback.setVisibility(View.VISIBLE);
+                        String title = "<b>Average</b>";
+                        ratingStatus.setText(Html.fromHtml(title));
+
                         ratingStatus.setTextColor(getResources().getColor(R.color.colorOrange));
 
                         reasonHeading.setVisibility(View.VISIBLE);
-                        reasonHeading.setText("What went bad");
-
+                        reasonHeading.setText("Okay! How can we improve?");
+                        feedbackComment.setVisibility(View.VISIBLE);
                         populateFeedbackReasons(2);
 
                         return false;
@@ -205,13 +222,16 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 4;
                         ratingStatus.setVisibility(View.VISIBLE);
-                        ratingStatus.setText("Good");
+                        submitFeedback.setVisibility(View.VISIBLE);
+                        String title = "<b>Good</b>";
+                        ratingStatus.setText(Html.fromHtml(title));
                         ratingStatus.setTextColor(getResources().getColor(R.color.colorGreen));
 
                         reasonHeading.setVisibility(View.VISIBLE);
-                        reasonHeading.setText("What went Good");
+                        reasonHeading.setText("Okay! How can we improve?");
 
-                        populateFeedbackReasons(3);
+                        feedbackComment.setVisibility(View.VISIBLE);
+                        populateFeedbackReasons(2);
 
                         return false;
                     }
@@ -227,12 +247,14 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star);
                         ratingScore = 5;
                         ratingStatus.setVisibility(View.VISIBLE);
-                        ratingStatus.setText("Super!");
+                        submitFeedback.setVisibility(View.VISIBLE);
+                        String title = "<b>Very Good</b>";
+                        ratingStatus.setText(Html.fromHtml(title));
                         ratingStatus.setTextColor(getResources().getColor(R.color.colorGreen));
 
                         reasonHeading.setVisibility(View.VISIBLE);
-                        reasonHeading.setText("What went Good");
-
+                        reasonHeading.setText("Happy to know that! What did you like?");
+                        feedbackComment.setVisibility(View.VISIBLE);
                         populateFeedbackReasons(3);
 
                         return false;
@@ -247,6 +269,7 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                             requestBuilder.setCandidateId(Prefs.candidateId.get());
                             requestBuilder.setRatingScore(ratingScore);
                             requestBuilder.addAllFeedbackReasonObject(selectedReasonList);
+                            requestBuilder.setFeedbackComment(feedbackComment.getText().toString());
 
                             if (mAsyncTask != null) {
                                 mAsyncTask.cancel(true);
@@ -254,6 +277,8 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                             mAsyncTask = new FeedbackActivity.AddFeedbackAsyncTask();
                             mAsyncTask.execute(requestBuilder.build());
 
+                        } else{
+                            showToast("Please select a rating");
                         }
                     }
                 });
