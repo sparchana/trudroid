@@ -33,6 +33,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -77,6 +78,8 @@ public class CandidateProfileExperience extends Fragment {
     Button saveExperienceBtn, isExperienced, isFresher, isEmployedYes, isEmployedNo;
     int pos = -1;
     TextView selectExp;
+
+    Boolean checkSkills = true;
 
     ImageView experiencePicker, currentJobRolePicker;
     View view;
@@ -465,7 +468,7 @@ public class CandidateProfileExperience extends Fragment {
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
                                 showDialog("Please select at least one language that you know");
-                            } else if(candidateSkill.size() < 1){
+                            } else if((checkSkills) && (candidateSkill.size() < 1)){
                                 check = false;
                                 showDialog("Please select at least one skill that you know");
                             }
@@ -500,6 +503,12 @@ public class CandidateProfileExperience extends Fragment {
                     });
 
                     LinearLayout skillListView = (LinearLayout) view.findViewById(R.id.skill_list_view);
+
+                    if(getCandidateExperienceProfileStaticResponse.getSkillObjectList().size() < 1){
+                        checkSkills = false;
+                        LinearLayout skillSection = (LinearLayout) view.findViewById(R.id.skill_section);
+                        skillSection.setVisibility(View.GONE);
+                    }
 
                     for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){
                         LayoutInflater inflater = null;

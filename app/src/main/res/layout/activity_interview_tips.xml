@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_interview_tips"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="in.trujobs.dev.trudroid.InterviewTipsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/ic_tips"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="Interview Tips"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/com_facebook_blue"
+            android:text="1. Dress professionally"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="a. For Men:"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="i. Wear clean, neatly ironed formal shirt and formal pant"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="ii. Be clean shaven"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="iii. Have a trimmed hair cut"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="iv. Do not chew bubble gum"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="v. Wear clean, formal shoes"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:textSize="12dp"
+            android:text="a. For Women:"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="i. If you prefer to wear Indian attire choose a neatly ironed cotton salwar-kameez or Saree"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="ii. If you prefer to ware western attire choose a neatly ironed formal shirt and pant / skirt"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:text="iii. Tie up / comb your hair neatly such that it doesn’t cover your face"/>
+
+        <!-- Documents section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/com_facebook_blue"
+            android:text="2. Carry Required Documents"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="a. Hard copy of resume"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="b. Educational certificates"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="c. Any other additional training certificates"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="d. Atleast one Id proof"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="e. Atleast one Address proof"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="f. Payslip, offer letter and experience letter from current/past company (If you were employed earlier)"/>
+
+        <!-- Be confident -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/com_facebook_blue"
+            android:text="3. Be Confident"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="a. When you meet the interviewer, say ‘Hello’ and shake hands"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="b. Give a brief introduction about yourself before they ask"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="c. Sit upright, smile, face the interviewer all the time and talk confidently"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="d. At the end of the interview thank the interviewer by saying ‘Thank you for giving me this opportunity. I will look forward to your response’ "/>
+
+        <!-- questions -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/com_facebook_blue"
+            android:text="4. Standard Interview Questions"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:text="a. Tell me about yourself / Introduce yourself?"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="i. Your answer should be less than 2 to 3 mins. You don’t have to say everything that is already written in your resume. "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="ii. You must cover information about your ‘education, ‘past work experience’ and ‘your career interests’"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="iii. If you are talking about your hobbies, keep it very short. (not more than 30 secs)"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="12dp"
+            android:layout_marginTop="8dp"
+            android:text="b. Why did you leave your last job?"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="i. Be honest while answering this question, but do not talk bad about your past company or manager"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="ii. Some possible reasons can be: "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="1. Your job doesn’t interest you anymore as there is no scope to grow in the company"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="2. Your work has become stagnated and you are not getting bigger responsibilities"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="3. You want to develop more skills and capabilities that are not available in your current job "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:layout_marginTop="4dp"
+            android:text="4. Your salary was too less in your past company"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="52dp"
+            android:layout_marginTop="4dp"
+            android:textSize="11dp"
+            android:text="5. You moved to a new city and hence you had to quit the previous company"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:textSize="12dp"
+            android:text="c. Why do you want this job? "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="4dp"
+            android:textSize="11dp"
+            android:text="i. To answer this question, you must have researched about the company and the job role."/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="4dp"
+            android:textSize="11dp"
+            android:text="ii. A good answer can include some of the below reasons:"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="1. Your skills match with what the new job requires "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="2. If you have prior work experience always bring out the similarities between the responsibilities, you were handling and the responsibilities for the new job"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="3. You can state how your interests match with what the business that the company is doing"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="4. If your friend or someone you know is working in the company, you can state that you have heard good feedback about the company / job and hence you want to work there"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:textSize="12dp"
+            android:text="d. Explain in detail your responsibilities at your previous job "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="4dp"
+            android:textSize="11dp"
+            android:text="i. You must prepare for this question in advance"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="4dp"
+            android:textSize="11dp"
+            android:text="ii. Make sure you are able to answer this question for atleast 2 to 3 mins. Highlight the below points:"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="1. Your day-to-day responsibilities"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="2. Daily/monthly targets (if any)"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="3. How did you make sure you met the set targets and goals"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="4. What kind of tools / software you used to carry out your job"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="5. Any rewards/recognitions that you got for your job"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="52dp"
+            android:textSize="11dp"
+            android:text="6. Any one instance of your job that you felt was particularly challenging and how did you handle the situation"/>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.trujobs.dev.trudroid.CandidateProfileActivity;
-import in.trujobs.dev.trudroid.MyAppliedJobs;
+import in.trujobs.dev.trudroid.JobApplicationActivity;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -114,7 +114,7 @@ public class ViewDialog {
             @Override
             public void onClick(View view) {
                 // Navigate user to my jobs section
-                Intent completeProfileIntent = new Intent(view.getContext(), MyAppliedJobs.class);
+                Intent completeProfileIntent = new Intent(view.getContext(), JobApplicationActivity.class);
                 view.getContext().startActivity(completeProfileIntent);
                 dialog.cancel();
             }

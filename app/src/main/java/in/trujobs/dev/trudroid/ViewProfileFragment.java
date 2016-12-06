@@ -324,7 +324,7 @@ public class ViewProfileFragment extends Fragment {
                         public void onClick(View view) {
                             Intent intent;
                             if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
-                                intent = new Intent(getContext(), MyAppliedJobs.class);
+                                intent = new Intent(getContext(), JobApplicationActivity.class);
                             } else{
                                 intent = new Intent(getContext(), SearchJobsActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
