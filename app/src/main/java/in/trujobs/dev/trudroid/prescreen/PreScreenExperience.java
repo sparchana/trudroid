@@ -355,9 +355,14 @@ public class PreScreenExperience extends Fragment{
                             showDialog("Please provide your current Salary");
                         } else if(isEmployed == 1 && (currentJobRoleValue == null || currentCompany.getText().toString().length() < 3)) {
                             isValidationPassed = false;
-                            currentCompany.setError("Please provide your current company details");
-                            currentCompany.addTextChangedListener(new GenericTextWatcher(currentCompany));
-                            showDialog("Please provide your current Company details");
+                            if(currentJobRoleValue == null ){
+                                showDialog("Please provide your current job role");
+                            }
+                            if(currentCompany.getText().toString().length() < 3){
+                                currentCompany.setError("Please provide your current company details");
+                                currentCompany.addTextChangedListener(new GenericTextWatcher(currentCompany));
+                                showDialog("Please provide your current Company details");
+                            }
                         }
 
                         if(isValidationPassed){

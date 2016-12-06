@@ -57,11 +57,9 @@ public class InterviewSlotSelectActivity extends TruJobsBaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
             //Track this action
-//                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EXIT);
+            addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_ACTION_TRIED_INTERVIEW_EXIT);
 
             Intent intent = new Intent(InterviewSlotSelectActivity.this, SearchJobsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);

@@ -308,16 +308,17 @@ public class PreScreenActivity extends TruJobsBaseActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            super.onBackPressed();
             Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             this.finish();
             return;
-        }
-        if(interviewSlotOpenned){
+        } else if(interviewSlotOpenned){
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
+
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_INTERVIEW_EXIT);
 
@@ -339,7 +340,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
                 @Override
                 public void run() {
-                    doubleBackToExitPressedOnce=false;
+                    doubleBackToExitPressedOnce = false;
                 }
             }, 2500);
             return;

@@ -83,7 +83,7 @@ public class InterviewSlotSelectFragment extends Fragment {
         ((TruJobsBaseActivity) getActivity()).setSupportActionBar(toolbar);
 
         if(((TruJobsBaseActivity) getActivity()).getSupportActionBar() != null)
-            ((TruJobsBaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((TruJobsBaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         // track screen view
         ((TruJobsBaseActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT);
@@ -178,7 +178,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if(interviewSlot.getSelectedItemPosition() < 1) {
-                            showDialog("No Interview slot selected. Please select an Interview Slot.");
+                            showDialog("No Interview slot selected. Please select an Interview Slot.", false);
                             Tlog.i("seleceted slot " + interviewSlot.getSelectedItemPosition());
                         } else {
                             int slotTimeId = interviewSlotIdArray[interviewSlot.getSelectedItemPosition()];
@@ -226,15 +226,14 @@ public class InterviewSlotSelectFragment extends Fragment {
                     // back to search
                     // show successfully applied message and redirect to search screen
                     showDialog("Interview Scheduled Successfully." +
-                            "You can track your applications from 'My Jobs' option from menu");
-                    redirectToSearch(getActivity());
+                            "You can track your applications from 'My Jobs' option from menu", true);
                 } else {
-                    showDialog("Something went wrong. Please try again.");
+                    showDialog("Something went wrong. Please try again.", false);
                 }
             }
         }
     }
-    private void showDialog(String msg){
+    private void showDialog(String msg, final boolean shouldRedirect){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);
@@ -242,9 +241,11 @@ public class InterviewSlotSelectFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        if(shouldRedirect){
+                            redirectToSearch(getActivity());
+                        }
                     }
                 });
         alertDialog.show();
     }
-
 }
