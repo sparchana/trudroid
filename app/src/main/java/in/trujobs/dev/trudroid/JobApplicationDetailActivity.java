@@ -28,6 +28,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -144,17 +145,17 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mToday = calendar.get(Calendar.DAY_OF_WEEK);
 
         String cDay = mDay + "";
-        String cMonth = (mMonth) + "";
 
         if(mDay < 10){
             cDay = "0" + mDay;
         }
-        if(mMonth < 10){
-            cMonth = "0" + mMonth;
-        }
-        interviewDateTv.setText(cDay + "-" + cMonth + "-" + mYear);
+
+        String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth) + " " + mYear;
+
+        interviewDateTv.setText(finalDate);
 
         //set interview time slot
         interviewTimeTv.setText(JPWFObject.getInterviewTimeSlotObject().getSlotTitle());

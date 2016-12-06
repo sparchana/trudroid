@@ -22,7 +22,7 @@
             android:padding="6dp"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorGreen"
+            android:background="@drawable/rounded_green_button"
             android:text="Completed Interview(s)"/>
 
     </LinearLayout>

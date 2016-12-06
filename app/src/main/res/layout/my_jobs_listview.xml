@@ -22,7 +22,7 @@
             android:padding="6dp"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorGreen"
+            android:background="@drawable/rounded_green_button"
             android:text="Today's Interview(s)"/>
 
     </LinearLayout>
@@ -38,7 +38,7 @@
             android:padding="6dp"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorGreen"
+            android:background="@drawable/rounded_green_button"
             android:text="Upcoming Interview(s)"/>
 
     </LinearLayout>
@@ -54,7 +54,7 @@
             android:padding="6dp"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorGreen"
+            android:background="@drawable/rounded_green_button"
             android:text="Past Interview(s)"/>
 
     </LinearLayout>

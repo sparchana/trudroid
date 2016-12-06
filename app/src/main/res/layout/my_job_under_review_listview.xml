@@ -23,7 +23,7 @@
             android:id="@+id/headerTitle"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorLightOrange"
+            android:background="@drawable/rounded_orange_button"
             android:text="Interview(s) Rescheduled"/>
 
     </LinearLayout>
@@ -39,7 +39,7 @@
             android:padding="6dp"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorLightOrange"
+            android:background="@drawable/rounded_orange_button"
             android:text="Application(s) Under Review "/>
 
     </LinearLayout>
@@ -55,7 +55,7 @@
             android:padding="6dp"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:background="@color/colorRed"
+            android:background="@drawable/rounded_red_button"
             android:text="Application(s) Not Shortlisted"/>
 
     </LinearLayout>
@@ -337,7 +337,7 @@
                 android:layout_marginTop="4dp"
                 android:id="@+id/scheduled_interview_date"
                 android:paddingRight="6dp"
-                android:paddingBottom="6dp"
+                android:paddingBottom="4dp"
                 android:orientation="horizontal">
 
                 <TextView

@@ -12,15 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -30,14 +27,12 @@ import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 import in.trujobs.proto.UpdateCandidateStatusRequest;
 import in.trujobs.proto.UpdateCandidateStatusResponse;
-import in.trujobs.proto.UpdateInterviewRequest;
-import in.trujobs.proto.UpdateInterviewResponse;
 
 /**
  * Created by batcoder1 on 8/8/16.
@@ -162,7 +157,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
             if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
                 candidateStatusPanel.setVisibility(View.VISIBLE);
-                selectStatusLabel.setVisibility(View.VISIBLE);
                 holder.mCurrentStatus = (TextView) rowView.findViewById(R.id.current_status);
                 holder.mCurrentStatus.setText(jobApplicationObject.getCandidateInterviewStatus().getStatusTitle());
                 if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
@@ -173,8 +167,10 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
                 if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){ //reached
                     statusOptionLayout.setVisibility(View.GONE);
+                    selectStatusLabel.setVisibility(View.GONE);
                 } else{
                     statusOptionLayout.setVisibility(View.VISIBLE);
+                    selectStatusLabel.setVisibility(View.VISIBLE);
 
                     if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
                         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
@@ -257,21 +253,18 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         holder.mJobApplicationInterviewSchedule = (TextView) rowView.findViewById(R.id.interview_schedule_text_view);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(jobApplicationObject.getInterviewDateMillis());
-        int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mToday = calendar.get(Calendar.DAY_OF_WEEK);
 
         String cDay = mDay + "";
-        String cMonth = (mMonth) + "";
 
         if(mDay < 10){
             cDay = "0" + mDay;
         }
-        if(mMonth < 10){
-            cMonth = "0" + mMonth;
-        }
+        String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth);
 
-        holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
+        holder.mJobApplicationInterviewSchedule.setText("Interview: " + finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         return rowView;
     }
 

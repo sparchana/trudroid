@@ -200,14 +200,8 @@
             android:name=".InterviewTipsActivity"
             android:screenOrientation="portrait" />
 
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_correct" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorGreen" />
-
-        <activity android:name=".FeedbackActivity"></activity>
+        <activity android:name=".FeedbackActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
