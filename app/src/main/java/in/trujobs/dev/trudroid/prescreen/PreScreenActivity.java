@@ -38,6 +38,8 @@ public class PreScreenActivity extends TruJobsBaseActivity {
     public static PreScreenPopulateProtoResponse globalPreScreenPopulateResponse;
     public static Context mContext;
     private android.os.AsyncTask<PreScreenPopulateProtoRequest, Void, PreScreenPopulateProtoResponse> mAsyncTaskPreScreen;
+    public static int totalCountFragment = 0;
+    public static int rankCount;
 
     protected static Long jobPostId;
     public static boolean interviewSlotOpenned = false;
@@ -62,6 +64,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Tlog.e("null jobPostId passed to preScreenActivity");
             return;
         }
+        rankCount = 0;
         openPreScreenWizard(jobPostId);
     }
 
@@ -175,7 +178,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                         lpStack.push(propId);
                     }
                 }
-
+                if(!hpStack.isEmpty()){
+                    totalCountFragment = + hpStack.size();
+                }
+                if(lpStack.size() > 0){
+                    totalCountFragment++;
+                }
                 while (!lpStack.isEmpty()) {
                     propertyIdStack.push(lpStack.pop());
                 }
@@ -209,12 +217,26 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             return;
         }
 
+        Tlog.i("current Property id: " + propId);
+        for(Object item : propertyIdStack){
+            Tlog.i(item.toString());
+        }
+        for(Object item : propertyIdBackStack) {
+            Tlog.i("backStack: "+item.toString());
+        }
+
+        rankCount++;
+        Tlog.i("Rank for :" + rankCount);
         switch (propId) {
             case PROPERTY_TYPE_DOCUMENT : // documents
                 bundle = new Bundle();
                 PreScreenDocument document = new PreScreenDocument();
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 document.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -226,6 +248,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 PreScreenLanguage language = new PreScreenLanguage();
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 language.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -237,6 +263,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 experience.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -249,6 +279,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle.putByteArray("education", preScreenPopulateResponse.getEducation().toByteArray());
                 bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 education.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -262,10 +296,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                propertyIdStack.push(propertyIdBackStack.pop());
                bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
-               bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
-               bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobRoleTitle());
+               bundle.putString("jobRoleTitle",preScreenPopulateResponse.getPreScreenJobRoleTitle());
+               bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                bundle.putBoolean("isFinalFragment", true);
+               bundle.putInt("totalCount",totalCountFragment);
+               bundle.putInt("rank",rankCount);
                others.setArguments(bundle);
                activity.getSupportFragmentManager().beginTransaction()
                        .addToBackStack(null)
@@ -347,12 +383,18 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         } else if(propertyIdStack.isEmpty() && !otherPropertyIdStack.isEmpty()){
             // restore all ids of other fragment
+            if(rankCount != 0){
+                rankCount--;
+            }
             while(!otherPropertyIdStack.isEmpty()){
                 propertyIdStack.push(otherPropertyIdStack.pop());
             }
             interviewSlotOpenned = false;
             otherPropertyIdStack.clear();
         } else if(!propertyIdBackStack.isEmpty() && !propertyIdStack.contains(propertyIdBackStack.peek())){
+            if(rankCount != 0){
+                rankCount--;
+            }
             propertyIdStack.push(propertyIdBackStack.pop());
         }
         interviewSlotOpenned =false;
