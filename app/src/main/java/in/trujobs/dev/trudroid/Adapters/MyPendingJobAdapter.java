@@ -58,7 +58,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
     public class Holder
     {
         TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView,
-                mJobApplicationExperienceTextView, mLastUpdateTextView, mJobApplicationInterviewSchedule, mInterviewDate;
+                mJobApplicationExperienceTextView, mJobApplicationInterviewSchedule, mInterviewDate;
         LinearLayout rescheduledHeader, underReviewHeader, rejectedHeader, interviewDateView;
     }
 
@@ -125,6 +125,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE ||
                 jobApplicationObject.getCandidateInterviewStatus().getStatusId() == JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
 
+            reschedulePanel.setVisibility(View.GONE);
             if(position == rejectedStartIndex && rejectedStartIndex != -1){
                 holder.rejectedHeader.setVisibility(View.VISIBLE);
             }
@@ -134,6 +135,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorRed));
 
         } else {
+            reschedulePanel.setVisibility(View.GONE);
             if(position == underReviewStartIndex && underReviewStartIndex != -1){
                 holder.underReviewHeader.setVisibility(View.VISIBLE);
             }
@@ -170,7 +172,6 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
 
         //last update
-        holder.mLastUpdateTextView = (TextView) rowView.findViewById(R.id.last_update_date);
         Calendar lastUpdateCalendar = Calendar.getInstance();
         lastUpdateCalendar.setTimeInMillis(jobApplicationObject.getCreationTimeMillis());
         int mYear = lastUpdateCalendar.get(Calendar.YEAR);
@@ -186,8 +187,6 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         if(mMonth < 10){
             cMonth = "0" + mMonth;
         }
-
-        holder.mLastUpdateTextView.setText(cDay + "-" + cMonth + "-" + mYear);
 
         holder.mJobApplicationInterviewSchedule = (TextView) rowView.findViewById(R.id.interview_schedule_text_view);
         holder.mInterviewDate = (TextView) rowView.findViewById(R.id.interview_date);

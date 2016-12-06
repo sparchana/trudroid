@@ -389,8 +389,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
-            mNavItems.add(new NavItem("Interview Tips", R.drawable.ic_idea));
             mNavItems.add(new NavItem("Feedback", R.drawable.ic_rating));
+            mNavItems.add(new NavItem("Interview Tips", R.drawable.ic_idea));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 
             userNameTextView.setText(Prefs.firstName.get());
@@ -442,13 +442,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_REFER_FRIEND);
                 break;
 
-            case 6: openItem(InterviewTipsActivity.class);
+            case 6: openItem(FeedbackActivity.class);
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_INTERVIEW_TIPS, Constants.GA_ACTION_INTERVIEW_TIPS);
                 break;
 
-            case 7: openItem(FeedbackActivity.class);
+            case 7: openItem(InterviewTipsActivity.class);
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_FEEDBACK, Constants.GA_ACTION_FEEDBACK);
@@ -1243,9 +1243,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             return 4;
         else if(title.equals("Refer friends"))
             return 5;
-        else if(title.equals("Interview Tips"))
-            return 6;
         else if(title.equals("Feedback"))
+            return 6;
+        else if(title.equals("Interview Tips"))
             return 7;
         else
             return -1;

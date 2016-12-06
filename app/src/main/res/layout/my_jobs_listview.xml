@@ -199,26 +199,6 @@
                         android:id="@+id/job_post_salary_text_view"
                         android:layout_height="wrap_content" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.45"
-                        android:gravity="right"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginLeft="4dp"
-                            android:id="@+id/application_status_icon" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:paddingLeft="4dp"
-                            android:textSize="12dp"
-                            android:text="Confirmed"
-                            android:id="@+id/application_status"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -303,6 +283,7 @@
                             android:layout_marginBottom="4dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/select_status_label"
                             android:text="Please select status from below"/>
 
                         <LinearLayout
@@ -423,16 +404,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginRight="4dp"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="4dp"
             android:layout_alignRight="@+id/linearLayout"
             android:layout_alignEnd="@+id/linearLayout">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="9dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="12dp"
+                android:id="@+id/info_icon"
+                android:src="@drawable/info" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_below="@+id/info_icon"
                 android:src="@drawable/ic_directions"
                 android:id="@+id/navigate_icon" />
 
@@ -441,7 +431,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/navigate_icon"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 android:text="Directions"/>
 
         </RelativeLayout>

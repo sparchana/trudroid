@@ -82,6 +82,8 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         pd = CustomProgressDialog.get(parent.getContext());
 
         LinearLayout candidateStatusPanel = (LinearLayout) rowView.findViewById(R.id.candidate_status_panel);
+        TextView selectStatusLabel = (TextView) rowView.findViewById(R.id.select_status_label);
+        selectStatusLabel.setVisibility(View.GONE);
 
         holder.todayInterviewHeader = (LinearLayout) rowView.findViewById(R.id.todays_interview_header);
         holder.upcomingInterviewHeader = (LinearLayout) rowView.findViewById(R.id.upcoming_interview_header);
@@ -114,9 +116,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         ImageView navigateIcon = (ImageView) rowView.findViewById(R.id.navigate_icon);
         TextView navigateText = (TextView) rowView.findViewById(R.id.navigate_text);
 
-        ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
-        TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
-
         LinearLayout statusOptionLayout = (LinearLayout) rowView.findViewById(R.id.status_options);
         LinearLayout notGoingLayout = (LinearLayout) rowView.findViewById(R.id.not_going);
         LinearLayout delayedLayout = (LinearLayout) rowView.findViewById(R.id.delayed);
@@ -124,10 +123,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         LinearLayout reachedLayout = (LinearLayout) rowView.findViewById(R.id.reached);
 
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() >= ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){ //confirmed and/or has current status
-
-            applicationStatusIcon.setBackgroundResource(R.drawable.ic_correct);
-            applicationStatusText.setText("Confirmed");
-            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
 
             if(jobApplicationObject.getInterviewLat() != 0.0){
                 navigateIcon.setVisibility(View.VISIBLE);
@@ -151,10 +146,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
             }
 
         } else{
-            applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
-            applicationStatusText.setText("Rescheduled");
-            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
-
             navigateIcon.setVisibility(View.GONE);
             navigateText.setVisibility(View.GONE);
         }
@@ -171,6 +162,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
             if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
                 candidateStatusPanel.setVisibility(View.VISIBLE);
+                selectStatusLabel.setVisibility(View.VISIBLE);
                 holder.mCurrentStatus = (TextView) rowView.findViewById(R.id.current_status);
                 holder.mCurrentStatus.setText(jobApplicationObject.getCandidateInterviewStatus().getStatusTitle());
                 if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
