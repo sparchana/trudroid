@@ -55,7 +55,6 @@ public class ReferFriends extends TruJobsBaseActivity {
                 addActionGA(Constants.GA_SCREEN_NAME_REFER_FRIEND, Constants.GA_ACTION_REFER_VIA_SMS);
             }
         });
-
     }
 
     @Override

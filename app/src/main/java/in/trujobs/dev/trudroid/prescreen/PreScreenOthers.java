@@ -12,6 +12,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +48,6 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -64,7 +64,6 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LOCALITY;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_MAX_AGE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_WORK_SHIFT;
 import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.otherPropertyIdStack;
-import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.totalCountFragment;
 
 public class PreScreenOthers extends Fragment {
     View view;
@@ -90,8 +89,6 @@ public class PreScreenOthers extends Fragment {
     public String preScreenJobRoleTitle;
     public Long jobPostId;
     public boolean isFinalFragment = false;
-    private int totalCount;
-    private int rank;
 
     final List<Integer> candidateAssetIdList = new ArrayList<>();
 
@@ -155,10 +152,11 @@ public class PreScreenOthers extends Fragment {
         String preScreenJobTitle = getArguments().getString("jobTitle");
 
         TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
-        headingApplicationForm.setText("Application form for "+preScreenJobTitle+" at "+preScreenCompanyName);
+        String headingTitle = "Application form for <b>"+preScreenJobTitle+"</b> at <b>"+preScreenCompanyName+"</b>";
+        headingApplicationForm.setText(Html.fromHtml(headingTitle));
 
-        rank = bundle.getInt("rank");
-        totalCount = bundle.getInt("totalCount");
+        int rank = bundle.getInt("rank");
+        int totalCount = bundle.getInt("totalCount");
 
         LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
         for(int i= 1; i<=totalCount; i++){
@@ -232,6 +230,8 @@ public class PreScreenOthers extends Fragment {
 
 
         if(remainingPropIdList.contains(PROPERTY_TYPE_ASSET_OWNED)) {
+            LinearLayout assetLayout = (LinearLayout) view.findViewById(R.id.asset_view);
+            assetLayout.setVisibility(view.VISIBLE);
             assetListView.setVisibility(view.VISIBLE);
             // render assets
             try {
@@ -322,6 +322,7 @@ public class PreScreenOthers extends Fragment {
             LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View mLinearView = inflater.inflate(R.layout.pre_screen_asset_item, null);
+
             TextView assetTitle = (TextView) mLinearView
                     .findViewById(R.id.asset_title);
             assetTitle.setText(assetObject.getAssetTitle());

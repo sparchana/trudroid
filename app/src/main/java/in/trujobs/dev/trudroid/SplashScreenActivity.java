@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 
 public class SplashScreenActivity extends TruJobsBaseActivity {
@@ -17,6 +20,8 @@ public class SplashScreenActivity extends TruJobsBaseActivity {
         setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
         new Handler().postDelayed(getSplashRunnable(), SPLASH_TIME_OUT);
+
+        Tlog.e(FirebaseInstanceId.getInstance().getToken() + " token --------------");
 
         // track in GA
         addScreenViewGA(Constants.GA_SCREEN_NAME_SPLASHSCREEN);

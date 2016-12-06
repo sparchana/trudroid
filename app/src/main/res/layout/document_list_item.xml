@@ -23,8 +23,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"
+                android:orientation="vertical"
                 android:weightSum="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/idproof_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.66"
+                        android:inputType="textCapCharacters"
+                        android:singleLine="true"
+                        android:textColor="@color/boxOption"
+                        android:textSize="@dimen/Edit_Text_Size" />
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -32,22 +47,17 @@
                     android:layout_marginTop="@dimen/margin_top_text"
                     android:layout_weight="0.5">
 
-                    <!--<android.support.design.widget.TextInputLayout-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content">-->
-
-                        <!---->
-                    <!--</android.support.design.widget.TextInputLayout>-->
                     <EditText
                         android:id="@+id/idproof_value"
-                        android:textSize="@dimen/Edit_Text_Size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.66"
+                        android:hint=""
                         android:inputType="textCapCharacters"
                         android:singleLine="true"
-                        android:layout_weight="0.66"
-                        android:layout_width="match_parent"
                         android:textColor="@drawable/edit_text_selector"
-                        android:layout_height="wrap_content"
-                        android:hint=""/>
+                        android:textColorHint="@color/back_grey_dark"
+                        android:textSize="@dimen/main_size" />
 
                 </LinearLayout>
             </LinearLayout>

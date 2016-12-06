@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,8 +67,6 @@ public class PreScreenEducation extends Fragment {
     private Long qualificationSelected = 0L, degreeSelected = 0L;
     private Integer qualificationStatus = -1;
 
-    private int totalCount;
-    private int rank;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         view = inflater.inflate(R.layout.pre_screen_education, container, false);
@@ -93,8 +92,8 @@ public class PreScreenEducation extends Fragment {
 
         isFinalFragment = getArguments().getBoolean("isFinalFragment");
         jobPostId = getArguments().getLong("jobPostId");
-        rank = getArguments().getInt("rank");
-        totalCount = getArguments().getInt("totalCount");
+        int rank = getArguments().getInt("rank");
+        int totalCount = getArguments().getInt("totalCount");
 
 
         AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask = new GetEducationStaticAsyncTask();
@@ -109,7 +108,8 @@ public class PreScreenEducation extends Fragment {
             String preScreenJobTitle = bundle.getString("jobTitle");
 
             TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
-            headingApplicationForm.setText("Application form for "+preScreenJobTitle+" at "+preScreenCompanyName);
+            String headingTitle = "Application form for <b>"+preScreenJobTitle+"</b> at <b>"+preScreenCompanyName+"</b>";
+            headingApplicationForm.setText(Html.fromHtml(headingTitle));
 
             LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
             for(int i= 1; i<=totalCount; i++){

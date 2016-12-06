@@ -29,11 +29,17 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
 
     ProgressDialog pd;
     public CandidateAppliedJobPostWorkFlowResponse jobApplications;
-    public List<JobPostWorkFlowObject> confirmedInterviewList;
+
+    public List<JobPostWorkFlowObject> pendingTabList;
+    public List<JobPostWorkFlowObject> confirmedTabList;
+
+    public List<JobPostWorkFlowObject> rescheduledList;
     public List<JobPostWorkFlowObject> underReviewInterviewList;
-    public List<JobPostWorkFlowObject> completedInterviewList;
     public List<JobPostWorkFlowObject> rejectedInterviewList;
     public List<JobPostWorkFlowObject> todaysInterviewList;
+    public List<JobPostWorkFlowObject> upcomingInterviewList;
+    public List<JobPostWorkFlowObject> pastInterviewList;
+    public List<JobPostWorkFlowObject> completedInterviewList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +58,16 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
 
         pd = CustomProgressDialog.get(JobApplicationActivity.this);
 
-        confirmedInterviewList = new ArrayList<>();
+        pendingTabList = new ArrayList<>();
+        confirmedTabList = new ArrayList<>();
+
+        rescheduledList = new ArrayList<>();
         underReviewInterviewList = new ArrayList<>();
-        completedInterviewList = new ArrayList<>();
         rejectedInterviewList = new ArrayList<>();
         todaysInterviewList = new ArrayList<>();
+        upcomingInterviewList = new ArrayList<>();
+        pastInterviewList = new ArrayList<>();
+        completedInterviewList = new ArrayList<>();
 
         //get details of a jobPost via AsyncTask
         getMyJobs();
@@ -98,47 +109,76 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
 
                 Calendar interviewCalendar = Calendar.getInstance();
 
-                    for(JobPostWorkFlowObject jwpf : candidateAppliedJobPostWorkFlowResponse.getJobPostWorkFlowObjectList()){
-                        if(jwpf.getCandidateInterviewStatus() != null){
-                            interviewCalendar.setTimeInMillis(jwpf.getInterviewDateMillis());
-                            int interviewYear = interviewCalendar.get(Calendar.YEAR);
-                            int interviewMonth = interviewCalendar.get(Calendar.MONTH) + 1;
-                            int interviewDay = interviewCalendar.get(Calendar.DAY_OF_MONTH);
+                for(JobPostWorkFlowObject jwpf : candidateAppliedJobPostWorkFlowResponse.getJobPostWorkFlowObjectList()){
+                    if(jwpf.getCandidateInterviewStatus() != null){
+                        interviewCalendar.setTimeInMillis(jwpf.getInterviewDateMillis());
+                        int interviewYear = interviewCalendar.get(Calendar.YEAR);
+                        int interviewMonth = interviewCalendar.get(Calendar.MONTH) + 1;
+                        int interviewDay = interviewCalendar.get(Calendar.DAY_OF_MONTH);
 
-                            if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE && jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
-                                if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
-                                    todaysInterviewList.add(jwpf);
-                                } else{
-                                    confirmedInterviewList.add(jwpf);
-                                }
-                            } else if(jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
-                                underReviewInterviewList.add(jwpf);
-                            } else if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT || jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE){
-                                rejectedInterviewList.add(jwpf);
-                            } else if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){
-                                completedInterviewList.add(jwpf);
-                            } else{
-                                underReviewInterviewList.add(jwpf);
-                            }
-                        } else{
+                        if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE){
+                            rescheduledList.add(jwpf);
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
                             underReviewInterviewList.add(jwpf);
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT || jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE){
+                            rejectedInterviewList.add(jwpf);
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
+                            if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
+                                todaysInterviewList.add(jwpf);
+                            } else if(jwpf.getInterviewDateMillis() > now.getTimeInMillis()){
+                                upcomingInterviewList.add(jwpf);
+                            } else{
+                                pastInterviewList.add(jwpf);
+                            }
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){
+                            completedInterviewList.add(jwpf);
                         }
+                    } else{
+                        underReviewInterviewList.add(jwpf);
+                    }
                 }
 
-                //adding rejected application at the end
+
+                //adding job application in pending list
+                for(JobPostWorkFlowObject jwpf: rescheduledList){
+                    pendingTabList.add(jwpf);
+                }
+
+                for(JobPostWorkFlowObject jwpf: underReviewInterviewList){
+                    pendingTabList.add(jwpf);
+                }
+
                 for(JobPostWorkFlowObject jwpf: rejectedInterviewList){
-                    underReviewInterviewList.add(jwpf);
+                    pendingTabList.add(jwpf);
                 }
 
-                //todays interview + confirmed interview
-                for(JobPostWorkFlowObject jwpf: confirmedInterviewList){
-                    todaysInterviewList.add(jwpf);
+                //adding job application in confirmed list
+                for(JobPostWorkFlowObject jwpf: todaysInterviewList){
+                    confirmedTabList.add(jwpf);
+                }
+
+                for(JobPostWorkFlowObject jwpf: upcomingInterviewList){
+                    confirmedTabList.add(jwpf);
+                }
+
+                for(JobPostWorkFlowObject jwpf: pastInterviewList){
+                    confirmedTabList.add(jwpf);
+                }
+
+                if(todaysInterviewList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(1);
+                } else if(rescheduledList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(0);
+                } else if(completedInterviewList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(2);
+                } else{
+                    Prefs.defaultMyJobsTab.put(0);
                 }
 
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.my_jobs_tab_layout);
-                tabLayout.addTab(tabLayout.newTab().setText("Confirmed/Rescheduled"));
+                tabLayout.addTab(tabLayout.newTab().setText("Pending Confirmation"));
+                tabLayout.addTab(tabLayout.newTab().setText("Confirmed"));
                 tabLayout.addTab(tabLayout.newTab().setText("Completed"));
-                tabLayout.addTab(tabLayout.newTab().setText("Other Application(s)"));
                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                 //pager to contain 4 tabs
@@ -158,6 +198,9 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {}
                 });
+
+                viewPager.setCurrentItem(Prefs.defaultMyJobsTab.get());
+                Prefs.defaultMyJobsTab.put(0);
             }
         }
     }

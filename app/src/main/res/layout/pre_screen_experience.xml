@@ -36,7 +36,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:title="Experience Profile"
+                app:title="Job Application Form"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -60,7 +60,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/headingApplicationForm"
                             android:text="Application form for Jobrole at Company"
-                            android:textSize="14dp"/>
+                            android:textSize="16dp"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -125,7 +125,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14dp"
-                            android:text="Experience"
+                            android:text="Your Work Experience ?"
                             android:textSize="18dp"/>
 
                         <LinearLayout

@@ -39,19 +39,16 @@
     <string name="start">GOT IT</string>
 
     <string name="slide_1_title">Welcome to TruJobs!</string>
-    <string name="slide_1_desc">Your job search partner</string>
+    <string name="slide_1_desc">Find jobs in Bangalore in 3 simple steps!</string>
 
-    <string name="slide_2_title">Location based Jobs</string>
+    <string name="slide_2_title">Location based Jobs!</string>
     <string name="slide_2_desc">Easily search jobs around you or at a particular location!</string>
 
-    <string name="slide_3_title">Your Preference</string>
-    <string name="slide_3_desc">Find and apply to the jobs matching your requirements!</string>
+    <string name="slide_3_title">Schedule Interviews!</string>
+    <string name="slide_3_desc">Select your preferred date and time and schedule your interview!</string>
 
     <string name="slide_4_title">Attend interviews and get placed</string>
-    <string name="slide_4_desc">Find a job and earn upto 30,000!</string>
-
-    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
-    <string name="play_again">Play Again</string>
+    <string name="slide_4_desc">Get instant notifications on interview results!</string>
 
     // FB tracking
     <string name="facebook_app_id">980050698772979</string>

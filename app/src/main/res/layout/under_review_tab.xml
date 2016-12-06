@@ -7,25 +7,6 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@color/colorLightOrange">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_gravity="center"
-            android:textSize="12dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="My Under Review/other Application(s)"/>
-
-    </LinearLayout>
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,6 +21,6 @@
         android:layout_marginTop="80dp"
         android:visibility="gone"
         android:id="@+id/no_under_review_jobs_image"
-        android:src="@drawable/no_my_jobs"/>
+        android:src="@drawable/no_pending_jobs"/>
 
 </LinearLayout>

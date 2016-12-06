@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,6 @@ public class PreScreenLanguage extends Fragment{
 
     public boolean isFinalFragment = false;
     public Long jobPostId;
-    private int totalCount;
-    private int rank;
 
     private AsyncTask<UpdateCandidateLanguageRequest, Void, GenericResponse> mUpdateLanguageAsyncTask;
 
@@ -76,14 +75,15 @@ public class PreScreenLanguage extends Fragment{
 
             isFinalFragment = bundle.getBoolean("isFinalFragment");
             jobPostId = bundle.getLong("jobPostId");
-            rank = bundle.getInt("rank");
-            totalCount = bundle.getInt("totalCount");
+            int rank = bundle.getInt("rank");
+            int totalCount = bundle.getInt("totalCount");
 
             String preScreenCompanyName = bundle.getString("companyName");
             String preScreenJobTitle = bundle.getString("jobTitle");
 
             TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
-            headingApplicationForm.setText("Application form for "+preScreenJobTitle+" at "+preScreenCompanyName);
+            String headingTitle = "Application form for <b>"+preScreenJobTitle+"</b> at <b>"+preScreenCompanyName+"</b>";
+            headingApplicationForm.setText(Html.fromHtml(headingTitle));
 
             LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
             for(int i= 1; i<=totalCount; i++){

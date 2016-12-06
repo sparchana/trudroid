@@ -146,12 +146,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         @Override
         protected void onPostExecute(PreScreenPopulateProtoResponse preScreenPopulateResponse) {
             super.onPostExecute(preScreenPopulateResponse);
-            if(!preScreenPopulateResponse.getShouldShow()){
-                propertyIdStack.clear();
-                showRequiredFragment(((FragmentActivity) mContext));
-                return;
-            }
-            // check object for only which property id is available and at the same time object should be initialized and propertyId should match
 
             if(!Util.isConnectedToInternet(getApplicationContext())) {
                 Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
@@ -162,7 +156,15 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 Tlog.w("Null Response");
                 return;
             }
+
+            // check object for only which property id is available and at the same time object should be initialized and propertyId should match
             globalPreScreenPopulateResponse = preScreenPopulateResponse;
+            if(!preScreenPopulateResponse.getShouldShow()){
+                propertyIdStack.clear();
+                showRequiredFragment(((FragmentActivity) mContext));
+                return;
+            }
+
             propertyIdStack = new Stack<>();
             propertyIdBackStack = new Stack<>();
 
@@ -194,14 +196,13 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             showRequiredFragment(((FragmentActivity) mContext));
         }
     }
-
     public static void showRequiredFragment(FragmentActivity activity) {
         PreScreenPopulateProtoResponse preScreenPopulateResponse =  globalPreScreenPopulateResponse;
         Bundle bundle = new Bundle();
 
         Integer propId = null;
         if(propertyIdStack.isEmpty()){
-            Tlog.e("Property Id Queue empty, trigger InterviewFragment");
+            Tlog.e("Property Id Stack empty, trigger InterviewFragment");
             PreScreenActivity.triggerInterviewFragment(activity,
                     preScreenPopulateResponse.getPreScreenCompanyName(),
                     preScreenPopulateResponse.getPreScreenJobRoleTitle(),
@@ -344,16 +345,17 @@ public class PreScreenActivity extends TruJobsBaseActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            super.onBackPressed();
             Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             this.finish();
             return;
-        }
-        if(interviewSlotOpenned){
+        } else if(interviewSlotOpenned){
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
+
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_INTERVIEW_EXIT);
 
@@ -375,7 +377,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
                 @Override
                 public void run() {
-                    doubleBackToExitPressedOnce=false;
+                    doubleBackToExitPressedOnce = false;
                 }
             }, 2500);
             return;

@@ -39,37 +39,42 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Basic Profile" />
+                app:title="Job Application Form" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="60dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        >
+                        android:paddingRight="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/headingApplicationForm"
                             android:text="Application form for Jobrole at Company"
-                            android:textSize="14dp"/>
+                            android:textSize="16dp"/>
+
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
+                    android:id="@+id/progressCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/progressCount"
-                    android:padding="15dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="15dp">
 
                 </LinearLayout>
 
@@ -98,6 +103,26 @@
             android:clickable="true"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/experience_profile" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Your Profile Details ?"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+
             <include layout="@layout/pre_screen_dob" />
 
             <include layout="@layout/pre_screen_gender" />
@@ -105,11 +130,25 @@
             <include layout="@layout/pre_screen_timeshift_pref" />
 
             <LinearLayout
-                android:id="@+id/ps_asset_list_view"
-                android:visibility="gone"
+                android:id="@+id/asset_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Do You Own Any of the Folowwing ?" />
+
+                <LinearLayout
+                    android:id="@+id/ps_asset_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <include layout="@layout/pre_screen_home_locality" />
 

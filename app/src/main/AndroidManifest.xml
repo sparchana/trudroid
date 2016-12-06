@@ -178,20 +178,42 @@
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
-
-        <activity android:name=".JobApplicationDetailActivity"
+        <activity
+            android:name=".JobApplicationDetailActivity"
             android:label="Detail"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
-
         <activity
             android:name=".prescreen.PreScreenActivity"
             android:label="@string/title_activity_pre_screen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction" />
         <activity
             android:name=".interview.InterviewSlotSelectActivity"
             android:label="@string/title_activity_interview_slot_select"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-    </application>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction"></activity>
 
+        <!-- FCM services -->
+        <service android:name=".FCM.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".FCM.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".InterviewTipsActivity"
+            android:screenOrientation="portrait"/>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_correct" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorGreen" />
+
+    </application>
 </manifest>

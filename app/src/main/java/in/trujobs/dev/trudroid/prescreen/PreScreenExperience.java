@@ -8,6 +8,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,8 +70,6 @@ public class PreScreenExperience extends Fragment{
 
     private boolean isFinalFragment = false;
     private Long jobPostId;
-    private int totalCount;
-    private int rank;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -96,11 +95,12 @@ public class PreScreenExperience extends Fragment{
 
         String preScreenCompanyName = getArguments().getString("companyName");
         String preScreenJobTitle = getArguments().getString("jobTitle");
-        rank = getArguments().getInt("rank");
-        totalCount = getArguments().getInt("totalCount");
+        int rank = getArguments().getInt("rank");
+        int totalCount = getArguments().getInt("totalCount");
 
         TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
-        headingApplicationForm.setText("Application form for "+preScreenJobTitle+" at "+preScreenCompanyName);
+        String headingTitle = "Application form for <b>"+preScreenJobTitle+"</b> at <b>"+preScreenCompanyName+"</b>";
+        headingApplicationForm.setText(Html.fromHtml(headingTitle));
 
         LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
         for(int i= 1; i<=totalCount; i++){
@@ -380,9 +380,14 @@ public class PreScreenExperience extends Fragment{
                             showDialog("Please provide your current Salary");
                         } else if(isEmployed == 1 && (currentJobRoleValue == null || currentCompany.getText().toString().length() < 3)) {
                             isValidationPassed = false;
-                            currentCompany.setError("Please provide your current company details");
-                            currentCompany.addTextChangedListener(new GenericTextWatcher(currentCompany));
-                            showDialog("Please provide your current Company details");
+                            if(currentJobRoleValue == null ){
+                                showDialog("Please provide your current job role");
+                            }
+                            if(currentCompany.getText().toString().length() < 3){
+                                currentCompany.setError("Please provide your current company details");
+                                currentCompany.addTextChangedListener(new GenericTextWatcher(currentCompany));
+                                showDialog("Please provide your current Company details");
+                            }
                         }
 
                         if(isValidationPassed){
