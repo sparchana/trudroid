@@ -27,6 +27,7 @@
 
         <LinearLayout
             android:layout_marginTop="36dp"
+            android:layout_marginBottom="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -35,36 +36,31 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:id="@+id/rating_1"
-                android:src="@drawable/ic_star_disable"/>
+                android:id="@+id/rating_1" />
 
             <ImageView
                 android:layout_width="36dp"
                 android:layout_marginLeft="8dp"
                 android:layout_height="36dp"
-                android:id="@+id/rating_2"
-                android:src="@drawable/ic_star_disable"/>
+                android:id="@+id/rating_2" />
 
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:id="@+id/rating_3"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/ic_star_disable"/>
+                android:layout_marginLeft="8dp" />
 
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:id="@+id/rating_4"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/ic_star_disable"/>
+                android:layout_marginLeft="8dp" />
 
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:id="@+id/rating_5"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/ic_star_disable"/>
+                android:layout_marginLeft="8dp" />
         </LinearLayout>
 
         <TextView
@@ -75,7 +71,8 @@
             android:text="Rating status"/>
 
         <TextView
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/reason_heading"
@@ -95,7 +92,7 @@
             android:layout_margin="4dp"
             android:text="Submit"
             android:id="@+id/submit_feedback"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/rounded_corner_button"
             android:layout_marginTop="18dp"
             android:textColor="@color/white"
             style="@style/Widget.AppCompat.Button.Colored" />

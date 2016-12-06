@@ -82,6 +82,12 @@ public class FeedbackActivity extends TruJobsBaseActivity {
         ratingFour = (ImageView) findViewById(R.id.rating_4);
         ratingFive = (ImageView) findViewById(R.id.rating_5);
 
+        ratingOne.setBackgroundResource(R.drawable.ic_1_star_disable);
+        ratingTwo.setBackgroundResource(R.drawable.ic_2_star_disable);
+        ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
+        ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
+        ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
+
         reasonHeading = (TextView) findViewById(R.id.reason_heading);
         ratingStatus = (TextView) findViewById(R.id.rating_status);
         ratingStatus.setVisibility(View.GONE);
@@ -125,11 +131,11 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingOne.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_star_disable);
-                        ratingThree.setBackgroundResource(R.drawable.ic_star_disable);
-                        ratingFour.setBackgroundResource(R.drawable.ic_star_disable);
-                        ratingFive.setBackgroundResource(R.drawable.ic_star_disable);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star_disable);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
+                        ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
+                        ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 1;
                         ratingStatus.setVisibility(View.VISIBLE);
                         ratingStatus.setText("Very Bad");
@@ -145,11 +151,11 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingTwo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingThree.setBackgroundResource(R.drawable.ic_star_disable);
-                        ratingFour.setBackgroundResource(R.drawable.ic_star_disable);
-                        ratingFive.setBackgroundResource(R.drawable.ic_star_disable);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
+                        ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
+                        ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 2;
                         ratingStatus.setVisibility(View.VISIBLE);
                         ratingStatus.setText("Bad");
@@ -165,11 +171,11 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingThree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingThree.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingFour.setBackgroundResource(R.drawable.ic_star_disable);
-                        ratingFive.setBackgroundResource(R.drawable.ic_star_disable);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star);
+                        ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
+                        ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 3;
                         ratingStatus.setVisibility(View.VISIBLE);
                         ratingStatus.setText("Average");
@@ -185,11 +191,11 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingFour.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingThree.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingFour.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingFive.setBackgroundResource(R.drawable.ic_star_disable);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star);
+                        ratingFour.setBackgroundResource(R.drawable.ic_4_star);
+                        ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 4;
                         ratingStatus.setVisibility(View.VISIBLE);
                         ratingStatus.setText("Good");
@@ -205,11 +211,11 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingFive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingThree.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingFour.setBackgroundResource(R.drawable.ic_star_enable);
-                        ratingFive.setBackgroundResource(R.drawable.ic_star_enable);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star);
+                        ratingFour.setBackgroundResource(R.drawable.ic_4_star);
+                        ratingFive.setBackgroundResource(R.drawable.ic_5_star);
                         ratingScore = 5;
                         ratingStatus.setVisibility(View.VISIBLE);
                         ratingStatus.setText("Super!");
@@ -294,13 +300,13 @@ public class FeedbackActivity extends TruJobsBaseActivity {
 
                 inflater = (LayoutInflater) getApplication().getApplicationContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View mLinearView = inflater.inflate(R.layout.skill_list_view, null);
+                View mLinearView = inflater.inflate(R.layout.sample_list_view, null);
                 TextView skillName = (TextView) mLinearView
-                        .findViewById(R.id.skill_name);
+                        .findViewById(R.id.list_name);
                 skillName.setText(feedbackReasonObject.getReasonTitle());
                 feedbackReason.addView(mLinearView);
 
-                final CheckBox reasonCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
+                final CheckBox reasonCheckbox = (CheckBox) mLinearView.findViewById(R.id.list_checkbox);
 
                 reasonCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
