@@ -183,6 +183,16 @@
             android:label="Detail"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
+        <activity
+            android:name=".prescreen.PreScreenActivity"
+            android:label="@string/title_activity_pre_screen"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction" />
+        <activity
+            android:name=".interview.InterviewSlotSelectActivity"
+            android:label="@string/title_activity_interview_slot_select"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoAction"/>
 
         <!-- FCM services -->
         <service android:name=".FCM.MyFirebaseMessagingService">
@@ -196,12 +206,12 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".InterviewTipsActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".InterviewTipsActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".FeedbackActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

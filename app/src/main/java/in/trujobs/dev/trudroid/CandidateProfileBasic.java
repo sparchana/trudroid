@@ -29,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -287,7 +286,7 @@ public class CandidateProfileBasic extends Fragment {
                     jobPrefEditText = (EditText) view.findViewById(R.id.pref_job_roles);
                     if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefCount() > 0){
                         selectedJobRoles.addAll(candidateProfileActivity.candidateInfo.getCandidate().getCandidateJobRolePrefList());
-                        for(int i=0; i<selectedJobRoles.size(); i++ ){
+                        for(int i=0; i<selectedJobRoles.size(); i++ ) {
                             jobRoleSelectedString = jobRoleSelectedString + selectedJobRoles.get(i).getJobRoleName();
                             jobRoleSelectedId = jobRoleSelectedId + selectedJobRoles.get(i).getJobRoleId();
                             if(i != (selectedJobRoles.size() - 1)){

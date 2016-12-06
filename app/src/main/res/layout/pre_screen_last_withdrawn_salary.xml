@@ -1,0 +1,20 @@
+<LinearLayout android:layout_width="fill_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="8dp"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/last_withdrawn_salary"
+        android:textSize="@dimen/Edit_Text_Size"
+        android:maxLength="5"
+        android:singleLine="true"
+        android:inputType="number"
+        android:paddingLeft="4dp"
+        android:drawablePadding="6dp"
+        android:drawableLeft="@drawable/indian_rupee_icon"
+        android:hint="Last Drawn Salary (per month)"/>
+
+</LinearLayout>

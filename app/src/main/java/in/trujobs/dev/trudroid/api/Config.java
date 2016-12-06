@@ -39,6 +39,18 @@ public class Config {
     public static final String URL_CANDIDATE_STATUS_SPECIFIC_ALERT = BASE_HTTP_URL + "/mFetchCandidateAlert";
     public static final String URL_JOB_SEARCH = BASE_HTTP_URL + "/mSearchJobs";
     public static final String URL_GET_LOCALITY_FOR_LATLNG = BASE_HTTP_URL + "/mGetLocalityForLatLngOrPlaceId";
+
+    // prescreen urls
+    public static final String URL_GET_JOB_POST_VS_CANDIDATE = BASE_HTTP_URL + "/mGetJobPostVsCandidate";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_DOCUMENT = BASE_HTTP_URL + "/mUpdateCandidateDocument";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_LANGUAGE = BASE_HTTP_URL + "/mUpdateCandidateLanguage";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_EXPERIENCE = BASE_HTTP_URL + "/mUpdateCandidateExperience";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_OTHERS = BASE_HTTP_URL + "/mUpdateCandidateOther";
+
+    // interview details
+    public static final String URL_UPDATE_CANDIDATE_INTERVIEW_DETAIL = BASE_HTTP_URL + "/mUpdateCandidateInterviewDetail";
+    public static final String URL_UPDATE_GET_INTERVIEW_SLOTS = BASE_HTTP_URL + "/mGetInterviewSlots";
+    public static final String URL_CHECK_INTERVIEW_SLOT_AVALABILITY = BASE_HTTP_URL + "/mCheckInterviewSlotAvailability";
     public static final String URL_UPDATE_CANDIDATE_TOKEN = BASE_HTTP_URL + "/mUpdateCandidateToken";
     public static final String URL_LOGOUT_CANDIDATE = BASE_HTTP_URL + "/mCandidateLogout";
     public static final String URL_ADD_FEEDBACK = BASE_HTTP_URL + "/mAddFeedback";

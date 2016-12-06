@@ -393,7 +393,7 @@ public class CandidateProfileExperience extends Fragment {
                     getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList());
 
                     allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
-                    languageIdList = new ArrayList<Integer>();
+                    languageIdList = new ArrayList<>();
 
                     for(int i=0 ; i<getCandidateExperienceProfileStaticResponse.getLanguageObjectCount() ; i++){
                         allLanguageList[i] = getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageName();
@@ -523,8 +523,8 @@ public class CandidateProfileExperience extends Fragment {
                         final CheckBox skillCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
 
                         for(CandidateSkillObject skill : candidateProfileActivity.candidateInfo.getCandidate().getCandidateSkillObjectList()){
-                            if(skill.getSkillId() == skillObject.getSkillId()){
-                                if(skill.getAnswer() == true){
+                            if(skill.getSkillId() == skillObject.getSkillId()) {
+                                if(skill.getAnswer() == true) {
                                     skillCheckbox.setChecked(true);
                                     CandidateSkillObject.Builder skillBuilder = CandidateSkillObject.newBuilder();
                                     skillBuilder.setSkillId(skillObject.getSkillId());
@@ -605,7 +605,7 @@ public class CandidateProfileExperience extends Fragment {
         return flag;
     }
 
-    public void getAllLanguages(List<LanguageObject> languageObjectList){
+    public void getAllLanguages(List<LanguageObject> languageObjectList) {
         for(final LanguageObject languageObject : languageObjectList){
             LayoutInflater inflater = null;
             inflater = (LayoutInflater) getActivity().getApplicationContext()
@@ -664,7 +664,7 @@ public class CandidateProfileExperience extends Fragment {
                             candidateLanguageKnown.remove(pos);
                             candidateLanguageKnown.add(language.build());
                             pos = -1;
-                        } else{
+                        } else {
                             language.setLanguageKnownId(languageObject.getLanguageId());
                             language.setLanguageReadWrite(1);
                             language.setLanguageUnderstand(0);

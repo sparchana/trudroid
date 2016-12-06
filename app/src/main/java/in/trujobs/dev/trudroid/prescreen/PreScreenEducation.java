@@ -1,8 +1,7 @@
-package in.trujobs.dev.trudroid;
+package in.trujobs.dev.trudroid.prescreen;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -19,112 +18,90 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
+import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
+import in.trujobs.proto.PreScreenEducationObject;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
 
-/**
- * Created by batcoder1 on 11/8/16.
- */
-public class CandidateProfileEducation extends Fragment {
+public class PreScreenEducation extends Fragment {
+    private ProgressDialog pd;
+    private AsyncTask<UpdateCandidateEducationProfileRequest, Void, UpdateCandidateBasicProfileResponse> updateEducationAsyncTask;
 
-    private AsyncTask<UpdateCandidateEducationProfileRequest, Void, UpdateCandidateBasicProfileResponse> UpdateEducationAsyncTask;
-    private AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask;
-    ProgressDialog pd;
+    private LinearLayout degreeSection;
+    private LinearLayout qualificationLayout;
+    private LinearLayout degreeLayout;
+    private LinearLayout educationStatus;
+    private EditText candidateCollege;
+    private Button updateEducationProfile;
+    private Button educationStatusYes;
+    private Button educationStatusNo;
+    private final int qualificationPos = 0;
+    private final int degreePos = 0;
+    private int firstTimeSetting = 0;
+    private SpinnerAdapter adapter;
+    private View view;
 
-    LinearLayout degreeSection;
-    LinearLayout qualificationLayout;
-    LinearLayout degreeLayout;
-    LinearLayout educationStatus;
-    EditText candidateCollege;
-    Button updateEducationProfile, educationStatusYes, educationStatusNo;
-    int qualificationPos = 0, degreePos = 0, firstTimeSetting = 0;
-    SpinnerAdapter adapter;
-    public CandidateProfileActivity candidateProfileActivity;
-    View view;
+    private String[] qualificationLevel = new String[0];
+    private Long[] qualificationId = new Long[0];
 
-    String[] qualificationLevel = new String[0];
-    Long[] qualificationId = new Long[0];
+    private String[] degreeName = new String[0];
+    private Long[] degreeId = new Long[0];
+    private boolean isFinalFragment = false;
+    private Long jobPostId;
 
-    String[] degreeName = new String[0];
-    Long[] degreeId = new Long[0];
-
-    //values
-    private Long qualificationSelected = Long.valueOf(0), degreeSelected = Long.valueOf(0);
-
-    Integer qualificationStatus = -1;
+    private Long qualificationSelected = 0L, degreeSelected = 0L;
+    private Integer qualificationStatus = -1;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.candidate_education_profile, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
+        view = inflater.inflate(R.layout.pre_screen_education, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((CandidateProfileActivity)getActivity()).setSupportActionBar(toolbar);
+        ((PreScreenActivity)getActivity()).setSupportActionBar(toolbar);
 
-        ((CandidateProfileActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((PreScreenActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         // track screen view
-        ((CandidateProfileActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PROFILE);
+        ((PreScreenActivity) getActivity()).addScreenViewGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN);
 
         educationStatus = (LinearLayout) view.findViewById(R.id.education_status_layout);
         qualificationLayout = (LinearLayout) view.findViewById(R.id.qualification_layout);
         degreeLayout = (LinearLayout) view.findViewById(R.id.degree_layout);
+
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
-        collapsingToolbarLayout.setTitle("Education Profile");
+        collapsingToolbarLayout.setTitle("Education Details");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         pd = CustomProgressDialog.get(getActivity());
 
-        mAsyncTask = new GetEducationStaticAsyncTask();
+        isFinalFragment = getArguments().getBoolean("isFinalFragment");
+        jobPostId = getArguments().getLong("jobPostId");
+
+
+        AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask = new GetEducationStaticAsyncTask();
         mAsyncTask.execute();
 
+        PreScreenEducationObject preScreenEducationObject = null;
+        Bundle bundle = getArguments();
+
+        try {
+            preScreenEducationObject = PreScreenEducationObject.parseFrom(bundle.getByteArray("education"));
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
         return view;
-    }
-
-    private class UpdateEducationProfileAsyncTask extends AsyncTask<UpdateCandidateEducationProfileRequest,
-            Void, UpdateCandidateBasicProfileResponse> {
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd.show();
-        }
-
-        @Override
-        protected UpdateCandidateBasicProfileResponse doInBackground(UpdateCandidateEducationProfileRequest ... params) {
-            return HttpRequest.updateCandidateEducationProfile(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse) {
-            super.onPostExecute(updateCandidateBasicProfileResponse);
-            pd.cancel();
-            if(!Util.isConnectedToInternet(getContext())) {
-                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-            } else if(updateCandidateBasicProfileResponse == null){
-                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
-                        Toast.LENGTH_LONG).show();
-            } else{
-                if(updateCandidateBasicProfileResponse.getStatusValue() == ServerConstants.SUCCESS){
-                    Toast.makeText(getContext(), MessageConstants.PROFILE_UPDATED,
-                            Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getContext(), CandidateProfileActivity.class);
-                    getActivity().finish();
-                    getContext().startActivity(intent);
-                } else{
-                    Toast.makeText(getContext(), "Looks like something went wrong while saving education profile. Please try again.",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        }
     }
 
     private class GetEducationStaticAsyncTask extends AsyncTask<Void,
@@ -150,12 +127,10 @@ public class CandidateProfileEducation extends Fragment {
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
                 Log.w("", "Null Response");
-                return;
             } else {
                 if(getCandidateEducationProfileStaticResponse.getStatusValue() == ServerConstants.SUCCESS){
-                    candidateProfileActivity = (CandidateProfileActivity) getActivity();
 
-                    updateEducationProfile = (Button) view.findViewById(R.id.save_education);
+                    updateEducationProfile = (Button) view.findViewById(R.id.save_ps_education_btn);
                     final Spinner candidateQualification = (Spinner) view.findViewById(R.id.candidate_qualification);
                     final Spinner candidateDegree = (Spinner) view.findViewById(R.id.candidate_degree);
 
@@ -169,27 +144,19 @@ public class CandidateProfileEducation extends Fragment {
                     degreeId = new Long[getCandidateEducationProfileStaticResponse.getDegreeObjectCount() + 1];
 
                     qualificationLevel[0] = "Select Education Level";
-                    qualificationId[0] = Long.valueOf(-1);
+                    qualificationId[0] = (long) -1;
                     for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getEducationObjectCount() ; i++){
                         qualificationLevel[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationName();
                         qualificationId[i] = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
-                        if(getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getEducation().getEducationId()){
-                            qualificationSelected = getCandidateEducationProfileStaticResponse.getEducationObject(i-1).getEducationId();
-                            qualificationPos = i;
-                            firstTimeSetting = 1;
-                        }
                     }
-
-                    degreeName[0] = "Select Highest Degree";
-                    degreeId[0] = Long.valueOf(-1);
                     for(int i = 1; i<= getCandidateEducationProfileStaticResponse.getDegreeObjectCount() ; i++){
                         degreeName[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeName();
                         degreeId[i] = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
-                        if(getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId() == candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getDegree().getDegreeId()){
-                            degreeSelected = getCandidateEducationProfileStaticResponse.getDegreeObject(i-1).getDegreeId();
-                            degreePos = i;
-                        }
                     }
+
+
+                    degreeName[0] = "Select Highest Degree";
+                    degreeId[0] = (long) -1;
 
                     educationStatusYes.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -245,10 +212,6 @@ public class CandidateProfileEducation extends Fragment {
                     candidateQualification.setSelection(qualificationPos);
                     candidateDegree.setSelection(degreePos);
 
-                    if(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute() != null){
-                        candidateCollege.setText(candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateInstitute());
-                    }
-
                     candidateQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
                     {
                         @Override
@@ -288,44 +251,28 @@ public class CandidateProfileEducation extends Fragment {
                         public void onNothingSelected(AdapterView<?> parentView) {}
                     });
 
-                    qualificationStatus = candidateProfileActivity.candidateInfo.getCandidate().getCandidateEducation().getCandidateEducationCompletionStatus();
-                    if(qualificationStatus == 1){
-                        qualificationStatus = 1;
-                        educationStatusYes.setBackgroundResource(R.drawable.rounded_corner_button);
-                        educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.white));
-                        educationStatusNo.setBackgroundResource(R.drawable.round_white_button);
-                        educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-
-                    } else if(qualificationStatus == 0){
-                        qualificationStatus = 0;
-                        educationStatusYes.setBackgroundResource(R.drawable.round_white_button);
-                        educationStatusYes.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                        educationStatusNo.setBackgroundResource(R.drawable.rounded_corner_button);
-                        educationStatusNo.setTextColor(getContext().getResources().getColor(R.color.white));
-                    }
-
                     updateEducationProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            boolean check = true;
-                            Tlog.e("Qualification status: = " + qualificationStatus);
+                            boolean isValidationPassed = true;
                             if(qualificationSelected < 1){
                                 showDialog("Please select your education level");
                                 qualificationLayout.setBackgroundResource(R.drawable.border);
-                                check = false;
+                                isValidationPassed = false;
                             } else if(qualificationSelected > 3 && degreeSelected < 1){
-                                check = false;
+                                isValidationPassed = false;
                                 showDialog("Please select your Degree");
                                 degreeLayout.setBackgroundResource(R.drawable.border);
                             } else if(qualificationStatus == -1){
-                                check = false;
+                                isValidationPassed = false;
                                 showDialog("Please answer: \"Have you successfully completed this course?\"");
                                 educationStatus.setBackgroundResource(R.drawable.border);
                             }
 
-                            if(check){
+                            if(isValidationPassed){
+
                                 //Track this action
-                                ((CandidateProfileActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PROFILE, Constants.GA_ACTION_SAVE_EDUCATION_PROFILE);
+                                ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN, Constants.GA_ACTION_SAVE_EDUCATION_PRESCREEN);
 
                                 UpdateCandidateEducationProfileRequest.Builder educationBuilder = UpdateCandidateEducationProfileRequest.newBuilder();
                                 educationBuilder.setCandidateMobile(Prefs.candidateMobile.get());
@@ -335,13 +282,15 @@ public class CandidateProfileEducation extends Fragment {
                                 }
                                 educationBuilder.setCandidateEducationCompletionStatus(qualificationStatus);
                                 educationBuilder.setCandidateEducationInstitute(candidateCollege.getText().toString());
-
-                                UpdateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
-                                UpdateEducationAsyncTask.execute(educationBuilder.build());
+                                educationBuilder.setJobPostId(jobPostId);
+                                educationBuilder.setIsFinalFragment(isFinalFragment);
+                                // this same api will add/update candidate education
+                                updateEducationAsyncTask = new UpdateEducationProfileAsyncTask();
+                                updateEducationAsyncTask.execute(educationBuilder.build());
                             }
                         }
                     });
-                } else {
+                } else{
                     Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                             Toast.LENGTH_LONG).show();
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -350,7 +299,39 @@ public class CandidateProfileEducation extends Fragment {
         }
     }
 
-    public void showDialog(String msg) {
+    private class UpdateEducationProfileAsyncTask extends AsyncTask<UpdateCandidateEducationProfileRequest,
+            Void, UpdateCandidateBasicProfileResponse> {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected UpdateCandidateBasicProfileResponse doInBackground(UpdateCandidateEducationProfileRequest ... params) {
+            return HttpRequest.updateCandidateEducationProfile(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(UpdateCandidateBasicProfileResponse updateCandidateBasicProfileResponse) {
+            super.onPostExecute(updateCandidateBasicProfileResponse);
+            pd.cancel();
+            if(!Util.isConnectedToInternet(getContext())) {
+                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+            } else if(updateCandidateBasicProfileResponse == null){
+                Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
+                        Toast.LENGTH_LONG).show();
+            } else{
+                if(updateCandidateBasicProfileResponse.getStatusValue() == ServerConstants.SUCCESS){
+                    PreScreenActivity.showRequiredFragment(getActivity());
+                } else{
+                    Toast.makeText(getContext(), "Looks like something went wrong while saving education profile. Please try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    private void showDialog(String msg){
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);
@@ -362,6 +343,4 @@ public class CandidateProfileEducation extends Fragment {
                 });
         alertDialog.show();
     }
-
 }
-
