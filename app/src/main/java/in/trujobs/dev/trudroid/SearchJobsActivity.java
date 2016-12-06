@@ -288,6 +288,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
+            mNavItems.add(new NavItem("Feedback", R.drawable.ic_rating));
             mNavItems.add(new NavItem("Interview Tips", R.drawable.ic_idea));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 
@@ -340,10 +341,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_REFER_FRIEND);
                 break;
 
-            case 6: openItem(InterviewTipsActivity.class);
+            case 6: openItem(FeedbackActivity.class);
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_INTERVIEW_TIPS, Constants.GA_ACTION_INTERVIEW_TIPS);
+                break;
+
+            case 7: openItem(InterviewTipsActivity.class);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_FEEDBACK, Constants.GA_ACTION_FEEDBACK);
                 break;
 
             default:
@@ -1207,25 +1214,25 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private int get_index(int position){
         String title = mNavItems.get(position).mTitle;
-        switch (title) {
-            case "Logout":
-                return 0;
-            case "Login/Sign Up":
-                return 0;
-            case "Search Job":
-                return 1;
-            case "My Profile":
-                return 2;
-            case "My Jobs":
-                return 3;
-            case "My Home Location":
-                return 4;
-            case "Refer friends":
-                return 5;
-            case "Interview Tips":
-                return 6;
-            default:
-                return -1;
-        }
+        if(title.equals("Logout"))
+            return 0;
+        else if(title.equals("Login/Sign Up"))
+            return 0;
+        else if(title.equals("Search Job"))
+            return 1;
+        else if(title.equals("My Profile"))
+            return 2;
+        else if(title.equals("My Jobs"))
+            return 3;
+        else if(title.equals("My Home Location"))
+            return 4;
+        else if(title.equals("Refer friends"))
+            return 5;
+        else if(title.equals("Feedback"))
+            return 6;
+        else if(title.equals("Interview Tips"))
+            return 7;
+        else
+            return -1;
     }
 }

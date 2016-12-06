@@ -35,6 +35,8 @@ import java.util.Random;
 
 import in.trujobs.dev.trudroid.CandidateProfileActivity;
 import in.trujobs.dev.trudroid.CandidateProfileBasic;
+import in.trujobs.dev.trudroid.FeedbackActivity;
+import in.trujobs.dev.trudroid.InterviewTipsActivity;
 import in.trujobs.dev.trudroid.JobApplicationActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.ReferFriends;
@@ -95,7 +97,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param messageBody FCM message body received.
      */
     private void sendNotification(RemoteMessage messageBody) {
-        Intent intent = new Intent(this, JobApplicationActivity.class);
+        Intent intent = new Intent(this, SplashScreenActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_SEARCH_JOBS))){ //search jobs activity
                 intent = new Intent(this, SearchJobsActivity.class);
@@ -110,8 +112,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Prefs.defaultMyJobsTab.put(2);
             } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_PROFILE))){ //My Profile
                 intent = new Intent(this, CandidateProfileActivity.class);
-            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_REFER))){ //My Profile
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_REFER))){ //refer
                 intent = new Intent(this, ReferFriends.class);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_INTERVIEW_TIPS))){ //interview tips
+                intent = new Intent(this, InterviewTipsActivity.class);
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_FEEDBACK))){ //feedback
+                intent = new Intent(this, FeedbackActivity.class);
             }
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -121,7 +127,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.launcher_icon)
+                    .setSmallIcon(getNotificationIcon())
                     .setColor(getResources().getColor(R.color.colorPrimary))
                     .setContentTitle("TruJobs.in - " + messageBody.getData().get("title"))
                     .setContentText(messageBody.getData().get("message"))
@@ -137,5 +143,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int m = random.nextInt(9999 - 1000) + 1000;
 
         notificationManager.notify(m, notificationBuilder.build());
+    }
+    private int getNotificationIcon() {
+        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
+        return useWhiteIcon ? R.drawable.ic_notification_icon : R.drawable.launcher_icon;
     }
 }

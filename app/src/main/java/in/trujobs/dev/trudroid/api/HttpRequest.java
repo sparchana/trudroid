@@ -17,8 +17,11 @@ import java.net.URL;
 
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.proto.AddFeedbackRequest;
+import in.trujobs.proto.AddFeedbackResponse;
 import in.trujobs.proto.CandidateAppliedJobPostWorkFlowResponse;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
+import in.trujobs.proto.FeedbackReasonResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
@@ -39,8 +42,6 @@ import in.trujobs.proto.GetInterviewSlotsRequest;
 import in.trujobs.proto.GetInterviewSlotsResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
-import in.trujobs.proto.HomeLocalityRequest;
-import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchRequest;
@@ -188,6 +189,30 @@ public class HttpRequest {
 
         if (notGoingReasonResponse != null && notGoingReasonResponse.getReasonObjectCount() != 0) {
             return notGoingReasonResponse;
+        } else {
+            return null;
+        }
+    }
+
+    public static FeedbackReasonResponse getAllFeedbackReason() {
+        FeedbackReasonResponse.Builder requestBuilder =
+                FeedbackReasonResponse.newBuilder();
+
+        String responseString = postToServer(Config.URL_ALL_FEEDBACK_REASON,
+                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        FeedbackReasonResponse feedbackReasonResponse = null;
+        try {
+            feedbackReasonResponse =
+                    feedbackReasonResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException ignored) {}
+
+        if (feedbackReasonResponse != null && feedbackReasonResponse.getFeedbackReasonObjectCount() != 0) {
+            return feedbackReasonResponse;
         } else {
             return null;
         }
@@ -805,5 +830,22 @@ public class HttpRequest {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return logoutCandidateResponse;
+    }
+
+    public static AddFeedbackResponse addFeedbackRequest(AddFeedbackRequest addFeedbackRequest) {
+        String responseString = postToServer(Config.URL_ADD_FEEDBACK,
+                Base64.encodeToString(addFeedbackRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        AddFeedbackResponse addFeedbackResponse = null;
+        try {
+            addFeedbackResponse = AddFeedbackResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return addFeedbackResponse;
     }
 }
