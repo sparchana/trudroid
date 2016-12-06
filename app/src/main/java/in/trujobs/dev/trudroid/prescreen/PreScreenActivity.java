@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import java.util.Stack;
 
-import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.SearchJobsActivity;
 import in.trujobs.dev.trudroid.TruJobsBaseActivity;
@@ -33,26 +32,23 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_EXPERIENCE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LANGUAGE;
 
 public class PreScreenActivity extends TruJobsBaseActivity {
-    public static Stack propertyIdStack = new Stack();
-    public static Stack propertyIdBackStack = new Stack();
-    public static Stack otherPropertyIdStack = new Stack();
+    public static Stack<Integer> propertyIdStack = new Stack<>();
+    public static Stack<Integer> propertyIdBackStack = new Stack<>();
+    public static Stack<Integer> otherPropertyIdStack = new Stack<>();
     public static PreScreenPopulateProtoResponse globalPreScreenPopulateResponse;
     public static Context mContext;
     private android.os.AsyncTask<PreScreenPopulateProtoRequest, Void, PreScreenPopulateProtoResponse> mAsyncTaskPreScreen;
-    /*private int totalCountFragment = 0;*/
-
-    private static AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask;
+    public static int totalCountFragment = 0;
+    public static int rankCount;
 
     protected static Long jobPostId;
-    protected static ApplyJobResponseBundle applyJobResponseBundle ;
     public static boolean interviewSlotOpenned = false;
     boolean doubleBackToExitPressedOnce = false;
 
 
-    public static void start(Context context, Long jpId, ApplyJobResponseBundle responseBundle) {
+    public static void start(Context context, Long jpId) {
         Intent intent = new Intent(context, PreScreenActivity.class);
         jobPostId = jpId;
-        applyJobResponseBundle = responseBundle;
         Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         context.startActivity(intent);
     }
@@ -68,11 +64,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Tlog.e("null jobPostId passed to preScreenActivity");
             return;
         }
-        openPreScreenWizard(jobPostId, applyJobResponseBundle);
+        rankCount = 0;
+        openPreScreenWizard(jobPostId);
     }
 
 
-    private void openPreScreenWizard(Long jobPostId, ApplyJobResponseBundle applyJobResponseBundle) {
+    private void openPreScreenWizard(Long jobPostId) {
         PreScreenPopulateProtoRequest.Builder requestBuilder = PreScreenPopulateProtoRequest.newBuilder();
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setCandidateMobile(String.valueOf(Prefs.candidateMobile.get()));
@@ -149,11 +146,11 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         @Override
         protected void onPostExecute(PreScreenPopulateProtoResponse preScreenPopulateResponse) {
             super.onPostExecute(preScreenPopulateResponse);
-            Tlog.i("should show the prescreen flow : " + preScreenPopulateResponse.getShouldShow());
-            if(preScreenPopulateResponse.getShouldShow()){
-
+            if(!preScreenPopulateResponse.getShouldShow()){
+                propertyIdStack.clear();
+                showRequiredFragment(((FragmentActivity) mContext));
+                return;
             }
-            Tlog.i(preScreenPopulateResponse.getPropertyIdList().size() + "--> List count");
             // check object for only which property id is available and at the same time object should be initialized and propertyId should match
 
             if(!Util.isConnectedToInternet(getApplicationContext())) {
@@ -166,35 +163,34 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 return;
             }
             globalPreScreenPopulateResponse = preScreenPopulateResponse;
-            propertyIdStack = new Stack();
-            propertyIdBackStack = new Stack();
+            propertyIdStack = new Stack<>();
+            propertyIdBackStack = new Stack<>();
 
-            Stack hpQueue = new Stack(); // all solo fragment prop ids, {0,1,4, 5}
-            Stack lpQueue = new Stack(); // all in one fragment prop id, {rest}
+            Stack<Integer> hpStack = new Stack<>(); // all solo fragment prop ids, {0,1,4, 5}
+            Stack<Integer> lpStack = new Stack<>(); // all in one fragment prop id, {rest}
 
-            Tlog.i("size: " + preScreenPopulateResponse.getPropertyIdList().size());
             if(preScreenPopulateResponse.getPropertyIdCount() > 0) {
                 for(Integer propId : preScreenPopulateResponse.getPropertyIdList()){
-                    if (propId == 0 || propId == 1 || propId == 4 || propId == 5) {
-                        hpQueue.push(propId);
+                    if(propId == null) continue;
+                    if (preScreenPopulateResponse.getHpPropertyIdList().contains(propId)) {
+                        hpStack.push(propId);
                     } else {
-                        lpQueue.push(propId);
+                        lpStack.push(propId);
                     }
                 }
-
-                while (!lpQueue.isEmpty()) {
-                    propertyIdStack.push(lpQueue.pop());
+                if(!hpStack.isEmpty()){
+                    totalCountFragment = + hpStack.size();
                 }
-                while (!hpQueue.isEmpty()) {
-                    propertyIdStack.push(hpQueue.pop());
+                if(lpStack.size() > 0){
+                    totalCountFragment++;
+                }
+                while (!lpStack.isEmpty()) {
+                    propertyIdStack.push(lpStack.pop());
+                }
+                while (!hpStack.isEmpty()) {
+                    propertyIdStack.push(hpStack.pop());
                 }
             }
-            /*if(hpQueue.size() != 0){
-                totalCountFragment = + hpQueue.size();
-            }
-            if(lpQueue.size() > 0){
-                totalCountFragment++;
-            }*/
             showRequiredFragment(((FragmentActivity) mContext));
         }
     }
@@ -205,14 +201,14 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         Integer propId = null;
         if(propertyIdStack.isEmpty()){
-            Tlog.e("Property Id Queue empty");
+            Tlog.e("Property Id Queue empty, trigger InterviewFragment");
             PreScreenActivity.triggerInterviewFragment(activity,
                     preScreenPopulateResponse.getPreScreenCompanyName(),
                     preScreenPopulateResponse.getPreScreenJobRoleTitle(),
-                    preScreenPopulateResponse.getPreScreenJobTitle(), true);
+                    preScreenPopulateResponse.getPreScreenJobTitle());
         } else {
-            propId = (Integer) propertyIdStack.pop();
-            if(!(propertyIdBackStack.contains(propId))) {
+            propId = propertyIdStack.pop();
+            if(propId!= null && !(propertyIdBackStack.contains(propId))) {
                 propertyIdBackStack.push(propId);
             }
         }
@@ -220,6 +216,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         if(propId == null) {
             return;
         }
+
         Tlog.i("current Property id: " + propId);
         for(Object item : propertyIdStack){
             Tlog.i(item.toString());
@@ -228,30 +225,18 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             Tlog.i("backStack: "+item.toString());
         }
 
-//        ////
-//        InterviewSlotSelectFragment interviewSlotSelectFragment = new InterviewSlotSelectFragment();
-//
-//        bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
-//        bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
-//        bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
-//        bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobRoleTitle());
-//        bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
-//
-//        interviewSlotSelectFragment.setArguments(bundle);
-//        activity.getSupportFragmentManager().beginTransaction()
-//                .addToBackStack(null)
-//                .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
-//                .replace(R.id.pre_screen, interviewSlotSelectFragment).commit();
-//
-//
-//        ////
+        rankCount++;
+        Tlog.i("Rank for :" + rankCount);
         switch (propId) {
             case PROPERTY_TYPE_DOCUMENT : // documents
                 bundle = new Bundle();
                 PreScreenDocument document = new PreScreenDocument();
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
-                /*bundle.putInt("rank",1);*/
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 document.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -263,7 +248,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 PreScreenLanguage language = new PreScreenLanguage();
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
-                /*bundle.putInt("rank",2);*/
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 language.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -275,7 +263,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
-                /*bundle.putInt("rank",3);*/
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 experience.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -288,7 +279,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle.putByteArray("education", preScreenPopulateResponse.getEducation().toByteArray());
                 bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
-                /*bundle.putInt("rank",4);*/
+                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
+                bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
+                bundle.putInt("totalCount",totalCountFragment);
+                bundle.putInt("rank",rankCount);
 
                 education.setArguments(bundle);
                 activity.getSupportFragmentManager().beginTransaction()
@@ -302,11 +296,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                propertyIdStack.push(propertyIdBackStack.pop());
                bundle.putByteArray("asset", preScreenPopulateResponse.getAssetList().toByteArray());
                bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
-               bundle.putString("jobRoleTitle", preScreenPopulateResponse.getPreScreenJobTitle());
-               bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobRoleTitle());
+               bundle.putString("jobRoleTitle",preScreenPopulateResponse.getPreScreenJobRoleTitle());
+               bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                bundle.putBoolean("isFinalFragment", true);
-               /*bundle.putInt("rank",5);*/
+               bundle.putInt("totalCount",totalCountFragment);
+               bundle.putInt("rank",rankCount);
                others.setArguments(bundle);
                activity.getSupportFragmentManager().beginTransaction()
                        .addToBackStack(null)
@@ -316,21 +311,14 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         }
     }
 
-    public static void triggerInterviewFragment(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle, boolean isFinalFragment){
-        if(isFinalFragment) {
-            // check if interview should open
-            CheckInterviewSlotRequest.Builder interviewSlotCheckBuilder = CheckInterviewSlotRequest.newBuilder();
-            interviewSlotCheckBuilder.setJobPostId(jobPostId);
+    public static void triggerInterviewFragment(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle){
+        // check if interview should open
+        CheckInterviewSlotRequest.Builder interviewSlotCheckBuilder = CheckInterviewSlotRequest.newBuilder();
+        interviewSlotCheckBuilder.setJobPostId(jobPostId);
 
-            checkInterviewSlotAsyncTask = new CheckInterviewSlotAsyncTask(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
-            checkInterviewSlotAsyncTask.execute(interviewSlotCheckBuilder.build());
+        AsyncTask<CheckInterviewSlotRequest, Void, CheckInterviewSlotResponse> checkInterviewSlotAsyncTask = new CheckInterviewSlotAsyncTask(activity, preScreenCompanyName, preScreenJobRoleTitle, preScreenJobTitle);
+        checkInterviewSlotAsyncTask.execute(interviewSlotCheckBuilder.build());
 
-        } else {
-            // show successfully applied message and redirect to search screen
-            Toast.makeText(activity, "Application Successfully completed.",
-                    Toast.LENGTH_LONG).show();
-            redirectToSearch(mContext);
-        }
     }
 
     public static void showInterviewFragment(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle){
@@ -355,7 +343,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
     @Override
     public void onBackPressed() {
-        Tlog.i("back pressed");
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -368,7 +355,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 //Track this action
-//                addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_EXIT);
+                addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_INTERVIEW_EXIT);
 
                 Intent intent = new Intent(PreScreenActivity.this, SearchJobsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -382,7 +369,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             showToast("Press back again to  cancel Interview Scheduling.");
 
             //Track this action
-            addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_EXIT);
+            addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_ACTION_TRIED_INTERVIEW_EXIT);
 
             new Handler().postDelayed(new Runnable() {
 
@@ -395,21 +382,19 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         } else if(propertyIdStack.isEmpty() && !otherPropertyIdStack.isEmpty()){
             // restore all ids of other fragment
-            Tlog.i("adding all other prop id to propidstack");
+            if(rankCount != 0){
+                rankCount--;
+            }
             while(!otherPropertyIdStack.isEmpty()){
-                Tlog.i("added : " + otherPropertyIdStack.peek());
                 propertyIdStack.push(otherPropertyIdStack.pop());
             }
             interviewSlotOpenned = false;
             otherPropertyIdStack.clear();
         } else if(!propertyIdBackStack.isEmpty() && !propertyIdStack.contains(propertyIdBackStack.peek())){
-            Tlog.i("onbackpress case 2");
+            if(rankCount != 0){
+                rankCount--;
+            }
             propertyIdStack.push(propertyIdBackStack.pop());
-            if(!propertyIdBackStack.isEmpty()) Tlog.i("bStack top:" + propertyIdBackStack.peek());
-            if(!propertyIdStack.isEmpty()) Tlog.i("mStack top:" + propertyIdStack.peek());
-        } else {
-            Tlog.i("onbackpress case 3");
-            if(!propertyIdBackStack.isEmpty()) Tlog.i("m contains bStack top:" + propertyIdBackStack.peek());
         }
         interviewSlotOpenned =false;
         super.onBackPressed();

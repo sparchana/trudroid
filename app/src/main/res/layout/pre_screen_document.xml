@@ -48,44 +48,46 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="20dp">
+                    android:layout_marginTop="60dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        >
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:text="Application for "
-                            android:textSize="11dp"/>
+                            android:text="Application form for "
+                            android:textSize="12dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
                             android:id="@+id/document_job_title"
+                            android:textStyle="bold"
                             android:text=" Bussiness Development"
-                            android:textSize="14dp"/>
+                            android:textSize="12dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
                             android:text=" at "
-                            android:textSize="14dp"/>
+                            android:textSize="12dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:id="@+id/document_company_title"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
+                            android:textStyle="bold"
                             android:text=" TruJobs.in"
-                            android:textSize="14dp"/>
+                            android:textSize="12dp"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/progressCount"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="15dp"
+                    android:gravity="center">
 
                 </LinearLayout>
 

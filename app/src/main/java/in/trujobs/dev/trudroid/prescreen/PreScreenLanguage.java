@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +27,6 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.LanguageKnownObject;
@@ -40,6 +40,8 @@ public class PreScreenLanguage extends Fragment{
 
     public boolean isFinalFragment = false;
     public Long jobPostId;
+    private int totalCount;
+    private int rank;
 
     private AsyncTask<UpdateCandidateLanguageRequest, Void, GenericResponse> mUpdateLanguageAsyncTask;
 
@@ -74,21 +76,50 @@ public class PreScreenLanguage extends Fragment{
 
             isFinalFragment = bundle.getBoolean("isFinalFragment");
             jobPostId = bundle.getLong("jobPostId");
+            rank = bundle.getInt("rank");
+            totalCount = bundle.getInt("totalCount");
+
+            String preScreenCompanyName = bundle.getString("companyName");
+            String preScreenJobTitle = bundle.getString("jobTitle");
+
+            TextView companyName = (TextView) view.findViewById(R.id.language_company_title);
+            TextView jobTitle = (TextView) view.findViewById(R.id.language_job_title);
+            companyName.setText(preScreenCompanyName);
+            jobTitle.setText(preScreenJobTitle);
+
+            LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
+            for(int i= 1; i<=totalCount; i++){
+                if(i == rank){
+                    ImageView progressDot = new ImageView(getContext());
+                    progressDot.setBackgroundResource(R.drawable.circle_small);
+                    progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                    lp.setMargins(5,25,5,25);
+                    progressDot.setLayoutParams(lp);
+                    progressLayout.addView(progressDot);
+                }
+                else{
+                    ImageView progressDot = new ImageView(getContext());
+                    progressDot.setBackgroundResource(R.drawable.circle_small);
+                    progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                    lp.setMargins(5,25,5,25);
+                    progressDot.setLayoutParams(lp);
+                    progressLayout.addView(progressDot);
+                }
+            }
 
             if(preScreenLanguageObject.isInitialized() && !preScreenLanguageObject.getIsMatching() ) {
-                getAllLanguages(preScreenLanguageObject.getJobPostLanguageList());
+                initLanguages(preScreenLanguageObject.getJobPostLanguageList());
 
                 Button saveLanguageDetail = (Button) view.findViewById(R.id.save_language_btn);
                 saveLanguageDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         UpdateCandidateLanguageRequest.Builder languageBuilder = UpdateCandidateLanguageRequest.newBuilder();
-                        boolean check = true;
                         if(candidateLanguageKnown.size() < 1){
-                            check = false;
-                            showDialog("Please select at least one language that you know");
-                        }
-                        if(check) {
+                            PreScreenActivity.showRequiredFragment(getActivity());
+                        } else {
                             //Track this action
                             ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_LANGUAGE_PRESCREEN, Constants.GA_ACTION_SAVE_LANGUAGE_PRESCREEN);
 
@@ -106,14 +137,11 @@ public class PreScreenLanguage extends Fragment{
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
-        if(preScreenLanguageObject != null) {
-            Tlog.i("language list size" + preScreenLanguageObject.getJobPostLanguageList().size());
-        }
         return view;
     }
 
 
-    public void getAllLanguages(List<LanguageObject> languageObjectList) {
+    public void initLanguages(List<LanguageObject> languageObjectList) {
         for(final LanguageObject languageObject : languageObjectList){
             LayoutInflater inflater = null;
             inflater = (LayoutInflater) getActivity().getApplicationContext()

@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LOCALITY;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_MAX_AGE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_WORK_SHIFT;
 import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.otherPropertyIdStack;
+import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.totalCountFragment;
 
 public class PreScreenOthers extends Fragment {
     View view;
@@ -88,6 +90,8 @@ public class PreScreenOthers extends Fragment {
     public String preScreenJobRoleTitle;
     public Long jobPostId;
     public boolean isFinalFragment = false;
+    private int totalCount;
+    private int rank;
 
     final List<Integer> candidateAssetIdList = new ArrayList<>();
 
@@ -147,6 +151,38 @@ public class PreScreenOthers extends Fragment {
         collapsingToolbarLayout.setTitle("Important Details");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
+        String preScreenCompanyName = getArguments().getString("companyName");
+        String preScreenJobTitle = getArguments().getString("jobTitle");
+
+        TextView companyName = (TextView) view.findViewById(R.id.other_company_title);
+        TextView jobTitle = (TextView) view.findViewById(R.id.other_job_title);
+        companyName.setText(preScreenCompanyName);
+        jobTitle.setText(preScreenJobTitle);
+        rank = bundle.getInt("rank");
+        totalCount = bundle.getInt("totalCount");
+
+        LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
+        for(int i = 1; i<=totalCount; i++){
+            if(i == rank){
+                ImageView progressDot = new ImageView(getContext());
+                progressDot.setBackgroundResource(R.drawable.circle_small);
+                progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                lp.setMargins(5,25,5,25);
+                progressDot.setLayoutParams(lp);
+                progressLayout.addView(progressDot);
+            }
+            else{
+                ImageView progressDot = new ImageView(getContext());
+                progressDot.setBackgroundResource(R.drawable.circle_small);
+                progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                lp.setMargins(5,25,5,25);
+                progressDot.setLayoutParams(lp);
+                progressLayout.addView(progressDot);
+            }
+        }
+
         pd = CustomProgressDialog.get(getActivity());
 
         remainingPropIdList = new ArrayList<>();
@@ -202,12 +238,13 @@ public class PreScreenOthers extends Fragment {
         isFinalFragment =  bundle.getBoolean("isFinalFragment");
 
 
+
         if(remainingPropIdList.contains(PROPERTY_TYPE_ASSET_OWNED)) {
             assetListView.setVisibility(view.VISIBLE);
             // render assets
             try {
                 preScreenAssetObject = PreScreenAssetObject.parseFrom(bundle.getByteArray("asset"));
-                getAllAsset(preScreenAssetObject.getJobPostAssetList());
+                initAsset(preScreenAssetObject.getJobPostAssetList());
 
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -218,7 +255,7 @@ public class PreScreenOthers extends Fragment {
         saveBasicProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean check = true;
+                boolean isValidationPassed = true;
 
                 int year, ageDiff = 0, minAgeDiff = 0;
                 if(candidateDob.getText().toString().length() > 0){
@@ -233,26 +270,26 @@ public class PreScreenOthers extends Fragment {
                 }
 
                 if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && candidateDob.getText().toString().trim().isEmpty()){
-                    check = false;
+                    isValidationPassed = false;
                     candidateDob.setError("Select date of birth");
                     candidateDob.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(candidateDob));
                     showDialog("Please enter your Date of Birth");
                 } else if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE) && (ageDiff < 0 || minAgeDiff > 0)){
-                    check = false;
+                    isValidationPassed = false;
                     candidateDob.setError("Select valid date of birth (min: 18 yrs, max: 80 yrs)");
                     candidateDob.addTextChangedListener(new PreScreenOthers.GenericTextWatcher(candidateDob));
                     showDialog("Please provide a valid date of birth (min: 18 yrs, max: 80 yrs  )");
                 } else if(remainingPropIdList.contains(PROPERTY_TYPE_GENDER) && genderValue < 0){
-                    check = false;
+                    isValidationPassed = false;
                     genderBtnLayout.setBackgroundResource(R.drawable.border);
                     showDialog("Please provide your gender");
                 } else if(remainingPropIdList.contains(PROPERTY_TYPE_WORK_SHIFT)  && shiftValue!= null && shiftValue < 1 ){
-                    check = false;
+                    isValidationPassed = false;
                     showDialog("Please provide your preferred Time Shift");
                     shiftLayout.setBackgroundResource(R.drawable.border);
                 }
 
-                if(check) {
+                if(isValidationPassed) {
                     //Track this action
                     ((PreScreenActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_OTHER_DETAIL_PRESCREEN, Constants.GA_ACTION_SAVE_OTHER_DETAIL_PRESCREEN);
 
@@ -285,11 +322,10 @@ public class PreScreenOthers extends Fragment {
             otherPropertyIdStack.push(PreScreenActivity.propertyIdStack.pop());
         }
 
-        Tlog.i("remaining ids, that needed to be shown in one fragment: ");
         return view;
     }
 
-    private void getAllAsset(List<AssetObject> jobPostAssetList) {
+    private void initAsset(List<AssetObject> jobPostAssetList) {
         for(AssetObject assetObject : jobPostAssetList){
             LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -489,7 +525,6 @@ public class PreScreenOthers extends Fragment {
                 Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                         Toast.LENGTH_LONG).show();
             } else {
-                Tlog.i("status: " + response.getStatus());
                 if(response.getStatus() == GenericResponse.Status.SUCCESS) {
                     PreScreenActivity.showRequiredFragment(getActivity());
                     return;
