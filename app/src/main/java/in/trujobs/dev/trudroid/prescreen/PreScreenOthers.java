@@ -46,7 +46,6 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -203,6 +202,8 @@ public class PreScreenOthers extends Fragment {
 
 
         if(remainingPropIdList.contains(PROPERTY_TYPE_ASSET_OWNED)) {
+            LinearLayout assetLayout = (LinearLayout) view.findViewById(R.id.asset_view);
+            assetLayout.setVisibility(view.VISIBLE);
             assetListView.setVisibility(view.VISIBLE);
             // render assets
             try {
@@ -293,6 +294,7 @@ public class PreScreenOthers extends Fragment {
             LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View mLinearView = inflater.inflate(R.layout.pre_screen_asset_item, null);
+
             TextView assetTitle = (TextView) mLinearView
                     .findViewById(R.id.asset_title);
             assetTitle.setText(assetObject.getAssetTitle());

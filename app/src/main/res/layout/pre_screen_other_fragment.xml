@@ -39,7 +39,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Basic Profile" />
+                app:title="Job Application Form" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -64,6 +64,25 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/experience_profile"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Your Profile Details ?"
+                    android:textSize="18dp"/>
+
+            </LinearLayout>
 
             <include layout="@layout/pre_screen_dob" />
 
@@ -72,11 +91,24 @@
             <include layout="@layout/pre_screen_timeshift_pref" />
 
             <LinearLayout
-                android:id="@+id/ps_asset_list_view"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:id="@+id/asset_view"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="Do You Own Any of the Folowwing ?"/>
+                <LinearLayout
+                    android:id="@+id/ps_asset_list_view"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
 
             <include layout="@layout/pre_screen_home_locality" />
 

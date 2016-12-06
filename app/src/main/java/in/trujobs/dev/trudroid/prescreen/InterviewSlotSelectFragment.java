@@ -28,6 +28,7 @@ import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.InterviewUtil;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -176,8 +177,9 @@ public class InterviewSlotSelectFragment extends Fragment {
                 saveInterviewSlot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(interviewSlot.getSelectedItemPosition() < 1){
+                        if(interviewSlot.getSelectedItemPosition() < 1) {
                             showDialog("No Interview slot selected. Please select an Interview Slot.");
+                            Tlog.i("seleceted slot " + interviewSlot.getSelectedItemPosition());
                         } else {
                             int slotTimeId = interviewSlotIdArray[interviewSlot.getSelectedItemPosition()];
                             Date slotDate = interviewSlotDateArray[interviewSlot.getSelectedItemPosition()];
@@ -225,6 +227,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     // show successfully applied message and redirect to search screen
                     showDialog("Interview Scheduled Successfully." +
                             "You can track your applications from 'My Jobs' option from menu");
+                    redirectToSearch(getActivity());
                 } else {
                     showDialog("Something went wrong. Please try again.");
                 }
@@ -239,7 +242,6 @@ public class InterviewSlotSelectFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        redirectToSearch(getActivity());
                     }
                 });
         alertDialog.show();

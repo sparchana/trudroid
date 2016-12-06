@@ -28,7 +28,7 @@ public class Validator {
     }
 
     public static boolean validateDL(String dlNumber) {
-        if (dlNumber == null) {
+        if (dlNumber == null || dlNumber.trim().isEmpty()) {
             return false;
         }
         dlNumber = dlNumber.replaceAll("[^a-zA-Z0-9]", "");
@@ -69,7 +69,7 @@ public class Validator {
     }
 
     public static boolean validatePASSPORT(String passPort) {
-        if (passPort == null) {
+        if (passPort == null || passPort.trim().isEmpty()) {
             return false;
         }
         passPort = passPort.replaceAll("[^a-zA-Z0-9]", "");
@@ -96,7 +96,7 @@ public class Validator {
     }
 
     public static boolean validatePAN(String panNumber) {
-        if(panNumber == null) {
+        if(panNumber == null && panNumber.trim().isEmpty()) {
             return false;
         }
 
@@ -111,7 +111,7 @@ public class Validator {
     }
 
     public static boolean validateAadhaar(String aadharNumber) {
-        if(aadharNumber == null) {
+        if(aadharNumber == null || aadharNumber.trim().isEmpty()) {
             return false;
         }
         Pattern aadharPattern = Pattern.compile("\\d{12}");

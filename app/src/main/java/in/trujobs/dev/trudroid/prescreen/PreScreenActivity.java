@@ -193,7 +193,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
 
         Integer propId = null;
         if(propertyIdStack.isEmpty()){
-            Tlog.e("Property Id Queue empty, trigger InterviewFragment");
+            Tlog.e("Property Id Stack empty, trigger InterviewFragment");
             PreScreenActivity.triggerInterviewFragment(activity,
                     preScreenPopulateResponse.getPreScreenCompanyName(),
                     preScreenPopulateResponse.getPreScreenJobRoleTitle(),

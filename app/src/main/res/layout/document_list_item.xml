@@ -23,8 +23,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"
+                android:orientation="vertical"
                 android:weightSum="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/idproof_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.66"
+                        android:inputType="textCapCharacters"
+                        android:singleLine="true"
+                        android:textColor="@color/boxOption"
+                        android:textSize="@dimen/Edit_Text_Size" />
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -42,7 +57,7 @@
                         android:singleLine="true"
                         android:textColor="@drawable/edit_text_selector"
                         android:textColorHint="@color/back_grey_dark"
-                        android:textSize="@dimen/Edit_Text_Size" />
+                        android:textSize="@dimen/main_size" />
 
                 </LinearLayout>
             </LinearLayout>

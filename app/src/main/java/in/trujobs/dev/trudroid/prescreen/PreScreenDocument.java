@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -133,8 +134,10 @@ public class PreScreenDocument extends Fragment {
 
             final CheckBox documentCheckbox = (CheckBox) mLinearView.findViewById(R.id.idproof_checkbox);
             final EditText documentValue = (EditText) mLinearView.findViewById(R.id.idproof_value);
+            final TextView documentLabel = (TextView) mLinearView.findViewById(R.id.idproof_label);
             documentCheckbox.setId(idProofObject.getIdProofId());
-            documentValue.setHint(idProofObject.getIdProofName());
+            documentValue.setHint("Enter "+idProofObject.getIdProofName() +" number here");
+            documentLabel.setText(idProofObject.getIdProofName());
 
             documentValue.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -145,6 +148,7 @@ public class PreScreenDocument extends Fragment {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     IdProofObjectWithNumber.Builder document = IdProofObjectWithNumber.newBuilder();
+                    documentCheckbox.setChecked(true);
                     if(documentCheckbox.isChecked()){
                         IdProofObject.Builder idProof = IdProofObject.newBuilder();
                         idProof.setIdProofId(documentCheckbox.getId());
@@ -256,6 +260,13 @@ public class PreScreenDocument extends Fragment {
                     showDialog("Please provide a valid PAN card Number");
                 }
                 return flag;
+            default:
+                // for other card info
+                if(value.trim().isEmpty()) {
+                    showDialog("Please provide document number for all selected proofs.");
+                } else {
+                    return true;
+                }
         }
         return false;
     }
