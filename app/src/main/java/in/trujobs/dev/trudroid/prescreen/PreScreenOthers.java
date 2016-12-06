@@ -154,33 +154,25 @@ public class PreScreenOthers extends Fragment {
         String preScreenCompanyName = getArguments().getString("companyName");
         String preScreenJobTitle = getArguments().getString("jobTitle");
 
-        TextView companyName = (TextView) view.findViewById(R.id.other_company_title);
-        TextView jobTitle = (TextView) view.findViewById(R.id.other_job_title);
-        companyName.setText(preScreenCompanyName);
-        jobTitle.setText(preScreenJobTitle);
+        TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
+        headingApplicationForm.setText("Application form for "+preScreenJobTitle+" at "+preScreenCompanyName);
+
         rank = bundle.getInt("rank");
         totalCount = bundle.getInt("totalCount");
 
         LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
-        for(int i = 1; i<=totalCount; i++){
-            if(i == rank){
-                ImageView progressDot = new ImageView(getContext());
-                progressDot.setBackgroundResource(R.drawable.circle_small);
-                progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
-                lp.setMargins(5,25,5,25);
-                progressDot.setLayoutParams(lp);
-                progressLayout.addView(progressDot);
-            }
-            else{
-                ImageView progressDot = new ImageView(getContext());
-                progressDot.setBackgroundResource(R.drawable.circle_small);
+        for(int i= 1; i<=totalCount; i++){
+            ImageView progressDot = new ImageView(getContext());
+            progressDot.setBackgroundResource(R.drawable.circle_small);
+            if(i == rank) {
+                progressDot.setLayoutParams(new LinearLayout.LayoutParams(25, 25));
+            }else {
                 progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
-                lp.setMargins(5,25,5,25);
-                progressDot.setLayoutParams(lp);
-                progressLayout.addView(progressDot);
             }
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+            lp.setMargins(5,35,5,35);
+            progressDot.setLayoutParams(lp);
+            progressLayout.addView(progressDot);
         }
 
         pd = CustomProgressDialog.get(getActivity());

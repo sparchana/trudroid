@@ -40,6 +40,21 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:title="Interview Selection" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="60dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/headingApplicationForm"
+                    android:text="Application form for Jobrole at Company"
+                    android:textSize="14dp"/>
+
+            </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -82,38 +97,6 @@
                     android:text="Select Interview Slot"
                     android:textSize="18dp"/>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text="You are applying for "
-                    android:textSize="11dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:id="@+id/interview_job_title"
-                    android:text=" Bussiness Development"
-                    android:textSize="14dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text=" at "
-                    android:textSize="14dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:id="@+id/interview_company_title"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text=" TruJobs.in"
-                    android:textSize="14dp"/>
-            </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="fill_parent"

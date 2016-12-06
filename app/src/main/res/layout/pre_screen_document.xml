@@ -58,27 +58,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Application form for "
-                            android:textSize="12dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/document_job_title"
-                            android:textStyle="bold"
-                            android:text=" Bussiness Development"
-                            android:textSize="12dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" at "
-                            android:textSize="12dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:id="@+id/document_company_title"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:text=" TruJobs.in"
-                            android:textSize="12dp"/>
+                            android:id="@+id/headingApplicationForm"
+                            android:text="Application form for Jobrole at Company"
+                            android:textSize="14dp"/>
+
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
