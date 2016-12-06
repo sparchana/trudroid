@@ -35,7 +35,7 @@ public class CandidateProfileActivity extends TruJobsBaseActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             Intent intent = new Intent(CandidateProfileActivity.this, SearchJobsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);

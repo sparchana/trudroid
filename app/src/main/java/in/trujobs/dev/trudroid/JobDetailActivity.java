@@ -342,8 +342,6 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     otherJobTextView.setVisibility(View.GONE);
                 }
 
-
-
                 //setting company tab info
                 //setting logo
                 if(getJobPostDetailsResponse.getCompany().getCompanyLogo() != null || getJobPostDetailsResponse.getCompany().getCompanyLogo() != ""){
@@ -497,5 +495,4 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

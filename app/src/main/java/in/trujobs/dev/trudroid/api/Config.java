@@ -7,12 +7,12 @@ public class Config {
     /**
      * AWS prod-like-test-server for all trujobs-dev requirements is hosted @ 52.42.8.205:80
      */
-   public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
+//   public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
     /**
      * replace ip below with your local ip for development
      * and uncomment the line, also comment out aws prod-like-test-server ip above
      */
-//    public static final String BASE_HTTP_URL = "http://192.168.0.108:9000";
+    public static final String BASE_HTTP_URL = "http://192.168.0.197:9000";
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
@@ -38,6 +38,18 @@ public class Config {
     public static final String URL_CANDIDATE_STATUS_SPECIFIC_ALERT = BASE_HTTP_URL + "/mFetchCandidateAlert";
     public static final String URL_JOB_SEARCH = BASE_HTTP_URL + "/mSearchJobs";
     public static final String URL_GET_LOCALITY_FOR_LATLNG = BASE_HTTP_URL + "/mGetLocalityForLatLngOrPlaceId";
+
+    // prescreen urls
+    public static final String URL_GET_JOB_POST_VS_CANDIDATE = BASE_HTTP_URL + "/mGetJobPostVsCandidate";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_DOCUMENT = BASE_HTTP_URL + "/mUpdateCandidateDocument";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_LANGUAGE = BASE_HTTP_URL + "/mUpdateCandidateLanguage";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_EXPERIENCE = BASE_HTTP_URL + "/mUpdateCandidateExperience";
+    public static final String URL_UPDATE_CANDIDATE_PRE_SCREEN_OTHERS = BASE_HTTP_URL + "/mUpdateCandidateOther";
+
+    // interview details
+    public static final String URL_UPDATE_CANDIDATE_INTERVIEW_DETAIL = BASE_HTTP_URL + "/mUpdateCandidateInterviewDetail";
+    public static final String URL_UPDATE_GET_INTERVIEW_SLOTS = BASE_HTTP_URL + "/mGetInterviewSlots";
+    public static final String URL_CHECK_INTERVIEW_SLOT_AVALABILITY = BASE_HTTP_URL + "/mCheckInterviewSlotAvailability";
     public static final String URL_UPDATE_CANDIDATE_TOKEN = BASE_HTTP_URL + "/mUpdateCandidateToken";
     public static final String URL_LOGOUT_CANDIDATE = BASE_HTTP_URL + "/mCandidateLogout";
 }

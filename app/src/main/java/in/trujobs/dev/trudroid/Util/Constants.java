@@ -79,6 +79,7 @@ public class Constants {
     public static final String GA_SCREEN_NAME_DRAWER = "DRAWER";
     public static final String GA_ACTION_EXIT = "EXIT";
     public static final String GA_ACTION_TRIED_EXIT = "TRIED_EXIT";
+    public static final String GA_ACTION_TRIED_INTERVIEW_EXIT = "TRIED_INTERVIEW_SLOT_SELECTION_EXIT";
     public static final String GA_ACTION_JOB_FILTER = "JOB_FILTER";
     public static final String GA_ACTION_SEARCH_BY_JOB_ROLE = "SEARCH_BY_JOB_ROLE";
     public static final String GA_ACTION_SELECTION_IN_SEARCH_BY_JOB_ROLE = "SELECTION_IN_SEARCH_BY_JOB_ROLE";
@@ -114,5 +115,32 @@ public class Constants {
     public static final String GA_ACTION_APPLY_FILTER = "APPLY_FILTER";
     public static final String GA_ACTION_CLEAR_FILTER = "CLEAR_FILTER";
     public static final String GA_ACTION_CLOSE_FILTER = "CLOSE_FILTER";
+    public static final String GA_INTERVIEW_EXIT = "INTERVIEW_EXIT";
+
+
+    public static final String GA_SCREEN_NAME_EDIT_DOCUMENT_PRESCREEN = "EDIT_DOCUMENT_PRESCREEN";
+    public static final String GA_ACTION_SAVE_DOCUMENT_PRESCREEN = "SAVE_DOCUMENT_PRESCREEN";
+    public static final String GA_SCREEN_NAME_EDIT_LANGUAGE_PRESCREEN = "EDIT_LANGUAGE_PRESCREEN";
+    public static final String GA_ACTION_SAVE_LANGUAGE_PRESCREEN = "SAVE_LANGUAGE_PRESCREEN";
+    public static final String GA_SCREEN_NAME_EDIT_EXPERIENCE_PRESCREEN = "EDIT_EXPERIENCE_PRESCREEN";
+    public static final String GA_ACTION_SAVE_EXPERIENCE_PRESCREEN = "SAVE_EXPERIENCE_PRESCREEN";
+    public static final String GA_SCREEN_NAME_EDIT_EDUCATION_PRESCREEN = "EDIT_EDUCATION_PRESCREEN";
+    public static final String GA_ACTION_SAVE_EDUCATION_PRESCREEN = "SAVE_EDUCATION_PRESCREEN";
+    public static final String GA_SCREEN_NAME_EDIT_OTHER_DETAIL_PRESCREEN = "EDIT_OTHER_DETAIL_PRESCREEN";
+    public static final String GA_ACTION_SAVE_OTHER_DETAIL_PRESCREEN = "SAVE_OTHER_DETAIL_PRESCREEN";
+    public static final String GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT = "SELECT_INTERVIEW_SLOT";
+
+
+    /* ---  Pre Screening Key ---- */
+    public static final int PROPERTY_TYPE_DOCUMENT = 0;
+    public static final int PROPERTY_TYPE_LANGUAGE = 1;
+    public static final int PROPERTY_TYPE_ASSET_OWNED = 2;
+    public static final int PROPERTY_TYPE_MAX_AGE = 3;
+    public static final int PROPERTY_TYPE_EXPERIENCE = 4;
+    public static final int PROPERTY_TYPE_EDUCATION = 5;
+    public static final int PROPERTY_TYPE_GENDER = 6;
+    public static final int PROPERTY_TYPE_SALARY = 7;
+    public static final int PROPERTY_TYPE_LOCALITY = 8;
+    public static final int PROPERTY_TYPE_WORK_SHIFT = 9;
 }
 
