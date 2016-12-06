@@ -169,8 +169,8 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                     Prefs.defaultMyJobsTab.put(1);
                 } else if(rescheduledList.size() > 0){
                     Prefs.defaultMyJobsTab.put(0);
-                } else if(completedInterviewList.size() > 0){
-                    Prefs.defaultMyJobsTab.put(2);
+                } else if(confirmedTabList.size() > 0){
+                    Prefs.defaultMyJobsTab.put(1);
                 } else{
                     Prefs.defaultMyJobsTab.put(0);
                 }

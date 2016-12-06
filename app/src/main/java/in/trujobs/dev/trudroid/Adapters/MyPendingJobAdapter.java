@@ -23,6 +23,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
@@ -58,7 +59,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
     public class Holder
     {
         TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView,
-                mJobApplicationExperienceTextView, mLastUpdateTextView, mJobApplicationInterviewSchedule, mInterviewDate;
+                mJobApplicationExperienceTextView, mJobApplicationInterviewSchedule, mInterviewDate;
         LinearLayout rescheduledHeader, underReviewHeader, rejectedHeader, interviewDateView;
     }
 
@@ -125,6 +126,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE ||
                 jobApplicationObject.getCandidateInterviewStatus().getStatusId() == JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
 
+            reschedulePanel.setVisibility(View.GONE);
             if(position == rejectedStartIndex && rejectedStartIndex != -1){
                 holder.rejectedHeader.setVisibility(View.VISIBLE);
             }
@@ -134,6 +136,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorRed));
 
         } else {
+            reschedulePanel.setVisibility(View.GONE);
             if(position == underReviewStartIndex && underReviewStartIndex != -1){
                 holder.underReviewHeader.setVisibility(View.VISIBLE);
             }
@@ -168,49 +171,26 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         holder.mJobApplicationExperienceTextView = (TextView) rowView.findViewById(R.id.job_post_exp_text_view);
         holder.mJobApplicationExperienceTextView.setText(jobApplicationObject.getJobPostObject().getJobPostExperience().getExperienceType());
 
-
-        //last update
-        holder.mLastUpdateTextView = (TextView) rowView.findViewById(R.id.last_update_date);
-        Calendar lastUpdateCalendar = Calendar.getInstance();
-        lastUpdateCalendar.setTimeInMillis(jobApplicationObject.getCreationTimeMillis());
-        int mYear = lastUpdateCalendar.get(Calendar.YEAR);
-        int mMonth = lastUpdateCalendar.get(Calendar.MONTH) + 1;
-        int mDay = lastUpdateCalendar.get(Calendar.DAY_OF_MONTH);
-
-        String cDay = mDay + "";
-        String cMonth = (mMonth) + "";
-
-        if(mDay < 10){
-            cDay = "0" + mDay;
-        }
-        if(mMonth < 10){
-            cMonth = "0" + mMonth;
-        }
-
-        holder.mLastUpdateTextView.setText(cDay + "-" + cMonth + "-" + mYear);
-
         holder.mJobApplicationInterviewSchedule = (TextView) rowView.findViewById(R.id.interview_schedule_text_view);
         holder.mInterviewDate = (TextView) rowView.findViewById(R.id.interview_date);
 
         Calendar calendar = Calendar.getInstance();
         if(jobApplicationObject.getInterviewDateMillis() != 0){
             calendar.setTimeInMillis(jobApplicationObject.getInterviewDateMillis());
-            mYear = calendar.get(Calendar.YEAR);
-            mMonth = calendar.get(Calendar.MONTH) + 1;
-            mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            int mMonth = calendar.get(Calendar.MONTH) + 1;
+            int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            int mToday = calendar.get(Calendar.DAY_OF_WEEK);
 
-            cDay = mDay + "";
-            cMonth = (mMonth) + "";
+            String cDay = mDay + "";
 
             if(mDay < 10){
                 cDay = "0" + mDay;
             }
-            if(mMonth < 10){
-                cMonth = "0" + mMonth;
-            }
 
-            holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
-            holder.mInterviewDate.setText(cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
+            String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth);
+
+            holder.mJobApplicationInterviewSchedule.setText("Interview rescheduled to: " + finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
+            holder.mInterviewDate.setText(finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         } else{
             holder.mJobApplicationInterviewSchedule.setVisibility(View.GONE);
         }

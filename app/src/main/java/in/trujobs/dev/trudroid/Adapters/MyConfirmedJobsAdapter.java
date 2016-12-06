@@ -12,15 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -30,14 +27,12 @@ import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 import in.trujobs.proto.UpdateCandidateStatusRequest;
 import in.trujobs.proto.UpdateCandidateStatusResponse;
-import in.trujobs.proto.UpdateInterviewRequest;
-import in.trujobs.proto.UpdateInterviewResponse;
 
 /**
  * Created by batcoder1 on 8/8/16.
@@ -82,6 +77,8 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         pd = CustomProgressDialog.get(parent.getContext());
 
         LinearLayout candidateStatusPanel = (LinearLayout) rowView.findViewById(R.id.candidate_status_panel);
+        TextView selectStatusLabel = (TextView) rowView.findViewById(R.id.select_status_label);
+        selectStatusLabel.setVisibility(View.GONE);
 
         holder.todayInterviewHeader = (LinearLayout) rowView.findViewById(R.id.todays_interview_header);
         holder.upcomingInterviewHeader = (LinearLayout) rowView.findViewById(R.id.upcoming_interview_header);
@@ -114,9 +111,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         ImageView navigateIcon = (ImageView) rowView.findViewById(R.id.navigate_icon);
         TextView navigateText = (TextView) rowView.findViewById(R.id.navigate_text);
 
-        ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
-        TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
-
         LinearLayout statusOptionLayout = (LinearLayout) rowView.findViewById(R.id.status_options);
         LinearLayout notGoingLayout = (LinearLayout) rowView.findViewById(R.id.not_going);
         LinearLayout delayedLayout = (LinearLayout) rowView.findViewById(R.id.delayed);
@@ -124,10 +118,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         LinearLayout reachedLayout = (LinearLayout) rowView.findViewById(R.id.reached);
 
         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() >= ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jobApplicationObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){ //confirmed and/or has current status
-
-            applicationStatusIcon.setBackgroundResource(R.drawable.ic_correct);
-            applicationStatusText.setText("Confirmed");
-            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorGreen));
 
             if(jobApplicationObject.getInterviewLat() != 0.0){
                 navigateIcon.setVisibility(View.VISIBLE);
@@ -151,10 +141,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
             }
 
         } else{
-            applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
-            applicationStatusText.setText("Rescheduled");
-            applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
-
             navigateIcon.setVisibility(View.GONE);
             navigateText.setVisibility(View.GONE);
         }
@@ -181,8 +167,10 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
                 if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_REACHED){ //reached
                     statusOptionLayout.setVisibility(View.GONE);
+                    selectStatusLabel.setVisibility(View.GONE);
                 } else{
                     statusOptionLayout.setVisibility(View.VISIBLE);
+                    selectStatusLabel.setVisibility(View.VISIBLE);
 
                     if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
                         if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
@@ -265,21 +253,18 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         holder.mJobApplicationInterviewSchedule = (TextView) rowView.findViewById(R.id.interview_schedule_text_view);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(jobApplicationObject.getInterviewDateMillis());
-        int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mToday = calendar.get(Calendar.DAY_OF_WEEK);
 
         String cDay = mDay + "";
-        String cMonth = (mMonth) + "";
 
         if(mDay < 10){
             cDay = "0" + mDay;
         }
-        if(mMonth < 10){
-            cMonth = "0" + mMonth;
-        }
+        String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth);
 
-        holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
+        holder.mJobApplicationInterviewSchedule.setText("Interview: " + finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         return rowView;
     }
 

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_feedback"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="in.trujobs.dev.trudroid.FeedbackActivity">
+
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_rate_us"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate your Experience!"
+            android:textSize="18dp"/>
+
+        <LinearLayout
+            android:layout_marginTop="36dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/rating_1"
+                android:src="@drawable/ic_star_disable"/>
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_marginLeft="8dp"
+                android:layout_height="36dp"
+                android:id="@+id/rating_2"
+                android:src="@drawable/ic_star_disable"/>
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/rating_3"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_star_disable"/>
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/rating_4"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_star_disable"/>
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:id="@+id/rating_5"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_star_disable"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating_status"
+            android:text="Rating status"/>
+
+        <TextView
+            android:layout_marginTop="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reason_heading"
+            android:text="What went good"/>
+
+        <LinearLayout
+            android:id="@+id/feedback_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Button
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textSize="16dp"
+            android:layout_margin="4dp"
+            android:text="Submit"
+            android:id="@+id/submit_feedback"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/white"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+    </LinearLayout>
+
+</ScrollView>

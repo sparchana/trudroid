@@ -88,22 +88,37 @@ public class Util {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
+    public static String getMonth(int month) {
+        String returnMonth = "";
+        switch (month){
+            case 1: returnMonth = "Jan"; break;
+            case 2: returnMonth = "Feb"; break;
+            case 3: returnMonth = "Mar"; break;
+            case 4: returnMonth = "Apr"; break;
+            case 5: returnMonth = "May"; break;
+            case 6: returnMonth = "Jun"; break;
+            case 7: returnMonth = "Jul"; break;
+            case 8: returnMonth = "Aug"; break;
+            case 9: returnMonth = "Sep"; break;
+            case 0: returnMonth = "Oct"; break;
+            case 11: returnMonth = "Nov"; break;
+            case 12: returnMonth = "Dec"; break;
         }
-
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
+        return returnMonth;
     }
+
+    public static String getDay(int date) {
+        String returnDay = "";
+        switch (date){
+            case 1: returnDay = "Sun"; break;
+            case 2: returnDay = "Mon"; break;
+            case 3: returnDay = "Tue"; break;
+            case 4: returnDay = "Wed"; break;
+            case 5: returnDay = "Thu"; break;
+            case 6: returnDay = "Fri"; break;
+            case 7: returnDay = "Sat"; break;
+        }
+        return returnDay;
+    }
+
 }

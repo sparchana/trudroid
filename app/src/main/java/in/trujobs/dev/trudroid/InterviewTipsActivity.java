@@ -1,10 +1,9 @@
 package in.trujobs.dev.trudroid;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class InterviewTipsActivity extends AppCompatActivity {
+public class InterviewTipsActivity extends TruJobsBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
