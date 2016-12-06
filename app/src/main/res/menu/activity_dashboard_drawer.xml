@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/search"
+            android:title="Search" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/profile"
+            android:title="My profile" />
+
+        <item
+            android:id="@+id/nav_my_jobs"
+            android:icon="@drawable/jobs"
+            android:title="My Jobs" />
+        <item
+            android:id="@+id/nav_home_locality"
+            android:icon="@drawable/jobs"
+            android:title="Home Locality" />
+
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/exit"
+            android:title="Logout" />
+    </group>
+
+</menu>

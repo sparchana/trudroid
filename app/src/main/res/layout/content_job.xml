@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_grey"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SearchJobsActivity"
+    tools:showIn="@layout/app_bar_job">
+
+    <include layout="@layout/filter_panel" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/transparent"
+            android:id="@+id/jobs_list_view">
+        </ListView>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="360dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="48dp"
+        android:visibility="gone"
+        android:id="@+id/something_went_wrong_image"
+        android:src="@drawable/something_went_wrong"/>
+    <ImageView
+        android:layout_width="360dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="48dp"
+        android:visibility="gone"
+        android:id="@+id/no_jobs_image"
+        android:src="@drawable/no_job"/>
+</LinearLayout>

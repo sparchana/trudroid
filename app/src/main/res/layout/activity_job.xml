@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout_main_activity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
+
+    <include
+        layout="@layout/app_bar_job"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <FrameLayout
+        android:id="@+id/overlay_job_filter_fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_pane_main_activity"
+        android:layout_width="280dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="left"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/parallax">
+
+            <ImageView
+                android:layout_marginLeft="18dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/icon_male"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userName"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guest"
+                    android:id="@+id/userMobile"
+                    android:textSize="9dp"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_view_main_activity_list_view"
+            android:layout_width="280dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="left"
+            android:choiceMode="singleChoice"
+            android:clickable="true"
+            android:divider="@color/transparent"
+            android:dividerHeight="0dp"/>
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>

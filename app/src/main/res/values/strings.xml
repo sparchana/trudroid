@@ -1,3 +1,58 @@
 <resources>
-    <string name="app_name">Trudroid</string>
+    <string name="app_name">TruJobs</string>
+    <string name="skip_btn_text">Skip ></string>
+    <string name="join_now_btn_text">Sign Up</string>
+    <string name="login_btn_text">Login</string>
+    <string name="signup_btn_text">Sign Up</string>
+    <string name="help_text_login_mobile">Mobile Number</string>
+    <string name="help_text_login_password">Password</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_job"></string>
+    <string name="title_activity_home">Locality</string>
+
+    <string name="question_fresher_experienced">Are you a fresher or experienced candidate?</string>
+
+    <!-- Messages -->
+    <string name="service_not_available">Service Not Available</string>
+    <string name="invalid_lat_long_used">Invalid Lat Long used</string>
+    <string name="no_address_found">No Address Found for provided Lat/Lng</string>
+    <string name="no_location_data_provided">No location data provided</string>
+    <string name="address_found">Address Located</string>
+    <string name="no_geocoder_available">No geo coder available</string>
+
+    <string name="google_android_api_key" templateMergeStrategy="preserve">
+        AIzaSyD_X5WIQmcstjwPnDaUawx_W-eqF_Bjt8I
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    //slider
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Welcome to TruJobs!</string>
+    <string name="slide_1_desc">Your job search partner</string>
+
+    <string name="slide_2_title">Location based Jobs</string>
+    <string name="slide_2_desc">Easily search jobs around you or at a particular location!</string>
+
+    <string name="slide_3_title">Your Preference</string>
+    <string name="slide_3_desc">Find and apply to the jobs matching your requirements!</string>
+
+    <string name="slide_4_title">Attend interviews and get placed</string>
+    <string name="slide_4_desc">Find a job and earn upto 30,000!</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
+    // FB tracking
+    <string name="facebook_app_id">980050698772979</string>
 </resources>
