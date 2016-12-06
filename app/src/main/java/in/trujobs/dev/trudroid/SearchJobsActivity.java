@@ -390,6 +390,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
             mNavItems.add(new NavItem("Interview Tips", R.drawable.ic_idea));
+            mNavItems.add(new NavItem("Feedback", R.drawable.ic_rating));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 
             userNameTextView.setText(Prefs.firstName.get());
@@ -445,6 +446,12 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_INTERVIEW_TIPS, Constants.GA_ACTION_INTERVIEW_TIPS);
+                break;
+
+            case 7: openItem(FeedbackActivity.class);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_FEEDBACK, Constants.GA_ACTION_FEEDBACK);
                 break;
 
             default:
@@ -1238,6 +1245,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             return 5;
         else if(title.equals("Interview Tips"))
             return 6;
+        else if(title.equals("Feedback"))
+            return 7;
         else
             return -1;
     }

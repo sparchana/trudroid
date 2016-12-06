@@ -209,7 +209,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                 cMonth = "0" + mMonth;
             }
 
-            holder.mJobApplicationInterviewSchedule.setText("Interview: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
+            holder.mJobApplicationInterviewSchedule.setText("Interview rescheduled to: " + cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
             holder.mInterviewDate.setText(cDay + "-" + cMonth + "-" + mYear + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         } else{
             holder.mJobApplicationInterviewSchedule.setVisibility(View.GONE);

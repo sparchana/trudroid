@@ -295,6 +295,16 @@
                             </LinearLayout>
                         </LinearLayout>
 
+                        <TextView
+                            android:layout_marginLeft="6dp"
+                            android:textSize="11dp"
+                            android:textColor="@color/colorLightOrange"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Please select status from below"/>
+
                         <LinearLayout
                             android:id="@+id/status_options"
                             android:layout_width="match_parent"
