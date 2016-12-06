@@ -58,8 +58,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
 
         ImageView companyLogo = (ImageView) findViewById(R.id.company_logo);
 
-        ImageView callHotline = (ImageView) findViewById(R.id.call_hotline);
-        ImageView shareNow = (ImageView) findViewById(R.id.share_now);
+        LinearLayout callHotline = (LinearLayout) findViewById(R.id.call_hotline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,15 +101,6 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
             }
         });
 
-        shareNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, MessageConstants.REFER_MESSAGE_TEXT);
-                startActivity(Intent.createChooser(shareIntent, "Share using"));
-            }
-        });
         //candidate status options
         LinearLayout notGoingLayout = (LinearLayout) findViewById(R.id.not_going);
         LinearLayout delayedLayout = (LinearLayout) findViewById(R.id.delayed);
