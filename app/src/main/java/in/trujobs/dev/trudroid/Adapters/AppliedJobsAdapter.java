@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import in.trujobs.dev.trudroid.MyJobsCompletedFragmentTab;
 import in.trujobs.dev.trudroid.MyJobsConfirmedFragmentTab;
-import in.trujobs.dev.trudroid.MyJobsUnderReviewFragmentTab;
+import in.trujobs.dev.trudroid.MyPendingJobsFragmentTab;
 
 /**
  * Created by dodo on 25/11/16.
@@ -24,11 +24,11 @@ public class AppliedJobsAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new MyJobsConfirmedFragmentTab();
+                return new MyPendingJobsFragmentTab();
             case 1:
-                return new MyJobsCompletedFragmentTab();
+                return new MyJobsConfirmedFragmentTab();
             case 2:
-                return new MyJobsUnderReviewFragmentTab();
+                return new MyJobsCompletedFragmentTab();
             default:
                 return null;
         }

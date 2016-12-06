@@ -57,6 +57,7 @@ public class Constants {
     public static final String GA_ACTION_CANCEL_APPLY_TO_JOB = "CANCEL_APPLY_TO_JOB";
     public static final String GA_ACTION_SELECTED_JOB_LOCATION = "SELECTED_JOB_LOCATION";
     public static final String GA_SCREEN_NAME_SEARCH_JOBS = "SEARCH";
+    public static final String GA_SCREEN_NAME_INTERVIEW_TIPS = "INTERVIEW_TIPS";
     public static final String GA_ACTION_JOB_APPLIED_STATUS = "JOB_APPLIED_STATUS";
     public static final String GA_ACTION_SHOW_JOB_POST_DETAIL = "SHOW_JOB_POST_DETAIL";
     public static final String GA_SCREEN_NAME_JOB_PREFERENCE = "JOB_PREFERENCE";
@@ -89,6 +90,7 @@ public class Constants {
     public static final String GA_ACTION_OPEN_CANDIDATE_PROFILE = "CANDIDATE_PROFILE";
     public static final String GA_ACTION_OPEN_APPLIED_JOBS = "OPEN_APPLIED_JOBS";
     public static final String GA_ACTION_OPEN_REFER_FRIEND = "OPEN_REFER_FRIEND";
+    public static final String GA_ACTION_INTERVIEW_TIPS = "OPEN_INTERVIEW_TIPS";
     public static final String GA_ACTION_POST_LOGIN_APPLY_TO_JOBS = "POST_LOGIN_APPLY_TO_JOBS";
     public static final String GA_SCREEN_NAME_VIEW_FILTER = "VIEW_FILTER";
     public static final String GA_ACTION_SORT_BY_SALARY = "SORT_BY_SALARY";

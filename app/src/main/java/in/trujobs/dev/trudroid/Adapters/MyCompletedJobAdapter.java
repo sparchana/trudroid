@@ -1,19 +1,20 @@
-package in.trujobs.dev.trudroid;
+package in.trujobs.dev.trudroid.Adapters;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.JobApplicationDetailActivity;
+import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
 
@@ -23,15 +24,18 @@ import in.trujobs.proto.JobPostWorkFlowObject;
 
 public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
-    Activity ctx;
-    public MyCompletedJobAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList) {
+    private Activity ctx;
+    private int completedApplicationStartIndex;
+    public MyCompletedJobAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList, int completedApplicationStartIndex) {
         super(context, 0, jobApplicationObjectList);
         ctx = context;
+        this.completedApplicationStartIndex = completedApplicationStartIndex;
     }
 
     public class Holder
     {
         TextView mJobApplicationTitleTextView, mJobApplicationCompanyTextView, mJobApplicationSalaryTextView, mJobApplicationExperienceTextView, mInterviewResultTextView, mJobApplicationLocationTextView;
+        LinearLayout completedInterviewHeader;
     }
 
     @Override
@@ -46,6 +50,9 @@ public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
         ImageView applicationStatusIcon = (ImageView) rowView.findViewById(R.id.application_status_icon);
         TextView applicationStatusText = (TextView) rowView.findViewById(R.id.application_status);
 
+        holder.completedInterviewHeader = (LinearLayout) rowView.findViewById(R.id.completed_interview_header);
+        holder.completedInterviewHeader.setVisibility(View.GONE);
+
         android.support.v7.widget.CardView cardView = (android.support.v7.widget.CardView) rowView.findViewById(R.id.card_view);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +61,9 @@ public class MyCompletedJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
             }
         });
 
+        if(position == completedApplicationStartIndex && completedApplicationStartIndex != -1){
+            holder.completedInterviewHeader.setVisibility(View.VISIBLE);
+        }
         //set job Application title
         holder.mJobApplicationTitleTextView = (TextView) rowView.findViewById(R.id.job_post_title_text_view);
         holder.mJobApplicationTitleTextView.setText(jobApplicationObject.getJobPostObject().getJobPostTitle());

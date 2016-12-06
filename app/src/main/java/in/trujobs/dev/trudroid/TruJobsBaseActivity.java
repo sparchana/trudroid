@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import in.trujobs.dev.trudroid.Util.CheckNetworkStatus;
 import in.trujobs.dev.trudroid.Util.Tlog;
@@ -22,7 +24,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetworkStatus {
     private Toast mBaseToastLong;
     private Tracker mTracker;
-
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +96,12 @@ public class TruJobsBaseActivity extends AppCompatActivity implements CheckNetwo
             mBaseToastLong = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         }
         mBaseToastLong.show();
+    }
+
+    protected boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        return resultCode == ConnectionResult.SUCCESS;
     }
 
 }

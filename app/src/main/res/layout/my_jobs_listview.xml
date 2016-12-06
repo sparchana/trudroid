@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,6 +10,55 @@
     android:id="@+id/list_item_linear_layout"
     android:background="@color/back_grey"
     android:gravity="left">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/todays_interview_header"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="6dp"
+            android:textSize="12dp"
+            android:textColor="@color/white"
+            android:background="@color/colorGreen"
+            android:text="Today's Interview(s)"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/upcoming_interview_header"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="6dp"
+            android:textSize="12dp"
+            android:textColor="@color/white"
+            android:background="@color/colorGreen"
+            android:text="Upcoming Interview(s)"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/past_interview_header"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="6dp"
+            android:textSize="12dp"
+            android:textColor="@color/white"
+            android:background="@color/colorGreen"
+            android:text="Past Interview(s)"/>
+
+    </LinearLayout>
+
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -195,6 +244,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="4dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -210,67 +261,6 @@
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:id="@+id/reschedule_panel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="wrap_content">
-
-                            <LinearLayout
-                                android:id="@+id/accept_interview"
-                                android:layout_width="0dp"
-                                android:layout_weight="0.5"
-                                android:orientation="horizontal"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_width="24dp"
-                                    android:background="@drawable/ic_correct"
-                                    android:layout_height="24dp" />
-
-                                <TextView
-                                    android:layout_marginTop="12dp"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Accept"/>
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/reject_interview"
-                                android:layout_width="0dp"
-                                android:layout_weight="0.5"
-                                android:orientation="horizontal"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginLeft="4dp"
-                                    android:layout_width="24dp"
-                                    android:background="@drawable/ic_error"
-                                    android:layout_height="24dp" />
-
-                                <TextView
-                                    android:layout_marginTop="12dp"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Reject"/>
-
-                            </LinearLayout>
-                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -424,7 +414,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_alignParentTop="true"
-            android:layout_margin="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
             android:layout_alignRight="@+id/linearLayout"
             android:layout_alignEnd="@+id/linearLayout">
 
@@ -448,4 +439,4 @@
     </android.support.v7.widget.CardView>
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -50,6 +50,8 @@ import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
 import in.trujobs.proto.PreScreenPopulateProtoRequest;
 import in.trujobs.proto.PreScreenPopulateProtoResponse;
+import in.trujobs.proto.LogoutCandidateRequest;
+import in.trujobs.proto.LogoutCandidateResponse;
 import in.trujobs.proto.NotGoingReasonResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
@@ -68,6 +70,8 @@ import in.trujobs.proto.UpdateCandidateStatusRequest;
 import in.trujobs.proto.UpdateCandidateStatusResponse;
 import in.trujobs.proto.UpdateInterviewRequest;
 import in.trujobs.proto.UpdateInterviewResponse;
+import in.trujobs.proto.UpdateTokenRequest;
+import in.trujobs.proto.UpdateTokenResponse;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -655,6 +659,7 @@ public class HttpRequest {
         String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_PRE_SCREEN_DOCUMENT,
                 Base64.encodeToString(updateCandidateDocumentRequest.toByteArray(), Base64.DEFAULT));
 
+
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
         if (responseByteArray == null) {
             return null;
@@ -766,5 +771,39 @@ public class HttpRequest {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return response;
+    }
+
+    public static UpdateTokenResponse updateTokenRequest(UpdateTokenRequest updateTokenRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_TOKEN,
+                Base64.encodeToString(updateTokenRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateTokenResponse updateTokenResponse = null;
+        try {
+            updateTokenResponse = UpdateTokenResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateTokenResponse;
+    }
+
+    public static LogoutCandidateResponse logoutCandidate(LogoutCandidateRequest logoutCandidateRequest) {
+        String responseString = postToServer(Config.URL_LOGOUT_CANDIDATE,
+                Base64.encodeToString(logoutCandidateRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        LogoutCandidateResponse logoutCandidateResponse = null;
+        try {
+            logoutCandidateResponse = LogoutCandidateResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return logoutCandidateResponse;
     }
 }

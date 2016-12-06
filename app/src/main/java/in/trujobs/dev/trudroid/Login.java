@@ -14,6 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
+
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -25,10 +31,13 @@ import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.UpdateTokenRequest;
+import in.trujobs.proto.UpdateTokenResponse;
 
 public class Login extends TruJobsBaseActivity {
 
     private AsyncTask<LogInRequest, Void, LogInResponse> mAsyncTask;
+    private AsyncTask<UpdateTokenRequest, Void, UpdateTokenResponse> mUpdateTokenAsyncTask;
     EditText mMobile;
     EditText mPassword;
     ProgressDialog pd;
@@ -153,6 +162,7 @@ public class Login extends TruJobsBaseActivity {
 
             else if (logInResponse.getStatusValue() == ServerConstants.SUCCESS){
                 showToast("Log In Successful!");
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mPassword.getWindowToken(), 0);
 
@@ -176,29 +186,104 @@ public class Login extends TruJobsBaseActivity {
                 Prefs.candidateHomeLocalityName.put(logInResponse.getCandidateHomeLocalityName());
                 /* TODO find a better way to clear jobFilterbkp on login */
                 SearchJobsActivity.jobFilterRequestBkp = null;
-                Tlog.i("Login.java : "+logInResponse.getCandidatePrefJobRoleIdOne());
 
-                Intent intent;
-                Tlog.e(Prefs.candidateHomeLocalityStatus.get() + " ---====");
-                if(Prefs.candidateJobPrefStatus.get() == 0){
-                    intent = new Intent(Login.this, JobPreference.class);
-                } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
-                    intent = new Intent(Login.this, HomeLocality.class);
-                } else{
-                    intent = new Intent(Login.this, SearchJobsActivity.class);
+                Boolean proceedWithoutToken = false;
+                //Checking play service is available or not
+                int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+
+                //if play service is not available
+                if(ConnectionResult.SUCCESS != resultCode && !GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                    Toast.makeText(getApplicationContext(), "This device does not support for Google Play Service!", Toast.LENGTH_LONG).show();
+                } else {
+                    //Starting intent to register device and generating token
+                    FirebaseInstanceId.getInstance().getToken();
+                    if(FirebaseInstanceId.getInstance().getToken() != null){
+                        proceedWithoutToken = true;
+                        Tlog.e("New token: " + FirebaseInstanceId.getInstance().getToken());
+
+                        //saving in prefs
+                        Prefs.fcmToken.put(FirebaseInstanceId.getInstance().getToken());
+
+                        //update candidate token
+                        UpdateTokenRequest.Builder requestBuilder = UpdateTokenRequest.newBuilder();
+                        requestBuilder.setCandidateId(String.valueOf(logInResponse.getCandidateId()));
+                        requestBuilder.setToken(Prefs.fcmToken.get());
+
+                        if (mUpdateTokenAsyncTask != null) {
+                            mUpdateTokenAsyncTask.cancel(true);
+                        }
+                        mUpdateTokenAsyncTask = new UpdateTokenRequestAsyncTask();
+                        mUpdateTokenAsyncTask.execute(requestBuilder.build());
+                    } else{
+                        proceedWithoutToken = false;
+                    }
                 }
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                finish();
-            }
-            else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
+
+                if(!proceedWithoutToken){ //token was not registered. So continuing a normal flow
+                    Intent intent;
+                    if(Prefs.candidateJobPrefStatus.get() == 0){
+                        intent = new Intent(Login.this, JobPreference.class);
+                    } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                        intent = new Intent(Login.this, HomeLocality.class);
+                    } else{
+                        intent = new Intent(Login.this, SearchJobsActivity.class);
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+                    finish();
+                }
+
+            } else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 showToast(MessageConstants.INCORRECT_PASSWORD);
             }
 
             else {
                 showToast(MessageConstants.SOMETHING_WENT_WRONG);
             }
+        }
+    }
+
+
+    private class UpdateTokenRequestAsyncTask extends AsyncTask<UpdateTokenRequest,
+            Void, UpdateTokenResponse> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected UpdateTokenResponse doInBackground(UpdateTokenRequest... params) {
+            return HttpRequest.updateTokenRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(UpdateTokenResponse updateTokenResponse) {
+            super.onPostExecute(updateTokenResponse);
+            mUpdateTokenAsyncTask = null;
+            pd.cancel();
+            if(!Util.isConnectedToInternet(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                return;
+            } else if (updateTokenResponse == null) {
+                showToast(MessageConstants.FAILED_REQUEST);
+                Log.w("","Null signIn Response");
+                return;
+            }
+
+            Intent intent;
+            if(Prefs.candidateJobPrefStatus.get() == 0){
+                intent = new Intent(Login.this, JobPreference.class);
+            } else if(Prefs.candidateHomeLocalityStatus.get() == 0){
+                intent = new Intent(Login.this, HomeLocality.class);
+            } else{
+                intent = new Intent(Login.this, SearchJobsActivity.class);
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_up, R.anim.no_change);
+            finish();
         }
     }
 }
