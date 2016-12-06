@@ -92,6 +92,38 @@ public class PreScreenExperience extends Fragment{
         isFinalFragment = getArguments().getBoolean("isFinalFragment");
         jobPostId = getArguments().getLong("jobPostId");
 
+        String preScreenCompanyName = getArguments().getString("companyName");
+        String preScreenJobTitle = getArguments().getString("jobTitle");
+        int rank = getArguments().getInt("rank");
+        int totalCount = getArguments().getInt("totalCount");
+
+        TextView companyName = (TextView) view.findViewById(R.id.experience_company_title);
+        TextView jobTitle = (TextView) view.findViewById(R.id.experience_job_title);
+        companyName.setText(preScreenCompanyName);
+        jobTitle.setText(preScreenJobTitle);
+
+        LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
+        for(int i = 1; i<= totalCount; i++){
+            if(i == rank){
+                ImageView progressDot = new ImageView(getContext());
+                progressDot.setBackgroundResource(R.drawable.circle_small);
+                progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                lp.setMargins(5,25,5,25);
+                progressDot.setLayoutParams(lp);
+                progressLayout.addView(progressDot);
+            }
+            else{
+                ImageView progressDot = new ImageView(getContext());
+                progressDot.setBackgroundResource(R.drawable.circle_small);
+                progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                lp.setMargins(5,25,5,25);
+                progressDot.setLayoutParams(lp);
+                progressLayout.addView(progressDot);
+            }
+        }
+
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         collapsingToolbarLayout.setTitle("Experience Details");

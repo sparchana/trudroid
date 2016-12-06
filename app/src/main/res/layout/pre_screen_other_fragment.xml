@@ -41,6 +41,64 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:title="Job Application Form" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="60dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Application form for "
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/other_job_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" Bussiness Development"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" at "
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/other_company_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" TruJobs.in"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/progressCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="15dp">
+
+                </LinearLayout>
+
+            </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -64,6 +122,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,14 +132,14 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_margin="8dp"
-                    android:src="@drawable/experience_profile"/>
+                    android:src="@drawable/experience_profile" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:text="Your Profile Details ?"
-                    android:textSize="18dp"/>
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
@@ -91,23 +150,24 @@
             <include layout="@layout/pre_screen_timeshift_pref" />
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:id="@+id/asset_view"
-                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_height="match_parent">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:padding="5dp"
                     android:layout_height="wrap_content"
-                    android:text="Do You Own Any of the Folowwing ?"/>
+                    android:padding="5dp"
+                    android:text="Do You Own Any of the Folowwing ?" />
+
                 <LinearLayout
                     android:id="@+id/ps_asset_list_view"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <include layout="@layout/pre_screen_home_locality" />
