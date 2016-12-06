@@ -146,12 +146,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         @Override
         protected void onPostExecute(PreScreenPopulateProtoResponse preScreenPopulateResponse) {
             super.onPostExecute(preScreenPopulateResponse);
-            if(!preScreenPopulateResponse.getShouldShow()){
-                propertyIdStack.clear();
-                showRequiredFragment(((FragmentActivity) mContext));
-                return;
-            }
-            // check object for only which property id is available and at the same time object should be initialized and propertyId should match
 
             if(!Util.isConnectedToInternet(getApplicationContext())) {
                 Toast.makeText(getApplicationContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
@@ -162,7 +156,15 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 Tlog.w("Null Response");
                 return;
             }
+
+            // check object for only which property id is available and at the same time object should be initialized and propertyId should match
             globalPreScreenPopulateResponse = preScreenPopulateResponse;
+            if(!preScreenPopulateResponse.getShouldShow()){
+                propertyIdStack.clear();
+                showRequiredFragment(((FragmentActivity) mContext));
+                return;
+            }
+
             propertyIdStack = new Stack<>();
             propertyIdBackStack = new Stack<>();
 
