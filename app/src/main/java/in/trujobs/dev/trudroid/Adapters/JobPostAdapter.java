@@ -20,7 +20,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
-import in.trujobs.dev.trudroid.Helper.ApplyJobResponseBundle;
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -40,8 +39,6 @@ import in.trujobs.proto.JobPostObject;
  * Created by batcoder1 on 27/7/16.
  */
 public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
-
-    private ApplyJobResponseBundle applyJobResponseBundle;
 
     private AsyncTask<ApplyJobRequest, Void, ApplyJobResponse> mAsyncTask;
 
