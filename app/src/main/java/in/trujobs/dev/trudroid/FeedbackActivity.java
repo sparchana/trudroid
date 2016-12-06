@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -128,9 +129,9 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                     feedbackReasonObjectList.add(feedbackReasonObject);
                 }
 
-                ratingOne.setOnClickListener(new View.OnClickListener() {
+                ratingOne.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onTouch(View v, MotionEvent event) {
                         ratingOne.setBackgroundResource(R.drawable.ic_1_star);
                         ratingTwo.setBackgroundResource(R.drawable.ic_2_star_disable);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
@@ -145,12 +146,14 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         reasonHeading.setText("What went bad");
 
                         populateFeedbackReasons(1);
+
+                        return false;
                     }
                 });
 
-                ratingTwo.setOnClickListener(new View.OnClickListener() {
+                ratingTwo.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onTouch(View v, MotionEvent event) {
                         ratingOne.setBackgroundResource(R.drawable.ic_1_star);
                         ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
@@ -165,12 +168,14 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         reasonHeading.setText("What went bad");
 
                         populateFeedbackReasons(1);
+
+                        return false;
                     }
                 });
 
-                ratingThree.setOnClickListener(new View.OnClickListener() {
+                ratingThree.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onTouch(View v, MotionEvent event) {
                         ratingOne.setBackgroundResource(R.drawable.ic_1_star);
                         ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star);
@@ -185,12 +190,14 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         reasonHeading.setText("What went bad");
 
                         populateFeedbackReasons(2);
+
+                        return false;
                     }
                 });
 
-                ratingFour.setOnClickListener(new View.OnClickListener() {
+                ratingFour.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onTouch(View v, MotionEvent event) {
                         ratingOne.setBackgroundResource(R.drawable.ic_1_star);
                         ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star);
@@ -205,12 +212,14 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         reasonHeading.setText("What went Good");
 
                         populateFeedbackReasons(3);
+
+                        return false;
                     }
                 });
 
-                ratingFive.setOnClickListener(new View.OnClickListener() {
+                ratingFive.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onTouch(View v, MotionEvent event) {
                         ratingOne.setBackgroundResource(R.drawable.ic_1_star);
                         ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star);
@@ -225,6 +234,8 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                         reasonHeading.setText("What went Good");
 
                         populateFeedbackReasons(3);
+
+                        return false;
                     }
                 });
 
