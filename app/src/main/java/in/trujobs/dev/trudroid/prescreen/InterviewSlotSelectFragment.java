@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import in.trujobs.dev.trudroid.Adapters.SpinnerAdapter;
 import in.trujobs.dev.trudroid.R;
@@ -26,7 +26,6 @@ import in.trujobs.dev.trudroid.TruJobsBaseActivity;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
-import in.trujobs.dev.trudroid.Util.InterviewUtil;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
@@ -35,10 +34,9 @@ import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.GetInterviewSlotsRequest;
 import in.trujobs.proto.GetInterviewSlotsResponse;
+import in.trujobs.proto.InterviewDateTime;
 import in.trujobs.proto.UpdateCandidateInterviewDetailRequest;
 
-import static in.trujobs.dev.trudroid.Util.InterviewUtil.getDayVal;
-import static in.trujobs.dev.trudroid.Util.InterviewUtil.getMonthVal;
 import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.redirectToSearch;
 
 /**
@@ -112,7 +110,7 @@ public class InterviewSlotSelectFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(GetInterviewSlotsResponse response) {
+        protected void onPostExecute(final GetInterviewSlotsResponse response) {
             super.onPostExecute(response);
             if(!Util.isConnectedToInternet(getContext())) {
                 Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
@@ -125,45 +123,14 @@ public class InterviewSlotSelectFragment extends Fragment {
                 final Spinner interviewSlot = (Spinner) view.findViewById(R.id.interview_slot_select);
 
                 ArrayList<String> interviewSlotList = new ArrayList<>();
-                interviewSlotIdArray = new Integer[response.getInterviewSlotsList().size() * 7 + 1];
-                interviewSlotDateArray = new Date[response.getInterviewSlotsList().size() * 7 + 1];
 
-                // setting the following values run in parallel
                 interviewSlotList.add("Select Interview Slot");
-                interviewSlotIdArray[0] = -1;
-                interviewSlotDateArray[0] = null;
 
-                // get today's date
-                Calendar newCalendar = Calendar.getInstance();
-                newCalendar.get(Calendar.YEAR);
-                newCalendar.get(Calendar.MONTH);
-                newCalendar.get(Calendar.DAY_OF_MONTH);
-                Date today = newCalendar.getTime();
-
-                for(int i = 1, k = 2; k < 9; ++k) {
-
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(today);
-                    c.add(Calendar.DATE, k);
-                    Date future = c.getTime();
-
-                    for(int j = 0; j< response.getInterviewSlotsList().size(); ++j) {
-
-                        // in a day , create entry for each different time slot
-                        String interviewDays = response.getInterviewSlotsList().get(j).getInterviewDays();
-
-                        if (InterviewUtil.checkSlotAvailability(future, interviewDays)) {
-                            interviewSlotIdArray[i] = response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotId();
-                            interviewSlotDateArray[i] = future;
-                            String slotString = getDayVal(future.getDay())+ ", "
-                                    + future.getDate() + " " + getMonthVal((future.getMonth() + 1))
-                                    + " (" + response.getInterviewSlotsList().get(j).getInterviewTimeSlotObject().getSlotTitle() + ")" ;
-                            interviewSlotList.add(slotString);
-                            i++;
-                        }
-                    }
+                for(Map.Entry<String, InterviewDateTime> entry: response.getInterviewSlotsMap().entrySet()) {
+                    interviewSlotList.add(entry.getKey());
                 }
-                String[] interviewSlotArray;
+
+                final String[] interviewSlotArray;
                 //First Step: convert ArrayList to an Object array.
                 Object[] objDays = interviewSlotList.toArray();
 
@@ -181,14 +148,14 @@ public class InterviewSlotSelectFragment extends Fragment {
                             showDialog("No Interview slot selected. Please select an Interview Slot.", false);
                             Tlog.i("seleceted slot " + interviewSlot.getSelectedItemPosition());
                         } else {
-                            int slotTimeId = interviewSlotIdArray[interviewSlot.getSelectedItemPosition()];
-                            Date slotDate = interviewSlotDateArray[interviewSlot.getSelectedItemPosition()];
+                            int slotTimeId = response.getInterviewSlotsMap().get(interviewSlotArray[interviewSlot.getSelectedItemPosition()]).getInterviewTimeSlot().getSlotId();
+                            long slotDateInMills = response.getInterviewSlotsMap().get(interviewSlotArray[interviewSlot.getSelectedItemPosition()]).getInterviewDateMillis();
 
                             UpdateCandidateInterviewDetailRequest.Builder interviewDetails = UpdateCandidateInterviewDetailRequest.newBuilder();
                             interviewDetails.setJobPostId(preScreenJobPostId);
                             interviewDetails.setCandidateMobile(Prefs.candidateMobile.get());
                             // sending current date fix this
-                            interviewDetails.setScheduledInterviewDateInMills(slotDate.getTime());
+                            interviewDetails.setScheduledInterviewDateInMills(slotDateInMills);
                             interviewDetails.setTimeSlotId(slotTimeId);
 
                             updateCandidateInterviewDetailAsyncTask = new UpdateCandidateInterviewAsyncTask();

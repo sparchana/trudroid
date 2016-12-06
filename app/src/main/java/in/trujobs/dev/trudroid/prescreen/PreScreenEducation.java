@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -63,6 +65,7 @@ public class PreScreenEducation extends Fragment {
 
     private Long qualificationSelected = 0L, degreeSelected = 0L;
     private Integer qualificationStatus = -1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         view = inflater.inflate(R.layout.pre_screen_education, container, false);
@@ -88,6 +91,8 @@ public class PreScreenEducation extends Fragment {
 
         isFinalFragment = getArguments().getBoolean("isFinalFragment");
         jobPostId = getArguments().getLong("jobPostId");
+        int rank = getArguments().getInt("rank");
+        int totalCount = getArguments().getInt("totalCount");
 
 
         AsyncTask<Void, Void, GetCandidateEducationProfileStaticResponse> mAsyncTask = new GetEducationStaticAsyncTask();
@@ -98,6 +103,35 @@ public class PreScreenEducation extends Fragment {
 
         try {
             preScreenEducationObject = PreScreenEducationObject.parseFrom(bundle.getByteArray("education"));
+            String preScreenCompanyName = bundle.getString("companyName");
+            String preScreenJobTitle = bundle.getString("jobTitle");
+
+            TextView companyName = (TextView) view.findViewById(R.id.education_company_title);
+            TextView jobTitle = (TextView) view.findViewById(R.id.education_job_title);
+            companyName.setText(preScreenCompanyName);
+            jobTitle.setText(preScreenJobTitle);
+
+            LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
+            for(int i = 1; i<= totalCount; i++){
+                if(i == rank){
+                    ImageView progressDot = new ImageView(getContext());
+                    progressDot.setBackgroundResource(R.drawable.circle_small);
+                    progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                    lp.setMargins(5,25,5,25);
+                    progressDot.setLayoutParams(lp);
+                    progressLayout.addView(progressDot);
+                }
+                else{
+                    ImageView progressDot = new ImageView(getContext());
+                    progressDot.setBackgroundResource(R.drawable.circle_small);
+                    progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                    lp.setMargins(5,25,5,25);
+                    progressDot.setLayoutParams(lp);
+                    progressLayout.addView(progressDot);
+                }
+            }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }

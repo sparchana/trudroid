@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -73,6 +74,38 @@ public class PreScreenLanguage extends Fragment{
 
             isFinalFragment = bundle.getBoolean("isFinalFragment");
             jobPostId = bundle.getLong("jobPostId");
+            int rank = bundle.getInt("rank");
+            int totalCount = bundle.getInt("totalCount");
+
+            String preScreenCompanyName = bundle.getString("companyName");
+            String preScreenJobTitle = bundle.getString("jobTitle");
+
+            TextView companyName = (TextView) view.findViewById(R.id.language_company_title);
+            TextView jobTitle = (TextView) view.findViewById(R.id.language_job_title);
+            companyName.setText(preScreenCompanyName);
+            jobTitle.setText(preScreenJobTitle);
+
+            LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
+            for(int i = 1; i<= totalCount; i++){
+                if(i == rank){
+                    ImageView progressDot = new ImageView(getContext());
+                    progressDot.setBackgroundResource(R.drawable.circle_small);
+                    progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                    lp.setMargins(5,25,5,25);
+                    progressDot.setLayoutParams(lp);
+                    progressLayout.addView(progressDot);
+                }
+                else{
+                    ImageView progressDot = new ImageView(getContext());
+                    progressDot.setBackgroundResource(R.drawable.circle_small);
+                    progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+                    lp.setMargins(5,25,5,25);
+                    progressDot.setLayoutParams(lp);
+                    progressLayout.addView(progressDot);
+                }
+            }
 
             if(preScreenLanguageObject.isInitialized() && !preScreenLanguageObject.getIsMatching() ) {
                 initLanguages(preScreenLanguageObject.getJobPostLanguageList());
