@@ -39,7 +39,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Interview Selection" />
+                app:title="Schedule Your Interview" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
