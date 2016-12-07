@@ -15,25 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.JobDetailActivity;
 import in.trujobs.dev.trudroid.R;
-import in.trujobs.dev.trudroid.Trudroid;
-import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
-import in.trujobs.dev.trudroid.CustomDialog.ViewDialog;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
+import in.trujobs.dev.trudroid.interview.InterviewSlotSelectActivity;
+import in.trujobs.dev.trudroid.prescreen.PreScreenActivity;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.JobPostObject;
@@ -44,8 +41,10 @@ import in.trujobs.proto.JobPostObject;
 public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
 
     private AsyncTask<ApplyJobRequest, Void, ApplyJobResponse> mAsyncTask;
+
     int preScreenLocationIndex = 0;
     int otherJobsSectionIndex = -1;
+    private Long myJobPostId;
 
     public JobPostAdapter(Activity context, List<JobPostObject> jobPostList, int externalJobSectionIndex) {
         super(context, 0, jobPostList);
@@ -59,7 +58,6 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         ImageView mJobColor;
         LinearLayout otherJobsHeader;
     }
-
 
     public Button applyingJobButton;
     public Button applyingJobButtonDetail;
@@ -260,27 +258,22 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 public void onClick(DialogInterface dialog, int which) {
                     applyJob(jobPost.getJobPostId(), localityId[preScreenLocationIndex], null);
                     dialog.dismiss();
-
-
                 }
             });
             applyDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-
                 }
             });
             applyDialogBuilder.setSingleChoiceItems(localityList, 0, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     preScreenLocationIndex = which;
-
-
                 }
             });
             final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
             applyDialog.show();
-        } else{
+        } else {
             Toast.makeText(getContext(), "Please login/sign up to apply.",
                     Toast.LENGTH_LONG).show();
             Prefs.jobToApplyStatus.put(1);
@@ -290,9 +283,11 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
     }
 
     public void applyJob(Long jobPostId, Long localityId, Button detailPageApplyBtn){
-        if(detailPageApplyBtn != null){
+
+        if(detailPageApplyBtn != null) {
             applyingJobButtonDetail = detailPageApplyBtn;
         }
+        myJobPostId = jobPostId;
         ApplyJobRequest.Builder requestBuilder = ApplyJobRequest.newBuilder();
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setLocalityId(localityId);
@@ -301,8 +296,10 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
         }
+
         mAsyncTask = new ApplyJobAsyncTask();
         mAsyncTask.execute(requestBuilder.build());
+        return;
     }
 
     private class ApplyJobAsyncTask extends AsyncTask<ApplyJobRequest,
@@ -333,40 +330,58 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 Tlog.w("Null Response");
                 return;
             }
-            ViewDialog alert = new ViewDialog();
-            if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
-                alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
-                //setting "already applied" to apply button of the jobs list
-                try {
-                    applyingJobColor.setImageResource(R.drawable.orange_dot);
-                    applyingJobButton.setEnabled(false);
-                    applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                    applyingJobButton.setText("Applied");
-                } catch (Exception ignored){}
+            else {
+                ViewDialog alert = new ViewDialog();
+                if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
 
-                //setting "already applied" to job detail activity button
-                try{
-                    applyingJobButtonDetail.setText("Applied");
-                    applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                    applyingJobButtonDetail.setEnabled(false);
-                } catch (Exception ignored){}
-            } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
-                alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
-                try {
-                    applyingJobButton.setEnabled(false);
-                    applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                    applyingJobButton.setText("Applied");
-                } catch (Exception ignored){}
-            } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
-                alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
-            } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
-                alert.showDialog(getContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 0);
-            } else if(!Util.isConnectedToInternet(getContext())) {
-                Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
-            } else{
-                alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact our servers", "",  R.drawable.sent, 0);
+                    // after job application is success, show pre screen / interview
+                    if(applyJobResponse.getIsPreScreenAvailable()){
+                        Tlog.i("pre screen is available");
+                        PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId());
+                    } else if(applyJobResponse.getIsInterviewAvailable()) {
+                        Tlog.i("interview is available");
+                        InterviewSlotSelectActivity.start(getContext(),
+                                applyJobResponse.getJobPostId(),
+                                applyJobResponse.getCompanyName(),
+                                applyJobResponse.getJobRoleTitle(),
+                                applyJobResponse.getJobTitle());
+                    } else {
+                        alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
+                        //setting "already applied" to apply button of the jobs list
+                        try {
+                            applyingJobColor.setImageResource(R.drawable.orange_dot);
+                            applyingJobButton.setEnabled(false);
+                            applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                            applyingJobButton.setText("Applied");
+                        } catch (Exception ignored){}
+
+                        //setting "already applied" to job detail activity button
+                        try{
+                            applyingJobButtonDetail.setText("Applied");
+                            applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                            applyingJobButtonDetail.setEnabled(false);
+                        } catch (Exception ignored){}
+                    }
+
+                } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
+                    alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
+                    try {
+                        applyingJobButton.setEnabled(false);
+                        applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                        applyingJobButton.setText("Applied");
+                    } catch (Exception ignored){}
+                } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
+                    alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
+                } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
+                    alert.showDialog(getContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 0);
+                } else if(!Util.isConnectedToInternet(getContext())) {
+                    Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
+                } else{
+                    alert.showDialog(getContext(), "Something went wrong! Please try again", "Unable to contact our servers", "",  R.drawable.sent, 0);
+                }
             }
         }
     }
+
 
 }

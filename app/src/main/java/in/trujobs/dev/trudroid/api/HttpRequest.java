@@ -1,7 +1,6 @@
 package in.trujobs.dev.trudroid.api;
 
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -15,11 +14,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+
 import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.Tlog;
-import in.trujobs.dev.trudroid.Util.Util;
+import in.trujobs.proto.AddFeedbackRequest;
+import in.trujobs.proto.AddFeedbackResponse;
+import in.trujobs.proto.CandidateAppliedJobPostWorkFlowResponse;
 import in.trujobs.proto.CandidateAppliedJobsRequest;
-import in.trujobs.proto.CandidateAppliedJobsResponse;
+import in.trujobs.proto.FeedbackReasonResponse;
 import in.trujobs.proto.GetCandidateBasicProfileStaticResponse;
 import in.trujobs.proto.GetCandidateEducationProfileStaticResponse;
 import in.trujobs.proto.GetCandidateExperienceProfileStaticResponse;
@@ -32,13 +34,14 @@ import in.trujobs.proto.AddJobRoleResponse;
 import in.trujobs.proto.ApplyJobRequest;
 import in.trujobs.proto.ApplyJobResponse;
 import in.trujobs.proto.CandidateInformationRequest;
-import in.trujobs.proto.FetchCandidateAlertRequest;
-import in.trujobs.proto.FetchCandidateAlertResponse;
+import in.trujobs.proto.CheckInterviewSlotRequest;
+import in.trujobs.proto.CheckInterviewSlotResponse;
+import in.trujobs.proto.GenericResponse;
 import in.trujobs.proto.GetCandidateInformationResponse;
+import in.trujobs.proto.GetInterviewSlotsRequest;
+import in.trujobs.proto.GetInterviewSlotsResponse;
 import in.trujobs.proto.GetJobPostDetailsRequest;
 import in.trujobs.proto.GetJobPostDetailsResponse;
-import in.trujobs.proto.HomeLocalityRequest;
-import in.trujobs.proto.HomeLocalityResponse;
 import in.trujobs.proto.JobPostResponse;
 import in.trujobs.proto.JobRoleResponse;
 import in.trujobs.proto.JobSearchRequest;
@@ -46,14 +49,30 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.PreScreenPopulateProtoRequest;
+import in.trujobs.proto.PreScreenPopulateProtoResponse;
+import in.trujobs.proto.LogoutCandidateRequest;
+import in.trujobs.proto.LogoutCandidateResponse;
+import in.trujobs.proto.NotGoingReasonResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 import in.trujobs.proto.SignUpRequest;
 import in.trujobs.proto.SignUpResponse;
 import in.trujobs.proto.UpdateCandidateBasicProfileRequest;
 import in.trujobs.proto.UpdateCandidateBasicProfileResponse;
+import in.trujobs.proto.UpdateCandidateDocumentRequest;
 import in.trujobs.proto.UpdateCandidateEducationProfileRequest;
 import in.trujobs.proto.UpdateCandidateExperienceProfileRequest;
+import in.trujobs.proto.UpdateCandidateExperienceRequest;
+import in.trujobs.proto.UpdateCandidateInterviewDetailRequest;
+import in.trujobs.proto.UpdateCandidateLanguageRequest;
+import in.trujobs.proto.UpdateCandidateOtherRequest;
+import in.trujobs.proto.UpdateCandidateStatusRequest;
+import in.trujobs.proto.UpdateCandidateStatusResponse;
+import in.trujobs.proto.UpdateInterviewRequest;
+import in.trujobs.proto.UpdateInterviewResponse;
+import in.trujobs.proto.UpdateTokenRequest;
+import in.trujobs.proto.UpdateTokenResponse;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -146,6 +165,54 @@ public class HttpRequest {
 
         if (jobRoleResponse != null && jobRoleResponse.getJobRoleCount() != 0) {
             return jobRoleResponse;
+        } else {
+            return null;
+        }
+    }
+
+    public static NotGoingReasonResponse getAllNotGoingReason() {
+        NotGoingReasonResponse.Builder requestBuilder =
+                NotGoingReasonResponse.newBuilder();
+
+        String responseString = postToServer(Config.URL_ALL_NOT_GOING_REASON,
+                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        NotGoingReasonResponse notGoingReasonResponse = null;
+        try {
+            notGoingReasonResponse =
+                    notGoingReasonResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException ignored) {}
+
+        if (notGoingReasonResponse != null && notGoingReasonResponse.getReasonObjectCount() != 0) {
+            return notGoingReasonResponse;
+        } else {
+            return null;
+        }
+    }
+
+    public static FeedbackReasonResponse getAllFeedbackReason() {
+        FeedbackReasonResponse.Builder requestBuilder =
+                FeedbackReasonResponse.newBuilder();
+
+        String responseString = postToServer(Config.URL_ALL_FEEDBACK_REASON,
+                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        FeedbackReasonResponse feedbackReasonResponse = null;
+        try {
+            feedbackReasonResponse =
+                    feedbackReasonResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException ignored) {}
+
+        if (feedbackReasonResponse != null && feedbackReasonResponse.getFeedbackReasonObjectCount() != 0) {
+            return feedbackReasonResponse;
         } else {
             return null;
         }
@@ -244,7 +311,7 @@ public class HttpRequest {
         return getJobPostDetailsResponse;
     }
 
-    public static CandidateAppliedJobsResponse getMyJobs(CandidateAppliedJobsRequest candidateAppliedJobsRequest) {
+    public static CandidateAppliedJobPostWorkFlowResponse getMyJobs(CandidateAppliedJobsRequest candidateAppliedJobsRequest) {
         String responseString = postToServer(Config.URL_CANDIDATE_APPLIED_JOBS,
                 Base64.encodeToString(candidateAppliedJobsRequest.toByteArray(), Base64.DEFAULT));
 
@@ -252,13 +319,47 @@ public class HttpRequest {
         if (responseByteArray == null) {
             return null;
         }
-        CandidateAppliedJobsResponse candidateAppliedJobsResponse = null;
+        CandidateAppliedJobPostWorkFlowResponse candidateAppliedJobPostWorkFlowResponse = null;
         try {
-            candidateAppliedJobsResponse = CandidateAppliedJobsResponse.parseFrom(responseByteArray);
+            candidateAppliedJobPostWorkFlowResponse = CandidateAppliedJobPostWorkFlowResponse.parseFrom(responseByteArray);
         } catch (InvalidProtocolBufferException e) {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
-        return candidateAppliedJobsResponse;
+        return candidateAppliedJobPostWorkFlowResponse;
+    }
+
+    public static UpdateInterviewResponse updateInterview(UpdateInterviewRequest updateInterviewRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_INTERVIEW,
+                Base64.encodeToString(updateInterviewRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateInterviewResponse updateInterviewResponse = null;
+        try {
+            updateInterviewResponse = UpdateInterviewResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateInterviewResponse;
+    }
+
+    public static UpdateCandidateStatusResponse updateCandidateStatus(UpdateCandidateStatusRequest updateCandidateStatusRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_STATUS,
+                Base64.encodeToString(updateCandidateStatusRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateCandidateStatusResponse updateCandidateStatusResponse = null;
+        try {
+            updateCandidateStatusResponse = UpdateCandidateStatusResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateCandidateStatusResponse;
     }
 
     public static GetCandidateBasicProfileStaticResponse getCandidateBasicProfileStatic() {
@@ -560,5 +661,191 @@ public class HttpRequest {
             Tlog.w(String.valueOf(e), "Cannot parse response");
         }
         return localityObjectResponse;
+    }
+
+    public static PreScreenPopulateProtoResponse getJobPostVsCandidate(PreScreenPopulateProtoRequest request) {
+        String responseString = postToServer(Config.URL_GET_JOB_POST_VS_CANDIDATE,
+                Base64.encodeToString(request.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        PreScreenPopulateProtoResponse preScreenPopulateResponse = null;
+        try {
+            preScreenPopulateResponse = PreScreenPopulateProtoResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return preScreenPopulateResponse;
+    }
+
+    public static GenericResponse updateCandidateDocument(UpdateCandidateDocumentRequest updateCandidateDocumentRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_PRE_SCREEN_DOCUMENT,
+                Base64.encodeToString(updateCandidateDocumentRequest.toByteArray(), Base64.DEFAULT));
+
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GenericResponse response = null;
+        try {
+            response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+    public static GenericResponse updateCandidateLanguage(UpdateCandidateLanguageRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_PRE_SCREEN_LANGUAGE,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GenericResponse response = null;
+        try {
+            response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static GenericResponse updateCandidateExperience(UpdateCandidateExperienceRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_PRE_SCREEN_EXPERIENCE,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GenericResponse response = null;
+        try {
+            response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static GenericResponse updateCandidateOther(UpdateCandidateOtherRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_PRE_SCREEN_OTHERS,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GenericResponse response = null;
+        try {
+            response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+    public static CheckInterviewSlotResponse checkInterviewSlot(CheckInterviewSlotRequest param) {
+        String responseString = postToServer(Config.URL_CHECK_INTERVIEW_SLOT_AVALABILITY,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        CheckInterviewSlotResponse response = null;
+        try {
+            response = CheckInterviewSlotResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static GenericResponse updateCandidateInterviewDetail(UpdateCandidateInterviewDetailRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_INTERVIEW_DETAIL,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GenericResponse response = null;
+        try {
+            response = GenericResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static GetInterviewSlotsResponse getInterviewSlots(GetInterviewSlotsRequest param) {
+        String responseString = postToServer(Config.URL_UPDATE_GET_INTERVIEW_SLOTS,
+                Base64.encodeToString(param.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        GetInterviewSlotsResponse response = null;
+        try {
+            response = GetInterviewSlotsResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return response;
+    }
+
+    public static UpdateTokenResponse updateTokenRequest(UpdateTokenRequest updateTokenRequest) {
+        String responseString = postToServer(Config.URL_UPDATE_CANDIDATE_TOKEN,
+                Base64.encodeToString(updateTokenRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        UpdateTokenResponse updateTokenResponse = null;
+        try {
+            updateTokenResponse = UpdateTokenResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return updateTokenResponse;
+    }
+
+    public static LogoutCandidateResponse logoutCandidate(LogoutCandidateRequest logoutCandidateRequest) {
+        String responseString = postToServer(Config.URL_LOGOUT_CANDIDATE,
+                Base64.encodeToString(logoutCandidateRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        LogoutCandidateResponse logoutCandidateResponse = null;
+        try {
+            logoutCandidateResponse = LogoutCandidateResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return logoutCandidateResponse;
+    }
+
+    public static AddFeedbackResponse addFeedbackRequest(AddFeedbackRequest addFeedbackRequest) {
+        String responseString = postToServer(Config.URL_ADD_FEEDBACK,
+                Base64.encodeToString(addFeedbackRequest.toByteArray(), Base64.DEFAULT));
+
+        byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
+        if (responseByteArray == null) {
+            return null;
+        }
+        AddFeedbackResponse addFeedbackResponse = null;
+        try {
+            addFeedbackResponse = AddFeedbackResponse.parseFrom(responseByteArray);
+        } catch (InvalidProtocolBufferException e) {
+            Tlog.w(String.valueOf(e), "Cannot parse response");
+        }
+        return addFeedbackResponse;
     }
 }

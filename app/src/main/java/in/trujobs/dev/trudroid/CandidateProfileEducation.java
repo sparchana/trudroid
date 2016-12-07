@@ -324,7 +324,6 @@ public class CandidateProfileEducation extends Fragment {
                             }
 
                             if(check){
-
                                 //Track this action
                                 ((CandidateProfileActivity) getActivity()).addActionGA(Constants.GA_SCREEN_NAME_EDIT_EDUCATION_PROFILE, Constants.GA_ACTION_SAVE_EDUCATION_PROFILE);
 
@@ -342,7 +341,7 @@ public class CandidateProfileEducation extends Fragment {
                             }
                         }
                     });
-                } else{
+                } else {
                     Toast.makeText(getContext(), "Looks like something went wrong. Please try again.",
                             Toast.LENGTH_LONG).show();
                     getActivity().getSupportFragmentManager().popBackStack();
@@ -351,7 +350,7 @@ public class CandidateProfileEducation extends Fragment {
         }
     }
 
-    public void showDialog(String msg){
+    public void showDialog(String msg) {
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setMessage(msg);
         alertDialog.setCanceledOnTouchOutside(true);

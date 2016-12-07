@@ -1,0 +1,43 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:id="@+id/home_locality_layout"
+    android:layout_marginTop="@dimen/margin_top_text"
+    android:layout_marginBottom="@dimen/margin_bottom_text"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.9"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/home_locality_auto_complete_edit_text"
+                android:textSize="14dp"
+                android:focusableInTouchMode="true"
+                android:maxLength="100"
+                android:paddingTop="8dp"
+                android:text="adasdsa"
+                android:layout_gravity="center"
+                android:hint="Home Locality*"
+                android:layout_weight="12"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/home_locality_picker"
+            android:layout_width="0dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:src="@drawable/edit_grey"/>
+
+    </LinearLayout>
+</LinearLayout>

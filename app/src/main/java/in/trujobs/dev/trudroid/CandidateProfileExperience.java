@@ -33,6 +33,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -77,6 +78,8 @@ public class CandidateProfileExperience extends Fragment {
     Button saveExperienceBtn, isExperienced, isFresher, isEmployedYes, isEmployedNo;
     int pos = -1;
     TextView selectExp;
+
+    Boolean checkSkills = true;
 
     ImageView experiencePicker, currentJobRolePicker;
     View view;
@@ -390,7 +393,7 @@ public class CandidateProfileExperience extends Fragment {
                     getAllLanguages(getCandidateExperienceProfileStaticResponse.getLanguageObjectList());
 
                     allLanguageList = new CharSequence[getCandidateExperienceProfileStaticResponse.getLanguageObjectCount()];
-                    languageIdList = new ArrayList<Integer>();
+                    languageIdList = new ArrayList<>();
 
                     for(int i=0 ; i<getCandidateExperienceProfileStaticResponse.getLanguageObjectCount() ; i++){
                         allLanguageList[i] = getCandidateExperienceProfileStaticResponse.getLanguageObjectList().get(i).getLanguageName();
@@ -465,7 +468,7 @@ public class CandidateProfileExperience extends Fragment {
                             } else if(candidateLanguageKnown.size() < 1){
                                 check = false;
                                 showDialog("Please select at least one language that you know");
-                            } else if(candidateSkill.size() < 1){
+                            } else if((checkSkills) && (candidateSkill.size() < 1)){
                                 check = false;
                                 showDialog("Please select at least one skill that you know");
                             }
@@ -501,6 +504,12 @@ public class CandidateProfileExperience extends Fragment {
 
                     LinearLayout skillListView = (LinearLayout) view.findViewById(R.id.skill_list_view);
 
+                    if(getCandidateExperienceProfileStaticResponse.getSkillObjectList().size() < 1){
+                        checkSkills = false;
+                        LinearLayout skillSection = (LinearLayout) view.findViewById(R.id.skill_section);
+                        skillSection.setVisibility(View.GONE);
+                    }
+
                     for(final SkillObject skillObject : getCandidateExperienceProfileStaticResponse.getSkillObjectList()){
                         LayoutInflater inflater = null;
                         inflater = (LayoutInflater) getActivity().getApplicationContext()
@@ -514,8 +523,8 @@ public class CandidateProfileExperience extends Fragment {
                         final CheckBox skillCheckbox = (CheckBox) mLinearView.findViewById(R.id.skill_checkbox);
 
                         for(CandidateSkillObject skill : candidateProfileActivity.candidateInfo.getCandidate().getCandidateSkillObjectList()){
-                            if(skill.getSkillId() == skillObject.getSkillId()){
-                                if(skill.getAnswer() == true){
+                            if(skill.getSkillId() == skillObject.getSkillId()) {
+                                if(skill.getAnswer() == true) {
                                     skillCheckbox.setChecked(true);
                                     CandidateSkillObject.Builder skillBuilder = CandidateSkillObject.newBuilder();
                                     skillBuilder.setSkillId(skillObject.getSkillId());
@@ -596,7 +605,7 @@ public class CandidateProfileExperience extends Fragment {
         return flag;
     }
 
-    public void getAllLanguages(List<LanguageObject> languageObjectList){
+    public void getAllLanguages(List<LanguageObject> languageObjectList) {
         for(final LanguageObject languageObject : languageObjectList){
             LayoutInflater inflater = null;
             inflater = (LayoutInflater) getActivity().getApplicationContext()
@@ -655,7 +664,7 @@ public class CandidateProfileExperience extends Fragment {
                             candidateLanguageKnown.remove(pos);
                             candidateLanguageKnown.add(language.build());
                             pos = -1;
-                        } else{
+                        } else {
                             language.setLanguageKnownId(languageObject.getLanguageId());
                             language.setLanguageReadWrite(1);
                             language.setLanguageUnderstand(0);
