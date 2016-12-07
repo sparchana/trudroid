@@ -627,6 +627,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             }
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
+            Tlog.i("jobRoleToSearchfor 1: " + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne());
+            Tlog.i("jobRoleToSearchfor 2: " + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdTwo());
+            Tlog.i("jobRoleToSearchfor 3: " + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdThree());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
 
             if(jobPostListView != null) {
@@ -807,8 +810,8 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         }
         if(selectedJobRoleList != null && selectedJobRoleList.size()>0){
             jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(0));
-            if(selectedJobRoleList.size()>1) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(1));
-            if(selectedJobRoleList.size()>2) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(2));
+            if(selectedJobRoleList.size()>1) jobRolesFilter.setJobRoleIdTwo(selectedJobRoleList.get(1));
+            if(selectedJobRoleList.size()>2) jobRolesFilter.setJobRoleIdThree(selectedJobRoleList.get(2));
         }
         else {
             if (Prefs.candidatePrefJobRoleIdOne.get() != null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
