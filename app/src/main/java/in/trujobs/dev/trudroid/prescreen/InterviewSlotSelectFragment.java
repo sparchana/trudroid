@@ -209,6 +209,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         if(shouldRedirect){
+                            PreScreenActivity.interviewSlotOpenned = false;
                             redirectToSearch(getActivity());
                         }
                     }
