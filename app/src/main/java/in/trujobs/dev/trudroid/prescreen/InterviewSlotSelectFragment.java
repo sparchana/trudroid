@@ -72,10 +72,8 @@ public class InterviewSlotSelectFragment extends Fragment {
         String preScreenJobTitle = bundle.getString("jobTitle");
         preScreenJobPostId = bundle.getLong("jobPostId");
 
-        TextView companyName = (TextView) view.findViewById(R.id.interview_company_title);
-        TextView jobTitle = (TextView) view.findViewById(R.id.interview_job_title);
-        companyName.setText(preScreenCompanyName);
-        jobTitle.setText(preScreenJobTitle);
+        TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
+        headingApplicationForm.setText("Application form for "+preScreenJobTitle+" at "+preScreenCompanyName);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((TruJobsBaseActivity) getActivity()).setSupportActionBar(toolbar);
