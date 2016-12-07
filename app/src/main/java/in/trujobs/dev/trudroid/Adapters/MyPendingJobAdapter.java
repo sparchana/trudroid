@@ -142,9 +142,6 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                 holder.underReviewHeader.setVisibility(View.VISIBLE);
             }
 
-            if(jobApplicationObject.getInterviewDateMillis() != 0){
-                holder.interviewDateView.setVisibility(View.VISIBLE);
-            }
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
             applicationStatusText.setText("Under Review");
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
@@ -192,9 +189,11 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
             String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth);
 
+            holder.interviewDateView.setVisibility(View.VISIBLE);
             holder.mJobApplicationInterviewSchedule.setText("Interview rescheduled to: " + finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
             holder.mInterviewDate.setText(finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         } else{
+            holder.interviewDateView.setVisibility(View.GONE);
             holder.mJobApplicationInterviewSchedule.setVisibility(View.GONE);
         }
 
