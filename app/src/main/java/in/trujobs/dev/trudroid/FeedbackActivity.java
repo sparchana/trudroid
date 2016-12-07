@@ -2,10 +2,6 @@ package in.trujobs.dev.trudroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -13,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,32 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.firebase.iid.FirebaseInstanceId;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
-import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
-import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.AddFeedbackRequest;
 import in.trujobs.proto.AddFeedbackResponse;
-import in.trujobs.proto.CandidateSkillObject;
 import in.trujobs.proto.FeedbackReasonObject;
 import in.trujobs.proto.FeedbackReasonResponse;
-import in.trujobs.proto.LogInRequest;
-import in.trujobs.proto.LogInResponse;
-import in.trujobs.proto.NotGoingReasonResponse;
-import in.trujobs.proto.SkillObject;
-import in.trujobs.proto.UpdateCandidateStatusRequest;
-import in.trujobs.proto.UpdateTokenRequest;
 
 public class FeedbackActivity extends TruJobsBaseActivity {
 
