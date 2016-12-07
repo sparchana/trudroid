@@ -196,7 +196,6 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             showRequiredFragment(((FragmentActivity) mContext));
         }
     }
-
     public static void showRequiredFragment(FragmentActivity activity) {
         PreScreenPopulateProtoResponse preScreenPopulateResponse =  globalPreScreenPopulateResponse;
         Bundle bundle = new Bundle();

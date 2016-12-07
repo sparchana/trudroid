@@ -8,6 +8,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,31 +98,23 @@ public class PreScreenExperience extends Fragment{
         int rank = getArguments().getInt("rank");
         int totalCount = getArguments().getInt("totalCount");
 
-        TextView companyName = (TextView) view.findViewById(R.id.experience_company_title);
-        TextView jobTitle = (TextView) view.findViewById(R.id.experience_job_title);
-        companyName.setText(preScreenCompanyName);
-        jobTitle.setText(preScreenJobTitle);
+        TextView headingApplicationForm= (TextView) view.findViewById(R.id.headingApplicationForm);
+        String headingTitle = "Application form for <b>"+preScreenJobTitle+"</b> at <b>"+preScreenCompanyName+"</b>";
+        headingApplicationForm.setText(Html.fromHtml(headingTitle));
 
         LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
-        for(int i = 1; i<= totalCount; i++){
-            if(i == rank){
-                ImageView progressDot = new ImageView(getContext());
-                progressDot.setBackgroundResource(R.drawable.circle_small);
-                progressDot.setLayoutParams(new LinearLayout.LayoutParams(30, 30));
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
-                lp.setMargins(5,25,5,25);
-                progressDot.setLayoutParams(lp);
-                progressLayout.addView(progressDot);
-            }
-            else{
-                ImageView progressDot = new ImageView(getContext());
-                progressDot.setBackgroundResource(R.drawable.circle_small);
+        for(int i= 1; i<=totalCount; i++){
+            ImageView progressDot = new ImageView(getContext());
+            progressDot.setBackgroundResource(R.drawable.circle_small);
+            if(i == rank) {
+                progressDot.setLayoutParams(new LinearLayout.LayoutParams(25, 25));
+            }else {
                 progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
-                lp.setMargins(5,25,5,25);
-                progressDot.setLayoutParams(lp);
-                progressLayout.addView(progressDot);
             }
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
+            lp.setMargins(5,35,5,35);
+            progressDot.setLayoutParams(lp);
+            progressLayout.addView(progressDot);
         }
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
