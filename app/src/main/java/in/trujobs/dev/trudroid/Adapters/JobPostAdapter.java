@@ -330,35 +330,39 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                 Tlog.w("Null Response");
                 return;
             }
-            if(applyJobResponse.getIsPreScreenAvailable()){
-                Tlog.i("pre screen is available");
-                PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId());
-            } else if(applyJobResponse.getIsInterviewAvailable()) {
-                Tlog.i("interview is available");
-                InterviewSlotSelectActivity.start(getContext(),
-                        applyJobResponse.getJobPostId(),
-                        applyJobResponse.getCompanyName(),
-                        applyJobResponse.getJobRoleTitle(),
-                        applyJobResponse.getJobTitle());
-            } else {
-
+            else {
                 ViewDialog alert = new ViewDialog();
                 if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_SUCCESS){
-                    alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
-                    //setting "already applied" to apply button of the jobs list
-                    try {
-                        applyingJobColor.setImageResource(R.drawable.orange_dot);
-                        applyingJobButton.setEnabled(false);
-                        applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                        applyingJobButton.setText("Applied");
-                    } catch (Exception ignored){}
 
-                    //setting "already applied" to job detail activity button
-                    try{
-                        applyingJobButtonDetail.setText("Applied");
-                        applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
-                        applyingJobButtonDetail.setEnabled(false);
-                    } catch (Exception ignored){}
+                    // after job application is success, show pre screen / interview
+                    if(applyJobResponse.getIsPreScreenAvailable()){
+                        Tlog.i("pre screen is available");
+                        PreScreenActivity.start(getContext(), applyJobResponse.getJobPostId());
+                    } else if(applyJobResponse.getIsInterviewAvailable()) {
+                        Tlog.i("interview is available");
+                        InterviewSlotSelectActivity.start(getContext(),
+                                applyJobResponse.getJobPostId(),
+                                applyJobResponse.getCompanyName(),
+                                applyJobResponse.getJobRoleTitle(),
+                                applyJobResponse.getJobTitle());
+                    } else {
+                        alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
+                        //setting "already applied" to apply button of the jobs list
+                        try {
+                            applyingJobColor.setImageResource(R.drawable.orange_dot);
+                            applyingJobButton.setEnabled(false);
+                            applyingJobButton.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                            applyingJobButton.setText("Applied");
+                        } catch (Exception ignored){}
+
+                        //setting "already applied" to job detail activity button
+                        try{
+                            applyingJobButtonDetail.setText("Applied");
+                            applyingJobButtonDetail.setBackgroundColor(getContext().getResources().getColor(R.color.back_grey_dark));
+                            applyingJobButtonDetail.setEnabled(false);
+                        } catch (Exception ignored){}
+                    }
+
                 } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_ALREADY_APPLIED){
                     alert.showDialog(getContext(), "Already Applied", "Looks like you have already applied to this job", "", R.drawable.sent, 5);
                     try {
