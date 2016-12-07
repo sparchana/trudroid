@@ -6,7 +6,6 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -47,6 +45,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -59,7 +58,6 @@ import in.trujobs.proto.UpdateCandidateOtherRequest;
 
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_ASSET_OWNED;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_GENDER;
-import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_LOCALITY;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_MAX_AGE;
 import static in.trujobs.dev.trudroid.Util.Constants.PROPERTY_TYPE_WORK_SHIFT;
 import static in.trujobs.dev.trudroid.prescreen.PreScreenActivity.otherPropertyIdStack;
@@ -91,26 +89,6 @@ public class PreScreenOthers extends Fragment {
 
     final List<Integer> candidateAssetIdList = new ArrayList<>();
 
-    private AutoCompleteTextView mHomeLocalityTxtView;
-
-    /**
-     * The formatted address.
-     */
-    public String mAddressOutput;
-
-    /**
-     * Represents a google's  place_id.
-     */
-    protected String mPlaceId;
-
-    /**
-     * Represents a geographical location.
-     */
-    protected Location mLastLocation;
-
-    protected boolean GET_LOCALITY_FROM_GPS = false;
-    protected boolean GET_LOCALITY_FROM_AUTOCOMPLETE = false;
-
     // currently as per app flow, total exp resides within experience card
     // hence we won't show it here.
     @Override
@@ -121,8 +99,8 @@ public class PreScreenOthers extends Fragment {
         candidateDob = (EditText) view.findViewById(R.id.date_of_birth_edit_text);
         LinearLayout candidateDobLayout = (LinearLayout) view.findViewById(R.id.pre_screen_dob);
 
-        mHomeLocalityTxtView = (AutoCompleteTextView) view.findViewById(R.id.home_locality_auto_complete_edit_text);
-        LinearLayout homeLocalityLayout = (LinearLayout) view.findViewById(R.id.home_locality_layout);
+//        mHomeLocalityTxtView = (AutoCompleteTextView) view.findViewById(R.id.home_locality_auto_complete_edit_text);
+//        LinearLayout homeLocalityLayout = (LinearLayout) view.findViewById(R.id.home_locality_layout);
 
         genderBtnLayout = (LinearLayout) view.findViewById(R.id.gender_button_layout);
         maleBtn = (Button) view.findViewById(R.id.gender_male);
@@ -218,9 +196,9 @@ public class PreScreenOthers extends Fragment {
                 }
             });
         }
-        if(remainingPropIdList.contains(PROPERTY_TYPE_LOCALITY)){
-            homeLocalityLayout.setVisibility(view.VISIBLE);
-        }
+//        if(remainingPropIdList.contains(PROPERTY_TYPE_LOCALITY)){
+//            homeLocalityLayout.setVisibility(view.VISIBLE);
+//        }
         if(remainingPropIdList.contains(PROPERTY_TYPE_WORK_SHIFT)){
             workShiftView.setVisibility(view.VISIBLE);
             mAsyncTask = new PreScreenOthers.GetBasicStaticAsyncTask();
@@ -493,9 +471,6 @@ public class PreScreenOthers extends Fragment {
             switch(view.getId()){
                 case R.id.date_of_birth_edit_text:
                     candidateDob.setError(null);
-                    break;
-                case R.id.home_locality_auto_complete_edit_text:
-                    mHomeLocalityTxtView.setError(null);
                     break;
             }
         }

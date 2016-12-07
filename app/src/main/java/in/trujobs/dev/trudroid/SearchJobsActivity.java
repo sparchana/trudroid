@@ -693,6 +693,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         mSearchJobAcTxtView.dismissDropDown();
                         jobSearchRequest.setLocalityName(mSearchJobAcTxtView.getText().toString());
 
+
                         AsyncTask<JobSearchRequest, Void, JobPostResponse> mJobSearchAsyncTask = new JobSearchAsyncTask();
                         mJobSearchAsyncTask.execute(jobSearchRequest.build());
                     }
@@ -803,6 +804,11 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
         if (jobRoleIdFromHttpIntent != null) {
             jobRolesFilter.setJobRoleIdOne(jobRoleIdFromHttpIntent);
+        }
+        if(selectedJobRoleList != null && selectedJobRoleList.size()>0){
+            jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(0));
+            if(selectedJobRoleList.size()>1) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(1));
+            if(selectedJobRoleList.size()>2) jobRolesFilter.setJobRoleIdOne(selectedJobRoleList.get(2));
         }
         else {
             if (Prefs.candidatePrefJobRoleIdOne.get() != null || Prefs.candidatePrefJobRoleIdOne.get() != 0)
@@ -1117,7 +1123,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
         List<String> mSelectedJobsName = new ArrayList<>();
         if (selectedJobRoleList != null && selectedJobRoleList.size() > 0) {
             for(int j=0; j<selectedJobRoleList.size();j++){
-                Tlog.i("search job for jobRolesFilter: " + selectedJobRoleList.get(j));
+                Tlog.i("search job for jobRoles: " + selectedJobRoleList.get(j));
                 String jobRoleName = jobRoleNameList[invBiMap
                         .get(selectedJobRoleList.get(j))].toString();
                 mSelectedJobsName.add(jobRoleName);
