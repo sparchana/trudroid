@@ -68,8 +68,6 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogoutCandidateRequest;
 import in.trujobs.proto.LogoutCandidateResponse;
-import in.trujobs.proto.UpdateTokenRequest;
-import in.trujobs.proto.UpdateTokenResponse;
 
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
@@ -579,13 +577,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         list.add(getJobPostDetailsResponse.getJobPost());
                         JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
                         jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
-
                         // TODO condition to check if response is already applied, or failed , accordingly allow to pass it to prescreen activity
-                        Tlog.i("prescreen triggered");
 
                         dialog.dismiss();
-                        Prefs.jobToApplyStatus.put(0);
-                        Prefs.getJobToApplyJobId.put(0L);
 
                         //Track this action
                         addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
@@ -611,11 +605,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
                 applyDialog.show();
 
-                Prefs.jobToApplyStatus.put(0);
-                Prefs.getJobToApplyJobId.put(0L);
             } else {
                 showToast("Something went wrong. Unable to fetch job details!");
             }
+
+            // unset the jobToApply status , which is part of applying without logged in
+            Prefs.jobToApplyStatus.put(0);
+            Prefs.getJobToApplyJobId.put(0L);
         }
     }
 
