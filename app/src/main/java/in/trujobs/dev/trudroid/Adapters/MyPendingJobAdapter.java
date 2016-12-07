@@ -105,6 +105,8 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
             LinearLayout acceptImageView = (LinearLayout) rowView.findViewById(R.id.accept_interview);
             LinearLayout rejectImageView = (LinearLayout) rowView.findViewById(R.id.reject_interview);
 
+            holder.interviewDateView.setVisibility(View.GONE);
+
             if(position == rescheduledStartIndex && rescheduledStartIndex != -1){
                 holder.rescheduledHeader.setVisibility(View.VISIBLE);
             }
@@ -132,6 +134,8 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                 holder.rejectedHeader.setVisibility(View.VISIBLE);
             }
 
+            holder.interviewDateView.setVisibility(View.VISIBLE);
+
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_error);
             applicationStatusText.setText("Not Shortlisted");
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorRed));
@@ -142,6 +146,7 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
                 holder.underReviewHeader.setVisibility(View.VISIBLE);
             }
 
+            holder.interviewDateView.setVisibility(View.VISIBLE);
             applicationStatusIcon.setBackgroundResource(R.drawable.ic_delayed);
             applicationStatusText.setText("Under Review");
             applicationStatusText.setTextColor(getContext().getResources().getColor(R.color.colorLightOrange));
@@ -189,7 +194,6 @@ public class MyPendingJobAdapter extends ArrayAdapter<JobPostWorkFlowObject> {
 
             String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth);
 
-            holder.interviewDateView.setVisibility(View.VISIBLE);
             holder.mJobApplicationInterviewSchedule.setText("Interview rescheduled to: " + finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
             holder.mInterviewDate.setText(finalDate + " @ " + jobApplicationObject.getInterviewTimeSlotObject().getSlotTitle());
         } else{
