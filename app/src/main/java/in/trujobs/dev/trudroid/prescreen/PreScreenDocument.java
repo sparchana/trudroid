@@ -33,6 +33,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.PreScreenUtil;
 import in.trujobs.dev.trudroid.Util.Validator;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.GenericResponse;
@@ -89,25 +90,10 @@ public class PreScreenDocument extends Fragment {
             String headingTitle = "Application form for <b>"+preScreenJobTitle+"</b> at <b>"+preScreenCompanyName+"</b>";
             headingApplicationForm.setText(Html.fromHtml(headingTitle));
 
-
-            LinearLayout progressLayout = (LinearLayout) view.findViewById(R.id.progressCount);
-            for(int i= 1; i<=totalCount; i++){
-                    ImageView progressDot = new ImageView(getContext());
-                    progressDot.setBackgroundResource(R.drawable.circle_small);
-                    if(i == rank) {
-                        progressDot.setLayoutParams(new LinearLayout.LayoutParams(25, 25));
-                    }else {
-                        progressDot.setLayoutParams(new LinearLayout.LayoutParams(10, 10));
-                    }
-                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) progressDot.getLayoutParams();
-                    lp.setMargins(5,35,5,35);
-                    progressDot.setLayoutParams(lp);
-                    progressLayout.addView(progressDot);
-            }
+            PreScreenUtil.getProgressDotLayout(getContext(), view, totalCount, rank);
 
             if(preScreenDocumentObject.isInitialized() && !preScreenDocumentObject.getIsMatching() ) {
                 initDocument(preScreenDocumentObject.getJobPostIdProofList());
-
 
                 Button saveDocumentDetail = (Button) view.findViewById(R.id.save_document_btn);
                 saveDocumentDetail.setOnClickListener(new View.OnClickListener() {
