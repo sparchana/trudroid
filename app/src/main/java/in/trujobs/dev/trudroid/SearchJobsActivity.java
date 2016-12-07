@@ -68,8 +68,6 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogoutCandidateRequest;
 import in.trujobs.proto.LogoutCandidateResponse;
-import in.trujobs.proto.UpdateTokenRequest;
-import in.trujobs.proto.UpdateTokenResponse;
 
 public class SearchJobsActivity extends TruJobsBaseActivity
         implements View.OnClickListener {
@@ -288,6 +286,7 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             mNavItems.add(new NavItem("My Profile", R.drawable.profile_icon));
             mNavItems.add(new NavItem("My Jobs", R.drawable.list));
             mNavItems.add(new NavItem("Refer friends", R.drawable.refer_icon));
+            mNavItems.add(new NavItem("Feedback", R.drawable.ic_rating));
             mNavItems.add(new NavItem("Interview Tips", R.drawable.ic_idea));
             mNavItems.add(new NavItem("Logout", R.drawable.login_icon));
 
@@ -340,10 +339,16 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_OPEN_REFER_FRIEND);
                 break;
 
-            case 6: openItem(InterviewTipsActivity.class);
+            case 6: openItem(FeedbackActivity.class);
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_INTERVIEW_TIPS, Constants.GA_ACTION_INTERVIEW_TIPS);
+                break;
+
+            case 7: openItem(InterviewTipsActivity.class);
+
+                //Track this action
+                addActionGA(Constants.GA_SCREEN_NAME_FEEDBACK, Constants.GA_ACTION_FEEDBACK);
                 break;
 
             default:
@@ -572,13 +577,9 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                         list.add(getJobPostDetailsResponse.getJobPost());
                         JobPostAdapter jobPostAdapter = new JobPostAdapter(SearchJobsActivity.this, list, externalJobPostStartIndex);
                         jobPostAdapter.applyJob(getJobPostDetailsResponse.getJobPost().getJobPostId(), localityId[preScreenLocationIndex], null);
-
                         // TODO condition to check if response is already applied, or failed , accordingly allow to pass it to prescreen activity
-                        Tlog.i("prescreen triggered");
 
                         dialog.dismiss();
-                        Prefs.jobToApplyStatus.put(0);
-                        Prefs.getJobToApplyJobId.put(0L);
 
                         //Track this action
                         addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_APPLY_TO_JOB);
@@ -604,11 +605,13 @@ public class SearchJobsActivity extends TruJobsBaseActivity
                 final android.support.v7.app.AlertDialog applyDialog = applyDialogBuilder.create();
                 applyDialog.show();
 
-                Prefs.jobToApplyStatus.put(0);
-                Prefs.getJobToApplyJobId.put(0L);
             } else {
                 showToast("Something went wrong. Unable to fetch job details!");
             }
+
+            // unset the jobToApply status , which is part of applying without logged in
+            Prefs.jobToApplyStatus.put(0);
+            Prefs.getJobToApplyJobId.put(0L);
         }
     }
 
@@ -1207,25 +1210,25 @@ public class SearchJobsActivity extends TruJobsBaseActivity
 
     private int get_index(int position){
         String title = mNavItems.get(position).mTitle;
-        switch (title) {
-            case "Logout":
-                return 0;
-            case "Login/Sign Up":
-                return 0;
-            case "Search Job":
-                return 1;
-            case "My Profile":
-                return 2;
-            case "My Jobs":
-                return 3;
-            case "My Home Location":
-                return 4;
-            case "Refer friends":
-                return 5;
-            case "Interview Tips":
-                return 6;
-            default:
-                return -1;
-        }
+        if(title.equals("Logout"))
+            return 0;
+        else if(title.equals("Login/Sign Up"))
+            return 0;
+        else if(title.equals("Search Job"))
+            return 1;
+        else if(title.equals("My Profile"))
+            return 2;
+        else if(title.equals("My Jobs"))
+            return 3;
+        else if(title.equals("My Home Location"))
+            return 4;
+        else if(title.equals("Refer friends"))
+            return 5;
+        else if(title.equals("Feedback"))
+            return 6;
+        else if(title.equals("Interview Tips"))
+            return 7;
+        else
+            return -1;
     }
 }

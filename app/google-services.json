@@ -1,39 +1,42 @@
 {
   "project_info": {
-    "project_number": "415258106732",
-    "firebase_url": "https://my-notification-app-f1c7e.firebaseio.com",
-    "project_id": "my-notification-app-f1c7e",
-    "storage_bucket": "my-notification-app-f1c7e.appspot.com"
+    "project_number": "655371968014",
+    "firebase_url": "https://trujobs-007.firebaseio.com",
+    "project_id": "trujobs-007",
+    "storage_bucket": "trujobs-007.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:415258106732:android:4d75e6e7c8a1fbd8",
+        "mobilesdk_app_id": "1:655371968014:android:4d75e6e7c8a1fbd8",
         "android_client_info": {
           "package_name": "in.trujobs.dev.trudroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "415258106732-5f0obgkkt0mh7um76aejmeoa78trju6p.apps.googleusercontent.com",
+          "client_id": "655371968014-8qf7ivn5g9itmqur02bu30ejc27gdjo7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDhwRCK5uiZN7K0vghXUQbjtQliiQF2aUc"
+          "current_key": "AIzaSyAwCfUhoCNjVQoGWShc1jfow6PTzgPx7XU"
         }
       ],
       "services": {
         "analytics_service": {
-          "status": 1
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-77156203-1"
+          }
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 2
+          "status": 1
         }
       }
     }

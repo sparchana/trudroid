@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
@@ -108,7 +110,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         LinearLayout startedLayout = (LinearLayout) findViewById(R.id.started);
         LinearLayout reachedLayout = (LinearLayout) findViewById(R.id.reached);
 
-        // accept/reject inteview options
+        // accept/reject interview options
         LinearLayout acceptInterview = (LinearLayout) findViewById(R.id.accept_interview);
         LinearLayout rejectInterview = (LinearLayout) findViewById(R.id.reject_interview);
 
@@ -117,7 +119,9 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         statusPanel.setVisibility(View.GONE);
         statusOptions.setVisibility(View.GONE);
 
-        companyNameTv.setText(JPWFObject.getJobPostObject().getJobPostCompanyName());
+        String title = "<b>" + JPWFObject.getJobPostObject().getJobPostCompanyName() + "</b>";
+        companyNameTv.setText(Html.fromHtml(title));
+
         companyAddressTv.setText(JPWFObject.getJobPostObject().getJobPostAddress());
 
         //set job Application salary
@@ -145,17 +149,17 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mToday = calendar.get(Calendar.DAY_OF_WEEK);
 
         String cDay = mDay + "";
-        String cMonth = (mMonth) + "";
 
         if(mDay < 10){
             cDay = "0" + mDay;
         }
-        if(mMonth < 10){
-            cMonth = "0" + mMonth;
-        }
-        interviewDateTv.setText(cDay + "-" + cMonth + "-" + mYear);
+
+        String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth) + " " + mYear;
+
+        interviewDateTv.setText(finalDate);
 
         //set interview time slot
         interviewTimeTv.setText(JPWFObject.getInterviewTimeSlotObject().getSlotTitle());

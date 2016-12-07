@@ -16,10 +16,11 @@ import in.trujobs.dev.trudroid.prescreen.InterviewSlotSelectFragment;
 
 public class InterviewSlotSelectActivity extends TruJobsBaseActivity {
 
-    public static Long jobPostId;
-    public static String preScreenCompanyName;
-    public static String preScreenJobRoleTitle;
-    public static String preScreenJobTitle;
+    private static Long jobPostId;
+    private static String preScreenCompanyName;
+    private static String preScreenJobRoleTitle;
+    private static String preScreenJobTitle;
+    private boolean doubleBackToExitPressedOnce = false;
 
     public static void start(Context context, Long jpId, String companyName,
                              String jobRoleTitle, String jobTitle) {
@@ -53,7 +54,6 @@ public class InterviewSlotSelectActivity extends TruJobsBaseActivity {
 
     }
 
-    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
@@ -69,7 +69,7 @@ public class InterviewSlotSelectActivity extends TruJobsBaseActivity {
             return;
         }
         this.doubleBackToExitPressedOnce = true;
-        showToast("Press back again to  cancel Interview Scheduling.");
+        showToast("Press back again to cancel Interview Scheduling.");
 
         //Track this action
         addActionGA(Constants.GA_SCREEN_NAME_SEARCH_JOBS, Constants.GA_ACTION_TRIED_EXIT);

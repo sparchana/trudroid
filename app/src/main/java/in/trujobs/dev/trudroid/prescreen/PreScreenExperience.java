@@ -375,9 +375,9 @@ public class PreScreenExperience extends Fragment{
                             isEmployedLayout.setBackgroundResource(R.drawable.border);
                         } else if(expInYears > 1 && (lastWithdrawnSalary.getText().toString().isEmpty())){
                             isValidationPassed = false;
-                            lastWithdrawnSalary.setError("Please provide your last drawn Salary");
+                            lastWithdrawnSalary.setError("Please provide your current/last drawn salary");
                             lastWithdrawnSalary.addTextChangedListener(new GenericTextWatcher(lastWithdrawnSalary));
-                            showDialog("Please provide your current Salary");
+                            showDialog("Please provide your current/last drawn salary");
                         } else if(isEmployed == 1 && (currentJobRoleValue == null || currentCompany.getText().toString().length() < 3)) {
                             isValidationPassed = false;
                             if(currentJobRoleValue == null ){

@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Do You Own Any of the Folowwing ?" />
+                    android:text="Do You Own Any of the Following ?" />
 
                 <LinearLayout
                     android:id="@+id/ps_asset_list_view"

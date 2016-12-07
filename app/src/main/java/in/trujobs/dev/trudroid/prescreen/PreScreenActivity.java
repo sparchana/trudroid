@@ -355,6 +355,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         } else if(interviewSlotOpenned){
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
+                interviewSlotOpenned = false;
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_INTERVIEW_EXIT);
@@ -363,12 +364,11 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_up, R.anim.no_change);
-                interviewSlotOpenned = false;
                 this.finish();
                 return;
             }
             this.doubleBackToExitPressedOnce = true;
-            showToast("Press back again to  cancel Interview Scheduling.");
+            showToast("Press back again to cancel interview scheduling.");
 
             //Track this action
             addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_ACTION_TRIED_INTERVIEW_EXIT);

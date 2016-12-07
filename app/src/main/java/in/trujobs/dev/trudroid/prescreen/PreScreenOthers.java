@@ -184,6 +184,7 @@ public class PreScreenOthers extends Fragment {
 
         if(remainingPropIdList.contains(PROPERTY_TYPE_MAX_AGE)){
             candidateDobLayout.setVisibility(view.VISIBLE);
+            setDateTimeField();
         }
         if(remainingPropIdList.contains(PROPERTY_TYPE_GENDER)){
             genderBtnLayout.setVisibility(view.VISIBLE);
@@ -377,7 +378,6 @@ public class PreScreenOthers extends Fragment {
                     ((PreScreenActivity)getActivity()).setSupportActionBar(toolbar);
 
 
-                    setDateTimeField();
                     shift_option = (Spinner) view.findViewById(R.id.shift_option);
 
                     final String[] categories = new String[getCandidateBasicProfileStaticResponse.getTimeShiftListCount() + 1];
