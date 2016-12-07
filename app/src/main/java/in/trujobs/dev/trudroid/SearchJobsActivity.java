@@ -628,8 +628,6 @@ public class SearchJobsActivity extends TruJobsBaseActivity
             Tlog.i("jobFilter status: "+jobSearchRequest.hasJobFilterRequest());
             Tlog.i("jobSearchByJobRoleRequest status: " + jobSearchRequest.hasJobSearchByJobRoleRequest());
             Tlog.i("jobRoleToSearchfor 1: " + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdOne());
-            Tlog.i("jobRoleToSearchfor 2: " + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdTwo());
-            Tlog.i("jobRoleToSearchfor 3: " + jobSearchRequest.getJobSearchByJobRoleRequest().getJobRoleIdThree());
             Tlog.i("lat/lng status: " + jobSearchRequest.getLatitude() + "/" + jobSearchRequest.getLongitude());
 
             if(jobPostListView != null) {
