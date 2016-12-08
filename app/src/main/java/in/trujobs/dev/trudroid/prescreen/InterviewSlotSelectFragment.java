@@ -92,7 +92,7 @@ public class InterviewSlotSelectFragment extends Fragment {
 
         GetInterviewSlotsRequest.Builder req = GetInterviewSlotsRequest.newBuilder();
         req.setJobPostId(preScreenJobPostId);
-        PreScreenActivity.interviewSlotOpenned = true;
+        PreScreenActivity.interviewSlotOpened = true;
         AsyncTask<GetInterviewSlotsRequest, Void, GetInterviewSlotsResponse> mGetInterviewSlotAsyncTask = new GetInterviewSlotAsyncTask();
         mGetInterviewSlotAsyncTask.execute(req.build());
 
@@ -190,7 +190,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                 if (response.getStatus() == GenericResponse.Status.SUCCESS) {
                     // back to search
                     // show successfully applied message and redirect to search screen
-                    showDialog("Interview Scheduled Successfully." +
+                    showDialog("Job application submitted successfully." +
                             "You can track your applications from 'My Jobs' option from menu", true);
                 } else {
                     showDialog("Something went wrong. Please try again.", false);
@@ -207,7 +207,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         if(shouldRedirect){
-                            PreScreenActivity.interviewSlotOpenned = false;
+                            PreScreenActivity.interviewSlotOpened = false;
                             redirectToSearch(getActivity());
                         }
                     }
