@@ -172,28 +172,6 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
                 } else{
                     statusOptionLayout.setVisibility(View.VISIBLE);
                     selectStatusLabel.setVisibility(View.VISIBLE);
-
-                    if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
-                        if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
-                            notGoingLayout.setVisibility(View.VISIBLE);
-                        } else{
-                            notGoingLayout.setVisibility(View.GONE);
-                        }
-                        delayedLayout.setVisibility(View.VISIBLE);
-                        startedLayout.setVisibility(View.VISIBLE);
-                        reachedLayout.setVisibility(View.VISIBLE);
-                    } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
-                        notGoingLayout.setVisibility(View.GONE);
-                        delayedLayout.setVisibility(View.GONE);
-                        startedLayout.setVisibility(View.VISIBLE);
-                        reachedLayout.setVisibility(View.VISIBLE);
-
-                    } else if(jobApplicationObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_STARTED) {
-                        notGoingLayout.setVisibility(View.GONE);
-                        startedLayout.setVisibility(View.GONE);
-                        delayedLayout.setVisibility(View.VISIBLE);
-                        reachedLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             } else{
                 candidateStatusPanel.setVisibility(View.GONE);

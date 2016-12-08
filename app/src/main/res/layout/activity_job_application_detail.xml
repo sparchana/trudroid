@@ -68,7 +68,7 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.78"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="8dp">
@@ -118,7 +118,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.22"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
@@ -403,10 +403,11 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
                                 android:orientation="horizontal">
 
                                 <LinearLayout
+                                    android:paddingTop="10dp"
+                                    android:paddingBottom="10dp"
                                     android:layout_width="0dp"
                                     android:layout_weight="0.25"
                                     android:id="@+id/not_going"
