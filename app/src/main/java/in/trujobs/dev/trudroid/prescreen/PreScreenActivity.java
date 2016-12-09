@@ -41,14 +41,14 @@ public class PreScreenActivity extends TruJobsBaseActivity {
     public static int totalCountFragment = 0;
     public static int rankCount;
 
-    protected static Long jobPostId;
-    public static boolean interviewSlotOpenned = false;
+    protected static Long mJobPostId;
+    public static boolean interviewSlotOpened = false;
     boolean doubleBackToExitPressedOnce = false;
 
 
     public static void start(Context context, Long jpId) {
         Intent intent = new Intent(context, PreScreenActivity.class);
-        jobPostId = jpId;
+        mJobPostId = jpId;
         Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         context.startActivity(intent);
     }
@@ -60,12 +60,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this.getApplicationContext();
-        if(jobPostId ==null){
+        if(mJobPostId ==null){
             Tlog.e("null jobPostId passed to preScreenActivity");
             return;
         }
         rankCount = 0;
-        openPreScreenWizard(jobPostId);
+        openPreScreenWizard(mJobPostId);
     }
 
 
@@ -204,6 +204,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         if(propertyIdStack.isEmpty()){
             Tlog.e("Property Id Stack empty, trigger InterviewFragment");
             PreScreenActivity.triggerInterviewFragment(activity,
+                    preScreenPopulateResponse.getJobPostId(),
                     preScreenPopulateResponse.getPreScreenCompanyName(),
                     preScreenPopulateResponse.getPreScreenJobRoleTitle(),
                     preScreenPopulateResponse.getPreScreenJobTitle());
@@ -312,7 +313,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         }
     }
 
-    public static void triggerInterviewFragment(FragmentActivity activity, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle){
+    public static void triggerInterviewFragment(FragmentActivity activity, Long jobPostId, String preScreenCompanyName, String preScreenJobRoleTitle, String preScreenJobTitle){
         // check if interview should open
         CheckInterviewSlotRequest.Builder interviewSlotCheckBuilder = CheckInterviewSlotRequest.newBuilder();
         interviewSlotCheckBuilder.setJobPostId(jobPostId);
@@ -328,7 +329,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         bundle.putString("companyName", preScreenCompanyName);
         bundle.putString("jobRoleTitle", preScreenJobRoleTitle);
         bundle.putString("jobTitle", preScreenJobTitle);
-        bundle.putLong("jobPostId", jobPostId);
+        bundle.putLong("jobPostId", mJobPostId);
         interviewSlotSelectFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
@@ -352,10 +353,10 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             this.finish();
             return;
-        } else if(interviewSlotOpenned){
+        } else if(interviewSlotOpened){
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
-                interviewSlotOpenned = false;
+                interviewSlotOpened = false;
 
                 //Track this action
                 addActionGA(Constants.GA_SCREEN_NAME_SELECT_INTERVIEW_SLOT, Constants.GA_INTERVIEW_EXIT);
@@ -390,7 +391,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             while(!otherPropertyIdStack.isEmpty()){
                 propertyIdStack.push(otherPropertyIdStack.pop());
             }
-            interviewSlotOpenned = false;
+            interviewSlotOpened = false;
             otherPropertyIdStack.clear();
         } else if(!propertyIdBackStack.isEmpty() && !propertyIdStack.contains(propertyIdBackStack.peek())){
             if(rankCount != 0){
@@ -398,7 +399,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             }
             propertyIdStack.push(propertyIdBackStack.pop());
         }
-        interviewSlotOpenned =false;
+        interviewSlotOpened =false;
         super.onBackPressed();
     }
 }
