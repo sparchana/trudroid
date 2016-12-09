@@ -41,14 +41,14 @@ public class PreScreenActivity extends TruJobsBaseActivity {
     public static int totalCountFragment = 0;
     public static int rankCount;
 
-    protected static Long jobPostId;
+    protected static Long mJobPostId;
     public static boolean interviewSlotOpened = false;
     boolean doubleBackToExitPressedOnce = false;
 
 
     public static void start(Context context, Long jpId) {
         Intent intent = new Intent(context, PreScreenActivity.class);
-        jobPostId = jpId;
+        mJobPostId = jpId;
         Tlog.i("Starting prescreen activity for jobpost: "+jpId);
         context.startActivity(intent);
     }
@@ -60,12 +60,12 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this.getApplicationContext();
-        if(jobPostId ==null){
+        if(mJobPostId ==null){
             Tlog.e("null jobPostId passed to preScreenActivity");
             return;
         }
         rankCount = 0;
-        openPreScreenWizard(jobPostId);
+        openPreScreenWizard(mJobPostId);
     }
 
 
@@ -329,7 +329,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
         bundle.putString("companyName", preScreenCompanyName);
         bundle.putString("jobRoleTitle", preScreenJobRoleTitle);
         bundle.putString("jobTitle", preScreenJobTitle);
-        bundle.putLong("jobPostId", jobPostId);
+        bundle.putLong("jobPostId", mJobPostId);
         interviewSlotSelectFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
