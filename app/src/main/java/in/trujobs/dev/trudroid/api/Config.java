@@ -7,7 +7,7 @@ public class Config {
     /**
      * AWS prod-like-test-server for all trujobs-dev requirements is hosted @ 52.42.8.205:80
      */
-      public static final String BASE_HTTP_URL = "http://52.89.66.63:9000";
+      public static final String BASE_HTTP_URL = "http://52.42.8.205:80";
     /**
      * replace ip below with your local ip for development
      * and uncomment the line, also comment out aws prod-like-test-server ip above
