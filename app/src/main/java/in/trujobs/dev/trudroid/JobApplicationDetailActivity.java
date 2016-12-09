@@ -223,28 +223,6 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
 
                             //else show the options
                             statusOptions.setVisibility(View.VISIBLE);
-
-                            if(JPWFObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED || JPWFObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_NOT_GOING){
-                                if(JPWFObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
-                                    notGoingLayout.setVisibility(View.VISIBLE);
-                                } else{
-                                    notGoingLayout.setVisibility(View.GONE);
-                                }
-                                delayedLayout.setVisibility(View.VISIBLE);
-                                startedLayout.setVisibility(View.VISIBLE);
-                                reachedLayout.setVisibility(View.VISIBLE);
-                            } else if(JPWFObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_DELAYED){
-                                notGoingLayout.setVisibility(View.GONE);
-                                delayedLayout.setVisibility(View.GONE);
-                                startedLayout.setVisibility(View.VISIBLE);
-                                reachedLayout.setVisibility(View.VISIBLE);
-
-                            } else if(JPWFObject.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_CANDIDATE_INTERVIEW_STATUS_STARTED) {
-                                notGoingLayout.setVisibility(View.GONE);
-                                startedLayout.setVisibility(View.GONE);
-                                delayedLayout.setVisibility(View.VISIBLE);
-                                reachedLayout.setVisibility(View.VISIBLE);
-                            }
                         }
 
                         //on click methods
