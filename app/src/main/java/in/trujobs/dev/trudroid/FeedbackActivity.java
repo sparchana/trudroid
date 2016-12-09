@@ -146,7 +146,7 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingTwo.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star_disable);
                         ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
                         ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
@@ -172,8 +172,8 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingThree.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star_disable);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star_disable);
                         ratingThree.setBackgroundResource(R.drawable.ic_3_star);
                         ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
@@ -197,9 +197,9 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingFour.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
-                        ratingThree.setBackgroundResource(R.drawable.ic_3_star);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star_disable);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star_disable);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
                         ratingFour.setBackgroundResource(R.drawable.ic_4_star);
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star_disable);
                         ratingScore = 4;
@@ -222,10 +222,10 @@ public class FeedbackActivity extends TruJobsBaseActivity {
                 ratingFive.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        ratingOne.setBackgroundResource(R.drawable.ic_1_star);
-                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star);
-                        ratingThree.setBackgroundResource(R.drawable.ic_3_star);
-                        ratingFour.setBackgroundResource(R.drawable.ic_4_star);
+                        ratingOne.setBackgroundResource(R.drawable.ic_1_star_disable);
+                        ratingTwo.setBackgroundResource(R.drawable.ic_2_star_disable);
+                        ratingThree.setBackgroundResource(R.drawable.ic_3_star_disable);
+                        ratingFour.setBackgroundResource(R.drawable.ic_4_star_disable);
                         ratingFive.setBackgroundResource(R.drawable.ic_5_star);
                         ratingScore = 5;
                         ratingStatus.setVisibility(View.VISIBLE);
