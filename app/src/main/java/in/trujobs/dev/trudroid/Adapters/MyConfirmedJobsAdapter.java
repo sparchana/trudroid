@@ -32,6 +32,7 @@ import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
+import in.trujobs.proto.NotGoingReasonRequest;
 import in.trujobs.proto.UpdateCandidateStatusRequest;
 import in.trujobs.proto.UpdateCandidateStatusResponse;
 
@@ -43,6 +44,8 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
     private int todayInterviewStartIndex;
     private int upcomingInterviewStartIndex;
     private int pastInterviewStartIndex;
+
+    private NotGoingReasonResponse mAsyncTask;
 
     private Activity ctx;
     public MyConfirmedJobsAdapter(Activity context, List<JobPostWorkFlowObject> jobApplicationObjectList,
@@ -288,8 +291,28 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
                 //showing not going reason dialog
                 if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL){
-                    AsyncTask<Void, Void, in.trujobs.proto.NotGoingReasonResponse> reasonAsyncTask = new NotGoingReasonResponse();
-                    reasonAsyncTask.execute();
+                    NotGoingReasonRequest.Builder notGoingReasonRequestBuilder = NotGoingReasonRequest.newBuilder();
+                    notGoingReasonRequestBuilder.setTypeId(ServerConstants.INTERVIEW_NOT_GOING_TYPE_REASON);
+
+                    if (mAsyncTask != null) {
+                        mAsyncTask.cancel(true);
+                    }
+                    mAsyncTask = new MyConfirmedJobsAdapter.NotGoingReasonResponse();
+                    mAsyncTask.execute(notGoingReasonRequestBuilder.build());
+
+                } else if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_DELAYED_VAL ||
+                        globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_STARTED_VAL){
+
+                    // for delayed and started status
+                    NotGoingReasonRequest.Builder notGoingReasonRequestBuilder = NotGoingReasonRequest.newBuilder();
+                    notGoingReasonRequestBuilder.setTypeId(ServerConstants.CANDIDATE_ETA);
+
+                    if (mAsyncTask != null) {
+                        mAsyncTask.cancel(true);
+                    }
+                    mAsyncTask = new MyConfirmedJobsAdapter.NotGoingReasonResponse();
+                    mAsyncTask.execute(notGoingReasonRequestBuilder.build());
+
                 } else{
                     Toast.makeText(getContext(), "Status Updated!", Toast.LENGTH_LONG).show();
                     ctx.finish();
@@ -302,7 +325,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         }
     }
 
-    private class NotGoingReasonResponse extends AsyncTask<Void,Void,in.trujobs.proto.NotGoingReasonResponse> {
+    private class NotGoingReasonResponse extends AsyncTask<NotGoingReasonRequest,Void,in.trujobs.proto.NotGoingReasonResponse> {
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -311,9 +334,10 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
         }
 
         @Override
-        protected in.trujobs.proto.NotGoingReasonResponse doInBackground(Void... params) {
-            return HttpRequest.getAllNotGoingReason();
+        protected in.trujobs.proto.NotGoingReasonResponse doInBackground(NotGoingReasonRequest... params) {
+            return HttpRequest.getAllNotGoingReason(params[0]);
         }
+
 
         @Override
         protected void onPostExecute(in.trujobs.proto.NotGoingReasonResponse notGoingReasonResponse) {
@@ -331,7 +355,11 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
 
             final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getContext());
             applyDialogBuilder.setCancelable(true);
-            applyDialogBuilder.setTitle("Select reason for not going:");
+            if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL){
+                applyDialogBuilder.setTitle("Select reason for not going:");
+            } else{
+                applyDialogBuilder.setTitle("Reaching for interview in:");
+            }
             applyDialogBuilder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if(selectedNotGoingReasonIndex > 0){
@@ -350,7 +378,7 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
                         mCandidateStatusAsyncTask.execute(updateCandidateStatusRequestBuilder.build());
 
                     } else{
-                        Toast.makeText(getContext(), "Please select a reason for not going!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Please select an option", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -370,4 +398,5 @@ public class MyConfirmedJobsAdapter extends ArrayAdapter<JobPostWorkFlowObject> 
             applyDialog.show();
         }
     }
+
 }

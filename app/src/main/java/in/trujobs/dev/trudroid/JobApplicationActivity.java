@@ -165,14 +165,17 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                     confirmedTabList.add(jwpf);
                 }
 
-                if(todaysInterviewList.size() > 0){
-                    Prefs.defaultMyJobsTab.put(1);
-                } else if(rescheduledList.size() > 0){
-                    Prefs.defaultMyJobsTab.put(0);
-                } else if(confirmedTabList.size() > 0){
-                    Prefs.defaultMyJobsTab.put(1);
-                } else{
-                    Prefs.defaultMyJobsTab.put(0);
+
+                if(Prefs.defaultMyJobsTab.get() == 0){
+                    if(todaysInterviewList.size() > 0){
+                        Prefs.defaultMyJobsTab.put(1);
+                    } else if(rescheduledList.size() > 0){
+                        Prefs.defaultMyJobsTab.put(0);
+                    } else if(confirmedTabList.size() > 0){
+                        Prefs.defaultMyJobsTab.put(1);
+                    } else{
+                        Prefs.defaultMyJobsTab.put(0);
+                    }
                 }
 
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.my_jobs_tab_layout);

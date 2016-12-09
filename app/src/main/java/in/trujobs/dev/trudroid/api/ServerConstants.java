@@ -69,6 +69,11 @@ public class ServerConstants {
     public static final int ANDROID_INTENT_ACTIVITY_FEEDBACK = 7;
     public static final int ANDROID_INTENT_ACTIVITY_INTERVIEW_TIPS = 8;
 
+    //reason type
+    public static final int INTERVIEW_REJECT_TYPE_REASON = 1;
+    public static final int INTERVIEW_NOT_GOING_TYPE_REASON = 2;
+    public static final int INTERVIEW_NOT_SELECED_TYPE_REASON = 3;
+    public static final int CANDIDATE_ETA = 4;
 
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
