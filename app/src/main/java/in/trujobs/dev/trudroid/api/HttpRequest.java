@@ -49,11 +49,12 @@ import in.trujobs.proto.LatLngOrPlaceIdRequest;
 import in.trujobs.proto.LocalityObjectResponse;
 import in.trujobs.proto.LogInRequest;
 import in.trujobs.proto.LogInResponse;
+import in.trujobs.proto.NotGoingReasonRequest;
+import in.trujobs.proto.NotGoingReasonResponse;
 import in.trujobs.proto.PreScreenPopulateProtoRequest;
 import in.trujobs.proto.PreScreenPopulateProtoResponse;
 import in.trujobs.proto.LogoutCandidateRequest;
 import in.trujobs.proto.LogoutCandidateResponse;
-import in.trujobs.proto.NotGoingReasonResponse;
 import in.trujobs.proto.ResetPasswordRequest;
 import in.trujobs.proto.ResetPasswordResponse;
 import in.trujobs.proto.SignUpRequest;
@@ -170,12 +171,9 @@ public class HttpRequest {
         }
     }
 
-    public static NotGoingReasonResponse getAllNotGoingReason() {
-        NotGoingReasonResponse.Builder requestBuilder =
-                NotGoingReasonResponse.newBuilder();
-
+    public static NotGoingReasonResponse getAllNotGoingReason(NotGoingReasonRequest notGoingReasonRequest) {
         String responseString = postToServer(Config.URL_ALL_NOT_GOING_REASON,
-                Base64.encodeToString(requestBuilder.build().toByteArray(), Base64.DEFAULT));
+                Base64.encodeToString(notGoingReasonRequest.toByteArray(), Base64.DEFAULT));
 
         byte[] responseByteArray = Base64.decode(responseString, Base64.DEFAULT);
         if (responseByteArray == null) {
@@ -193,6 +191,7 @@ public class HttpRequest {
             return null;
         }
     }
+
 
     public static FeedbackReasonResponse getAllFeedbackReason() {
         FeedbackReasonResponse.Builder requestBuilder =

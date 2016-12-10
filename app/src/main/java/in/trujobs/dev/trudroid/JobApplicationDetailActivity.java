@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
+import in.trujobs.dev.trudroid.Adapters.MyConfirmedJobsAdapter;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
@@ -35,6 +36,7 @@ import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
 import in.trujobs.dev.trudroid.api.ServerConstants;
 import in.trujobs.proto.JobPostWorkFlowObject;
+import in.trujobs.proto.NotGoingReasonRequest;
 import in.trujobs.proto.UpdateCandidateStatusRequest;
 import in.trujobs.proto.UpdateCandidateStatusResponse;
 import in.trujobs.proto.UpdateInterviewRequest;
@@ -50,6 +52,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
     private AsyncTask<UpdateCandidateStatusRequest, Void, UpdateCandidateStatusResponse> mCandidateStatusAsyncTask;
     AsyncTask<UpdateInterviewRequest, Void, UpdateInterviewResponse> mAsyncTask;
 
+    private NotGoingReasonResponse mNotGoingAsyncTask;
     private static JobPostWorkFlowObject JPWFObject;
 
     @Override
@@ -62,6 +65,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         ImageView companyLogo = (ImageView) findViewById(R.id.company_logo);
 
         LinearLayout callHotline = (LinearLayout) findViewById(R.id.call_hotline);
+        LinearLayout interviewTips = (LinearLayout) findViewById(R.id.interview_tips);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -101,6 +105,15 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
                     return;
                 }
                 startActivity(callIntent);
+            }
+        });
+
+        interviewTips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(JobApplicationDetailActivity.this, InterviewTipsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.no_change);
             }
         });
 
@@ -390,11 +403,30 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
             pd.cancel();
             if(updateCandidateStatusResponse.getStatus().getNumber() == UpdateCandidateStatusResponse.Status.SUCCESS_VALUE){
 
-                //showing not going reason dialog
                 if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL){
-                    AsyncTask<Void, Void, in.trujobs.proto.NotGoingReasonResponse> reasonAsyncTask = new NotGoingReasonResponse();
-                    reasonAsyncTask.execute();
-                } else{
+                    NotGoingReasonRequest.Builder notGoingReasonRequestBuilder = NotGoingReasonRequest.newBuilder();
+                    notGoingReasonRequestBuilder.setTypeId(ServerConstants.INTERVIEW_NOT_GOING_TYPE_REASON);
+
+                    if (mNotGoingAsyncTask != null) {
+                        mNotGoingAsyncTask.cancel(true);
+                    }
+                    mNotGoingAsyncTask = new JobApplicationDetailActivity.NotGoingReasonResponse();
+                    mNotGoingAsyncTask.execute(notGoingReasonRequestBuilder.build());
+
+                } else if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_DELAYED_VAL ||
+                        globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_STARTED_VAL){
+
+                    // for delayed and started status
+                    NotGoingReasonRequest.Builder notGoingReasonRequestBuilder = NotGoingReasonRequest.newBuilder();
+                    notGoingReasonRequestBuilder.setTypeId(ServerConstants.CANDIDATE_ETA);
+
+                    if (mNotGoingAsyncTask != null) {
+                        mAsyncTask.cancel(true);
+                    }
+                    mNotGoingAsyncTask = new JobApplicationDetailActivity.NotGoingReasonResponse();
+                    mNotGoingAsyncTask.execute(notGoingReasonRequestBuilder.build());
+
+                }  else{
                     showToast("Status Updated!");
                     finish();
                     Intent intent = new Intent(JobApplicationDetailActivity.this, JobApplicationActivity.class);
@@ -406,7 +438,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         }
     }
 
-    private class NotGoingReasonResponse extends AsyncTask<Void,Void,in.trujobs.proto.NotGoingReasonResponse> {
+    private class NotGoingReasonResponse extends AsyncTask<NotGoingReasonRequest,Void,in.trujobs.proto.NotGoingReasonResponse> {
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -415,14 +447,14 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         }
 
         @Override
-        protected in.trujobs.proto.NotGoingReasonResponse doInBackground(Void... params) {
-            return HttpRequest.getAllNotGoingReason();
+        protected in.trujobs.proto.NotGoingReasonResponse doInBackground(NotGoingReasonRequest... params) {
+            return HttpRequest.getAllNotGoingReason(params[0]);
         }
+
 
         @Override
         protected void onPostExecute(in.trujobs.proto.NotGoingReasonResponse notGoingReasonResponse) {
             super.onPostExecute(notGoingReasonResponse);
-            mAsyncTask = null;
             pd.cancel();
 
             //initializing the list of reason
@@ -435,7 +467,12 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
 
             final android.support.v7.app.AlertDialog.Builder applyDialogBuilder = new android.support.v7.app.AlertDialog.Builder(JobApplicationDetailActivity.this);
             applyDialogBuilder.setCancelable(true);
-            applyDialogBuilder.setTitle("Select reason for not going:");
+            if(globalCandidateStatus == ServerConstants.CANDIDATE_STATUS_NOT_GOING_VAL){
+                applyDialogBuilder.setTitle("Select reason for not going:");
+            } else{
+                applyDialogBuilder.setTitle("Reaching for interview in:");
+            }
+
             applyDialogBuilder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if(selectedNotGoingReasonIndex > 0){
