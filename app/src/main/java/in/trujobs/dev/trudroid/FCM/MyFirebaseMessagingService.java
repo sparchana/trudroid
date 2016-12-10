@@ -101,13 +101,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_SEARCH_JOBS))){ //search jobs activity
                 intent = new Intent(this, SearchJobsActivity.class);
-            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_PENDING))){ //My Jobs (pending tab)
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_PENDING))){ //My Applications (pending tab)
                 intent = new Intent(this, JobApplicationActivity.class);
                 Prefs.defaultMyJobsTab.put(0);
-            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_CONFIRMED))){ //My Jobs (confirmed tab tab)
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_CONFIRMED))){ //My Applications (confirmed tab tab)
                 intent = new Intent(this, JobApplicationActivity.class);
                 Prefs.defaultMyJobsTab.put(1);
-            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_COMPLETED))){ //My Jobs (pending tab)
+            } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_JOBS_COMPLETED))){ //My Applications (pending tab)
                 intent = new Intent(this, JobApplicationActivity.class);
                 Prefs.defaultMyJobsTab.put(2);
             } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_MY_PROFILE))){ //My Profile

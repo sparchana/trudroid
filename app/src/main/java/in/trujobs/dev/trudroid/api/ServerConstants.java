@@ -32,7 +32,7 @@ public class ServerConstants {
 
     public static String CANDIDATE_STATUS_NOT_GOING = "Not Going";
     public static String CANDIDATE_STATUS_DELAYED = "Delayed";
-    public static String CANDIDATE_STATUS_STARTED = "Started";
+    public static String CANDIDATE_STATUS_ON_THE_WAY = "On the way";
     public static String CANDIDATE_STATUS_REACHED = "Reached";
 
     public static final int CANDIDATE_STATUS_NOT_GOING_VAL = 1;

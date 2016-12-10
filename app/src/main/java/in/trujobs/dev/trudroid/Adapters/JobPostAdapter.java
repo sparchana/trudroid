@@ -346,7 +346,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                                 applyJobResponse.getJobRoleTitle(),
                                 applyJobResponse.getJobTitle());
                     } else {
-                        alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Jobs\" option in the Menu", R.drawable.sent, 5);
+                        alert.showDialog(getContext(), "Application Sent", "Your Application has been sent to the recruiter", "You can track your application in \"My Applications\" option in the Menu", R.drawable.sent, 5);
                         //setting "already applied" to apply button of the jobs list
                         try {
                             applyingJobColor.setImageResource(R.drawable.orange_dot);

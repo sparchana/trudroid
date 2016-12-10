@@ -100,7 +100,7 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
             pd.cancel();
 
             if (candidateAppliedJobPostWorkFlowResponse == null) {
-                Log.w("","Null my jobs Response");
+                Log.w("","Null my applications Response");
                 return;
             } else {
                 jobApplications = candidateAppliedJobPostWorkFlowResponse;
@@ -120,9 +120,11 @@ public class JobApplicationActivity extends TruJobsBaseActivity {
                             rescheduledList.add(jwpf);
                         } else if(jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT){
                             underReviewInterviewList.add(jwpf);
-                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT || jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE){
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_RECRUITER_SUPPORT
+                                || jwpf.getCandidateInterviewStatus().getStatusId() == ServerConstants.JWF_STATUS_INTERVIEW_REJECTED_BY_CANDIDATE){
                             rejectedInterviewList.add(jwpf);
-                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
+                        } else if(jwpf.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE
+                                && jwpf.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
                             if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
                                 todaysInterviewList.add(jwpf);
                             } else if(jwpf.getInterviewDateMillis() > now.getTimeInMillis()){
