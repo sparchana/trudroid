@@ -88,7 +88,7 @@ public class ViewDialog {
             viewJobsLayout.setVisibility(View.GONE);
         }
 
-        else if(category == 5) { // View my jobs
+        else if(category == 5) { // View my applications
             completeProfileLayout.setVisibility(View.GONE);
             newJobsLayout.setVisibility(View.GONE);
             referLayout.setVisibility(View.GONE);
@@ -113,7 +113,7 @@ public class ViewDialog {
         viewJobsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Navigate user to my jobs section
+                // Navigate user to my applications section
                 Intent completeProfileIntent = new Intent(view.getContext(), JobApplicationActivity.class);
                 view.getContext().startActivity(completeProfileIntent);
                 dialog.cancel();

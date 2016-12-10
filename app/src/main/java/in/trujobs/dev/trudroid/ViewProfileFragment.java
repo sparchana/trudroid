@@ -310,10 +310,10 @@ public class ViewProfileFragment extends Fragment {
 
                     jobsApplied.setText(getCandidateInformationResponse.getCandidate().getAppliedJobs() + "");
 
-                    //setting my jobs header message if candidate has applied in any one of the jobs
+                    //setting my applications header message if candidate has applied in any one of the jobs
                     if(getCandidateInformationResponse.getCandidate().getAppliedJobs() > 0){
                         myJobsHeading.setText("Jobs you have applied");
-                        myJobsSubHeading.setText("Go to my Jobs");
+                        myJobsSubHeading.setText("Go to my Applications");
                     } else{
                         myJobsHeading.setText("No Jobs Applied");
                         myJobsSubHeading.setText("Apply Now");

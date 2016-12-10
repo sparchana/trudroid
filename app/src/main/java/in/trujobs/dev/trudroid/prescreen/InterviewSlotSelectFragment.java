@@ -191,7 +191,7 @@ public class InterviewSlotSelectFragment extends Fragment {
                     // back to search
                     // show successfully applied message and redirect to search screen
                     showDialog("Job application submitted successfully." +
-                            "You can track your applications from 'My Jobs' option from menu", true);
+                            "You can track your applications from 'My Applications' option from menu", true);
                 } else {
                     showDialog("Something went wrong. Please try again.", false);
                 }
