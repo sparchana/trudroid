@@ -72,7 +72,7 @@ public class ServerConstants {
     //reason type
     public static final int INTERVIEW_REJECT_TYPE_REASON = 1;
     public static final int INTERVIEW_NOT_GOING_TYPE_REASON = 2;
-    public static final int INTERVIEW_NOT_SELECED_TYPE_REASON = 3;
+    public static final int INTERVIEW_NOT_SELECTED_TYPE_REASON = 3;
     public static final int CANDIDATE_ETA = 4;
 
     /* API KEYS */
