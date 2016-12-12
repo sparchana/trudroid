@@ -31,6 +31,7 @@ import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
 import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Util;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.dev.trudroid.api.MessageConstants;
@@ -92,6 +93,7 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         LinearLayout acceptRejectPanel = (LinearLayout) findViewById(R.id.reschedule_panel);
         LinearLayout statusPanel = (LinearLayout) findViewById(R.id.candidate_status_panel);
         LinearLayout statusOptions = (LinearLayout) findViewById(R.id.status_options);
+        LinearLayout interviewDateSlot = (LinearLayout) findViewById(R.id.interview_date_slot);
 
         callHotline.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,26 +158,31 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
         //set job recruiter name
         recNameTv.setText(JPWFObject.getJobPostObject().getRecruiterName());
 
-        //set interview date
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(JPWFObject.getInterviewDateMillis());
-        int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH) + 1;
-        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int mToday = calendar.get(Calendar.DAY_OF_WEEK);
+        if(JPWFObject.getInterviewDateMillis() != 0){
+            //set interview date
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(JPWFObject.getInterviewDateMillis());
+            int mYear = calendar.get(Calendar.YEAR);
+            int mMonth = calendar.get(Calendar.MONTH) + 1;
+            int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            int mToday = calendar.get(Calendar.DAY_OF_WEEK);
 
-        String cDay = mDay + "";
+            String cDay = mDay + "";
 
-        if(mDay < 10){
-            cDay = "0" + mDay;
+            if(mDay < 10){
+                cDay = "0" + mDay;
+            }
+
+            String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth) + " " + mYear;
+
+            interviewDateTv.setText(finalDate);
+
+            //set interview time slot
+            interviewTimeTv.setText(JPWFObject.getInterviewTimeSlotObject().getSlotTitle());
+            interviewDateSlot.setVisibility(View.VISIBLE);
+        } else{
+            interviewDateSlot.setVisibility(View.GONE);
         }
-
-        String finalDate = Util.getDay(mToday) + ", " + cDay + " " + Util.getMonth(mMonth) + " " + mYear;
-
-        interviewDateTv.setText(finalDate);
-
-        //set interview time slot
-        interviewTimeTv.setText(JPWFObject.getInterviewTimeSlotObject().getSlotTitle());
 
         //set job Application status
         if(JPWFObject.getCandidateInterviewStatus() != null){
