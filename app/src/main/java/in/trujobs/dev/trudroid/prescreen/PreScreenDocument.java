@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,8 +31,9 @@ import in.trujobs.dev.trudroid.R;
 import in.trujobs.dev.trudroid.Util.AsyncTask;
 import in.trujobs.dev.trudroid.Util.Constants;
 import in.trujobs.dev.trudroid.Util.CustomProgressDialog;
-import in.trujobs.dev.trudroid.Util.Prefs;
 import in.trujobs.dev.trudroid.Util.PreScreenUtil;
+import in.trujobs.dev.trudroid.Util.Prefs;
+import in.trujobs.dev.trudroid.Util.Tlog;
 import in.trujobs.dev.trudroid.Util.Validator;
 import in.trujobs.dev.trudroid.api.HttpRequest;
 import in.trujobs.proto.GenericResponse;

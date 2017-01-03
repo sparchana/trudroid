@@ -234,6 +234,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
                 bundle = new Bundle();
                 PreScreenDocument document = new PreScreenDocument();
                 bundle.putByteArray("document", preScreenPopulateResponse.getDocumentList().toByteArray());
+                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
                 bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
                 bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
@@ -249,6 +250,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             case PROPERTY_TYPE_LANGUAGE : // language
                 PreScreenLanguage language = new PreScreenLanguage();
                 bundle.putByteArray("language", preScreenPopulateResponse.getLanguageList().toByteArray());
+                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
                 bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
                 bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
@@ -264,6 +266,7 @@ public class PreScreenActivity extends TruJobsBaseActivity {
             case PROPERTY_TYPE_EXPERIENCE : // exp
                 PreScreenExperience experience = new PreScreenExperience();
                 bundle.putByteArray("experience", preScreenPopulateResponse.getExperience().toByteArray());
+                bundle.putLong("jobPostId", preScreenPopulateResponse.getJobPostId());
                 bundle.putBoolean("isFinalFragment", propertyIdStack.size() == 0);
                 bundle.putString("companyName", preScreenPopulateResponse.getPreScreenCompanyName());
                 bundle.putString("jobTitle", preScreenPopulateResponse.getPreScreenJobTitle());
