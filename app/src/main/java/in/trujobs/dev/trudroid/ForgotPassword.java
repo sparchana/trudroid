@@ -108,8 +108,9 @@ public class ForgotPassword extends TruJobsBaseActivity {
             } else if (resetPasswordResponse.getStatusValue() == ServerConstants.NO_USER_TO_SEND_OTP){
                 Toast.makeText(ForgotPassword.this, MessageConstants.NO_USER,
                         Toast.LENGTH_LONG).show();
-            }
-            else {
+            } else if (resetPasswordResponse.getStatusValue() == ServerConstants.NO_AUTH) {
+                showToast(MessageConstants.NO_AUTH);
+            } else {
                 Toast.makeText(ForgotPassword.this, MessageConstants.SOMETHING_WENT_WRONG,
                         Toast.LENGTH_LONG).show();
             }

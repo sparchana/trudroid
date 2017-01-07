@@ -9,6 +9,7 @@ public class MessageConstants {
     public static final String NOT_CONNECTED = "Looks like you are not connected to the internet. Please connect and try again.";
     public static final String FAILED_REQUEST = "Failed to Request. Please try again.";
     public static final String INCORRECT_PASSWORD = "Incorrect password. Click \"Forgot Password\" to reset";
+    public static final String NO_AUTH = "Looks like you didn't complete your registration last time. Please register again to continue!";
     public static final String EXISTING_USER = "Mobile number is already registered. Please Login in to continue";
     public static final String ENTER_VALID_MOBILE = "Enter a valid 10-digit mobile number";
     public static final String ENTER_VALID_NAME = "Name cannot have numbers and special characters";

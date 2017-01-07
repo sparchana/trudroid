@@ -11,6 +11,7 @@ public class ServerConstants {
     public static final int FAILURE = 2;
     public static final int NO_USER = 3;
     public static final int WRONG_PASSWORD = 4;
+    public static final int NO_AUTH = 5;
 
     public static final int SIGNUP_SUCCESS = 1;
     public static final int SIGNUP_EXISTS = 3;
@@ -22,6 +23,7 @@ public class ServerConstants {
     public static final int JOB_ALREADY_APPLIED = 3;
     public static final int JOB_APPLY_NO_CANDIDATE = 4;
     public static final int JOB_APPLY_NO_JOB = 4;
+    public static final int APPLICATION_LIMIT_REACHED = 5;
 
     public static Integer HOMELOCALITY_YES = 1;
     public static Integer JOBPREFERENCE_YES = 1;

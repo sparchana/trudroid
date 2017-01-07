@@ -219,9 +219,13 @@ public class JobApplicationDetailActivity extends TruJobsBaseActivity {
                 int interviewMonth = interviewCalendar.get(Calendar.MONTH) + 1;
                 int interviewDay = interviewCalendar.get(Calendar.DAY_OF_MONTH);
 
-                //checking today inteview
+                //checking today interview
                 if((interviewDay == now.get(Calendar.DATE)) && (interviewMonth) == (now.get(Calendar.MONTH) + 1) && interviewYear == now.get(Calendar.YEAR)){
-                    if(JPWFObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE && JPWFObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED){
+                    recNameTv.setText(JPWFObject.getJobPostObject().getRecruiterName() + " [" + JPWFObject.getJobPostObject().getRecruiterMobile() + "] ");
+                    if(JPWFObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_RESCHEDULE
+                            && JPWFObject.getCandidateInterviewStatus().getStatusId() < ServerConstants.JWF_STATUS_CANDIDATE_FEEDBACK_STATUS_COMPLETE_SELECTED)
+                    {
+
                         statusPanel.setVisibility(View.VISIBLE);
                         if(JPWFObject.getCandidateInterviewStatus().getStatusId() > ServerConstants.JWF_STATUS_INTERVIEW_CONFIRMED){
                             currentStatusTv.setText(JPWFObject.getCandidateInterviewStatus().getStatusTitle());
