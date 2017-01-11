@@ -70,6 +70,7 @@ public class ServerConstants {
     public static final int ANDROID_INTENT_ACTIVITY_REFER = 6;
     public static final int ANDROID_INTENT_ACTIVITY_FEEDBACK = 7;
     public static final int ANDROID_INTENT_ACTIVITY_INTERVIEW_TIPS = 8;
+    public static final int ANDROID_INTENT_ACTIVITY_JOB_DETAIL = 9;
 
     //reason type
     public static final int INTERVIEW_REJECT_TYPE_REASON = 1;

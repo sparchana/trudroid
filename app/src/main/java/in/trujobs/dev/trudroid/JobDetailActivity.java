@@ -45,20 +45,23 @@ import in.trujobs.proto.JobPostObject;
 import in.trujobs.proto.LocalityObject;
 
 public class JobDetailActivity extends TruJobsBaseActivity {
-    private static String EXTRA_JOB_TITLE = "EXTRA_JOB_TITLE";
-    private static final List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
+    private static List<LocalityObject> EXTRA_LOCALITY = new ArrayList<LocalityObject>();
     private FloatingActionButton fab;
     Button jobTabApplyBtn;
     ProgressDialog pd;
     int preScreenLocationIndex = 0;
     private AsyncTask<GetJobPostDetailsRequest, Void, GetJobPostDetailsResponse> mAsyncTask;
+    private TextView toolbarTitle;
 
-    public static void start(Context context, String jobRole, List<LocalityObject> jobPostLocalityList) {
+    public static void start(Context context, List<LocalityObject> jobPostLocalityList) {
         Intent intent = new Intent(context, JobDetailActivity.class);
         EXTRA_LOCALITY.clear();
-        EXTRA_JOB_TITLE = jobRole;
-        for(LocalityObject localityObject : jobPostLocalityList){
-            EXTRA_LOCALITY.add(localityObject);
+        if(jobPostLocalityList != null){
+            for(LocalityObject localityObject : jobPostLocalityList){
+                EXTRA_LOCALITY.add(localityObject);
+            }
+        } else{
+            EXTRA_LOCALITY = null;
         }
         context.startActivity(intent);
     }
@@ -70,8 +73,8 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(EXTRA_JOB_TITLE);
+        toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Loading...");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -183,6 +186,14 @@ public class JobDetailActivity extends TruJobsBaseActivity {
             if(getJobPostDetailsResponse.getStatus() == GetJobPostDetailsResponse.Status.SUCCESS){
                 //Set job page
 
+                toolbarTitle.setText(getJobPostDetailsResponse.getJobPost().getJobRole());
+
+                List<LocalityObject> localityObjectList = getJobPostDetailsResponse.getJobPost().getJobPostLocalityList();
+
+                if(EXTRA_LOCALITY == null){
+                    EXTRA_LOCALITY = localityObjectList;
+                }
+
                 //breaking a lot of localities in 3 localities and rest as "more"
                 String localities = "";
                 int localityCount = EXTRA_LOCALITY.size();
@@ -195,13 +206,14 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                         localities += ", ";
                     }
                 }
-                if(localityCount > 3){
-                    localities += " more";
+                if(localityObjectList.size() > 3){
+                    localities += " + " + (localityObjectList.size() - 3) + " more";
                 }
                 //setting job post details
                 jobPostLocation.setText(localities);
                 jobPostJobTitle.setText(getJobPostDetailsResponse.getJobPost().getJobPostTitle());
                 jobPostExperience.setText(getJobPostDetailsResponse.getJobPost().getJobPostExperience().getExperienceType() + " experience");
+
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(getJobPostDetailsResponse.getJobPost().getJobPostCreationMillis());
                 int mYear = calendar.get(Calendar.YEAR);
@@ -331,7 +343,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                             public void onClick(View view) {
                                 Log.e("Other job post", "data: " + jobPostObject);
                                 Prefs.jobPostId.put(jobPostObject.getJobPostId());
-                                JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobRole(), jobPostObject.getJobPostLocalityList());
+                                JobDetailActivity.start(JobDetailActivity.this, jobPostObject.getJobPostLocalityList());
                                 //Track this action
                                 addActionGA(Constants.GA_SCREEN_FRAGMENT_COMPANY, Constants.GA_ACTION_OTHER_JOBS);
                             }
@@ -493,6 +505,14 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra("methodName").equals("startActivity")){
+            start(this, null);
         }
     }
 }

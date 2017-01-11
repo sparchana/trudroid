@@ -215,7 +215,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             @Override
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
-                JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
+                JobDetailActivity.start(getContext(), jobPost.getJobPostLocalityList());
 
             }
         });

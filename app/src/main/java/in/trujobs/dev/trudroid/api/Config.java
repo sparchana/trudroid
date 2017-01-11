@@ -13,7 +13,7 @@ public class Config {
      * and uncomment the line, also comment out aws prod-like-test-server ip above
      */
 
-//    public static final String BASE_HTTP_URL = "http://192.168.0.116:9000";
+//    public static final String BASE_HTTP_URL = "http://192.168.0.123:9000";
 
     public static final String URL_SIGN_UP = BASE_HTTP_URL + "/mSignUp";
     public static final String URL_LOGIN = BASE_HTTP_URL + "/mLoginSubmit";
