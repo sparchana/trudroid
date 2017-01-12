@@ -190,7 +190,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
 
                 List<LocalityObject> localityObjectList = getJobPostDetailsResponse.getJobPost().getJobPostLocalityList();
 
-                if(EXTRA_LOCALITY == null){
+                if(EXTRA_LOCALITY == null || EXTRA_LOCALITY.size() < 1){
                     EXTRA_LOCALITY = localityObjectList;
                 }
 
@@ -207,7 +207,7 @@ public class JobDetailActivity extends TruJobsBaseActivity {
                     }
                 }
                 if(localityObjectList.size() > 3){
-                    localities += " + " + (localityObjectList.size() - 3) + " more";
+                    localities += " + " + (EXTRA_LOCALITY.size() - 3) + " more";
                 }
                 //setting job post details
                 jobPostLocation.setText(localities);

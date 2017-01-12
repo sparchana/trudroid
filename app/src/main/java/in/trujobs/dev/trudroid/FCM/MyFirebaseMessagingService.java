@@ -120,9 +120,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_FEEDBACK))){ //feedback
                 intent = new Intent(this, FeedbackActivity.class);
             } else if(Objects.equals(messageBody.getData().get("type"), String.valueOf(ServerConstants.ANDROID_INTENT_ACTIVITY_JOB_DETAIL))){ //jobDetails page
-                Prefs.jobPostId.put(Long.valueOf(messageBody.getData().get("jpId")));
-                intent = new Intent(this, JobDetailActivity.class);
-                intent.putExtra("methodName","startActivity");
+                if(Objects.equals(messageBody.getData().get("jpId"), "null")){
+                    //if job post id is null, open search job intent
+                    intent = new Intent(this, SearchJobsActivity.class);
+
+                } else{
+                    Prefs.jobPostId.put(Long.valueOf(messageBody.getData().get("jpId")));
+                    intent = new Intent(this, JobDetailActivity.class);
+                    intent.putExtra("methodName","startActivity");
+
+                }
             }
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
