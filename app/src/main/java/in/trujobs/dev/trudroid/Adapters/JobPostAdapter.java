@@ -292,7 +292,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
         requestBuilder.setJobPostId(jobPostId);
         requestBuilder.setLocalityId(localityId);
         requestBuilder.setCandidateMobile(String.valueOf(Prefs.candidateMobile.get()));
-        requestBuilder.setAppVersion(ServerConstants.CURRENT_APP_VERSION);
+        requestBuilder.setAppVersionCode(ServerConstants.CURRENT_APP_VERSION);
 
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
