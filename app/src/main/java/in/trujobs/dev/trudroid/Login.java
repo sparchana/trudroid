@@ -236,9 +236,9 @@ public class Login extends TruJobsBaseActivity {
 
             } else if (logInResponse.getStatusValue() == ServerConstants.WRONG_PASSWORD) {
                 showToast(MessageConstants.INCORRECT_PASSWORD);
-            }
-
-            else {
+            } else if (logInResponse.getStatusValue() == ServerConstants.NO_AUTH) {
+                showToast(MessageConstants.NO_AUTH);
+            } else {
                 showToast(MessageConstants.SOMETHING_WENT_WRONG);
             }
         }

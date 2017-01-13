@@ -215,7 +215,7 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
             @Override
             public void onClick(View v) {
                 Prefs.jobPostId.put(jobPost.getJobPostId());
-                JobDetailActivity.start(getContext(), jobPost.getJobRole(), jobPost.getJobPostLocalityList());
+                JobDetailActivity.start(getContext(), jobPost.getJobPostLocalityList());
 
             }
         });
@@ -377,7 +377,9 @@ public class JobPostAdapter extends ArrayAdapter<JobPostObject> {
                     } catch (Exception ignored){}
                 } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_JOB){
                     alert.showDialog(getContext(), "No Job Found", "Looks like the job is no more active", "", R.drawable.sent, 0);
-                } else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
+                } else if(applyJobResponse.getStatusValue() == ServerConstants.APPLICATION_LIMIT_REACHED){
+                    alert.showDialog(getContext(), "Application closed!", "Looks like the job is not accepting any more applications this week. Please apply next week.", "", R.drawable.sent, 0);
+                }  else if(applyJobResponse.getStatusValue() == ServerConstants.JOB_APPLY_NO_CANDIDATE){
                     alert.showDialog(getContext(), "Candidate doesn't exists", "Please login to continue", "", R.drawable.sent, 0);
                 } else if(!Util.isConnectedToInternet(getContext())) {
                     Toast.makeText(getContext(), MessageConstants.NOT_CONNECTED, Toast.LENGTH_LONG).show();
