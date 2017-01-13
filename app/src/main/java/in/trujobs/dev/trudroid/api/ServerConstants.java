@@ -1,7 +1,6 @@
 package in.trujobs.dev.trudroid.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import in.trujobs.dev.trudroid.BuildConfig;
 
 /**
  * Created by batcoder1 on 25/7/16.
@@ -81,4 +80,5 @@ public class ServerConstants {
     /* API KEYS */
     public static final String GOOGLE_SERVER_API_KEY = "AIzaSyCKHf7GijuzKW84Ggz0fFWWHD0y9_onUhg";
 
+    public static int CURRENT_APP_VERSION = BuildConfig.VERSION_CODE;
 }
