@@ -111,6 +111,7 @@ public class Login extends TruJobsBaseActivity {
         LogInRequest.Builder requestBuilder = LogInRequest.newBuilder();
         requestBuilder.setCandidateMobile(mMobile.getText().toString());
         requestBuilder.setCandidatePassword(mPassword.getText().toString());
+        requestBuilder.setAppVersionCode(ServerConstants.CURRENT_APP_VERSION);
 
         int check = 1;
         if(!Util.isValidMobile(requestBuilder.getCandidateMobile())){

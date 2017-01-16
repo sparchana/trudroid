@@ -63,6 +63,7 @@ public class ForgotPassword extends TruJobsBaseActivity {
         ResetPasswordRequest.Builder requestBuilder = ResetPasswordRequest.newBuilder();
         requestBuilder.setMobile(mUserMobile.getText().toString());
         Prefs.candidateMobile.put(mUserMobile.getText().toString());
+        requestBuilder.setAppVersionCode(ServerConstants.CURRENT_APP_VERSION);
 
         if(Util.isValidMobile(requestBuilder.getMobile()) == false){
             Toast.makeText(ForgotPassword.this, "Enter a valid 10 digit mobile number",

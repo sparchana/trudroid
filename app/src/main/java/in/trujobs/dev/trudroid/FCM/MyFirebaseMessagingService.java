@@ -136,16 +136,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
+        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
+        style.setBigContentTitle("TruJobs.in - " + messageBody.getData().get("title"));
+        style.bigText(messageBody.getData().get("message"));
+
         NotificationCompat.Builder notificationBuilder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(getNotificationIcon())
                     .setColor(getResources().getColor(R.color.colorPrimary))
-                    .setContentTitle("TruJobs.in - " + messageBody.getData().get("title"))
-                    .setContentText(messageBody.getData().get("message"))
                     .setAutoCancel(true)
                     .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE | DEFAULT_LIGHTS)
-                    .setContentIntent(pendingIntent);
+                    .setContentIntent(pendingIntent)
+                    .setStyle(style);
         }
 
         NotificationManager notificationManager =
